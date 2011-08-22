@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<view icon="8712" title="Mag-Tools" width="320" height="450">
+  <control progid="DecalControls.Notebook" name="nbMain">
+
+    <page label="Mana Tracker">
+      <control progid="DecalControls.FixedLayout" clipped="">
+        <control progid="DecalControls.List" name="ManaList" left="0" top="0" width="320" height="380">
+          <column progid="DecalControls.IconColumn" name="ManaItemIcon" fixedwidth="16" />
+          <column progid="DecalControls.TextColumn" name="ManaItemName" fixedwidth="127" />
+          <column progid="DecalControls.IconColumn" name="ManaItemActive" fixedwidth="16" />
+          <column progid="DecalControls.TextColumn" name="ManaItemMana" fixedwidth="72" />
+          <column progid="DecalControls.TextColumn" name="ManaItemTime" fixedwidth="44" />
+          <column progid="DecalControls.TextColumn" name="ManaItemID" />
+          <column progid="DecalControls.TextColumn" name="ManaItemSort" />
+        </control>
+        <control progid="DecalControls.StaticText" name="ManaTotal" left="5" top="385" width="160" height="18" text="" />
+        <control progid="DecalControls.CheckBox" name="RefillMana" left="170" top="385" width="130" height="20" text="Auto Recharge On/Off" checked="true" />
+      </control>
+    </page>
+
+    <page label="Misc">
+      <control progid="DecalControls.FixedLayout" clipped="">
+        <control progid="DecalControls.StaticText" name="ThanksLabel" left="5" top="320" width="310" height="60" text="Parts of this plugin came from the ideas of Squire and ManaMinder plugins. Squire was created by Flynn: http://www.flynn1179.net/ac/"/>
+
+        <control progid="DecalControls.StaticText" name="VersionLabel" left="5" top="385" width="200" height="18" text="Version "/>
+        <control progid="DecalControls.CheckBox" name="DebugEnabled" left="225" top="385" width="80" height="20" text="Show Debug" checked="true" />
+      </control>
+    </page>
+    
+  </control>
+</view>
