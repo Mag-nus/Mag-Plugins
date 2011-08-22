@@ -38,6 +38,8 @@ namespace MagTools
 		internal static Decal.Adapter.Wrappers.PluginHost host = null;
 		internal static Decal.Adapter.CoreManager core = null;
 
+		internal static  Views.MainView mainView;
+
 		private ManaTracker.Tracker manaTracker;
 		private VirindiTools.ItemInfoOnIdent itemInfoOnIdent;
 
@@ -51,9 +53,11 @@ namespace MagTools
 				host = Host;
 				core = Core;
 
+				mainView = new Views.MainView();
+
 				System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
 				System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-				Views.MainView.Instance.VersionLabel.Text = "Version: " + fvi.ProductVersion;
+				PluginCore.mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
 
 				manaTracker = new ManaTracker.Tracker();
 				itemInfoOnIdent = new VirindiTools.ItemInfoOnIdent();
@@ -71,6 +75,8 @@ namespace MagTools
 			{
 				itemInfoOnIdent.Dispose();
 				manaTracker.Dispose();
+
+				mainView.Dispose();
 
 				host = null;
 				core = null;

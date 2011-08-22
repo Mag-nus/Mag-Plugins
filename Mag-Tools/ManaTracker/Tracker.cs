@@ -19,9 +19,9 @@ namespace MagTools.ManaTracker
 		{
 			try
 			{
-				this.ManaList = Views.MainView.Instance.ManaList;
-				this.ManaTotal = Views.MainView.Instance.ManaTotal;
-				this.RefillMana = Views.MainView.Instance.RefillMana;
+				this.ManaList = PluginCore.mainView.ManaList;
+				this.ManaTotal = PluginCore.mainView.ManaTotal;
+				this.RefillMana = PluginCore.mainView.RefillMana;
 
 				PluginCore.core.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete);
 				PluginCore.core.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);

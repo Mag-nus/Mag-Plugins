@@ -8,11 +8,9 @@ namespace MagTools.Views
 	// The view here is MagTools.mainView.xml because our projects default namespace is SamplePlugin, and the file name is mainView.xml.
 	// The other key here is that mainView.xml must be included as an embeded resource. If its not, your plugin will not show up in-game.
 	[MVView("MagTools.Views.mainView.xml")]
-	sealed class MainView : IDisposable
+	class MainView : IDisposable
 	{
-		private static readonly MainView instance = new MainView();
-
-		private MainView()
+		public MainView()
 		{
 			try
 			{
@@ -30,14 +28,6 @@ namespace MagTools.Views
 				MVWireupHelper.WireupEnd(this);
 			}
 			catch (Exception ex) { Util.LogError(ex); }
-		}
-
-		public static MainView Instance
-		{
-			get
-			{
-				return instance;
-			}
 		}
 
 
