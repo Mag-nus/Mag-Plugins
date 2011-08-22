@@ -85,6 +85,7 @@ namespace MagTools.ManaTracker
 		{
 			const int IconActive = 0x60011f9;
 			const int IconInactive = 0x60011f8;
+			const int IconNone = 0x600287A;
 
 			// Go through and find all of our current active spells (enchantments)
 			List<int> activeSpellsOnChar = new List<int>();
@@ -112,18 +113,20 @@ namespace MagTools.ManaTracker
 				if (item.Name != null && item.Name.Contains("Aetheria"))
 					continue;
 
+				// Don't show arrows
+				if (item.Values(LongValueKey.EquippedSlots) == 8388608)
+					continue;
+
+
 				equippedItems.Add(item.Id);
+
+				// If we don't have Id data for this item yet, lets request it. We won't have the extended info this time around, but should for the next.
+				if (!item.HasIdData)
+					PluginCore.host.Actions.RequestId(item.Id);
 
 
 				// Lets check if the item is not active. We start off by assuming it is active
 				bool itemIsActive = true;
-
-				List<int> itemActiveSpells = new List<int>();
-
-				for (int i = 0 ; i < item.Values(LongValueKey.ActiveSpellCount) ; i++)
-				{
-					itemActiveSpells.Add(item.ActiveSpell(i));
-				}
 
 				// Go through all of this items spells to determine if all are active.
 				for (int i = 0 ; i < item.Values(LongValueKey.SpellCount) ; i++)
@@ -143,11 +146,12 @@ namespace MagTools.ManaTracker
 					bool hasActiveSpell = false;
 
 					// Check to see if this item cast any spells on itself.
-					foreach (int j in itemActiveSpells)
+					for (int j = 0 ; j < item.Values(LongValueKey.ActiveSpellCount) ; j++)
 					{
-						if ((service.SpellTable.GetById(j).Family == spellOnItem.Family) && (service.SpellTable.GetById(j).Difficulty >= spellOnItem.Difficulty))
+						int activeSpellOnItemId = item.ActiveSpell(j);
+
+						if ((service.SpellTable.GetById(activeSpellOnItemId).Family == spellOnItem.Family) && (service.SpellTable.GetById(activeSpellOnItemId).Difficulty >= spellOnItem.Difficulty))
 						{
-							//itemActiveSpells.Remove(spell);
 							hasActiveSpell = true;
 							break;
 						}
@@ -156,12 +160,12 @@ namespace MagTools.ManaTracker
 					if (hasActiveSpell)
 						continue;
 
+
 					// Check to see if this item cast any spells on the player.
 					foreach (int j in activeSpellsOnChar)
 					{
 						if (service.SpellTable.GetById(j) != null && (service.SpellTable.GetById(j).Family == spellOnItem.Family) && (service.SpellTable.GetById(j).Difficulty >= spellOnItem.Difficulty))
 						{
-							//activeSpellsOnChar.Remove(spell);
 							hasActiveSpell = true;
 							break;
 						}
@@ -190,7 +194,7 @@ namespace MagTools.ManaTracker
 						{
 							if (itemIsActive)			ManaList[row - 1][2][1] = IconActive;
 							else if (item.HasIdData)	ManaList[row - 1][2][1] = IconInactive;
-							else						ManaList[row - 1][2][1] = null;
+							else						ManaList[row - 1][2][1] = IconNone;
 						}
 
 						break;
@@ -202,11 +206,12 @@ namespace MagTools.ManaTracker
 						IListRow newRow = ManaList.Add();
 						newRow[0][1] = item.Icon + 0x6000000;
 						newRow[1][0] = item.Name;
+						newRow[2][1] = IconNone;
 						if (item.Values(LongValueKey.SpellCount) != 0)
 						{
 							if (itemIsActive)			newRow[2][1] = IconActive;
 							else if (item.HasIdData)	newRow[2][1] = IconInactive;
-							else						newRow[2][1] = null;
+							else						newRow[2][1] = IconNone;
 						}
 						newRow[5][0] = item.Id.ToString();
 						newRow[6][0] = int.MaxValue.ToString();
@@ -237,7 +242,7 @@ namespace MagTools.ManaTracker
 
 				WorldObject wo = PluginCore.core.WorldFilter[itemId];
 
-				if (wo == null || !wo.HasIdData || !wo.Exists(DoubleValueKey.ManaRateOfChange) || ManaList[row][2][1] == null)
+				if (wo == null || !wo.HasIdData || !wo.Exists(DoubleValueKey.ManaRateOfChange) || int.Parse(ManaList[row][2][1].ToString()) == IconNone)
 				{
 					ManaList[row][3][0] = "-";
 					ManaList[row][4][0] = "-";
