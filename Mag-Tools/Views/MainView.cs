@@ -17,7 +17,7 @@ namespace MagTools.Views
 				//Display the view
 				MVWireupHelper.WireupStart(this, PluginCore.host);
 			}
-			catch (Exception ex) { Util.LogError(ex); }
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		public void Dispose()
@@ -27,7 +27,7 @@ namespace MagTools.Views
 				//Remove the view
 				MVWireupHelper.WireupEnd(this);
 			}
-			catch (Exception ex) { Util.LogError(ex); }
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 
@@ -39,13 +39,18 @@ namespace MagTools.Views
 		private IStaticText manaTotal = null;
 		public IStaticText ManaTotal { get { return manaTotal; } }
 
-		[MVControlReference("RefillMana")]
-		private ICheckBox refillMana = null;
-		public ICheckBox RefillMana { get { return refillMana; } }
+		//         <control progid="DecalControls.CheckBox" name="RefillMana" left="170" top="385" width="130" height="20" text="Auto Recharge On/Off" checked="true" />
+		//[MVControlReference("RefillMana")]
+		//private ICheckBox refillMana = null;
+		//public ICheckBox RefillMana { get { return refillMana; } }
 
 
 		[MVControlReference("VersionLabel")]
 		private IStaticText versionLabel = null;
 		public IStaticText VersionLabel { get { return versionLabel; } }
+
+		[MVControlReference("DebugEnabled")]
+		private ICheckBox debugEnabled = null;
+		public ICheckBox DebugEnabled { get { return debugEnabled; } }
 	}
 }

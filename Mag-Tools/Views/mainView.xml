@@ -14,7 +14,6 @@
           <column progid="DecalControls.TextColumn" name="ManaItemSort" />
         </control>
         <control progid="DecalControls.StaticText" name="ManaTotal" left="5" top="385" width="160" height="18" text="" />
-        <control progid="DecalControls.CheckBox" name="RefillMana" left="170" top="385" width="130" height="20" text="Auto Recharge On/Off" checked="true" />
       </control>
     </page>
 
@@ -23,7 +22,7 @@
         <control progid="DecalControls.StaticText" name="ThanksLabel" left="5" top="320" width="310" height="60" text="Parts of this plugin came from the ideas of Squire and ManaMinder plugins. Squire was created by Flynn: http://www.flynn1179.net/ac/"/>
 
         <control progid="DecalControls.StaticText" name="VersionLabel" left="5" top="385" width="200" height="18" text="Version "/>
-        <control progid="DecalControls.CheckBox" name="DebugEnabled" left="225" top="385" width="80" height="20" text="Show Debug" checked="true" />
+        <control progid="DecalControls.CheckBox" name="DebugEnabled" left="225" top="385" width="80" height="20" text="Show Debug" checked="false" />
       </control>
     </page>
     

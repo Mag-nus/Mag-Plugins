@@ -3,13 +3,27 @@ using System.IO;
 
 namespace MagTools
 {
-	public static class Util
+	public static class Debug
 	{
-		public static void LogError(Exception ex)
+		public static bool DebugEnabled = false;
+
+		/// <summary>
+		/// This will only write the exception to the errors.txt file if Debugging is enabled.
+		/// </summary>
+		/// <param name="ex"></param>
+		public static void LogException(Exception ex)
 		{
 			try
 			{
-				using (StreamWriter writer = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Asheron's Call\" + PluginCore.PluginName + " errors.txt", true))
+				if (!DebugEnabled)
+					return;
+
+				DirectoryInfo dir = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\" + PluginCore.PluginName);
+
+				if (!dir.Exists)
+					dir.Create();
+
+				using (StreamWriter writer = new StreamWriter(dir.FullName + @"\Exceptions.txt", true))
 				{
 					writer.WriteLine("============================================================================");
 					writer.WriteLine(DateTime.Now.ToString());
@@ -31,13 +45,20 @@ namespace MagTools
 			}
 		}
 
+		/// <summary>
+		/// This will only write the message to the chat if Debugging is enabled.
+		/// </summary>
+		/// <param name="message"></param>
 		public static void WriteToChat(string message)
 		{
 			try
 			{
+				if (!DebugEnabled)
+					return;
+
 				PluginCore.host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + message, 5);
 			}
-			catch (Exception ex) { LogError(ex); }
+			catch (Exception ex) { LogException(ex); }
 		}
 	}
 }

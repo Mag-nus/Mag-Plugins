@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 using Decal.Filters;
 
@@ -12,30 +13,45 @@ namespace MagTools.VirindiTools
 		{
 			try
 			{
-				PluginCore.core.ContainerOpened += new EventHandler<Decal.Adapter.ContainerOpenedEventArgs>(Core_ContainerOpened);
-				PluginCore.core.WorldFilter.ChangeObject += new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+				CoreManager.Current.ContainerOpened += new EventHandler<Decal.Adapter.ContainerOpenedEventArgs>(Core_ContainerOpened);
+				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 			}
-			catch (Exception ex) { Util.LogError(ex); }
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		public void Dispose()
 		{
 			try
 			{
-				PluginCore.core.ContainerOpened -= new EventHandler<Decal.Adapter.ContainerOpenedEventArgs>(Core_ContainerOpened);
-				PluginCore.core.WorldFilter.ChangeObject -= new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+				CoreManager.Current.ContainerOpened -= new EventHandler<Decal.Adapter.ContainerOpenedEventArgs>(Core_ContainerOpened);
+				CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 			}
-			catch (Exception ex) { Util.LogError(ex); }
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		void Core_ContainerOpened(object sender, Decal.Adapter.ContainerOpenedEventArgs e)
 		{
 			try
 			{
-				foreach (WorldObject wo in PluginCore.core.WorldFilter.GetByContainer(e.ItemGuid))
+				/*
+				sellitem = getasellitem();
+				buyitem = getabuyitem();
+				while (sellitem != null && buyitem != null)
+				{
+					vitemtoolbuysell(buyitem, sellitem);
+					if (noneininventory(sellitem)) sellitem = getasellitem();
+					if (noneininventory(buyitem)) buyitem = getabuyitem();
+				}
+				*/
+
+				//VTClassic.LootCore loot = new VTClassic.LootCore();
+				//loot.LoadProfile("profile", false);
+				//LootAction action = loot.GetLootDecision(item);
+
+				foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetByContainer(e.ItemGuid))
 					ProcessItem(wo);
 			}
-			catch (Exception ex) { Util.LogError(ex); }
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		void WorldFilter_ChangeObject(object sender, Decal.Adapter.Wrappers.ChangeObjectEventArgs e)
@@ -45,12 +61,12 @@ namespace MagTools.VirindiTools
 				if (e.Change != WorldChangeType.IdentReceived)
 					return;
 
-				if (PluginCore.core.Actions.CurrentSelection != e.Changed.Id)
+				if (CoreManager.Current.Actions.CurrentSelection != e.Changed.Id)
 					return;
 
 				ProcessItem(e.Changed);
 			}
-			catch (Exception ex) { Util.LogError(ex); }
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		private void ProcessItem(WorldObject wo)
@@ -103,18 +119,18 @@ namespace MagTools.VirindiTools
 				processVTankIdentLootAction(obj, result);
 
 			}
-			catch (Exception ex) { Util.LogError(ex); }
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		private void processVTankIdentLootAction(int itemId, uTank2.LootPlugins.LootAction result)
 		{
-			WorldObject wo = PluginCore.core.WorldFilter[itemId];
+			WorldObject wo = CoreManager.Current.WorldFilter[itemId];
 
 			if (wo == null)
 				return;
 
 			// If a rule does not exist for this item and the user doesn't have it selected, ignore it
-			if (String.IsNullOrEmpty(result.RuleName) && itemId != PluginCore.core.Actions.CurrentSelection)
+			if (result.IsNoLoot && String.IsNullOrEmpty(result.RuleName) && itemId != CoreManager.Current.Actions.CurrentSelection)
 				return;
 
 			//<Tell:IIDString:221112:-2024140046>(Epics)<\\Tell>
@@ -207,7 +223,7 @@ namespace MagTools.VirindiTools
 
 			if (wo.Values(LongValueKey.SpellCount) > 0)
 			{
-				FileService service = PluginCore.core.Filter<FileService>();
+				FileService service = CoreManager.Current.Filter<FileService>();
 
 				List<int> itemActiveSpells = new List<int>();
 

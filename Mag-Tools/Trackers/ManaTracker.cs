@@ -1,0 +1,229 @@
+﻿using System;
+using System.Collections.Generic;
+
+using Decal.Adapter;
+using Decal.Adapter.Wrappers;
+using Decal.Filters;
+using MyClasses.MetaViewWrappers;
+
+namespace MagTools.Trackers
+{
+	public class ManaTracker : IDisposable
+	{
+		/// <summary>
+		/// This is raised when an item has been added to the tracker.
+		/// </summary>
+		public event Action<ManaTrackedItem> ItemAdded;
+
+		/// <summary>
+		/// This is raised when we have stopped tracking an item.
+		/// </summary>
+		public event Action<ManaTrackedItem> ItemRemoved;
+
+		private readonly PluginHost Host;
+
+		private List<ManaTrackedItem> trackedItems = new List<ManaTrackedItem>();
+
+		public ManaTracker(PluginHost host)
+		{
+			try
+			{
+				this.Host = host;
+
+				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete);
+				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+				CoreManager.Current.WorldFilter.ReleaseObject += new EventHandler<ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
+				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		public void Dispose()
+		{
+			try
+			{
+				CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
+				CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+				CoreManager.Current.WorldFilter.ReleaseObject -= new EventHandler<ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
+				CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void CharacterFilter_LoginComplete(object sender, EventArgs e)
+		{
+			try
+			{
+				RemoveAllTrackedItems();
+
+				// Add all of our items
+				foreach (WorldObject obj in CoreManager.Current.WorldFilter.GetInventory())
+				{
+					if (ItemIsEquippedByMe(obj) && ShoudlWeWatchItem(obj))
+						AddItem(obj);
+				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void WorldFilter_ChangeObject(object sender, ChangeObjectEventArgs e)
+		{
+			try
+			{
+				/*
+				Storage change is a goofy process.
+				if (e.Changed.Name.Contains("White E")) Util.WriteToChat(e.Changed.Name + " " + e.Change + ", Container: " + e.Changed.Container + ", Slot: " + e.Changed.Values(LongValueKey.Slot, 0) + ", EquippedSlots: " + e.Changed.Values(LongValueKey.EquippedSlots));
+
+				Dequip:
+				<{Mag-Tools}>: Enhanced White Empyrean Ring StorageChange, Container: 1343094282, Slot: 29, EquippedSlots: 262144
+				<{Mag-Tools}>: AddItem
+				<{Mag-Tools}>: Enhanced White Empyrean Ring StorageChange, Container: 1343094282, Slot: 29, EquippedSlots: 262144
+				<{Mag-Tools}>: AddItem
+				<{Mag-Tools}>: Enhanced White Empyrean Ring StorageChange, Container: 1343094282, Slot: 0, EquippedSlots: 0
+				<{Mag-Tools}>: RemoveItem
+
+				Equip:
+				<{Mag-Tools}>: Enhanced White Empyrean Ring StorageChange, Container: 1343094282, Slot: 0, EquippedSlots: 262144
+				<{Mag-Tools}>: AddItem7
+				<{Mag-Tools}>: Enhanced White Empyrean Ring StorageChange, Container: 0, Slot: 0, EquippedSlots: 262144
+				<{Mag-Tools}>: RemoveItem
+				<{Mag-Tools}>: Enhanced White Empyrean Ring StorageChange, Container: 1343094282, Slot: 0, EquippedSlots: 262144
+				<{Mag-Tools}>: AddItem
+				Enhanced White Empyrean Ring cast Incantation of Armor Other on you, surpassing Incantation of Armor Self
+				<{Mag-Tools}>: Enhanced White Empyrean Ring IdentReceived, Container: 1343094282, Slot: 0, EquippedSlots: 262144
+				*/
+
+				// This is kind of a goofy check.
+				// When we equip an item StorageChange is raised three times on that item.
+				// The process will call AddItem, then RemoveItem, then AddItem
+				if (e.Change == WorldChangeType.StorageChange && e.Changed.Values(LongValueKey.Container) != 0)
+				{
+					if (ItemIsEquippedByMe(e.Changed) && ShoudlWeWatchItem(e.Changed))
+						AddItem(e.Changed);
+					else
+						RemoveItem(e.Changed);
+				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void WorldFilter_ReleaseObject(object sender, ReleaseObjectEventArgs e)
+		{
+			try
+			{
+				foreach (ManaTrackedItem item in trackedItems)
+				{
+					if (item.Id == e.Released.Id)
+						RemoveItem(e.Released);
+				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void CharacterFilter_Logoff(object sender, Decal.Adapter.Wrappers.LogoffEventArgs e)
+		{
+			try
+			{
+				RemoveAllTrackedItems();
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		protected virtual bool ShoudlWeWatchItem(WorldObject obj)
+		{
+			// Only watch items equipped by me
+			if (!ItemIsEquippedByMe(obj))
+				return false;
+
+			// We also don't load aetheria
+			if (obj.Name != null && obj.Name.Contains("Aetheria"))
+				return false;
+			
+			// Don't show arrows
+			if (obj.Values(LongValueKey.EquippedSlots) == 8388608)
+				return false;
+
+			return true;
+		}
+
+		bool ItemIsEquippedByMe(WorldObject obj)
+		{
+			if (obj.Values(LongValueKey.EquippedSlots) <= 0)
+				return false;
+
+			// Weapons are in the -1 slot
+			if (obj.Values(LongValueKey.Slot, -1) == -1)
+				return (obj.Container == CoreManager.Current.CharacterFilter.Id);
+
+			return true;
+		}
+
+		/// <summary>
+		/// This will process an item for addition to our trackedItems list.
+		/// It will not allow an item to be added twice.
+		/// </summary>
+		/// <param name="obj"></param>
+		protected void AddItem(WorldObject obj)
+		{
+			foreach (ManaTrackedItem item in trackedItems)
+			{
+				if (item.Id == obj.Id)
+					return;
+			}
+
+			ManaTrackedItem trackedItem = new ManaTrackedItem(Host, obj.Id);
+
+			trackedItems.Add(trackedItem);
+
+			if (ItemAdded != null)
+				ItemAdded(trackedItem);
+		}
+
+		protected void RemoveItem(WorldObject obj)
+		{
+			ManaTrackedItem[] trackedItemsArray = trackedItems.ToArray();
+
+			foreach (ManaTrackedItem trackedItem in trackedItemsArray)
+			{
+				if (trackedItem.Id == obj.Id)
+				{
+					trackedItems.Remove(trackedItem);
+
+					if (ItemRemoved != null)
+						ItemRemoved(trackedItem);
+				}
+			}
+		}
+
+		void RemoveAllTrackedItems()
+		{
+			if (trackedItems.Count == 0)
+				return;
+
+			ManaTrackedItem[] trackedItemsArray = trackedItems.ToArray();
+
+			foreach (ManaTrackedItem trackedItem in trackedItemsArray)
+			{
+				trackedItems.Remove(trackedItem);
+
+				if (ItemRemoved != null)
+					ItemRemoved(trackedItem);
+			}
+		}
+
+		public int ManaNeededToRefillItems
+		{
+			get
+			{
+				int manaNeeded = 0;
+
+				foreach (ManaTrackedItem trackedItem in trackedItems)
+				{
+					manaNeeded += trackedItem.ManaNeededToRefill;
+				}
+
+				return manaNeeded;
+			}
+		}
+	}
+}

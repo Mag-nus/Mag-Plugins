@@ -36,11 +36,21 @@ namespace MagTools
 		internal static string PluginName = "Mag-Tools";
 
 		internal static Decal.Adapter.Wrappers.PluginHost host = null;
-		internal static Decal.Adapter.CoreManager core = null;
 
-		internal static  Views.MainView mainView;
+		// View
+		private Views.MainView mainView;
 
-		private ManaTracker.Tracker manaTracker;
+		// Core Tools
+		private DebugGUI debugGUI;
+
+		// Macros
+		private Macros.AutoGive autoGive;
+
+		// Trackers
+		private Trackers.ManaTracker manaTracker;
+		private Trackers.ManaTrackerGUI manaTrackerGUI;
+
+
 		private VirindiTools.ItemInfoOnIdent itemInfoOnIdent;
 
 		/// <summary>
@@ -51,19 +61,30 @@ namespace MagTools
 			try
 			{
 				host = Host;
-				core = Core;
 
+				// View
 				mainView = new Views.MainView();
+
+				// Core Tools
+				debugGUI = new DebugGUI(mainView);
+
+				// Macros
+				autoGive = new Macros.AutoGive();
+
+				// Trackers
+				manaTracker = new Trackers.ManaTracker(host);
+				manaTrackerGUI = new Trackers.ManaTrackerGUI(manaTracker, mainView);
+
+
+				itemInfoOnIdent = new VirindiTools.ItemInfoOnIdent();
+
 
 				System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
 				System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-				PluginCore.mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
-
-				manaTracker = new ManaTracker.Tracker();
-				itemInfoOnIdent = new VirindiTools.ItemInfoOnIdent();
+				mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
 				
 			}
-			catch (Exception ex) { Util.LogError(ex); }
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		/// <summary>
@@ -74,14 +95,23 @@ namespace MagTools
 			try
 			{
 				itemInfoOnIdent.Dispose();
+
+				// Macros
+				autoGive.Dispose();
+
+				// Trackers
+				manaTrackerGUI.Dispose();
 				manaTracker.Dispose();
 
+				// Core Tools
+				debugGUI.Dispose();
+
+				// View
 				mainView.Dispose();
 
 				host = null;
-				core = null;
 			}
-			catch (Exception ex) { Util.LogError(ex); }
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		[BaseEvent("LoginComplete", "CharacterFilter")]
@@ -89,10 +119,10 @@ namespace MagTools
 		{
 			try
 			{
-				Util.WriteToChat("Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation);
+				Host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
 
 			}
-			catch (Exception ex) { Util.LogError(ex); }
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 	}
 }
