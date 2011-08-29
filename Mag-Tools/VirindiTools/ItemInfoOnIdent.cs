@@ -60,21 +60,6 @@ namespace MagTools.VirindiTools
 				if (!Enabled)
 					return;
 
-				/*
-				sellitem = getasellitem();
-				buyitem = getabuyitem();
-				while (sellitem != null && buyitem != null)
-				{
-					vitemtoolbuysell(buyitem, sellitem);
-					if (noneininventory(sellitem)) sellitem = getasellitem();
-					if (noneininventory(buyitem)) buyitem = getabuyitem();
-				}
-				*/
-
-				//VTClassic.LootCore loot = new VTClassic.LootCore();
-				//loot.LoadProfile("profile", false);
-				//LootAction action = loot.GetLootDecision(item);
-
 				foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetByContainer(e.ItemGuid))
 					ProcessItem(wo);
 			}
@@ -114,14 +99,14 @@ namespace MagTools.VirindiTools
 				return;
 
 			/*
-			 * me: FLootPluginClassifyCallback and immediate, difference being anything other than hte obv?
-				Jess: immediate should only be called after queryneedsid and then IDing if needed
-				Jess: and with all those you need to wait 1 frame after the packet
+			 * me: FLootPluginClassifyCallback and immediate, difference being anything other than the obv?
+				V: immediate should only be called after queryneedsid and then IDing if needed
+				V: and with all those you need to wait 1 frame after the packet
 			 * 
-			 * (12:25:27 AM) Jess: you can create something like a vtankinterface class
-				(12:25:38 AM) Jess: and then only create an instance of it when vtank is present
+			 * (12:25:27 AM) V: you can create something like a vtankinterface class
+				(12:25:38 AM) V: and then only create an instance of it when vtank is present
 				(12:25:57 AM) me: ok, i'll do that when I'm ready to distribute, for now I'd like to work on getting my ideas working
-				(12:26:03 AM) Jess: so everytime you want to call something you check to see if that instance is null and if not you call the interface class which calls vtank
+				(12:26:03 AM) V: so everytime you want to call something you check to see if that instance is null and if not you call the interface class which calls vtank
 			 * 
 			 * */
 

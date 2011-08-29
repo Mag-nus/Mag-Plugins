@@ -8,11 +8,11 @@ namespace MagTools
 		/// <summary>
 		/// This option is defaultd on.
 		/// </summary>
-		public static bool DebugEnabled { private get; set; }
+		public static bool Enabled { private get; set; }
 
 		static Debug()
 		{
-			DebugEnabled = true;
+			Enabled = true;
 		}
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace MagTools
 		{
 			try
 			{
-				if (!DebugEnabled)
+				if (!Enabled)
 					return;
 
 				PluginCore.host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Exception caught: " + ex.Message + Environment.NewLine + ex.Source + Environment.NewLine + ex.StackTrace, 5);
@@ -32,14 +32,23 @@ namespace MagTools
 				{
 					writer.WriteLine("============================================================================");
 					writer.WriteLine(DateTime.Now.ToString());
+					writer.WriteLine(ex);
+					/*
+					writer.WriteLine(DateTime.Now.ToString());
 					writer.WriteLine("Error: " + ex.Message);
 					writer.WriteLine("Source: " + ex.Source);
 					writer.WriteLine("Stack: " + ex.StackTrace);
-					if (ex.InnerException != null)
+
+					Exception innerException = ex.InnerException;
+
+					while (innerException != null)
 					{
 						writer.WriteLine("Inner: " + ex.InnerException.Message);
 						writer.WriteLine("Inner Stack: " + ex.InnerException.StackTrace);
+
+						innerException = innerException.InnerException;
 					}
+					*/
 					writer.WriteLine("============================================================================");
 					writer.WriteLine("");
 					writer.Close();
@@ -59,7 +68,7 @@ namespace MagTools
 		{
 			try
 			{
-				if (!DebugEnabled)
+				if (!Enabled)
 					return;
 
 				PluginCore.host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + message, 5);

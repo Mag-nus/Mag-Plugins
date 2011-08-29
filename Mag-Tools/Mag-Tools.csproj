@@ -63,6 +63,7 @@
     <Compile Include="Macros\AutoBuySell.cs" />
     <Compile Include="Macros\AutoGive.cs" />
     <Compile Include="Macros\AutoPack.cs" />
+    <Compile Include="OpenMainPackOnLogin.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="OptionGroup.cs" />
     <Compile Include="Settings\XmlFile.cs" />

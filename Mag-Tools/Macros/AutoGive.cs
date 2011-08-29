@@ -6,6 +6,8 @@ namespace MagTools.Macros
 {
 	class AutoGive : IDisposable
 	{
+		public bool Enabled { private get; set; }
+
 		public AutoGive()
 		{
 			try
@@ -50,6 +52,8 @@ namespace MagTools.Macros
 			try
 			{
 				// Catch when mules log in
+				if (!Enabled)
+					return;
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -59,6 +63,8 @@ namespace MagTools.Macros
 			try
 			{
 				// Catch when you become in range of a mule
+				if (!Enabled)
+					return;
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}

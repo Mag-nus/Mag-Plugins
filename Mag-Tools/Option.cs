@@ -50,10 +50,20 @@ namespace MagTools
 		private static readonly Option filterNPKFails = new Option(OptionGroup.Filters, "NPKFails", "Filter NPK Fails");
 		public static Option FilterNPKFails { get { return filterNPKFails; } }
 
+		private static readonly Option filterVendorTells = new Option(OptionGroup.Filters, "VendorTells", "Filter Vendor Tells");
+		public static Option FilterVendorTells { get { return filterVendorTells; } }
+
 
 		private static readonly Option itemInfoOnIdent = new Option(OptionGroup.ItemInfoOnIdent, "Enabled", "Show Item Info On Ident");
 		public static Option ItemInfoOnIdent { get { return itemInfoOnIdent; } }
 
+
+		private static readonly Option autoBuySellEnabled = new Option(OptionGroup.AutoBuySell, "Enabled", "Auto Buy/Sell Enabled");
+		public static Option AutoBuySellEnabled { get { return autoBuySellEnabled; } }
+
+
+		private static readonly Option openMainPackOnLogin = new Option(OptionGroup.Misc, "OpenMainPackOnLogin", "Open Main Pack On Login");
+		public static Option OpenMainPackOnLogin { get { return openMainPackOnLogin; } }
 
 		private static readonly Option debuggingEnabled = new Option(OptionGroup.Misc, "DebuggingEnabled", "Debugging Enabled");
 		public static Option DebuggingEnabled { get { return debuggingEnabled; } }

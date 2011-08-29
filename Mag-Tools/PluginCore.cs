@@ -54,6 +54,7 @@ namespace MagTools
 
 		// General
 		private ChatFilter chatFilter;
+		private OpenMainPackOnLogin openMainPackOnLogin;
 
 		// Macros
 		private Macros.AutoBuySell autoBuySell;
@@ -90,6 +91,7 @@ namespace MagTools
 
 				// General
 				chatFilter = new ChatFilter();
+				openMainPackOnLogin = new OpenMainPackOnLogin();
 
 				// Macros
 				autoBuySell = new Macros.AutoBuySell();
@@ -136,6 +138,7 @@ namespace MagTools
 
 				// General
 				chatFilter.Dispose();
+				openMainPackOnLogin.Dispose();
 
 				// Settings
 				pluginConfigFile.Dispose();
@@ -170,9 +173,13 @@ namespace MagTools
 			mainView.AddOption(Option.FilterCompUsage);
 			mainView.AddOption(Option.FilterSpellExpires);
 			mainView.AddOption(Option.FilterNPKFails);
+			mainView.AddOption(Option.FilterVendorTells);
 
 			mainView.AddOption(Option.ItemInfoOnIdent);
 
+			mainView.AddOption(Option.AutoBuySellEnabled);
+
+			mainView.AddOption(Option.OpenMainPackOnLogin);
 			mainView.AddOption(Option.DebuggingEnabled);
 		}
 
@@ -194,26 +201,45 @@ namespace MagTools
 		{
 			mainView.SetOption(Option.FilterAttackEvades, pluginConfigFile.GetBoolean(Option.FilterAttackEvades.Xpath));
 			chatFilter.FilterAttackEvades = pluginConfigFile.GetBoolean(Option.FilterAttackEvades.Xpath);
+
 			mainView.SetOption(Option.FilterDefenseEvades, pluginConfigFile.GetBoolean(Option.FilterDefenseEvades.Xpath));
 			chatFilter.FilterDefenseEvades = pluginConfigFile.GetBoolean(Option.FilterDefenseEvades.Xpath);
+
 			mainView.SetOption(Option.FilterAttackResists, pluginConfigFile.GetBoolean(Option.FilterAttackResists.Xpath));
 			chatFilter.FilterAttackResists = pluginConfigFile.GetBoolean(Option.FilterAttackResists.Xpath);
+
 			mainView.SetOption(Option.FilterDefenseResists, pluginConfigFile.GetBoolean(Option.FilterDefenseResists.Xpath));
 			chatFilter.FilterDefenseResists = pluginConfigFile.GetBoolean(Option.FilterDefenseResists.Xpath);
+
 			mainView.SetOption(Option.FilterSpellCasting, pluginConfigFile.GetBoolean(Option.FilterSpellCasting.Xpath));
 			chatFilter.FilterSpellCasting = pluginConfigFile.GetBoolean(Option.FilterSpellCasting.Xpath);
+
 			mainView.SetOption(Option.FilterCompUsage, pluginConfigFile.GetBoolean(Option.FilterCompUsage.Xpath));
 			chatFilter.FilterCompUsage = pluginConfigFile.GetBoolean(Option.FilterCompUsage.Xpath);
+
 			mainView.SetOption(Option.FilterSpellExpires, pluginConfigFile.GetBoolean(Option.FilterSpellExpires.Xpath));
 			chatFilter.FilterSpellExpires = pluginConfigFile.GetBoolean(Option.FilterSpellExpires.Xpath);
+
 			mainView.SetOption(Option.FilterNPKFails, pluginConfigFile.GetBoolean(Option.FilterNPKFails.Xpath));
 			chatFilter.FilterNPKFails = pluginConfigFile.GetBoolean(Option.FilterNPKFails.Xpath);
+
+			mainView.SetOption(Option.FilterVendorTells, pluginConfigFile.GetBoolean(Option.FilterVendorTells.Xpath));
+			chatFilter.FilterVendorTells = pluginConfigFile.GetBoolean(Option.FilterVendorTells.Xpath);
+
 
 			mainView.SetOption(Option.ItemInfoOnIdent, pluginConfigFile.GetBoolean(Option.ItemInfoOnIdent.Xpath));
 			itemInfoOnIdent.Enabled = pluginConfigFile.GetBoolean(Option.ItemInfoOnIdent.Xpath);
 
+
+			mainView.SetOption(Option.AutoBuySellEnabled, pluginConfigFile.GetBoolean(Option.AutoBuySellEnabled.Xpath));
+			autoBuySell.Enabled = pluginConfigFile.GetBoolean(Option.AutoBuySellEnabled.Xpath);
+
+
+			mainView.SetOption(Option.OpenMainPackOnLogin, pluginConfigFile.GetBoolean(Option.OpenMainPackOnLogin.Xpath));
+			openMainPackOnLogin.Enabled = pluginConfigFile.GetBoolean(Option.OpenMainPackOnLogin.Xpath);
+
 			mainView.SetOption(Option.DebuggingEnabled, pluginConfigFile.GetBoolean(Option.DebuggingEnabled.Xpath));
-			Debug.DebugEnabled = pluginConfigFile.GetBoolean(Option.DebuggingEnabled.Xpath);
+			Debug.Enabled = pluginConfigFile.GetBoolean(Option.DebuggingEnabled.Xpath);
 		}
 	}
 }

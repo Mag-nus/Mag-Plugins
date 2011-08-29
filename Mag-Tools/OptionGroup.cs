@@ -21,6 +21,9 @@ namespace MagTools
 		private static readonly OptionGroup itemInfoOnIdent = new OptionGroup("ItemInfoOnIdent", "Item Info On Ident");
 		public static OptionGroup ItemInfoOnIdent { get { return itemInfoOnIdent; } }
 
+		private static readonly OptionGroup autoBuySell = new OptionGroup("AutoBuySell", "Auto Buy/Sell");
+		public static OptionGroup AutoBuySell { get { return autoBuySell; } }
+
 		private static readonly OptionGroup misc = new OptionGroup("Misc", "Misc");
 		public static OptionGroup Misc { get { return misc; } }
 	}

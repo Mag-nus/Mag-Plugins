@@ -1,6 +1,7 @@
 ﻿using System;
 
 using Decal.Adapter;
+using Decal.Adapter.Wrappers;
 
 namespace MagTools
 {
@@ -21,6 +22,8 @@ namespace MagTools
 		public bool FilterSpellExpires { private get; set; }
 
 		public bool FilterNPKFails { private get; set; }
+
+		public bool FilterVendorTells { private get; set; }
 
 		public ChatFilter()
 		{
@@ -63,31 +66,46 @@ namespace MagTools
 		{
 			try
 			{
+				if (e.Eat || string.IsNullOrEmpty(e.Text))
+					return;
+
 				if (e.Eat == false && FilterAttackEvades)
 				{
 					// Ruschk Sadist evaded your attack.
-					if (e.Text.EndsWith(" evaded your attack."))
+					if (e.Text.Contains(" evaded your attack.") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
 						e.Eat = true;
 				}
 
 				if (e.Eat == false && FilterDefenseEvades)
 				{
 					// You evaded Ruschk Sadist!
-					if (e.Text.StartsWith("You evaded "))
+					if (e.Text.StartsWith("You evaded ") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
 						e.Eat = true;
 				}
 
 				if (e.Eat == false && FilterAttackResists)
 				{
 					// Sentient Crystal Shard resists your spell
-					if (e.Text.EndsWith(" resists your spell."))
+					if (e.Text.EndsWith(" resists your spell.") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
 						e.Eat = true;
 				}
 
 				if (e.Eat == false && FilterDefenseResists)
 				{
 					// You resist the spell cast by Sentient Crystal Shard
-					if (e.Text.StartsWith("You resist the spell cast by "))
+					if (e.Text.StartsWith("You resist the spell cast by ") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
+						e.Eat = true;
+
+					// You have no appropriate targets equipped for Ruschk Warlord's spell.
+					if (e.Text.StartsWith("You have no appropriate target") && e.Text.Contains("spell") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
+						e.Eat = true;
+
+					// You are an invalid target for the spell of Ruschk Warlord.
+					if (e.Text.StartsWith("You are an invalid target for the spell") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
+						e.Eat = true;
+
+					// Ruschk Warlord tried to cast a spell on you, but was too far away!
+					if (e.Text.Contains("tried to cast a spell on you, but was too far away!") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
 						e.Eat = true;
 				}
 
@@ -97,7 +115,7 @@ namespace MagTools
 				if (e.Eat == false && FilterCompUsage)
 				{
 					// The spell consumed the following components:
-					if (e.Text.StartsWith("The spell consumed the following components"))
+					if (e.Text.StartsWith("The spell consumed the following components") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
 						e.Eat = true;
 				}
 
@@ -105,14 +123,30 @@ namespace MagTools
 				{
 					// The spell Defender VI on Brass Sceptre has expired.
 					// Focus Self VI has expired.
-					if (e.Text.EndsWith("has expired.") || e.Text.EndsWith("have expired."))
+					if (e.Text.Contains("has expired.") || e.Text.Contains("have expired.") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
 						e.Eat = true;
 				}
 
 				if (e.Eat == false && FilterNPKFails)
 				{
-					if (e.Text.StartsWith("You fail to affect ") && e.Text.Contains(" you are not a player killer!"))
+					if (e.Text.StartsWith("You fail to affect ") && e.Text.Contains(" you are not a player killer!") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
 						e.Eat = true;
+				}
+
+				if (e.Eat == false && FilterVendorTells)
+				{
+					if (e.Text.Contains(" tells you"))
+					{
+						string vendorName = e.Text.Substring(0, e.Text.IndexOf(" tells you"));
+
+						if (!string.IsNullOrEmpty(vendorName))
+						{
+							WorldObjectCollection collection = CoreManager.Current.WorldFilter.GetByName(vendorName);
+
+							if (collection.Count == 1 && collection.First.ObjectClass == ObjectClass.Vendor)
+								e.Eat = true;
+						}
+					}
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }

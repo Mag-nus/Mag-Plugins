@@ -33,10 +33,7 @@ namespace MagTools.Trackers
 			if (wo == null)
 				return;
 
-			if (wo.HasIdData)
-				timeOfLastManaIdent = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(wo.LastIdTime);
-			else
-				Host.Actions.RequestId(Id);
+			Host.Actions.RequestId(Id);
 
 			CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 			CoreManager.Current.ChatBoxMessage += new EventHandler<ChatTextInterceptEventArgs>(Current_ChatBoxMessage);
