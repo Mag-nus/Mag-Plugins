@@ -59,22 +59,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DebugGUI.cs" />
+    <Compile Include="ChatFilter.cs" />
+    <Compile Include="Macros\AutoBuySell.cs" />
     <Compile Include="Macros\AutoGive.cs" />
+    <Compile Include="Macros\AutoPack.cs" />
+    <Compile Include="Option.cs" />
+    <Compile Include="OptionGroup.cs" />
+    <Compile Include="Settings\XmlFile.cs" />
     <Compile Include="Trackers\ManaTrackedItem.cs" />
     <Compile Include="Trackers\ManaTrackedItemState.cs" />
     <Compile Include="Trackers\ManaTrackerGUI.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="Views\MainView.cs" />
     <Compile Include="Trackers\ManaTracker.cs" />
     <Compile Include="PluginCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="VirindiTools\ItemInfoOnIdent.cs" />
-    <Compile Include="VirindiViews\ViewSystemSelector.cs" />
-    <Compile Include="VirindiViews\Wrapper.cs" />
-    <Compile Include="VirindiViews\Wrapper_Decal.cs" />
-    <Compile Include="VirindiViews\Wrapper_MyHuds.cs" />
-    <Compile Include="VirindiViews\Wrapper_WireupHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\mainView.xml">

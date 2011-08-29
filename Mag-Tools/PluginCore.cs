@@ -1,8 +1,8 @@
 ﻿using System;
+using System.IO;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
-using MyClasses.MetaViewWrappers;
 
 
 /*
@@ -35,23 +35,40 @@ namespace MagTools
 	{
 		internal static string PluginName = "Mag-Tools";
 
+		private static DirectoryInfo pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\" + PluginCore.PluginName);
+		internal static DirectoryInfo PluginPersonalFolder
+		{
+			get
+			{
+				if (!pluginPersonalFolder.Exists)
+					pluginPersonalFolder.Create();
+				
+				return pluginPersonalFolder;
+			}
+		}
+
 		internal static Decal.Adapter.Wrappers.PluginHost host = null;
 
 		// View
 		private Views.MainView mainView;
 
-		// Core Tools
-		private DebugGUI debugGUI;
+		// General
+		private ChatFilter chatFilter;
 
 		// Macros
+		private Macros.AutoBuySell autoBuySell;
 		private Macros.AutoGive autoGive;
+		private Macros.AutoPack autoPack;
 
 		// Trackers
 		private Trackers.ManaTracker manaTracker;
 		private Trackers.ManaTrackerGUI manaTrackerGUI;
 
-
+		//
 		private VirindiTools.ItemInfoOnIdent itemInfoOnIdent;
+
+		// Settings
+		private Settings.XmlFile pluginConfigFile;
 
 		/// <summary>
 		/// This is called when the plugin is started up. This happens only once.
@@ -64,25 +81,36 @@ namespace MagTools
 
 				// View
 				mainView = new Views.MainView();
+				mainView.OptionEnabled += new Action<Option>(mainView_OptionEnabled);
+				mainView.OptionDisabled += new Action<Option>(mainView_OptionDisabled);
 
-				// Core Tools
-				debugGUI = new DebugGUI(mainView);
+				// Settings
+				FileInfo pluginConfigFileInfo = new FileInfo(PluginPersonalFolder.FullName + @"\" + PluginName + ".xml");
+				pluginConfigFile = new Settings.XmlFile(pluginConfigFileInfo.FullName, PluginName);
+
+				// General
+				chatFilter = new ChatFilter();
 
 				// Macros
+				autoBuySell = new Macros.AutoBuySell();
 				autoGive = new Macros.AutoGive();
+				autoPack = new Macros.AutoPack();
 
 				// Trackers
 				manaTracker = new Trackers.ManaTracker(host);
 				manaTrackerGUI = new Trackers.ManaTrackerGUI(manaTracker, mainView);
 
+				//
+				itemInfoOnIdent = new VirindiTools.ItemInfoOnIdent(host);
 
-				itemInfoOnIdent = new VirindiTools.ItemInfoOnIdent();
+				//
+				AddOptionsToGUI();
+				LoadOptionsFromConfig();
 
 
 				System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
 				System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
 				mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
-				
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -94,19 +122,27 @@ namespace MagTools
 		{
 			try
 			{
+				//
 				itemInfoOnIdent.Dispose();
-
-				// Macros
-				autoGive.Dispose();
 
 				// Trackers
 				manaTrackerGUI.Dispose();
 				manaTracker.Dispose();
 
-				// Core Tools
-				debugGUI.Dispose();
+				// Macros
+				autoGive.Dispose();
+				autoBuySell.Dispose();
+				autoPack.Dispose();
+
+				// General
+				chatFilter.Dispose();
+
+				// Settings
+				pluginConfigFile.Dispose();
 
 				// View
+				mainView.OptionEnabled -= new Action<Option>(mainView_OptionEnabled);
+				mainView.OptionDisabled -= new Action<Option>(mainView_OptionDisabled);
 				mainView.Dispose();
 
 				host = null;
@@ -120,9 +156,64 @@ namespace MagTools
 			try
 			{
 				Host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
-
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		private void AddOptionsToGUI()
+		{
+			mainView.AddOption(Option.FilterAttackEvades);
+			mainView.AddOption(Option.FilterDefenseEvades);
+			mainView.AddOption(Option.FilterAttackResists);
+			mainView.AddOption(Option.FilterDefenseResists);
+			mainView.AddOption(Option.FilterSpellCasting);
+			mainView.AddOption(Option.FilterCompUsage);
+			mainView.AddOption(Option.FilterSpellExpires);
+			mainView.AddOption(Option.FilterNPKFails);
+
+			mainView.AddOption(Option.ItemInfoOnIdent);
+
+			mainView.AddOption(Option.DebuggingEnabled);
+		}
+
+		void mainView_OptionEnabled(Option obj)
+		{
+			pluginConfigFile.SetBoolean(obj.Xpath, true);
+
+			LoadOptionsFromConfig();
+		}
+
+		void mainView_OptionDisabled(Option obj)
+		{
+			pluginConfigFile.SetBoolean(obj.Xpath, false);
+
+			LoadOptionsFromConfig();
+		}
+
+		private void LoadOptionsFromConfig()
+		{
+			mainView.SetOption(Option.FilterAttackEvades, pluginConfigFile.GetBoolean(Option.FilterAttackEvades.Xpath));
+			chatFilter.FilterAttackEvades = pluginConfigFile.GetBoolean(Option.FilterAttackEvades.Xpath);
+			mainView.SetOption(Option.FilterDefenseEvades, pluginConfigFile.GetBoolean(Option.FilterDefenseEvades.Xpath));
+			chatFilter.FilterDefenseEvades = pluginConfigFile.GetBoolean(Option.FilterDefenseEvades.Xpath);
+			mainView.SetOption(Option.FilterAttackResists, pluginConfigFile.GetBoolean(Option.FilterAttackResists.Xpath));
+			chatFilter.FilterAttackResists = pluginConfigFile.GetBoolean(Option.FilterAttackResists.Xpath);
+			mainView.SetOption(Option.FilterDefenseResists, pluginConfigFile.GetBoolean(Option.FilterDefenseResists.Xpath));
+			chatFilter.FilterDefenseResists = pluginConfigFile.GetBoolean(Option.FilterDefenseResists.Xpath);
+			mainView.SetOption(Option.FilterSpellCasting, pluginConfigFile.GetBoolean(Option.FilterSpellCasting.Xpath));
+			chatFilter.FilterSpellCasting = pluginConfigFile.GetBoolean(Option.FilterSpellCasting.Xpath);
+			mainView.SetOption(Option.FilterCompUsage, pluginConfigFile.GetBoolean(Option.FilterCompUsage.Xpath));
+			chatFilter.FilterCompUsage = pluginConfigFile.GetBoolean(Option.FilterCompUsage.Xpath);
+			mainView.SetOption(Option.FilterSpellExpires, pluginConfigFile.GetBoolean(Option.FilterSpellExpires.Xpath));
+			chatFilter.FilterSpellExpires = pluginConfigFile.GetBoolean(Option.FilterSpellExpires.Xpath);
+			mainView.SetOption(Option.FilterNPKFails, pluginConfigFile.GetBoolean(Option.FilterNPKFails.Xpath));
+			chatFilter.FilterNPKFails = pluginConfigFile.GetBoolean(Option.FilterNPKFails.Xpath);
+
+			mainView.SetOption(Option.ItemInfoOnIdent, pluginConfigFile.GetBoolean(Option.ItemInfoOnIdent.Xpath));
+			itemInfoOnIdent.Enabled = pluginConfigFile.GetBoolean(Option.ItemInfoOnIdent.Xpath);
+
+			mainView.SetOption(Option.DebuggingEnabled, pluginConfigFile.GetBoolean(Option.DebuggingEnabled.Xpath));
+			Debug.DebugEnabled = pluginConfigFile.GetBoolean(Option.DebuggingEnabled.Xpath);
 		}
 	}
 }

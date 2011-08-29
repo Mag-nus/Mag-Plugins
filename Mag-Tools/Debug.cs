@@ -5,10 +5,18 @@ namespace MagTools
 {
 	public static class Debug
 	{
-		public static bool DebugEnabled = false;
+		/// <summary>
+		/// This option is defaultd on.
+		/// </summary>
+		public static bool DebugEnabled { private get; set; }
+
+		static Debug()
+		{
+			DebugEnabled = true;
+		}
 
 		/// <summary>
-		/// This will only write the exception to the errors.txt file if Debugging is enabled.
+		/// This will only write the exception to the errors.txt file if DebugEnabled is true.
 		/// </summary>
 		/// <param name="ex"></param>
 		public static void LogException(Exception ex)
@@ -18,12 +26,9 @@ namespace MagTools
 				if (!DebugEnabled)
 					return;
 
-				DirectoryInfo dir = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\" + PluginCore.PluginName);
+				PluginCore.host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Exception caught: " + ex.Message + Environment.NewLine + ex.Source + Environment.NewLine + ex.StackTrace, 5);
 
-				if (!dir.Exists)
-					dir.Create();
-
-				using (StreamWriter writer = new StreamWriter(dir.FullName + @"\Exceptions.txt", true))
+				using (StreamWriter writer = new StreamWriter(PluginCore.PluginPersonalFolder.FullName + @"\Exceptions.txt", true))
 				{
 					writer.WriteLine("============================================================================");
 					writer.WriteLine(DateTime.Now.ToString());
@@ -42,11 +47,12 @@ namespace MagTools
 			}
 			catch
 			{
+				// Eat the exception, yumm.
 			}
 		}
 
 		/// <summary>
-		/// This will only write the message to the chat if Debugging is enabled.
+		/// This will only write the message to the chat if DebugEnabled is true.
 		/// </summary>
 		/// <param name="message"></param>
 		public static void WriteToChat(string message)

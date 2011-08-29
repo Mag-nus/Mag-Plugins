@@ -9,30 +9,57 @@ namespace MagTools.VirindiTools
 {
 	class ItemInfoOnIdent : IDisposable
 	{
-		public ItemInfoOnIdent()
+		private readonly PluginHost Host;
+
+		public bool Enabled { private get; set; }
+
+		public ItemInfoOnIdent(PluginHost host)
 		{
 			try
 			{
+				this.Host = host;
+
 				CoreManager.Current.ContainerOpened += new EventHandler<Decal.Adapter.ContainerOpenedEventArgs>(Core_ContainerOpened);
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		private bool _disposed = false;
+
 		public void Dispose()
 		{
-			try
+			Dispose(true);
+
+			// Use SupressFinalize in case a subclass
+			// of this type implements a finalizer.
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			// If you need thread safety, use a lock around these 
+			// operations, as well as in your methods that use the resource.
+			if (!_disposed)
 			{
-				CoreManager.Current.ContainerOpened -= new EventHandler<Decal.Adapter.ContainerOpenedEventArgs>(Core_ContainerOpened);
-				CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+				if (disposing)
+				{
+					CoreManager.Current.ContainerOpened -= new EventHandler<Decal.Adapter.ContainerOpenedEventArgs>(Core_ContainerOpened);
+					CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+				}
+
+				// Indicate that the instance has been disposed.
+				_disposed = true;
 			}
-			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		void Core_ContainerOpened(object sender, Decal.Adapter.ContainerOpenedEventArgs e)
 		{
 			try
 			{
+				if (!Enabled)
+					return;
+
 				/*
 				sellitem = getasellitem();
 				buyitem = getabuyitem();
@@ -58,10 +85,13 @@ namespace MagTools.VirindiTools
 		{
 			try
 			{
+				if (!Enabled)
+					return;
+
 				if (e.Change != WorldChangeType.IdentReceived)
 					return;
 
-				if (CoreManager.Current.Actions.CurrentSelection != e.Changed.Id)
+				if (Host.Actions.CurrentSelection != e.Changed.Id)
 					return;
 
 				ProcessItem(e.Changed);
@@ -130,7 +160,7 @@ namespace MagTools.VirindiTools
 				return;
 
 			// If a rule does not exist for this item and the user doesn't have it selected, ignore it
-			if (result.IsNoLoot && String.IsNullOrEmpty(result.RuleName) && itemId != CoreManager.Current.Actions.CurrentSelection)
+			if (result.IsNoLoot && String.IsNullOrEmpty(result.RuleName) && itemId != Host.Actions.CurrentSelection)
 				return;
 
 			//<Tell:IIDString:221112:-2024140046>(Epics)<\\Tell>

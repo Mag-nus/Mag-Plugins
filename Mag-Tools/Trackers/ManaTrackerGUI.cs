@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
-
-using MyClasses.MetaViewWrappers;
 
 namespace MagTools.Trackers
 {
@@ -31,14 +28,32 @@ namespace MagTools.Trackers
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		private bool _disposed = false;
+
 		public void Dispose()
 		{
-			try
+			Dispose(true);
+
+			// Use SupressFinalize in case a subclass
+			// of this type implements a finalizer.
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			// If you need thread safety, use a lock around these 
+			// operations, as well as in your methods that use the resource.
+			if (!_disposed)
 			{
-				manaTracker.ItemAdded -= new Action<ManaTrackedItem>(manaTracker_ItemAdded);
-				manaTracker.ItemRemoved -= new Action<ManaTrackedItem>(manaTracker_ItemRemoved);
+				if (disposing)
+				{
+					manaTracker.ItemAdded -= new Action<ManaTrackedItem>(manaTracker_ItemAdded);
+					manaTracker.ItemRemoved -= new Action<ManaTrackedItem>(manaTracker_ItemRemoved);
+				}
+
+				// Indicate that the instance has been disposed.
+				_disposed = true;
 			}
-			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		void manaTracker_ItemAdded(ManaTrackedItem obj)
@@ -50,10 +65,11 @@ namespace MagTools.Trackers
 				if (wo == null)
 					return;
 
-				IListRow newRow = mainView.ManaList.Add();
-				newRow[0][1] = wo.Icon + 0x6000000;
-				newRow[1][0] = wo.Name;
-				newRow[5][0] = obj.Id.ToString();
+				VirindiViewService.Controls.HudList.HudListRowAccessor newRow = mainView.ManaList.AddRow();
+
+				((VirindiViewService.Controls.HudPictureBox)newRow[0]).Image = wo.Icon + 0x6000000;
+				((VirindiViewService.Controls.HudStaticText)newRow[1]).Text = wo.Name;
+				((VirindiViewService.Controls.HudStaticText)newRow[5]).Text = obj.Id.ToString();
 
 				Item_Changed(obj);
 
@@ -70,7 +86,7 @@ namespace MagTools.Trackers
 
 				for (int row = 1 ; row <= mainView.ManaList.RowCount ; row++)
 				{
-					if (int.Parse(mainView.ManaList[row - 1][5][0].ToString()) == obj.Id)
+					if (int.Parse(((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row - 1][5]).Text) == obj.Id)
 					{
 						mainView.ManaList.RemoveRow(row - 1);
 
@@ -87,28 +103,28 @@ namespace MagTools.Trackers
 			{
 				for (int row = 1 ; row <= mainView.ManaList.RowCount ; row++)
 				{
-					if (int.Parse(mainView.ManaList[row - 1][5][0].ToString()) == obj.Id)
+					if (int.Parse(((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row - 1][5]).Text) == obj.Id)
 					{
 						if (obj.ItemState == ManaTrackedItemState.Active)
-							mainView.ManaList[row - 1][2][1] = IconActive;
+							((VirindiViewService.Controls.HudPictureBox)mainView.ManaList[row - 1][2]).Image = IconActive;
 						else if (obj.ItemState == ManaTrackedItemState.NotActive)
-							mainView.ManaList[row - 1][2][1] = IconNotActive;
+							((VirindiViewService.Controls.HudPictureBox)mainView.ManaList[row - 1][2]).Image = IconNotActive;
 						else if (obj.ItemState == ManaTrackedItemState.Unknown)
-							mainView.ManaList[row - 1][2][1] = IconUnknown;
+							((VirindiViewService.Controls.HudPictureBox)mainView.ManaList[row - 1][2]).Image = IconUnknown;
 						else
-							mainView.ManaList[row - 1][2][1] = IconNone;
+							((VirindiViewService.Controls.HudPictureBox)mainView.ManaList[row - 1][2]).Image = IconNone;
 
 						if (obj.ItemState != ManaTrackedItemState.Active && obj.ItemState != ManaTrackedItemState.NotActive)
 						{
-							mainView.ManaList[row - 1][3][0] = "-";
-							mainView.ManaList[row - 1][4][0] = "-";
-							mainView.ManaList[row - 1][6][0] = int.MaxValue.ToString();
+							((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row - 1][3]).Text = "-";
+							((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row - 1][4]).Text = "-";
+							((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row - 1][6]).Text = int.MaxValue.ToString();
 						}
 						else
 						{
-							mainView.ManaList[row - 1][3][0] = obj.CalculatedCurrentMana + " / " + obj.MaximumMana;
-							mainView.ManaList[row - 1][4][0] = string.Format("{0:d}h{1:d2}m", (int)obj.ManaTimeRemaining.TotalHours, (int)obj.ManaTimeRemaining.Minutes);
-							mainView.ManaList[row - 1][6][0] = obj.ManaTimeRemaining.TotalSeconds.ToString();
+							((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row - 1][3]).Text = obj.CalculatedCurrentMana + " / " + obj.MaximumMana;
+							((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row - 1][4]).Text = string.Format("{0:d}h{1:d2}m", (int)obj.ManaTimeRemaining.TotalHours, (int)obj.ManaTimeRemaining.Minutes);
+							((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row - 1][6]).Text = obj.ManaTimeRemaining.TotalSeconds.ToString();
 						}
 
 						SortList();
@@ -129,37 +145,36 @@ namespace MagTools.Trackers
 			{
 				for (int compareRow = row + 1 ; compareRow < mainView.ManaList.RowCount ; compareRow++)
 				{
-					if (double.Parse(mainView.ManaList[row][6][0].ToString()) > double.Parse(mainView.ManaList[compareRow][6][0].ToString()))
+					if (double.Parse(((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row][6]).Text) > double.Parse(((VirindiViewService.Controls.HudStaticText)mainView.ManaList[compareRow][6]).Text))
 					{
-						object obj;
+						
+						VirindiViewService.ACImage obj0 = ((VirindiViewService.Controls.HudPictureBox)mainView.ManaList[row][0]).Image;
+						((VirindiViewService.Controls.HudPictureBox)mainView.ManaList[row][0]).Image = ((VirindiViewService.Controls.HudPictureBox)mainView.ManaList[compareRow][0]).Image;
+						((VirindiViewService.Controls.HudPictureBox)mainView.ManaList[compareRow][0]).Image = obj0;
 
-						obj = mainView.ManaList[row][0][1];
-						mainView.ManaList[row][0][1] = mainView.ManaList[compareRow][0][1];
-						mainView.ManaList[compareRow][0][1] = obj;
+						string obj1 = ((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row][1]).Text;
+						((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row][1]).Text = ((VirindiViewService.Controls.HudStaticText)mainView.ManaList[compareRow][1]).Text;
+						((VirindiViewService.Controls.HudStaticText)mainView.ManaList[compareRow][1]).Text = obj1;
 
-						obj = mainView.ManaList[row][1][0];
-						mainView.ManaList[row][1][0] = mainView.ManaList[compareRow][1][0];
-						mainView.ManaList[compareRow][1][0] = obj;
+						VirindiViewService.ACImage obj2 = ((VirindiViewService.Controls.HudPictureBox)mainView.ManaList[row][2]).Image;
+						((VirindiViewService.Controls.HudPictureBox)mainView.ManaList[row][2]).Image = ((VirindiViewService.Controls.HudPictureBox)mainView.ManaList[compareRow][2]).Image;
+						((VirindiViewService.Controls.HudPictureBox)mainView.ManaList[compareRow][2]).Image = obj2;
 
-						obj = mainView.ManaList[row][2][1];
-						mainView.ManaList[row][2][1] = mainView.ManaList[compareRow][2][1];
-						mainView.ManaList[compareRow][2][1] = obj;
+						string obj3 = ((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row][3]).Text;
+						((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row][3]).Text = ((VirindiViewService.Controls.HudStaticText)mainView.ManaList[compareRow][3]).Text;
+						((VirindiViewService.Controls.HudStaticText)mainView.ManaList[compareRow][3]).Text = obj3;
 
-						obj = mainView.ManaList[row][3][0];
-						mainView.ManaList[row][3][0] = mainView.ManaList[compareRow][3][0];
-						mainView.ManaList[compareRow][3][0] = obj;
+						string obj4 = ((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row][4]).Text;
+						((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row][4]).Text = ((VirindiViewService.Controls.HudStaticText)mainView.ManaList[compareRow][4]).Text;
+						((VirindiViewService.Controls.HudStaticText)mainView.ManaList[compareRow][4]).Text = obj4;
 
-						obj = mainView.ManaList[row][4][0];
-						mainView.ManaList[row][4][0] = mainView.ManaList[compareRow][4][0];
-						mainView.ManaList[compareRow][4][0] = obj;
+						string obj5 = ((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row][5]).Text;
+						((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row][5]).Text = ((VirindiViewService.Controls.HudStaticText)mainView.ManaList[compareRow][5]).Text;
+						((VirindiViewService.Controls.HudStaticText)mainView.ManaList[compareRow][5]).Text = obj5;
 
-						obj = mainView.ManaList[row][5][0];
-						mainView.ManaList[row][5][0] = mainView.ManaList[compareRow][5][0];
-						mainView.ManaList[compareRow][5][0] = obj;
-
-						obj = mainView.ManaList[row][6][0];
-						mainView.ManaList[row][6][0] = mainView.ManaList[compareRow][6][0];
-						mainView.ManaList[compareRow][6][0] = obj;
+						string obj6 = ((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row][6]).Text;
+						((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row][6]).Text = ((VirindiViewService.Controls.HudStaticText)mainView.ManaList[compareRow][6]).Text;
+						((VirindiViewService.Controls.HudStaticText)mainView.ManaList[compareRow][6]).Text = obj6;
 					}
 				}
 			}

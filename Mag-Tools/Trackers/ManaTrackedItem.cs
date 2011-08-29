@@ -44,12 +44,35 @@ namespace MagTools.Trackers
 			burnTimer.Tick += new EventHandler(burnTimer_Tick);
 		}
 
+		private bool _disposed = false;
+
 		public void Dispose()
 		{
-			CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
-			CoreManager.Current.ChatBoxMessage -= new EventHandler<ChatTextInterceptEventArgs>(Current_ChatBoxMessage);
+			Dispose(true);
 
-			burnTimer.Tick -= new EventHandler(burnTimer_Tick);
+			// Use SupressFinalize in case a subclass
+			// of this type implements a finalizer.
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			// If you need thread safety, use a lock around these 
+			// operations, as well as in your methods that use the resource.
+			if (!_disposed)
+			{
+				if (disposing)
+				{
+					CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+					CoreManager.Current.ChatBoxMessage -= new EventHandler<ChatTextInterceptEventArgs>(Current_ChatBoxMessage);
+
+					burnTimer.Tick -= new EventHandler(burnTimer_Tick);
+					burnTimer.Dispose();
+				}
+
+				// Indicate that the instance has been disposed.
+				_disposed = true;
+			}
 		}
 
 		void burnTimer_Tick(object sender, EventArgs e)

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
-using Decal.Filters;
-using MyClasses.MetaViewWrappers;
 
 namespace MagTools.Trackers
 {
@@ -16,7 +14,7 @@ namespace MagTools.Trackers
 		public event Action<ManaTrackedItem> ItemAdded;
 
 		/// <summary>
-		/// This is raised when we have stopped tracking an item.
+		/// This is raised when we have stopped tracking an item. After this is raised the ManaTrackedItem is disposed.
 		/// </summary>
 		public event Action<ManaTrackedItem> ItemRemoved;
 
@@ -38,16 +36,36 @@ namespace MagTools.Trackers
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		private bool _disposed = false;
+
 		public void Dispose()
 		{
-			try
+			Dispose(true);
+
+			// Use SupressFinalize in case a subclass
+			// of this type implements a finalizer.
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			// If you need thread safety, use a lock around these 
+			// operations, as well as in your methods that use the resource.
+			if (!_disposed)
 			{
-				CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
-				CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
-				CoreManager.Current.WorldFilter.ReleaseObject -= new EventHandler<ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
-				CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
+				if (disposing)
+				{
+					CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
+					CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+					CoreManager.Current.WorldFilter.ReleaseObject -= new EventHandler<ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
+					CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
+
+					RemoveAllTrackedItems();
+				}
+
+				// Indicate that the instance has been disposed.
+				_disposed = true;
 			}
-			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		void CharacterFilter_LoginComplete(object sender, EventArgs e)
@@ -181,33 +199,34 @@ namespace MagTools.Trackers
 
 		protected void RemoveItem(WorldObject obj)
 		{
-			ManaTrackedItem[] trackedItemsArray = trackedItems.ToArray();
-
-			foreach (ManaTrackedItem trackedItem in trackedItemsArray)
+			for (int i = trackedItems.Count - 1 ; i >= 0 ; i--)
 			{
-				if (trackedItem.Id == obj.Id)
+				if (trackedItems[i].Id == obj.Id)
 				{
-					trackedItems.Remove(trackedItem);
+					ManaTrackedItem trackedItem = trackedItems[i];
+
+					trackedItems.RemoveAt(i);
 
 					if (ItemRemoved != null)
 						ItemRemoved(trackedItem);
+
+					trackedItem.Dispose();
 				}
 			}
 		}
 
 		void RemoveAllTrackedItems()
 		{
-			if (trackedItems.Count == 0)
-				return;
-
-			ManaTrackedItem[] trackedItemsArray = trackedItems.ToArray();
-
-			foreach (ManaTrackedItem trackedItem in trackedItemsArray)
+			for (int i = trackedItems.Count - 1 ; i >= 0 ; i--)
 			{
-				trackedItems.Remove(trackedItem);
+				ManaTrackedItem trackedItem = trackedItems[i];
+
+				trackedItems.RemoveAt(i);
 
 				if (ItemRemoved != null)
 					ItemRemoved(trackedItem);
+
+				trackedItem.Dispose();
 			}
 		}
 
@@ -223,6 +242,22 @@ namespace MagTools.Trackers
 				}
 
 				return manaNeeded;
+			}
+		}
+
+		public int NumberOfInactiveItems
+		{
+			get
+			{
+				int inactiveItems = 0;
+
+				foreach (ManaTrackedItem trackedItem in trackedItems)
+				{
+					if (trackedItem.ItemState == ManaTrackedItemState.NotActive)
+						inactiveItems++;
+				}
+
+				return inactiveItems;
 			}
 		}
 	}
