@@ -249,6 +249,10 @@ namespace MagTools.Macros
 
 			foreach (WorldObject playerObj in CoreManager.Current.WorldFilter.GetInventory())
 			{
+				// Safety check to prevent equipped items from being sold.
+				if (playerObj.Values(LongValueKey.EquipableSlots, 0) > 0)
+					continue;
+
 				// Convert the vendor item into a VT GameItemInfo object
 				uTank2.LootPlugins.GameItemInfo itemInfo = uTank2.PluginCore.PC.FWorldTracker_GetWithID(playerObj.Id);
 
