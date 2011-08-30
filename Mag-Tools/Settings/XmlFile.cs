@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Xml;
 using System.IO;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace MagTools.Settings
 {
@@ -216,6 +218,25 @@ namespace MagTools.Settings
 			XmlNode node = CreateNode(xpath);
 
 			node.InnerText = Convert.ToString(value);
+		}
+
+		public IEnumerable<string> GetCollection(string xpath)
+		{
+			xpath = xpath.Replace(" ", "");
+
+			XmlNode node = GetNode(xpath);
+
+			Collection<string> collection = new Collection<string>();
+
+			if (node == null)
+				return collection;
+
+			foreach (XmlNode childNode in node.ChildNodes)
+			{
+				collection.Add(childNode.InnerText);
+			}
+
+			return collection;
 		}
 	}
 }

@@ -39,23 +39,23 @@
       <HintPath>C:\Games\Decal 3.0\Decal.Adapter.dll</HintPath>
     </Reference>
     <Reference Include="Decal.FileService">
-      <HintPath>..\..\..\..\Games\Decal 3.0\Decal.FileService.dll</HintPath>
+      <HintPath>C:\Games\Decal 3.0\Decal.FileService.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="utank2-i">
-      <HintPath>..\..\..\..\Games\VirindiPlugins\VirindiTank\utank2-i.dll</HintPath>
+      <HintPath>C:\Games\VirindiPlugins\VirindiTank\utank2-i.dll</HintPath>
     </Reference>
     <Reference Include="VirindiItemTool">
-      <HintPath>..\..\..\..\Games\VirindiPlugins\VirindiItemTool\VirindiItemTool.dll</HintPath>
+      <HintPath>C:\Games\VirindiPlugins\VirindiItemTool\VirindiItemTool.dll</HintPath>
     </Reference>
     <Reference Include="VirindiViewService">
       <HintPath>C:\Games\VirindiPlugins\VirindiViewService\VirindiViewService.dll</HintPath>
     </Reference>
     <Reference Include="VTClassic">
-      <HintPath>..\..\..\..\Games\VirindiPlugins\VirindiTankClassicLooter\VTClassic.dll</HintPath>
+      <HintPath>C:\Games\VirindiPlugins\VirindiTankClassicLooter\VTClassic.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +63,7 @@
     <Compile Include="Macros\AutoBuySell.cs" />
     <Compile Include="Macros\AutoGive.cs" />
     <Compile Include="Macros\AutoPack.cs" />
+    <Compile Include="Macros\AutoTradeAccept.cs" />
     <Compile Include="OpenMainPackOnLogin.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="OptionGroup.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="VirindiTools\ItemInfoOnIdent.cs" />
+    <Compile Include="VirindiTools\Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\mainView.xml">

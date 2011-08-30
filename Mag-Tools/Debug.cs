@@ -31,8 +31,10 @@ namespace MagTools
 				using (StreamWriter writer = new StreamWriter(PluginCore.PluginPersonalFolder.FullName + @"\Exceptions.txt", true))
 				{
 					writer.WriteLine("============================================================================");
+
 					writer.WriteLine(DateTime.Now.ToString());
 					writer.WriteLine(ex);
+
 					/*
 					writer.WriteLine(DateTime.Now.ToString());
 					writer.WriteLine("Error: " + ex.Message);
@@ -49,6 +51,7 @@ namespace MagTools
 						innerException = innerException.InnerException;
 					}
 					*/
+
 					writer.WriteLine("============================================================================");
 					writer.WriteLine("");
 					writer.Close();

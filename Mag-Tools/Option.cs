@@ -62,6 +62,10 @@ namespace MagTools
 		public static Option AutoBuySellEnabled { get { return autoBuySellEnabled; } }
 
 
+		private static readonly Option autoTradeAcceptEnabled = new Option(OptionGroup.AutoTradeAccept, "Enabled", "Auto Trade Accept Enabled");
+		public static Option AutoTradeAcceptEnabled { get { return autoTradeAcceptEnabled; } }
+
+
 		private static readonly Option openMainPackOnLogin = new Option(OptionGroup.Misc, "OpenMainPackOnLogin", "Open Main Pack On Login");
 		public static Option OpenMainPackOnLogin { get { return openMainPackOnLogin; } }
 

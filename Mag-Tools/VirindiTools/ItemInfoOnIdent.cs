@@ -13,6 +13,7 @@ namespace MagTools.VirindiTools
 
 		public bool Enabled { private get; set; }
 
+
 		public ItemInfoOnIdent(PluginHost host)
 		{
 			try
@@ -86,6 +87,7 @@ namespace MagTools.VirindiTools
 
 		private void ProcessItem(WorldObject wo)
 		{
+			// System.IO.FileNotFoundException
 			if (wo.ObjectClass == ObjectClass.Corpse ||
 				wo.ObjectClass == ObjectClass.Door ||
 				wo.ObjectClass == ObjectClass.Foci ||
@@ -98,6 +100,21 @@ namespace MagTools.VirindiTools
 				wo.ObjectClass == ObjectClass.Vendor)
 				return;
 
+			try
+			{
+				ProcessItemWithVTank(wo);
+			}
+			catch (System.IO.FileNotFoundException)
+			{
+				// If this exception was raised, the uTank2 dll probably didn't load right.
+				// We'll display the ident info without the additional vtank loot rule header.
+
+				PluginCore.host.Actions.AddChatText(GetIdentStringForItem(wo), 14, 1);
+			}
+		}
+
+		private void ProcessItemWithVTank(WorldObject wo)
+		{
 			/*
 			 * me: FLootPluginClassifyCallback and immediate, difference being anything other than the obv?
 				V: immediate should only be called after queryneedsid and then IDing if needed
@@ -161,7 +178,18 @@ namespace MagTools.VirindiTools
 
 			sb.Append(@"<\\Tell>");
 
-			sb.Append(" " + wo.Name);
+			sb.Append(" ");
+
+			sb.Append(GetIdentStringForItem(wo));
+
+			PluginCore.host.Actions.AddChatText(sb.ToString(), 14, 1);
+		}
+
+		private string GetIdentStringForItem(WorldObject wo)
+		{
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+			sb.Append(wo.Name);
 
 			int set = wo.Values((Decal.Adapter.Wrappers.LongValueKey)265, 0);
 			if (set != 0)
@@ -229,7 +257,7 @@ namespace MagTools.VirindiTools
 
 			if (wo.Values(DoubleValueKey.AttackBonus, 1) != 1)
 				sb.Append(", +" + Math.Round(((wo.Values(DoubleValueKey.AttackBonus) - 1) * 100)) + "%a");
-			
+
 			if (wo.Values(DoubleValueKey.MeleeDefenseBonus, 1) != 1)
 				sb.Append(", " + Math.Round(((wo.Values(DoubleValueKey.MeleeDefenseBonus) - 1) * 100)) + "%md");
 
@@ -286,7 +314,7 @@ namespace MagTools.VirindiTools
 					wo.Values(DoubleValueKey.LightningProt).ToString("N1") + "]");
 			}
 
-			PluginCore.host.Actions.AddChatText(sb.ToString(), 14, 1);
+			return sb.ToString();
 		}
 	}
 }

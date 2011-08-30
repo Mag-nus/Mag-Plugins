@@ -44,7 +44,6 @@ namespace MagTools.Macros
 				// Indicate that the instance has been disposed.
 				_disposed = true;
 			}
-
 		}
 
 		void WorldFilter_CreateObject(object sender, Decal.Adapter.Wrappers.CreateObjectEventArgs e)

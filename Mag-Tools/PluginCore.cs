@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
@@ -60,6 +62,7 @@ namespace MagTools
 		private Macros.AutoBuySell autoBuySell;
 		private Macros.AutoGive autoGive;
 		private Macros.AutoPack autoPack;
+		private Macros.AutoTradeAccept autoTradeAccept;
 
 		// Trackers
 		private Trackers.ManaTracker manaTracker;
@@ -70,6 +73,8 @@ namespace MagTools
 
 		// Settings
 		private Settings.XmlFile pluginConfigFile;
+
+		Collection<string> startupErrors = new Collection<string>();
 
 		/// <summary>
 		/// This is called when the plugin is started up. This happens only once.
@@ -94,25 +99,46 @@ namespace MagTools
 				openMainPackOnLogin = new OpenMainPackOnLogin();
 
 				// Macros
-				autoBuySell = new Macros.AutoBuySell();
 				autoGive = new Macros.AutoGive();
-				autoPack = new Macros.AutoPack();
+				autoTradeAccept = new Macros.AutoTradeAccept();
 
 				// Trackers
 				manaTracker = new Trackers.ManaTracker(host);
 				manaTrackerGUI = new Trackers.ManaTrackerGUI(manaTracker, mainView);
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
 
-				//
+			// We init objects that have dependancies here. These might crash out.
+			try
+			{
 				itemInfoOnIdent = new VirindiTools.ItemInfoOnIdent(host);
+			}
+			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("itemInfoOnIdent failed to load: " + ex.Message); }
+			catch (Exception ex) { Debug.LogException(ex); }
 
-				//
+			try
+			{
+				autoPack = new Macros.AutoPack();
+			}
+			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("autoPack failed to load: " + ex.Message); }
+			catch (Exception ex) { Debug.LogException(ex); }
+
+			try
+			{
+				autoBuySell = new Macros.AutoBuySell();
+			}
+			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("autoBuySell failed to load: " + ex.Message); }
+			catch (Exception ex) { Debug.LogException(ex); }
+
+			try
+			{
 				AddOptionsToGUI();
 				LoadOptionsFromConfig();
 
 
 				System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
 				System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-				mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
+				if (mainView != null) mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -125,28 +151,32 @@ namespace MagTools
 			try
 			{
 				//
-				itemInfoOnIdent.Dispose();
+				if (itemInfoOnIdent != null) itemInfoOnIdent.Dispose();
 
 				// Trackers
-				manaTrackerGUI.Dispose();
-				manaTracker.Dispose();
+				if (manaTrackerGUI != null) manaTrackerGUI.Dispose();
+				if (manaTracker != null) manaTracker.Dispose();
 
 				// Macros
-				autoGive.Dispose();
-				autoBuySell.Dispose();
-				autoPack.Dispose();
+				if (autoGive != null) autoGive.Dispose();
+				if (autoBuySell != null) autoBuySell.Dispose();
+				if (autoPack != null) autoPack.Dispose();
+				if (autoTradeAccept != null) autoTradeAccept.Dispose();
 
 				// General
-				chatFilter.Dispose();
-				openMainPackOnLogin.Dispose();
+				if (chatFilter != null) chatFilter.Dispose();
+				if (openMainPackOnLogin != null) openMainPackOnLogin.Dispose();
 
 				// Settings
-				pluginConfigFile.Dispose();
+				if (pluginConfigFile != null) pluginConfigFile.Dispose();
 
 				// View
-				mainView.OptionEnabled -= new Action<Option>(mainView_OptionEnabled);
-				mainView.OptionDisabled -= new Action<Option>(mainView_OptionDisabled);
-				mainView.Dispose();
+				if (mainView != null)
+				{
+					mainView.OptionEnabled -= new Action<Option>(mainView_OptionEnabled);
+					mainView.OptionDisabled -= new Action<Option>(mainView_OptionDisabled);
+					mainView.Dispose();
+				}
 
 				host = null;
 			}
@@ -159,12 +189,22 @@ namespace MagTools
 			try
 			{
 				Host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
+
+				foreach (string startupError in startupErrors)
+				{
+					Host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: Startup Error: " + startupError, 5);
+				}
+
+				startupErrors.Clear();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		private void AddOptionsToGUI()
 		{
+			if (mainView == null)
+				return;
+
 			mainView.AddOption(Option.FilterAttackEvades);
 			mainView.AddOption(Option.FilterDefenseEvades);
 			mainView.AddOption(Option.FilterAttackResists);
@@ -179,12 +219,17 @@ namespace MagTools
 
 			mainView.AddOption(Option.AutoBuySellEnabled);
 
+			mainView.AddOption(Option.AutoTradeAcceptEnabled);
+
 			mainView.AddOption(Option.OpenMainPackOnLogin);
 			mainView.AddOption(Option.DebuggingEnabled);
 		}
 
 		void mainView_OptionEnabled(Option obj)
 		{
+			if (pluginConfigFile == null)
+				return;
+
 			pluginConfigFile.SetBoolean(obj.Xpath, true);
 
 			LoadOptionsFromConfig();
@@ -192,6 +237,9 @@ namespace MagTools
 
 		void mainView_OptionDisabled(Option obj)
 		{
+			if (pluginConfigFile == null)
+				return;
+
 			pluginConfigFile.SetBoolean(obj.Xpath, false);
 
 			LoadOptionsFromConfig();
@@ -199,47 +247,75 @@ namespace MagTools
 
 		private void LoadOptionsFromConfig()
 		{
-			mainView.SetOption(Option.FilterAttackEvades, pluginConfigFile.GetBoolean(Option.FilterAttackEvades.Xpath));
-			chatFilter.FilterAttackEvades = pluginConfigFile.GetBoolean(Option.FilterAttackEvades.Xpath);
+			if (pluginConfigFile == null)
+				return;
 
-			mainView.SetOption(Option.FilterDefenseEvades, pluginConfigFile.GetBoolean(Option.FilterDefenseEvades.Xpath));
-			chatFilter.FilterDefenseEvades = pluginConfigFile.GetBoolean(Option.FilterDefenseEvades.Xpath);
+			if (mainView != null && chatFilter != null)
+			{
+				mainView.SetOption(Option.FilterAttackEvades, pluginConfigFile.GetBoolean(Option.FilterAttackEvades.Xpath));
+				chatFilter.FilterAttackEvades = pluginConfigFile.GetBoolean(Option.FilterAttackEvades.Xpath);
 
-			mainView.SetOption(Option.FilterAttackResists, pluginConfigFile.GetBoolean(Option.FilterAttackResists.Xpath));
-			chatFilter.FilterAttackResists = pluginConfigFile.GetBoolean(Option.FilterAttackResists.Xpath);
+				mainView.SetOption(Option.FilterDefenseEvades, pluginConfigFile.GetBoolean(Option.FilterDefenseEvades.Xpath));
+				chatFilter.FilterDefenseEvades = pluginConfigFile.GetBoolean(Option.FilterDefenseEvades.Xpath);
 
-			mainView.SetOption(Option.FilterDefenseResists, pluginConfigFile.GetBoolean(Option.FilterDefenseResists.Xpath));
-			chatFilter.FilterDefenseResists = pluginConfigFile.GetBoolean(Option.FilterDefenseResists.Xpath);
+				mainView.SetOption(Option.FilterAttackResists, pluginConfigFile.GetBoolean(Option.FilterAttackResists.Xpath));
+				chatFilter.FilterAttackResists = pluginConfigFile.GetBoolean(Option.FilterAttackResists.Xpath);
 
-			mainView.SetOption(Option.FilterSpellCasting, pluginConfigFile.GetBoolean(Option.FilterSpellCasting.Xpath));
-			chatFilter.FilterSpellCasting = pluginConfigFile.GetBoolean(Option.FilterSpellCasting.Xpath);
+				mainView.SetOption(Option.FilterDefenseResists, pluginConfigFile.GetBoolean(Option.FilterDefenseResists.Xpath));
+				chatFilter.FilterDefenseResists = pluginConfigFile.GetBoolean(Option.FilterDefenseResists.Xpath);
 
-			mainView.SetOption(Option.FilterCompUsage, pluginConfigFile.GetBoolean(Option.FilterCompUsage.Xpath));
-			chatFilter.FilterCompUsage = pluginConfigFile.GetBoolean(Option.FilterCompUsage.Xpath);
+				mainView.SetOption(Option.FilterSpellCasting, pluginConfigFile.GetBoolean(Option.FilterSpellCasting.Xpath));
+				chatFilter.FilterSpellCasting = pluginConfigFile.GetBoolean(Option.FilterSpellCasting.Xpath);
 
-			mainView.SetOption(Option.FilterSpellExpires, pluginConfigFile.GetBoolean(Option.FilterSpellExpires.Xpath));
-			chatFilter.FilterSpellExpires = pluginConfigFile.GetBoolean(Option.FilterSpellExpires.Xpath);
+				mainView.SetOption(Option.FilterCompUsage, pluginConfigFile.GetBoolean(Option.FilterCompUsage.Xpath));
+				chatFilter.FilterCompUsage = pluginConfigFile.GetBoolean(Option.FilterCompUsage.Xpath);
 
-			mainView.SetOption(Option.FilterNPKFails, pluginConfigFile.GetBoolean(Option.FilterNPKFails.Xpath));
-			chatFilter.FilterNPKFails = pluginConfigFile.GetBoolean(Option.FilterNPKFails.Xpath);
+				mainView.SetOption(Option.FilterSpellExpires, pluginConfigFile.GetBoolean(Option.FilterSpellExpires.Xpath));
+				chatFilter.FilterSpellExpires = pluginConfigFile.GetBoolean(Option.FilterSpellExpires.Xpath);
 
-			mainView.SetOption(Option.FilterVendorTells, pluginConfigFile.GetBoolean(Option.FilterVendorTells.Xpath));
-			chatFilter.FilterVendorTells = pluginConfigFile.GetBoolean(Option.FilterVendorTells.Xpath);
+				mainView.SetOption(Option.FilterNPKFails, pluginConfigFile.GetBoolean(Option.FilterNPKFails.Xpath));
+				chatFilter.FilterNPKFails = pluginConfigFile.GetBoolean(Option.FilterNPKFails.Xpath);
 
+				mainView.SetOption(Option.FilterVendorTells, pluginConfigFile.GetBoolean(Option.FilterVendorTells.Xpath));
+				chatFilter.FilterVendorTells = pluginConfigFile.GetBoolean(Option.FilterVendorTells.Xpath);
+			}
 
-			mainView.SetOption(Option.ItemInfoOnIdent, pluginConfigFile.GetBoolean(Option.ItemInfoOnIdent.Xpath));
-			itemInfoOnIdent.Enabled = pluginConfigFile.GetBoolean(Option.ItemInfoOnIdent.Xpath);
+			if (mainView != null && itemInfoOnIdent != null)
+			{
+				mainView.SetOption(Option.ItemInfoOnIdent, pluginConfigFile.GetBoolean(Option.ItemInfoOnIdent.Xpath));
+				itemInfoOnIdent.Enabled = pluginConfigFile.GetBoolean(Option.ItemInfoOnIdent.Xpath);
+			}
 
+			if (mainView != null && autoBuySell != null)
+			{
+				mainView.SetOption(Option.AutoBuySellEnabled, pluginConfigFile.GetBoolean(Option.AutoBuySellEnabled.Xpath));
+				autoBuySell.Enabled = pluginConfigFile.GetBoolean(Option.AutoBuySellEnabled.Xpath);
+			}
 
-			mainView.SetOption(Option.AutoBuySellEnabled, pluginConfigFile.GetBoolean(Option.AutoBuySellEnabled.Xpath));
-			autoBuySell.Enabled = pluginConfigFile.GetBoolean(Option.AutoBuySellEnabled.Xpath);
+			if (mainView != null && autoTradeAccept != null)
+			{
+				mainView.SetOption(Option.AutoTradeAcceptEnabled, pluginConfigFile.GetBoolean(Option.AutoTradeAcceptEnabled.Xpath));
+				autoTradeAccept.Enabled = pluginConfigFile.GetBoolean(Option.AutoTradeAcceptEnabled.Xpath);
 
+				IEnumerable<string> whitelist = pluginConfigFile.GetCollection(OptionGroup.AutoTradeAccept.Xpath + "/Whitelist");
 
-			mainView.SetOption(Option.OpenMainPackOnLogin, pluginConfigFile.GetBoolean(Option.OpenMainPackOnLogin.Xpath));
-			openMainPackOnLogin.Enabled = pluginConfigFile.GetBoolean(Option.OpenMainPackOnLogin.Xpath);
+				foreach (string obj in whitelist)
+				{
+					autoTradeAccept.AddToWhitelist(new System.Text.RegularExpressions.Regex(obj));
+				}
+			}
 
-			mainView.SetOption(Option.DebuggingEnabled, pluginConfigFile.GetBoolean(Option.DebuggingEnabled.Xpath));
-			Debug.Enabled = pluginConfigFile.GetBoolean(Option.DebuggingEnabled.Xpath);
+			if (mainView != null && openMainPackOnLogin != null)
+			{
+				mainView.SetOption(Option.OpenMainPackOnLogin, pluginConfigFile.GetBoolean(Option.OpenMainPackOnLogin.Xpath));
+				openMainPackOnLogin.Enabled = pluginConfigFile.GetBoolean(Option.OpenMainPackOnLogin.Xpath);
+			}
+
+			if (mainView != null)
+			{
+				mainView.SetOption(Option.DebuggingEnabled, pluginConfigFile.GetBoolean(Option.DebuggingEnabled.Xpath));
+				Debug.Enabled = pluginConfigFile.GetBoolean(Option.DebuggingEnabled.Xpath);
+			}
 		}
 	}
 }
