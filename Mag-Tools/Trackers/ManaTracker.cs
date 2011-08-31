@@ -129,11 +129,7 @@ namespace MagTools.Trackers
 		{
 			try
 			{
-				foreach (ManaTrackedItem item in trackedItems)
-				{
-					if (item.Id == e.Released.Id)
-						RemoveItem(e.Released);
-				}
+				RemoveItem(e.Released);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
