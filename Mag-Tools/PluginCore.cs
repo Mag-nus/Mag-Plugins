@@ -60,8 +60,9 @@ namespace MagTools
 
 		// Macros
 		private Macros.AutoBuySell autoBuySell;
-		private Macros.AutoGive autoGive;
 		private Macros.AutoPack autoPack;
+		private Macros.AutoGive autoGive;
+		private Macros.AutoTradeAdd autoTradeAdd;
 		private Macros.AutoTradeAccept autoTradeAccept;
 
 		// Trackers
@@ -99,7 +100,6 @@ namespace MagTools
 				openMainPackOnLogin = new OpenMainPackOnLogin();
 
 				// Macros
-				autoGive = new Macros.AutoGive();
 				autoTradeAccept = new Macros.AutoTradeAccept();
 
 				// Trackers
@@ -121,6 +121,20 @@ namespace MagTools
 				autoPack = new Macros.AutoPack();
 			}
 			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("autoPack failed to load: " + ex.Message); }
+			catch (Exception ex) { Debug.LogException(ex); }
+
+			try
+			{
+				autoGive = new Macros.AutoGive();
+			}
+			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("autoGive failed to load: " + ex.Message); }
+			catch (Exception ex) { Debug.LogException(ex); }
+
+			try
+			{
+				autoTradeAdd = new Macros.AutoTradeAdd();
+			}
+			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("autoTradeAdd failed to load: " + ex.Message); }
 			catch (Exception ex) { Debug.LogException(ex); }
 
 			try
@@ -158,8 +172,9 @@ namespace MagTools
 				if (manaTracker != null) manaTracker.Dispose();
 
 				// Macros
-				if (autoGive != null) autoGive.Dispose();
 				if (autoBuySell != null) autoBuySell.Dispose();
+				if (autoTradeAdd != null) autoTradeAdd.Dispose();
+				if (autoGive != null) autoGive.Dispose();
 				if (autoPack != null) autoPack.Dispose();
 				if (autoTradeAccept != null) autoTradeAccept.Dispose();
 
@@ -218,6 +233,8 @@ namespace MagTools
 			mainView.AddOption(Option.ItemInfoOnIdent);
 
 			mainView.AddOption(Option.AutoBuySellEnabled);
+
+			mainView.AddOption(Option.AutoTradeAdd);
 
 			mainView.AddOption(Option.AutoTradeAcceptEnabled);
 
@@ -290,6 +307,12 @@ namespace MagTools
 			{
 				mainView.SetOption(Option.AutoBuySellEnabled, pluginConfigFile.GetBoolean(Option.AutoBuySellEnabled.Xpath));
 				autoBuySell.Enabled = pluginConfigFile.GetBoolean(Option.AutoBuySellEnabled.Xpath);
+			}
+
+			if (mainView != null && autoTradeAdd != null)
+			{
+				mainView.SetOption(Option.AutoTradeAdd, pluginConfigFile.GetBoolean(Option.AutoTradeAdd.Xpath));
+				autoTradeAdd.Enabled = pluginConfigFile.GetBoolean(Option.AutoTradeAdd.Xpath);
 			}
 
 			if (mainView != null && autoTradeAccept != null)

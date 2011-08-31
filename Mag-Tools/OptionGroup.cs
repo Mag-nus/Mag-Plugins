@@ -24,6 +24,9 @@ namespace MagTools
 		private static readonly OptionGroup autoBuySell = new OptionGroup("AutoBuySell", "Auto Buy/Sell");
 		public static OptionGroup AutoBuySell { get { return autoBuySell; } }
 
+		private static readonly OptionGroup autoTradeAdd = new OptionGroup("AutoTradeAdd", "Auto Add To Trade");
+		public static OptionGroup AutoTradeAdd { get { return autoTradeAdd; } }
+
 		private static readonly OptionGroup autoTradeAccept = new OptionGroup("AutoTradeAccept", "Auto Trade Accept");
 		public static OptionGroup AutoTradeAccept { get { return autoTradeAccept; } }
 
