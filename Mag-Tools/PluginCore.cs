@@ -324,7 +324,7 @@ namespace MagTools
 
 				foreach (string obj in whitelist)
 				{
-					autoTradeAccept.AddToWhitelist(new System.Text.RegularExpressions.Regex(obj));
+					autoTradeAccept.AddToWhitelist(new System.Text.RegularExpressions.Regex("^" + obj + "$"));
 				}
 			}
 
