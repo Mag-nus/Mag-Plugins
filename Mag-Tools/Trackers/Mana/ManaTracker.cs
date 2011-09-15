@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
-namespace MagTools.Trackers
+namespace MagTools.Trackers.Mana
 {
 	public class ManaTracker : IDisposable
 	{

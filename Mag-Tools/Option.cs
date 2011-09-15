@@ -41,6 +41,9 @@ namespace MagTools
 		private static readonly Option filterSpellCasting = new Option(OptionGroup.Filters, "SpellCasting", "Filter Spell Casting");
 		public static Option FilterSpellCasting { get { return filterSpellCasting; } }
 
+		private static readonly Option filterSpellCastFizzles = new Option(OptionGroup.Filters, "SpellCastFizzles", "Filter Spell Cast Fizzles");
+		public static Option FilterSpellCastFizzles { get { return filterSpellCastFizzles; } }
+
 		private static readonly Option filterCompUsage = new Option(OptionGroup.Filters, "CompUsage", "Filter Comp Usage");
 		public static Option FilterCompUsage { get { return filterCompUsage; } }
 
@@ -52,6 +55,21 @@ namespace MagTools
 
 		private static readonly Option filterVendorTells = new Option(OptionGroup.Filters, "VendorTells", "Filter Vendor Tells");
 		public static Option FilterVendorTells { get { return filterVendorTells; } }
+
+		private static readonly Option filterHealingKitSuccess = new Option(OptionGroup.Filters, "HealingKitSuccess", "Filter Healing Kit Success");
+		public static Option FilterHealingKitSuccess { get { return filterHealingKitSuccess; } }
+
+		private static readonly Option filterHealingKitFail = new Option(OptionGroup.Filters, "HealingKitFail", "Filter Healing Kit Fail");
+		public static Option FilterHealingKitFail { get { return filterHealingKitFail; } }
+
+		private static readonly Option filterMonsterDeaths = new Option(OptionGroup.Filters, "MonsterDeaths", "Filter Monster Deaths");
+		public static Option FilterMonsterDeaths { get { return filterMonsterDeaths; } }
+
+		private static readonly Option filterSalvaging = new Option(OptionGroup.Filters, "Salvaging", "Filter Salvaging");
+		public static Option FilterSalvaging { get { return filterSalvaging; } }
+
+		private static readonly Option filterSalvagingFails = new Option(OptionGroup.Filters, "SalvagingFails", "Filter Salvaging Fails");
+		public static Option FilterSalvagingFails { get { return filterSalvagingFails; } }
 
 
 		private static readonly Option itemInfoOnIdent = new Option(OptionGroup.ItemInfoOnIdent, "Enabled", "Show Item Info On Ident");
@@ -72,6 +90,9 @@ namespace MagTools
 
 		private static readonly Option openMainPackOnLogin = new Option(OptionGroup.Misc, "OpenMainPackOnLogin", "Open Main Pack On Login");
 		public static Option OpenMainPackOnLogin { get { return openMainPackOnLogin; } }
+
+		private static readonly Option removeWindowBorder = new Option(OptionGroup.Misc, "RemoveWindowBorder", "Remove Window Border");
+		public static Option RemoveWindowBorder { get { return removeWindowBorder; } }
 
 		private static readonly Option debuggingEnabled = new Option(OptionGroup.Misc, "DebuggingEnabled", "Debugging Enabled");
 		public static Option DebuggingEnabled { get { return debuggingEnabled; } }

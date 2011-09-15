@@ -17,6 +17,8 @@ namespace MagTools
 
 		public bool FilterSpellCasting { private get; set; }
 
+		public bool FilterSpellCastFizzles { private get; set; }
+
 		public bool FilterCompUsage { private get; set; }
 
 		public bool FilterSpellExpires { private get; set; }
@@ -24,6 +26,16 @@ namespace MagTools
 		public bool FilterNPKFails { private get; set; }
 
 		public bool FilterVendorTells { private get; set; }
+
+		public bool FilterHealingKitSuccess { private get; set; }
+
+		public bool FilterHealingKitFail { private get; set; }
+
+		public bool FilterMonsterDeaths { private get; set; }
+
+		public bool FilterSalvaging { private get; set; }
+
+		public bool FilterSalvagingFails { private get; set; }
 
 		public ChatFilter()
 		{
@@ -86,7 +98,8 @@ namespace MagTools
 				if (e.Eat == false && FilterAttackResists)
 				{
 					// Sentient Crystal Shard resists your spell
-					if (e.Text.EndsWith(" resists your spell.") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
+					// Invading Silver Scope Knight resists your spell
+					if (e.Text.Contains(" resists your spell") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
 						e.Eat = true;
 				}
 
@@ -112,6 +125,13 @@ namespace MagTools
 				if (e.Eat == false && FilterSpellCasting && Util.IsSpellCastMessage(e.Text))
 					e.Eat = true;
 
+				if (e.Eat == false && FilterSpellCastFizzles)
+				{
+					// Your spell fizzled.
+					if (e.Text.StartsWith("Your spell fizzled.") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
+						e.Eat = true;
+				}
+
 				if (e.Eat == false && FilterCompUsage)
 				{
 					// The spell consumed the following components:
@@ -121,10 +141,14 @@ namespace MagTools
 
 				if (e.Eat == false && FilterSpellExpires)
 				{
-					// The spell Defender VI on Brass Sceptre has expired.
-					// Focus Self VI has expired.
-					if (e.Text.Contains("has expired.") || e.Text.Contains("have expired.") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
-						e.Eat = true;
+					// Don't filter rare expires
+					if (!e.Text.Contains("Brilliance") && !e.Text.Contains("Prodigal") && !e.Text.Contains("Spectral"))
+					{
+						// The spell Defender VI on Brass Sceptre has expired.
+						// Focus Self VI has expired.
+						if (e.Text.Contains("has expired.") || e.Text.Contains("have expired.") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
+							e.Eat = true;
+					}
 				}
 
 				if (e.Eat == false && FilterNPKFails)
@@ -147,6 +171,49 @@ namespace MagTools
 								e.Eat = true;
 						}
 					}
+				}
+
+				if (e.Eat == false && FilterHealingKitSuccess)
+				{
+					// You heal yourself for 88 Health points. Your treated Healing Kit has 16  uses left.
+					// You expertly heal yourself for 123 Health points. Your Treated Healing Kit has 41 uses left.
+					if (e.Text.StartsWith("You ") && e.Text.Contains(" heal yourself for ") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
+						e.Eat = true;
+				}
+
+				if (e.Eat == false && FilterHealingKitFail)
+				{
+					// You fail to heal yourself. Your Treated Healing Kit has 18 uses left.
+					if (e.Text.StartsWith("You fail to heal yourself. ") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
+						e.Eat = true;
+				}
+
+				if (e.Eat == false && FilterMonsterDeaths)
+				{
+					if (Util.IsMonsterKilledByYouDeathMessage(e.Text))
+						e.Eat = true;
+				}
+
+				if (e.Eat == false && FilterSalvaging)
+				{
+					// You obtain 9 granite (ws 8.00) using your knowledge of Salvaging
+					if (e.Text.StartsWith("You obtain ") && e.Text.Contains(" using your knowledge of ") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
+						e.Eat = true;
+
+					// Salvaging Failed!
+
+					//  The following were not suitable for salvaging: Salvaged Sunstone (79), Salvaged Sunstone (7).
+				}
+
+				if (e.Eat == false && FilterSalvagingFails)
+				{
+					// Salvaging Failed!
+					if (e.Text.StartsWith("Salvaging Failed!") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
+						e.Eat = true;
+
+					//  The following were not suitable for salvaging: Salvaged Sunstone (79), Salvaged Sunstone (7).
+					if (e.Text.Contains("The following were not suitable for salvaging: ") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
+						e.Eat = true;
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }

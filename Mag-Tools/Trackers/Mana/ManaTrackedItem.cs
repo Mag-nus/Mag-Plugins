@@ -5,7 +5,7 @@ using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 using Decal.Filters;
 
-namespace MagTools.Trackers
+namespace MagTools.Trackers.Mana
 {
 	public class ManaTrackedItem : IDisposable
 	{
@@ -118,6 +118,9 @@ namespace MagTools.Trackers
 		{
 			try
 			{
+				if (e.Text.StartsWith("You say, ") || e.Text.Contains("says, \""))
+					return;
+
 				WorldObject wo = CoreManager.Current.WorldFilter[Id];
 
 				if (wo == null)
@@ -135,7 +138,7 @@ namespace MagTools.Trackers
 				// Your items are fully charged.
 				if (e.Text.Contains("The Mana Stone gives "))
 				{
-					if (e.Text.Remove(0, e.Text.IndexOf(':')).Contains(wo.Name))
+					if (e.Text.Contains(wo.Name))
 						Host.Actions.RequestId(Id);
 				}
 

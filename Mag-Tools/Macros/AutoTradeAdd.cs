@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
@@ -19,6 +20,7 @@ namespace MagTools.Macros
 			{
 				CoreManager.Current.WorldFilter.EnterTrade += new EventHandler<Decal.Adapter.Wrappers.EnterTradeEventArgs>(WorldFilter_EnterTrade);
 				CoreManager.Current.WorldFilter.EndTrade += new EventHandler<Decal.Adapter.Wrappers.EndTradeEventArgs>(WorldFilter_EndTrade);
+				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 
 				addTimer.Tick += new EventHandler(addTimer_Tick);
 			}
@@ -46,6 +48,7 @@ namespace MagTools.Macros
 				{
 					CoreManager.Current.WorldFilter.EnterTrade -= new EventHandler<Decal.Adapter.Wrappers.EnterTradeEventArgs>(WorldFilter_EnterTrade);
 					CoreManager.Current.WorldFilter.EndTrade -= new EventHandler<Decal.Adapter.Wrappers.EndTradeEventArgs>(WorldFilter_EndTrade);
+					CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 
 					addTimer.Tick -= new EventHandler(addTimer_Tick);
 					addTimer.Dispose();
@@ -61,6 +64,7 @@ namespace MagTools.Macros
 		private VTClassic.LootCore lootProfile = new VTClassic.LootCore();
 
 		Queue<int> itemQueue = new Queue<int>();
+		Collection<int> itemsWaitingForId = new Collection<int>();
 
 		void WorldFilter_EnterTrade(object sender, Decal.Adapter.Wrappers.EnterTradeEventArgs e)
 		{
@@ -71,6 +75,7 @@ namespace MagTools.Macros
 
 				addTimer.Stop();
 				itemQueue.Clear();
+				itemsWaitingForId.Clear();
 
 				int traderId = 0;
 
@@ -118,6 +123,7 @@ namespace MagTools.Macros
 			{
 				addTimer.Stop();
 				itemQueue.Clear();
+				itemsWaitingForId.Clear();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -133,8 +139,15 @@ namespace MagTools.Macros
 				// Convert the item into a VT GameItemInfo object
 				uTank2.LootPlugins.GameItemInfo itemInfo = uTank2.PluginCore.PC.FWorldTracker_GetWithID(item.Id);
 
+				if (itemInfo == null)
+				{
+					Debug.WriteToChat("AutoTradeAdd.ProcessInventory(), itemInfo == null for " + item.Name);
+					continue;
+				}
+
 				if (lootProfile.DoesPotentialItemNeedID(itemInfo))
 				{
+					itemsWaitingForId.Add(item.Id);
 					CoreManager.Current.Actions.RequestId(item.Id);
 				}
 				else
@@ -150,15 +163,27 @@ namespace MagTools.Macros
 			}
 		}
 
-		void uTankCallBack(int obj, uTank2.LootPlugins.LootAction result, bool getsuccess)
+		void WorldFilter_ChangeObject(object sender, ChangeObjectEventArgs e)
 		{
 			try
 			{
-				if (!getsuccess)
+				if (itemsWaitingForId.Count == 0 || e.Change != WorldChangeType.IdentReceived || !itemsWaitingForId.Contains(e.Changed.Id))
 					return;
 
-				processVTankIdentLootAction(obj, result);
+				itemsWaitingForId.Remove(e.Changed.Id);
 
+				// Convert the item into a VT GameItemInfo object
+				uTank2.LootPlugins.GameItemInfo itemInfo = uTank2.PluginCore.PC.FWorldTracker_GetWithID(e.Changed.Id);
+
+				if (itemInfo == null)
+				{
+					Debug.WriteToChat("AutoTradeAdd.ProcessInventory(), itemInfo == null for " + e.Changed.Name);
+					return;
+				}
+
+				uTank2.LootPlugins.LootAction result = lootProfile.GetLootDecision(itemInfo);
+
+				processVTankIdentLootAction(e.Changed.Id, result);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -168,10 +193,6 @@ namespace MagTools.Macros
 			if (!result.IsKeep)
 				return;
 
-			// Can't trade more than 102 items so don't bother.
-			if (itemQueue.Count >= 102)
-				return;
-
 			itemQueue.Enqueue(itemId);
 		}
 
@@ -179,7 +200,7 @@ namespace MagTools.Macros
 		{
 			try
 			{
-				if (itemQueue.Count == 0)
+				if (itemQueue.Count == 0 && itemsWaitingForId.Count == 0)
 				{
 					addTimer.Stop();
 					return;

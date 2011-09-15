@@ -3,7 +3,7 @@
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
-namespace MagTools.Trackers
+namespace MagTools.Trackers.Mana
 {
 	class ManaTrackerGUI : IDisposable
 	{

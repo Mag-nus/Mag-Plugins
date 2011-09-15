@@ -1,5 +1,5 @@
 ﻿
-namespace MagTools.Trackers
+namespace MagTools.Trackers.Mana
 {
 	public enum ManaTrackedItemState
 	{

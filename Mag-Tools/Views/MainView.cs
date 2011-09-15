@@ -30,6 +30,10 @@ namespace MagTools.Views
 
 				ManaTotal = (HudStaticText)view["ManaTotal"] ?? new HudStaticText();
 
+				// Damage Tracker
+				MonsterList = (HudList)view["MonsterList"] ?? new HudList();
+				DamageList = (HudList)view["DamageList"] ?? new HudList();
+
 				// Misc
 				OptionList = (HudList)view["OptionList"] ?? new HudList();
 
@@ -72,6 +76,10 @@ namespace MagTools.Views
 		public HudList ManaList { get; private set; }
 
 		public HudStaticText ManaTotal { get; private set; }
+
+		// Damage Tracker
+		public HudList MonsterList { get; private set; }
+		public HudList DamageList { get; private set; }
 
 		// Misc
 		private HudList OptionList { get; set; }

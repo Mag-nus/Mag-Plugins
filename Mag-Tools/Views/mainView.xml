@@ -4,9 +4,9 @@
 
     <page label="Mana Tracker">
       <control progid="DecalControls.FixedLayout" clipped="">
-        <control progid="DecalControls.List" name="ManaList" left="0" top="0" width="320" height="380">
+        <control progid="DecalControls.List" name="ManaList" left="1" top="1" width="318" height="380">
           <column progid="DecalControls.IconColumn" name="ManaItemIcon" fixedwidth="16" />
-          <column progid="DecalControls.TextColumn" name="ManaItemName" fixedwidth="127" />
+          <column progid="DecalControls.TextColumn" name="ManaItemName" fixedwidth="125" />
           <column progid="DecalControls.IconColumn" name="ManaItemActive" fixedwidth="16" />
           <column progid="DecalControls.TextColumn" name="ManaItemMana" fixedwidth="72" />
           <column progid="DecalControls.TextColumn" name="ManaItemTime" fixedwidth="44" />
@@ -17,9 +17,16 @@
       </control>
     </page>
 
+    <page label="Combat Tracker">
+      <control progid="DecalControls.FixedLayout" clipped="">
+        <control progid="DecalControls.List" name="MonsterList" left="1" top="1" width="318" height="202" />
+        <control progid="DecalControls.List" name="DamageList" left="1" top="204" width="318" height="205" />
+      </control>
+    </page>
+    
     <page label="Misc">
       <control progid="DecalControls.FixedLayout" clipped="">
-        <control progid="DecalControls.List" name="OptionList" left="0" top="0" width="320" height="325">
+        <control progid="DecalControls.List" name="OptionList" left="1" top="1" width="318" height="325">
           <column progid="DecalControls.CheckColumn" name="Enabled" />
           <column progid="DecalControls.TextColumn" name="Option" />
         </control>

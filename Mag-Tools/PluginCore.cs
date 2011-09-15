@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+//using System.Runtime.InteropServices;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
@@ -66,9 +67,32 @@ namespace MagTools
 		private Macros.AutoTradeAccept autoTradeAccept;
 
 		// Trackers
-		private Trackers.ManaTracker manaTracker;
-		private Trackers.ManaTrackerGUI manaTrackerGUI;
+		/// <summary>
+		/// If your plugin starts up before Mag-tools, this will be null. It is instantiated during this plugins Startup() and disposed in Shutdown()
+		/// </summary>
+		public static Trackers.Mana.ManaTracker manaTracker;
+		private Trackers.Mana.ManaTrackerGUI manaTrackerGUI;
+		/// <summary>
+		/// If your plugin starts up before Mag-tools, this will be null. It is instantiated during this plugins Startup() and disposed in Shutdown()
+		/// </summary>
+		public static Trackers.Combat.CombatTracker combatTracker;
+		private Trackers.Combat.CombatTrackerGUIInfo combatTrackerGUIInfo;
+		private Trackers.Combat.CombatTrackerGUIMonsters combatTrackerGUIMonsters;
 
+		/*
+    <page label="Comp Tracker">
+      <control progid="DecalControls.FixedLayout" clipped="">
+        <control progid="DecalControls.List" name="lstStats" left="0" top="0" width="320" height="380">
+          <column progid="DecalControls.TextColumn" fixedwidth="60" />
+          <column progid="DecalControls.TextColumn" fixedwidth="34" justify="right" />
+          <column progid="DecalControls.TextColumn" fixedwidth="82" justify="right" />
+          <column progid="DecalControls.TextColumn" fixedwidth="82" justify="right" />
+          <column progid="DecalControls.TextColumn" fixedwidth="42" justify="right" />
+        </control>
+        <control progid="DecalControls.PushButton" name="pbResetStats" left="5" top="380" width="60" height="20" text="Reset" />
+      </control>
+    </page>
+		*/
 		//
 		private VirindiTools.ItemInfoOnIdent itemInfoOnIdent;
 
@@ -103,8 +127,11 @@ namespace MagTools
 				autoTradeAccept = new Macros.AutoTradeAccept();
 
 				// Trackers
-				manaTracker = new Trackers.ManaTracker(host);
-				manaTrackerGUI = new Trackers.ManaTrackerGUI(manaTracker, mainView);
+				manaTracker = new Trackers.Mana.ManaTracker(host);
+				manaTrackerGUI = new Trackers.Mana.ManaTrackerGUI(manaTracker, mainView);
+				combatTracker = new Trackers.Combat.CombatTracker();
+				combatTrackerGUIInfo = new Trackers.Combat.CombatTrackerGUIInfo(mainView.DamageList);
+				combatTrackerGUIMonsters = new Trackers.Combat.CombatTrackerGUIMonsters(combatTracker, mainView.MonsterList, combatTrackerGUIInfo);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 
@@ -170,6 +197,8 @@ namespace MagTools
 				// Trackers
 				if (manaTrackerGUI != null) manaTrackerGUI.Dispose();
 				if (manaTracker != null) manaTracker.Dispose();
+				if (combatTrackerGUIMonsters != null) combatTrackerGUIMonsters.Dispose();
+				if (combatTracker != null) combatTracker.Dispose();
 
 				// Macros
 				if (autoBuySell != null) autoBuySell.Dispose();
@@ -198,7 +227,17 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		[BaseEvent("LoginComplete", "CharacterFilter")]
+		/*
+		//Sets window attributes
+		[DllImport("USER32.DLL")]
+		static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+		//Gets window attributes
+		[DllImport("USER32.DLL")]
+		static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+		*/
+
+  		[BaseEvent("LoginComplete", "CharacterFilter")]
 		private void CharacterFilter_LoginComplete(object sender, EventArgs e)
 		{
 			try
@@ -211,6 +250,17 @@ namespace MagTools
 				}
 
 				startupErrors.Clear();
+
+				/*
+				const int GWL_STYLE = -16;
+				const int WS_BORDER = 0x00800000; //window with border
+				const int WS_DLGFRAME = 0x00400000; //window with double border but no title
+				const int WS_CAPTION = WS_BORDER | WS_DLGFRAME; //window with a title bar
+
+				int style = GetWindowLong(Host.Decal.Hwnd, GWL_STYLE);
+				SetWindowLong(Host.Decal.Hwnd, GWL_STYLE, (style & ~WS_CAPTION));
+				*/
+
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -225,10 +275,16 @@ namespace MagTools
 			mainView.AddOption(Option.FilterAttackResists);
 			mainView.AddOption(Option.FilterDefenseResists);
 			mainView.AddOption(Option.FilterSpellCasting);
+			mainView.AddOption(Option.FilterSpellCastFizzles);
 			mainView.AddOption(Option.FilterCompUsage);
 			mainView.AddOption(Option.FilterSpellExpires);
 			mainView.AddOption(Option.FilterNPKFails);
 			mainView.AddOption(Option.FilterVendorTells);
+			mainView.AddOption(Option.FilterHealingKitSuccess);
+			mainView.AddOption(Option.FilterHealingKitFail);
+			mainView.AddOption(Option.FilterMonsterDeaths);
+			mainView.AddOption(Option.FilterSalvaging);
+			mainView.AddOption(Option.FilterSalvagingFails);
 
 			mainView.AddOption(Option.ItemInfoOnIdent);
 
@@ -284,6 +340,9 @@ namespace MagTools
 				mainView.SetOption(Option.FilterSpellCasting, pluginConfigFile.GetBoolean(Option.FilterSpellCasting.Xpath));
 				chatFilter.FilterSpellCasting = pluginConfigFile.GetBoolean(Option.FilterSpellCasting.Xpath);
 
+				mainView.SetOption(Option.FilterSpellCastFizzles, pluginConfigFile.GetBoolean(Option.FilterSpellCastFizzles.Xpath));
+				chatFilter.FilterSpellCastFizzles = pluginConfigFile.GetBoolean(Option.FilterSpellCastFizzles.Xpath);
+
 				mainView.SetOption(Option.FilterCompUsage, pluginConfigFile.GetBoolean(Option.FilterCompUsage.Xpath));
 				chatFilter.FilterCompUsage = pluginConfigFile.GetBoolean(Option.FilterCompUsage.Xpath);
 
@@ -295,6 +354,21 @@ namespace MagTools
 
 				mainView.SetOption(Option.FilterVendorTells, pluginConfigFile.GetBoolean(Option.FilterVendorTells.Xpath));
 				chatFilter.FilterVendorTells = pluginConfigFile.GetBoolean(Option.FilterVendorTells.Xpath);
+
+				mainView.SetOption(Option.FilterHealingKitSuccess, pluginConfigFile.GetBoolean(Option.FilterHealingKitSuccess.Xpath));
+				chatFilter.FilterHealingKitSuccess = pluginConfigFile.GetBoolean(Option.FilterHealingKitSuccess.Xpath);
+
+				mainView.SetOption(Option.FilterHealingKitFail, pluginConfigFile.GetBoolean(Option.FilterHealingKitFail.Xpath));
+				chatFilter.FilterHealingKitFail = pluginConfigFile.GetBoolean(Option.FilterHealingKitFail.Xpath);
+
+				mainView.SetOption(Option.FilterMonsterDeaths, pluginConfigFile.GetBoolean(Option.FilterMonsterDeaths.Xpath));
+				chatFilter.FilterMonsterDeaths = pluginConfigFile.GetBoolean(Option.FilterMonsterDeaths.Xpath);
+
+				mainView.SetOption(Option.FilterSalvaging, pluginConfigFile.GetBoolean(Option.FilterSalvaging.Xpath));
+				chatFilter.FilterSalvaging = pluginConfigFile.GetBoolean(Option.FilterSalvaging.Xpath);
+
+				mainView.SetOption(Option.FilterSalvagingFails, pluginConfigFile.GetBoolean(Option.FilterSalvagingFails.Xpath));
+				chatFilter.FilterSalvagingFails = pluginConfigFile.GetBoolean(Option.FilterSalvagingFails.Xpath);
 			}
 
 			if (mainView != null && itemInfoOnIdent != null)

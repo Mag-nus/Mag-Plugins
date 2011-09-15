@@ -177,7 +177,10 @@ namespace MagTools.Macros
 				uTank2.LootPlugins.GameItemInfo itemInfo = uTank2.PluginCore.PC.FWorldTracker_GetWithVendorObjectTemplateID(vendorObj.Id);
 
 				if (itemInfo == null)
+				{
+					Debug.WriteToChat("AutoBuySell.GetBuyItem(), itemInfo == null for " + vendorObj.Name);
 					continue;
+				}
 
 				// Get the loot profile result for this object
 				// result.IsNoLoot will always be false so we must check the Keep # against items in inventory.
@@ -218,7 +221,10 @@ namespace MagTools.Macros
 				uTank2.LootPlugins.GameItemInfo itemInfo = uTank2.PluginCore.PC.FWorldTracker_GetWithVendorObjectTemplateID(vendorObj.Id);
 
 				if (itemInfo == null)
+				{
+					Debug.WriteToChat("AutoBuySell.GetBuyItem(), itemInfo == null for " + vendorObj.Name);
 					continue;
+				}
 
 				// Get the loot profile result for this object
 				// result.IsNoLoot will always be false
@@ -257,7 +263,10 @@ namespace MagTools.Macros
 				uTank2.LootPlugins.GameItemInfo itemInfo = uTank2.PluginCore.PC.FWorldTracker_GetWithID(playerObj.Id);
 
 				if (itemInfo == null)
+				{
+					Debug.WriteToChat("AutoBuySell.GetSellItem(), itemInfo == null for " + playerObj.Name);
 					continue;
+				}
 
 				// Get the loot profile result for this object
 				// result.IsNoLoot will always be false so we must check the Keep # against items in inventory.
