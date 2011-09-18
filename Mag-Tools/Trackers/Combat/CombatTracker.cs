@@ -82,7 +82,7 @@ namespace MagTools.Trackers.Combat
 				foreach (string word in words)
 				{
 					// This is broken for monsters that names start with The
-					if (char.IsUpper(word[0]) || (monsterName != null && (word == "of" || word == "the" || word == "a" || word == "to" || word == "in")))
+					if (!string.IsNullOrEmpty(word) && (char.IsUpper(word[0]) || (monsterName != null && (word == "of" || word == "the" || word == "a" || word == "to" || word == "in"))))
 						monsterName += monsterName == null ? word : " " + word;
 					else if (monsterName != null)
 						break;
@@ -169,7 +169,8 @@ namespace MagTools.Trackers.Combat
 					// Magical energies lose 1 point of health due to Sentient Crystal Shard casting Vitality Siphon
 					// You lose 39 points of health due to Infernal Zefir casting Drain Health Other V on you
 					// Crystal Minion casts Harm Other VI and drains 39 points ...
-					if (((e.Text.Contains(" lose ") || e.Text.Contains(" and drains ")) && e.Text.Contains("health")) || e.Text.Contains(" exhausts "))
+					// Tendril of T'thuun depletes you for 188 points with Martyr's Hecatomb V.
+					if (((e.Text.Contains(" lose ") || e.Text.Contains(" and drains ")) && e.Text.Contains("health")) || e.Text.Contains(" exhausts ") || e.Text.Contains(" depletes "))
 					{
 						attackType = AttackType.Magic;
 						damageElemenet = DamageElement.Typeless;
@@ -222,7 +223,7 @@ namespace MagTools.Trackers.Combat
 				if (CombatEvent != null)
 					CombatEvent(this, combatEventArgs);
 			}
-			catch (Exception ex) { Debug.LogException(ex); }
+			catch (Exception ex) { Debug.LogException(ex, e.Text); }
 		}
 	}
 }

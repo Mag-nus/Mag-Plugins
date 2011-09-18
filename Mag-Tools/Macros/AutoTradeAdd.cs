@@ -65,6 +65,7 @@ namespace MagTools.Macros
 
 		Queue<int> itemQueue = new Queue<int>();
 		Collection<int> itemsWaitingForId = new Collection<int>();
+		Collection<int> itemsNeedChecking = new Collection<int>();
 
 		void WorldFilter_EnterTrade(object sender, Decal.Adapter.Wrappers.EnterTradeEventArgs e)
 		{
@@ -76,6 +77,7 @@ namespace MagTools.Macros
 				addTimer.Stop();
 				itemQueue.Clear();
 				itemsWaitingForId.Clear();
+				itemsNeedChecking.Clear();
 
 				int traderId = 0;
 
@@ -124,6 +126,7 @@ namespace MagTools.Macros
 				addTimer.Stop();
 				itemQueue.Clear();
 				itemsWaitingForId.Clear();
+				itemsNeedChecking.Clear();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -148,6 +151,7 @@ namespace MagTools.Macros
 				if (lootProfile.DoesPotentialItemNeedID(itemInfo))
 				{
 					itemsWaitingForId.Add(item.Id);
+
 					CoreManager.Current.Actions.RequestId(item.Id);
 				}
 				else
@@ -172,18 +176,7 @@ namespace MagTools.Macros
 
 				itemsWaitingForId.Remove(e.Changed.Id);
 
-				// Convert the item into a VT GameItemInfo object
-				uTank2.LootPlugins.GameItemInfo itemInfo = uTank2.PluginCore.PC.FWorldTracker_GetWithID(e.Changed.Id);
-
-				if (itemInfo == null)
-				{
-					Debug.WriteToChat("AutoTradeAdd.ProcessInventory(), itemInfo == null for " + e.Changed.Name);
-					return;
-				}
-
-				uTank2.LootPlugins.LootAction result = lootProfile.GetLootDecision(itemInfo);
-
-				processVTankIdentLootAction(e.Changed.Id, result);
+				itemsNeedChecking.Add(e.Changed.Id);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -200,11 +193,33 @@ namespace MagTools.Macros
 		{
 			try
 			{
-				if (itemQueue.Count == 0 && itemsWaitingForId.Count == 0)
+				if (itemQueue.Count == 0 && itemsWaitingForId.Count == 0 && itemsNeedChecking.Count == 0)
 				{
 					addTimer.Stop();
+					CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Add To Trade - Inventory scan complete.", 5);
 					return;
 				}
+
+				foreach (int Id in itemsNeedChecking)
+				{
+					// Convert the item into a VT GameItemInfo object
+					uTank2.LootPlugins.GameItemInfo itemInfo = uTank2.PluginCore.PC.FWorldTracker_GetWithID(Id);
+
+					if (itemInfo == null)
+					{
+						Debug.WriteToChat("AutoTradeAdd.ProcessInventory(), itemInfo == null for " + Id);
+						continue;
+					}
+
+					uTank2.LootPlugins.LootAction result = lootProfile.GetLootDecision(itemInfo);
+
+					processVTankIdentLootAction(Id, result);
+				}
+
+				itemsNeedChecking.Clear();
+
+				if (itemQueue.Count == 0)
+					return;
 
 				int item = itemQueue.Dequeue();
 

@@ -19,14 +19,17 @@ namespace MagTools
 		/// This will only write the exception to the errors.txt file if DebugEnabled is true.
 		/// </summary>
 		/// <param name="ex"></param>
-		public static void LogException(Exception ex)
+		public static void LogException(Exception ex, string note = null)
 		{
 			try
 			{
 				if (!Enabled)
 					return;
 
-				PluginCore.host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Exception caught: " + ex.Message + Environment.NewLine + ex.Source + Environment.NewLine + ex.StackTrace, 5);
+				if (note != null)
+					PluginCore.host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Exception caught: " + ex.Message + Environment.NewLine + ex.Source + Environment.NewLine + ex.StackTrace + Environment.NewLine + "Note: " + note, 5);
+				else
+					PluginCore.host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Exception caught: " + ex.Message + Environment.NewLine + ex.Source + Environment.NewLine + ex.StackTrace, 5);
 
 				using (StreamWriter writer = new StreamWriter(PluginCore.PluginPersonalFolder.FullName + @"\Exceptions.txt", true))
 				{
@@ -51,6 +54,9 @@ namespace MagTools
 						innerException = innerException.InnerException;
 					}
 					*/
+
+					if (note != null)
+						writer.WriteLine("Note: " + note);
 
 					writer.WriteLine("============================================================================");
 					writer.WriteLine("");
