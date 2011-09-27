@@ -6,28 +6,24 @@ using Decal.Adapter.Wrappers;
 
 namespace MagTools.Trackers.Mana
 {
-	public class ManaTracker : IDisposable
+	class ManaTracker : IDisposable, IManaTracker
 	{
 		/// <summary>
 		/// This is raised when an item has been added to the tracker.
 		/// </summary>
-		public event Action<ManaTrackedItem> ItemAdded;
+		public event Action<IManaTrackedItem> ItemAdded;
 
 		/// <summary>
 		/// This is raised when we have stopped tracking an item. After this is raised the ManaTrackedItem is disposed.
 		/// </summary>
-		public event Action<ManaTrackedItem> ItemRemoved;
-
-		private readonly PluginHost Host;
+		public event Action<IManaTrackedItem> ItemRemoved;
 
 		private List<ManaTrackedItem> trackedItems = new List<ManaTrackedItem>();
 
-		public ManaTracker(PluginHost host)
+		public ManaTracker()
 		{
 			try
 			{
-				this.Host = host;
-
 				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 				CoreManager.Current.WorldFilter.ReleaseObject += new EventHandler<ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
@@ -177,7 +173,7 @@ namespace MagTools.Trackers.Mana
 		/// It will not allow an item to be added twice.
 		/// </summary>
 		/// <param name="obj"></param>
-		protected void AddItem(WorldObject obj)
+		void AddItem(WorldObject obj)
 		{
 			foreach (ManaTrackedItem item in trackedItems)
 			{
@@ -185,7 +181,7 @@ namespace MagTools.Trackers.Mana
 					return;
 			}
 
-			ManaTrackedItem trackedItem = new ManaTrackedItem(Host, obj.Id);
+			ManaTrackedItem trackedItem = new ManaTrackedItem(obj.Id);
 
 			trackedItems.Add(trackedItem);
 
@@ -193,7 +189,7 @@ namespace MagTools.Trackers.Mana
 				ItemAdded(trackedItem);
 		}
 
-		protected void RemoveItem(WorldObject obj)
+		void RemoveItem(WorldObject obj)
 		{
 			for (int i = trackedItems.Count - 1 ; i >= 0 ; i--)
 			{

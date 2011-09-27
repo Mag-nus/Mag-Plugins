@@ -77,6 +77,11 @@ namespace MagTools
 			if (container == 0)
 				throw new ArgumentOutOfRangeException("Invalid container passed, id of 0.");
 
+			WorldObject target = CoreManager.Current.WorldFilter[container];
+
+			if (target == null || target.ObjectClass != ObjectClass.Container)
+				throw new ArgumentOutOfRangeException("Invalid container passed, null reference");
+
 			int slots_filled = 0;
 
 			foreach (WorldObject obj in CoreManager.Current.WorldFilter.GetByContainer(container))
@@ -86,9 +91,6 @@ namespace MagTools
 
 				slots_filled++;
 			}
-
-			if (CoreManager.Current.WorldFilter[container] == null)
-				throw new ArgumentOutOfRangeException("Invalid container passed, null reference");
 
 			return CoreManager.Current.WorldFilter[container].Values(LongValueKey.ItemSlots) - slots_filled;
 		}
@@ -254,6 +256,7 @@ namespace MagTools
 			// Your killing blow nearly turns Shivering Crystalline Wisp inside-out!
 			// Your attack stops Ruschk Draktehn cold! (Frost)
 			// Your lightning coruscates over Insatiable Eater's mortal remains! (Lightning)
+			// Your assault sends Ardent Moar to an icy death!
 			else if (text.StartsWith("Your "))
 			{
 				if (text.Contains("killing blow nearly turns") && text.Contains("inside-out!"))
@@ -261,6 +264,8 @@ namespace MagTools
 				if (text.Contains("attack stops") && text.Contains("cold!"))
 					return true;
 				if (text.Contains("lightning coruscates") && text.Contains("mortal remains!"))
+					return true;
+				if (text.Contains("assault sends") && text.Contains("to an icy death!"))
 					return true;
 			}
 			// The thunder of crushing Pyre Minion is followed by the deafening silence of death!

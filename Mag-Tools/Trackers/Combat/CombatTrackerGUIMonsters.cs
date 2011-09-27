@@ -7,14 +7,14 @@ namespace MagTools.Trackers.Combat
 {
 	class CombatTrackerGUIMonsters
 	{
-		CombatTracker combatTracker;
+		ICombatTracker combatTracker;
 		HudList monsterList;
 		CombatTrackerGUIInfo combatTrackerGUIInfo;
 
 		Dictionary<string, TrackedCombat> combatInfoByMonster = new Dictionary<string, TrackedCombat>();
 		int selectedRow = 0;
 
-		public CombatTrackerGUIMonsters(CombatTracker combatTracker, HudList monsterList, CombatTrackerGUIInfo combatTrackerGUIInfo)
+		public CombatTrackerGUIMonsters(ICombatTracker combatTracker, HudList monsterList, CombatTrackerGUIInfo combatTrackerGUIInfo)
 		{
 			try
 			{
@@ -48,7 +48,7 @@ namespace MagTools.Trackers.Combat
 
 				monsterList.Click += new HudList.delClickedControl(monsterList_Click);
 
-				combatTracker.CombatEvent += new CombatTracker.CombatEventHandler(combatTracker_CombatEvent);
+				combatTracker.CombatEvent += new Action<CombatEventArgs>(combatTracker_CombatEvent);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -74,7 +74,7 @@ namespace MagTools.Trackers.Combat
 				{
 					monsterList.Click -= new HudList.delClickedControl(monsterList_Click);
 
-					combatTracker.CombatEvent -= new CombatTracker.CombatEventHandler(combatTracker_CombatEvent);
+					combatTracker.CombatEvent -= new Action<CombatEventArgs>(combatTracker_CombatEvent);
 				}
 
 				// Indicate that the instance has been disposed.
@@ -106,7 +106,7 @@ namespace MagTools.Trackers.Combat
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void combatTracker_CombatEvent(object sender, CombatEventArgs e)
+		void combatTracker_CombatEvent(CombatEventArgs e)
 		{
 			try
 			{

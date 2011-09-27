@@ -26,6 +26,9 @@ namespace MagTools
 			this.Name = name;
 		}
 
+		private static readonly Option autoRechargeMana = new Option(OptionGroup.ManaMagement, "AutoRecharge", "Auto Recharge Mana");
+		public static Option AutoRechargeMana { get { return autoRechargeMana; } }
+
 		private static readonly Option filterAttackEvades = new Option(OptionGroup.Filters, "AttackEvades", "Filter Attack Evades");
 		public static Option FilterAttackEvades { get { return filterAttackEvades; } }
 
@@ -71,6 +74,9 @@ namespace MagTools
 		private static readonly Option filterSalvagingFails = new Option(OptionGroup.Filters, "SalvagingFails", "Filter Salvaging Fails");
 		public static Option FilterSalvagingFails { get { return filterSalvagingFails; } }
 
+		private static readonly Option tradeBuffBotSpam = new Option(OptionGroup.Filters, "TradeBuffBotSpam", "Filter Trade/Buff Bot Spam");
+		public static Option TradeBuffBotSpam { get { return tradeBuffBotSpam; } }
+
 
 		private static readonly Option itemInfoOnIdent = new Option(OptionGroup.ItemInfoOnIdent, "Enabled", "Show Item Info On Ident");
 		public static Option ItemInfoOnIdent { get { return itemInfoOnIdent; } }
@@ -86,6 +92,10 @@ namespace MagTools
 
 		private static readonly Option autoTradeAcceptEnabled = new Option(OptionGroup.AutoTradeAccept, "Enabled", "Auto Trade Accept Enabled");
 		public static Option AutoTradeAcceptEnabled { get { return autoTradeAcceptEnabled; } }
+
+
+		private static readonly Option chestLooterEnabled = new Option(OptionGroup.Looting, "Enabled", "Auto Loot Chests");
+		public static Option ChestLooterEnabled { get { return chestLooterEnabled; } }
 
 
 		private static readonly Option openMainPackOnLogin = new Option(OptionGroup.Misc, "OpenMainPackOnLogin", "Open Main Pack On Login");

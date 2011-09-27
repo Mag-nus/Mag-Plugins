@@ -7,22 +7,15 @@ using Decal.Adapter.Wrappers;
 
 namespace MagTools.Macros
 {
-	class AutoPack : IDisposable
+	class InventoryPacker : IDisposable, IInventoryPacker
 	{
 		public bool Enabled { private get; set; }
 
-		System.Windows.Forms.Timer packTimer = new System.Windows.Forms.Timer();
-
-		public AutoPack()
+		public InventoryPacker()
 		{
 			try
 			{
 				CoreManager.Current.ChatBoxMessage += new EventHandler<ChatTextInterceptEventArgs>(Current_ChatBoxMessage);
-
-				CoreManager.Current.WorldFilter.CreateObject += new EventHandler<Decal.Adapter.Wrappers.CreateObjectEventArgs>(WorldFilter_CreateObject);
-				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
-
-				packTimer.Tick += new EventHandler(packTimer_Tick);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -46,13 +39,9 @@ namespace MagTools.Macros
 			{
 				if (disposing)
 				{
-					packTimer.Tick -= new EventHandler(packTimer_Tick);
-					packTimer.Dispose();
+					Stop();
 
 					CoreManager.Current.ChatBoxMessage -= new EventHandler<ChatTextInterceptEventArgs>(Current_ChatBoxMessage);
-
-					CoreManager.Current.WorldFilter.CreateObject -= new EventHandler<Decal.Adapter.Wrappers.CreateObjectEventArgs>(WorldFilter_CreateObject);
-					CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 				}
 
 				// Indicate that the instance has been disposed.
@@ -68,40 +57,7 @@ namespace MagTools.Macros
 					return;
 
 				if (e.Text.ToLower().Contains(CoreManager.Current.CharacterFilter.Name.ToLower() + " autopack"))
-					startAutoPack();
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		void WorldFilter_CreateObject(object sender, Decal.Adapter.Wrappers.CreateObjectEventArgs e)
-		{
-			try
-			{
-				// Catch when an object is given to us by creating it in our inventory
-
-				// Called when purchasing an item from a vendor.
-				// Called when someone hands you an item.
-				// Called when a character first logs in.
-
-				if (!Enabled)
-					return;
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		void WorldFilter_ChangeObject(object sender, Decal.Adapter.Wrappers.ChangeObjectEventArgs e)
-		{
-			try
-			{
-				// Catch when we pickup an object
-
-				// StorageChange when picking up an item.
-				// StorageChange when receiving an item via trade.
-				// StorageChange when you move an item in your own inventory.
-				// StorageChange when you dequip an item.
-
-				if (!Enabled)
-					return;
+					Start();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -122,8 +78,13 @@ namespace MagTools.Macros
 
 		private Collection<ItemToProcess> ItemsToProcess = new Collection<ItemToProcess>();
 
-		void startAutoPack()
+		bool started = false;
+
+		public void Start()
 		{
+			if (started)
+				return;
+
 			FileInfo fileInfo = new FileInfo(PluginCore.PluginPersonalFolder + @"\" + CoreManager.Current.CharacterFilter.Name + ".AutoPack.utl");
 
 			if (!fileInfo.Exists)
@@ -202,80 +163,99 @@ namespace MagTools.Macros
 				return;
 			}
 
-			packTimer.Interval = 200;
-			packTimer.Start();
+			CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
+
+			started = true;
 		}
 
-		void packTimer_Tick(object sender, EventArgs e)
+		public void Stop()
+		{
+			if (!started)
+				return;
+
+			CoreManager.Current.RenderFrame -= new EventHandler<EventArgs>(Current_RenderFrame);
+
+			started = false;
+
+			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Completed.", 5);
+		}
+
+		DateTime lastThought = DateTime.MinValue;
+
+		void Current_RenderFrame(object sender, EventArgs e)
 		{
 			try
 			{
-				if (ItemsToProcess.Count == 0)
-				{
-					packTimer.Stop();
-
-					CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Completed.", 5);
-
+				if (DateTime.Now - lastThought < TimeSpan.FromMilliseconds(100))
 					return;
-				}
 
-				// Lets go through our list and see if any items are in their primary target pack
+				lastThought = DateTime.Now;
+
+				Think();
+
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void Think()
+		{
+			// Lets go through our list and see if any items are in their primary target pack
+			for (int i = ItemsToProcess.Count - 1 ; i >= 0 ; i--)
+			{
+				ItemToProcess itemToProcess = ItemsToProcess[i];
+
+				WorldObject item = CoreManager.Current.WorldFilter[itemToProcess.Id];
+
+				if (item.Container == itemToProcess.TargetPackIds[0])
+				{
+					ItemsToProcess.RemoveAt(i);
+
+					continue;
+				}
+			}
+
+			Collection<int> itemsToSkip = new Collection<int>();
+
+			// Lets see if we can find an item that can be moved to its target pack
+			for (int packIndex = 0 ; packIndex < 10 ; packIndex++)
+			{
 				for (int i = ItemsToProcess.Count - 1 ; i >= 0 ; i--)
 				{
 					ItemToProcess itemToProcess = ItemsToProcess[i];
 
 					WorldObject item = CoreManager.Current.WorldFilter[itemToProcess.Id];
 
-					if (item.Container == itemToProcess.TargetPackIds[0])
+					if (itemToProcess.TargetPackIds.Length <= packIndex)
+						continue;
+
+					if (itemsToSkip.Contains(item.Id))
+						continue;
+
+					// Check to see if this item is already in the target pack
+					if (item.Container == itemToProcess.TargetPackIds[packIndex])
 					{
-						ItemsToProcess.RemoveAt(i);
+						itemsToSkip.Add(item.Id);
 
 						continue;
 					}
-				}
 
-				Collection<int> itemsToSkip = new Collection<int>();
+					// Check to see that the target is even a pack.
+					WorldObject target = CoreManager.Current.WorldFilter[itemToProcess.TargetPackIds[packIndex]];
+					
+					if (target == null || target.ObjectClass != ObjectClass.Container)
+						continue;
 
-				// Lets see if we can find an item that can be moved to its target pack
-				for (int packIndex = 0 ; packIndex < 10 ; packIndex++)
-				{
-					for (int i = ItemsToProcess.Count - 1 ; i >= 0 ; i--)
+					if (Util.GetFreePackSlots(itemToProcess.TargetPackIds[packIndex]) > 0)
 					{
-						ItemToProcess itemToProcess = ItemsToProcess[i];
+						CoreManager.Current.Actions.MoveItem(item.Id, itemToProcess.TargetPackIds[packIndex], 0, false);
 
-						WorldObject item = CoreManager.Current.WorldFilter[itemToProcess.Id];
-
-						if (itemToProcess.TargetPackIds.Length <= packIndex)
-							continue;
-
-						if (itemsToSkip.Contains(item.Id))
-							continue;
-
-						// Check to see if this item is already in the target pack
-						if (item.Container == itemToProcess.TargetPackIds[packIndex])
-						{
-							itemsToSkip.Add(item.Id);
-
-							continue;
-						}
-
-						if (Util.GetFreePackSlots(itemToProcess.TargetPackIds[packIndex]) > 0)
-						{
-							CoreManager.Current.Actions.MoveItem(item.Id, itemToProcess.TargetPackIds[packIndex], 0, false);
-
-							return;
-						}
+						return;
 					}
 				}
-
-				// If we've gotten to this point no items were moved.
-				ItemsToProcess.Clear();
-				packTimer.Stop();
-
-				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Completed.", 5);
-
 			}
-			catch (Exception ex) { Debug.LogException(ex); }
+
+			// If we've gotten to this point no items were moved.
+			Stop();
 		}
 	}
 }

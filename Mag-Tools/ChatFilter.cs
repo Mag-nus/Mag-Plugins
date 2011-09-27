@@ -5,7 +5,7 @@ using Decal.Adapter.Wrappers;
 
 namespace MagTools
 {
-	public class ChatFilter : IDisposable
+	class ChatFilter : IDisposable
 	{
 		public bool FilterAttackEvades { private get; set; }
 
@@ -36,6 +36,8 @@ namespace MagTools
 		public bool FilterSalvaging { private get; set; }
 
 		public bool FilterSalvagingFails { private get; set; }
+
+		public bool TradeBuffBotSpam { private get; set; }
 
 		public ChatFilter()
 		{
@@ -155,6 +157,9 @@ namespace MagTools
 				{
 					if (e.Text.StartsWith("You fail to affect ") && e.Text.Contains(" you are not a player killer!") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
 						e.Eat = true;
+
+					if (e.Text.Contains("fails to affect you") && e.Text.Contains(" is not a player killer!") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
+						e.Eat = true;
 				}
 
 				if (e.Eat == false && FilterVendorTells)
@@ -213,6 +218,12 @@ namespace MagTools
 
 					//  The following were not suitable for salvaging: Salvaged Sunstone (79), Salvaged Sunstone (7).
 					if (e.Text.Contains("The following were not suitable for salvaging: ") && !e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \""))
+						e.Eat = true;
+				}
+
+				if (e.Eat == false && TradeBuffBotSpam)
+				{
+					if (e.Text.Contains("says, \"") && (e.Text.Trim().EndsWith("-t-\"") || e.Text.Trim().EndsWith("-b-\"")))
 						e.Eat = true;
 				}
 			}

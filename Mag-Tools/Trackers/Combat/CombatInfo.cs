@@ -57,7 +57,7 @@ namespace MagTools.Trackers.Combat
 			if (e.IsKillingBlow)
 				combatInfo.KillingBlows++;
 
-			if (!e.IsFailedAttack)
+			if (!e.IsFailedAttack && !e.IsKillingBlow)
 			{
 				if (!e.IsCriticalHit)
 				{

@@ -5,10 +5,9 @@ using Decal.Adapter.Wrappers;
 
 namespace MagTools.Trackers.Combat
 {
-	public class CombatTracker : IDisposable
+	class CombatTracker : IDisposable, ICombatTracker
 	{
-		public delegate void CombatEventHandler(object sender, CombatEventArgs e);
-		public event CombatEventHandler CombatEvent;  
+		public event Action<CombatEventArgs> CombatEvent;
 
 		public CombatTracker()
 		{
@@ -77,7 +76,7 @@ namespace MagTools.Trackers.Combat
 				// Parsing the monster name from the string can be a bit tricky.
 				// First we remove common phrases that we know are not the monster name.
 				// The first chunk of capitalized words is the monster name.
-				string parsedString = e.Text.Replace("Critical hit!", "").Replace("Your ", "").Replace("You ", "").Replace("The ", "").Replace("Critical Protection", "").Replace("Magical energies", "").Replace("Electricity tears", "").Replace("Blistered by", "").Replace("to a", "");
+				string parsedString = e.Text.Replace("Critical hit!", "").Replace("Your ", "").Replace("You ", "").Replace("The ", "").Replace("Critical Protection", "").Replace("Magical energies", "").Replace("Electricity tears", "").Replace("Blistered by", "").Replace("to a", "").Replace("in twain!", "");
 				string[] words = parsedString.Trim().Split(' ');
 				foreach (string word in words)
 				{
@@ -206,6 +205,13 @@ namespace MagTools.Trackers.Combat
 						// Electric
 						else if (e.Text.Contains("electric") || e.Text.Contains(" lightning") || e.Text.Contains(" jolt") || e.Text.Contains(" shock") || e.Text.Contains(" spark"))
 							damageElemenet = DamageElement.Electric;
+
+						if (damageElemenet == DamageElement.Unknown)
+						{
+							// Blessed Moar hits your upper leg for 36 points of damage!
+							if (e.Text.Contains(" hits your "))
+								damageElemenet = DamageElement.Typeless;
+						}
 					}
 
 					if (damageElemenet == DamageElement.Unknown)
@@ -221,7 +227,7 @@ namespace MagTools.Trackers.Combat
 				CombatEventArgs combatEventArgs = new CombatEventArgs(monsterName, attackDirection, attackType, damageElemenet, isFailedAttack, isKillingBlow, isCriticalHit, damageAmount);
 
 				if (CombatEvent != null)
-					CombatEvent(this, combatEventArgs);
+					CombatEvent(combatEventArgs);
 			}
 			catch (Exception ex) { Debug.LogException(ex, e.Text); }
 		}

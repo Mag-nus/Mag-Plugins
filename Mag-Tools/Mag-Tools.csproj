@@ -60,15 +60,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChatFilter.cs" />
+    <Compile Include="IPluginCore.cs" />
     <Compile Include="Macros\AutoBuySell.cs" />
     <Compile Include="Macros\AutoGive.cs" />
-    <Compile Include="Macros\AutoPack.cs" />
+    <Compile Include="Macros\AutoRecharge.cs" />
+    <Compile Include="Macros\ChestLooter.cs" />
+    <Compile Include="Macros\InventoryPacker.cs" />
     <Compile Include="Macros\AutoTradeAccept.cs" />
     <Compile Include="Macros\AutoTradeAdd.cs" />
+    <Compile Include="Macros\IInventoryPacker.cs" />
+    <Compile Include="ManaRecharger.cs" />
     <Compile Include="OpenMainPackOnLogin.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="OptionGroup.cs" />
     <Compile Include="Settings\XmlFile.cs" />
+    <Compile Include="PrintItemInfo.cs" />
+    <Compile Include="PrintItemInfoOnContainerOpen.cs" />
     <Compile Include="Trackers\Combat\CombatEventArgs.cs" />
     <Compile Include="Trackers\Combat\CombatInfo.cs" />
     <Compile Include="Trackers\Combat\CombatTracker.cs" />
@@ -78,7 +85,10 @@
     <Compile Include="Trackers\Combat\DamageElement.cs" />
     <Compile Include="Trackers\Combat\AttackType.cs" />
     <Compile Include="Trackers\Combat\ICombatInfo.cs" />
+    <Compile Include="Trackers\Combat\ICombatTracker.cs" />
     <Compile Include="Trackers\Combat\ITrackedCombat.cs" />
+    <Compile Include="Trackers\Mana\IManaTrackedItem.cs" />
+    <Compile Include="Trackers\Mana\IManaTracker.cs" />
     <Compile Include="Trackers\Mana\ManaTrackedItem.cs" />
     <Compile Include="Trackers\Mana\ManaTrackedItemState.cs" />
     <Compile Include="Trackers\Mana\ManaTrackerGUI.cs" />
@@ -89,7 +99,7 @@
     <Compile Include="PluginCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Debug.cs" />
-    <Compile Include="VirindiTools\ItemInfoOnIdent.cs" />
+    <Compile Include="PrintItemInfoOnUserIdent.cs" />
     <Compile Include="VirindiTools\Util.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO;
 
+using Decal.Adapter;
+
 namespace MagTools
 {
-	public static class Debug
+	static class Debug
 	{
 		/// <summary>
 		/// This option is defaultd on.
@@ -27,9 +29,9 @@ namespace MagTools
 					return;
 
 				if (note != null)
-					PluginCore.host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Exception caught: " + ex.Message + Environment.NewLine + ex.Source + Environment.NewLine + ex.StackTrace + Environment.NewLine + "Note: " + note, 5);
+					CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Exception caught: " + ex.Message + Environment.NewLine + ex.Source + Environment.NewLine + ex.StackTrace + Environment.NewLine + "Note: " + note, 5);
 				else
-					PluginCore.host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Exception caught: " + ex.Message + Environment.NewLine + ex.Source + Environment.NewLine + ex.StackTrace, 5);
+					CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Exception caught: " + ex.Message + Environment.NewLine + ex.Source + Environment.NewLine + ex.StackTrace, 5);
 
 				using (StreamWriter writer = new StreamWriter(PluginCore.PluginPersonalFolder.FullName + @"\Exceptions.txt", true))
 				{
@@ -80,7 +82,7 @@ namespace MagTools
 				if (!Enabled)
 					return;
 
-				PluginCore.host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + message, 5);
+				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + message, 5);
 			}
 			catch (Exception ex) { LogException(ex); }
 		}

@@ -22,8 +22,8 @@ namespace MagTools.Trackers.Mana
 				this.manaTracker = manaTracker;
 				this.mainView = mainView;
 
-				manaTracker.ItemAdded += new Action<ManaTrackedItem>(manaTracker_ItemAdded);
-				manaTracker.ItemRemoved += new Action<ManaTrackedItem>(manaTracker_ItemRemoved);
+				manaTracker.ItemAdded += new Action<IManaTrackedItem>(manaTracker_ItemAdded);
+				manaTracker.ItemRemoved += new Action<IManaTrackedItem>(manaTracker_ItemRemoved);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -47,8 +47,8 @@ namespace MagTools.Trackers.Mana
 			{
 				if (disposing)
 				{
-					manaTracker.ItemAdded -= new Action<ManaTrackedItem>(manaTracker_ItemAdded);
-					manaTracker.ItemRemoved -= new Action<ManaTrackedItem>(manaTracker_ItemRemoved);
+					manaTracker.ItemAdded -= new Action<IManaTrackedItem>(manaTracker_ItemAdded);
+					manaTracker.ItemRemoved -= new Action<IManaTrackedItem>(manaTracker_ItemRemoved);
 				}
 
 				// Indicate that the instance has been disposed.
@@ -56,7 +56,7 @@ namespace MagTools.Trackers.Mana
 			}
 		}
 
-		void manaTracker_ItemAdded(ManaTrackedItem obj)
+		void manaTracker_ItemAdded(IManaTrackedItem obj)
 		{
 			try
 			{
@@ -73,16 +73,16 @@ namespace MagTools.Trackers.Mana
 
 				Item_Changed(obj);
 
-				obj.Changed += new Action<ManaTrackedItem>(Item_Changed);
+				obj.Changed += new Action<IManaTrackedItem>(Item_Changed);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void manaTracker_ItemRemoved(ManaTrackedItem obj)
+		void manaTracker_ItemRemoved(IManaTrackedItem obj)
 		{
 			try
 			{
-				obj.Changed -= new Action<ManaTrackedItem>(Item_Changed);
+				obj.Changed -= new Action<IManaTrackedItem>(Item_Changed);
 
 				for (int row = 1 ; row <= mainView.ManaList.RowCount ; row++)
 				{
@@ -97,7 +97,7 @@ namespace MagTools.Trackers.Mana
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void Item_Changed(ManaTrackedItem obj)
+		void Item_Changed(IManaTrackedItem obj)
 		{
 			try
 			{

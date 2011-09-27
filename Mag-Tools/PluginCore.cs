@@ -34,8 +34,13 @@ namespace MagTools
 
 	// FriendlyName is the name that will show up in the plugins list of the decal agent (the one in windows, not in-game)
 	[FriendlyName("Mag-Tools")]
-	public class PluginCore : PluginBase
+	public sealed class PluginCore : PluginBase, IPluginCore
 	{
+		/// <summary>
+		/// Returns the current instance of the plugin in Decal. If the plugin hasn't been loaded yet this will return null.
+		/// </summary>
+		public static IPluginCore Current { get; private set; }
+
 		internal static string PluginName = "Mag-Tools";
 
 		private static DirectoryInfo pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\" + PluginCore.PluginName);
@@ -50,32 +55,31 @@ namespace MagTools
 			}
 		}
 
-		internal static Decal.Adapter.Wrappers.PluginHost host = null;
-
 		// View
 		private Views.MainView mainView;
 
 		// General
 		private ChatFilter chatFilter;
 		private OpenMainPackOnLogin openMainPackOnLogin;
+		private PrintItemInfoOnUserIdent printItemInfoOnUserIdent;
+		private PrintItemInfoOnContainerOpen printItemInfoOnContainerOpen;
 
 		// Macros
+		private Macros.AutoRecharge autoRecharge;
 		private Macros.AutoBuySell autoBuySell;
-		private Macros.AutoPack autoPack;
+		private Macros.InventoryPacker inventoryPacker;
+		public Macros.IInventoryPacker InventoryPacker { get { return inventoryPacker; } }
 		private Macros.AutoGive autoGive;
 		private Macros.AutoTradeAdd autoTradeAdd;
 		private Macros.AutoTradeAccept autoTradeAccept;
+		private Macros.ChestLooter chestLooter;
 
 		// Trackers
-		/// <summary>
-		/// If your plugin starts up before Mag-tools, this will be null. It is instantiated during this plugins Startup() and disposed in Shutdown()
-		/// </summary>
-		public static Trackers.Mana.ManaTracker manaTracker;
+		private Trackers.Mana.ManaTracker manaTracker;
+		public Trackers.Mana.IManaTracker ManaTracker { get { return manaTracker; } }
 		private Trackers.Mana.ManaTrackerGUI manaTrackerGUI;
-		/// <summary>
-		/// If your plugin starts up before Mag-tools, this will be null. It is instantiated during this plugins Startup() and disposed in Shutdown()
-		/// </summary>
-		public static Trackers.Combat.CombatTracker combatTracker;
+		private Trackers.Combat.CombatTracker combatTracker;
+		public Trackers.Combat.ICombatTracker CombatTracker { get { return combatTracker; } }
 		private Trackers.Combat.CombatTrackerGUIInfo combatTrackerGUIInfo;
 		private Trackers.Combat.CombatTrackerGUIMonsters combatTrackerGUIMonsters;
 
@@ -94,7 +98,6 @@ namespace MagTools
     </page>
 		*/
 		//
-		private VirindiTools.ItemInfoOnIdent itemInfoOnIdent;
 
 		// Settings
 		private Settings.XmlFile pluginConfigFile;
@@ -108,7 +111,7 @@ namespace MagTools
 		{
 			try
 			{
-				host = Host;
+				Current = this;
 
 				// View
 				mainView = new Views.MainView();
@@ -124,10 +127,11 @@ namespace MagTools
 				openMainPackOnLogin = new OpenMainPackOnLogin();
 
 				// Macros
+				autoRecharge = new Macros.AutoRecharge();
 				autoTradeAccept = new Macros.AutoTradeAccept();
 
 				// Trackers
-				manaTracker = new Trackers.Mana.ManaTracker(host);
+				manaTracker = new Trackers.Mana.ManaTracker();
 				manaTrackerGUI = new Trackers.Mana.ManaTrackerGUI(manaTracker, mainView);
 				combatTracker = new Trackers.Combat.CombatTracker();
 				combatTrackerGUIInfo = new Trackers.Combat.CombatTrackerGUIInfo(mainView.DamageList);
@@ -138,16 +142,23 @@ namespace MagTools
 			// We init objects that have dependancies here. These might crash out.
 			try
 			{
-				itemInfoOnIdent = new VirindiTools.ItemInfoOnIdent(host);
+				printItemInfoOnUserIdent = new PrintItemInfoOnUserIdent();
 			}
-			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("itemInfoOnIdent failed to load: " + ex.Message); }
+			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("printItemInfoOnUserIdent failed to load: " + ex.Message); }
 			catch (Exception ex) { Debug.LogException(ex); }
 
 			try
 			{
-				autoPack = new Macros.AutoPack();
+				printItemInfoOnContainerOpen = new PrintItemInfoOnContainerOpen();
 			}
-			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("autoPack failed to load: " + ex.Message); }
+			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("printItemInfoOnContainerOpen failed to load: " + ex.Message); }
+			catch (Exception ex) { Debug.LogException(ex); }
+
+			try
+			{
+				inventoryPacker = new Macros.InventoryPacker();
+			}
+			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("inventoryPacker failed to load: " + ex.Message); }
 			catch (Exception ex) { Debug.LogException(ex); }
 
 			try
@@ -173,6 +184,13 @@ namespace MagTools
 
 			try
 			{
+				chestLooter = new Macros.ChestLooter();
+			}
+			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("chestLooter failed to load: " + ex.Message); }
+			catch (Exception ex) { Debug.LogException(ex); }
+
+			try
+			{
 				AddOptionsToGUI();
 				LoadOptionsFromConfig();
 
@@ -192,7 +210,8 @@ namespace MagTools
 			try
 			{
 				//
-				if (itemInfoOnIdent != null) itemInfoOnIdent.Dispose();
+				if (printItemInfoOnContainerOpen != null) printItemInfoOnContainerOpen.Dispose();
+				if (printItemInfoOnUserIdent != null) printItemInfoOnUserIdent.Dispose();
 
 				// Trackers
 				if (manaTrackerGUI != null) manaTrackerGUI.Dispose();
@@ -201,10 +220,12 @@ namespace MagTools
 				if (combatTracker != null) combatTracker.Dispose();
 
 				// Macros
+				if (autoRecharge != null) autoRecharge.Dispose();
+				if (chestLooter != null) chestLooter.Dispose();
 				if (autoBuySell != null) autoBuySell.Dispose();
 				if (autoTradeAdd != null) autoTradeAdd.Dispose();
 				if (autoGive != null) autoGive.Dispose();
-				if (autoPack != null) autoPack.Dispose();
+				if (inventoryPacker != null) inventoryPacker.Dispose();
 				if (autoTradeAccept != null) autoTradeAccept.Dispose();
 
 				// General
@@ -222,7 +243,7 @@ namespace MagTools
 					mainView.Dispose();
 				}
 
-				host = null;
+				Current = null;
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -242,11 +263,11 @@ namespace MagTools
 		{
 			try
 			{
-				Host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
+				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
 
 				foreach (string startupError in startupErrors)
 				{
-					Host.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: Startup Error: " + startupError, 5);
+					CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: Startup Error: " + startupError, 5);
 				}
 
 				startupErrors.Clear();
@@ -270,6 +291,8 @@ namespace MagTools
 			if (mainView == null)
 				return;
 
+			mainView.AddOption(Option.AutoRechargeMana);
+
 			mainView.AddOption(Option.FilterAttackEvades);
 			mainView.AddOption(Option.FilterDefenseEvades);
 			mainView.AddOption(Option.FilterAttackResists);
@@ -285,6 +308,7 @@ namespace MagTools
 			mainView.AddOption(Option.FilterMonsterDeaths);
 			mainView.AddOption(Option.FilterSalvaging);
 			mainView.AddOption(Option.FilterSalvagingFails);
+			mainView.AddOption(Option.TradeBuffBotSpam);
 
 			mainView.AddOption(Option.ItemInfoOnIdent);
 
@@ -293,6 +317,8 @@ namespace MagTools
 			mainView.AddOption(Option.AutoTradeAdd);
 
 			mainView.AddOption(Option.AutoTradeAcceptEnabled);
+
+			mainView.AddOption(Option.ChestLooterEnabled);
 
 			mainView.AddOption(Option.OpenMainPackOnLogin);
 			mainView.AddOption(Option.DebuggingEnabled);
@@ -322,6 +348,12 @@ namespace MagTools
 		{
 			if (pluginConfigFile == null)
 				return;
+
+			if (mainView != null && autoRecharge != null)
+			{
+				mainView.SetOption(Option.AutoRechargeMana, pluginConfigFile.GetBoolean(Option.AutoRechargeMana.Xpath));
+				autoRecharge.Enabled = pluginConfigFile.GetBoolean(Option.AutoRechargeMana.Xpath);
+			}
 
 			if (mainView != null && chatFilter != null)
 			{
@@ -369,12 +401,18 @@ namespace MagTools
 
 				mainView.SetOption(Option.FilterSalvagingFails, pluginConfigFile.GetBoolean(Option.FilterSalvagingFails.Xpath));
 				chatFilter.FilterSalvagingFails = pluginConfigFile.GetBoolean(Option.FilterSalvagingFails.Xpath);
+
+				mainView.SetOption(Option.TradeBuffBotSpam, pluginConfigFile.GetBoolean(Option.TradeBuffBotSpam.Xpath));
+				chatFilter.TradeBuffBotSpam = pluginConfigFile.GetBoolean(Option.TradeBuffBotSpam.Xpath);
 			}
 
-			if (mainView != null && itemInfoOnIdent != null)
+			if (mainView != null && (printItemInfoOnUserIdent != null || printItemInfoOnContainerOpen != null))
 			{
 				mainView.SetOption(Option.ItemInfoOnIdent, pluginConfigFile.GetBoolean(Option.ItemInfoOnIdent.Xpath));
-				itemInfoOnIdent.Enabled = pluginConfigFile.GetBoolean(Option.ItemInfoOnIdent.Xpath);
+				if (printItemInfoOnUserIdent != null)
+					printItemInfoOnUserIdent.Enabled = pluginConfigFile.GetBoolean(Option.ItemInfoOnIdent.Xpath);
+				if (printItemInfoOnContainerOpen != null)
+					printItemInfoOnContainerOpen.Enabled = pluginConfigFile.GetBoolean(Option.ItemInfoOnIdent.Xpath);
 			}
 
 			if (mainView != null && autoBuySell != null)
@@ -400,6 +438,12 @@ namespace MagTools
 				{
 					autoTradeAccept.AddToWhitelist(new System.Text.RegularExpressions.Regex("^" + obj + "$"));
 				}
+			}
+
+			if (mainView != null && chestLooter != null)
+			{
+				mainView.SetOption(Option.ChestLooterEnabled, pluginConfigFile.GetBoolean(Option.ChestLooterEnabled.Xpath));
+				chestLooter.Enabled = pluginConfigFile.GetBoolean(Option.ChestLooterEnabled.Xpath);
 			}
 
 			if (mainView != null && openMainPackOnLogin != null)
