@@ -15,6 +15,9 @@ namespace MagTools
 			this.Name = name;
 		}
 
+		private static readonly OptionGroup manaMagement = new OptionGroup("ManaManagement", "Mana Management");
+		public static OptionGroup ManaMagement { get { return manaMagement; } }
+
 		private static readonly OptionGroup filters = new OptionGroup("Filters", "Filters");
 		public static OptionGroup Filters { get { return filters; } }
 
@@ -29,6 +32,9 @@ namespace MagTools
 
 		private static readonly OptionGroup autoTradeAccept = new OptionGroup("AutoTradeAccept", "Auto Trade Accept");
 		public static OptionGroup AutoTradeAccept { get { return autoTradeAccept; } }
+
+		private static readonly OptionGroup looting = new OptionGroup("Looting", "Looting");
+		public static OptionGroup Looting { get { return looting; } }
 
 		private static readonly OptionGroup misc = new OptionGroup("Misc", "Misc");
 		public static OptionGroup Misc { get { return misc; } }

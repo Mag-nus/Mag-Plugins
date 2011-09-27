@@ -211,6 +211,10 @@ namespace MagTools.Macros
 				// Ok, we need to buy some of this item, how many should we buy?
 				buyAmount = result.Data1 - currentAmountInInventory;
 
+				// We can't add more than 5000 of any one item to the vendor buy pane.
+				if (buyAmount > 5000)
+					buyAmount = 5000;
+
 				return vendorObj;
 			}
 

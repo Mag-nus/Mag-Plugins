@@ -12,17 +12,12 @@ namespace MagTools.Macros
 	{
 		public bool Enabled { private get; set; }
 
-		System.Windows.Forms.Timer addTimer = new System.Windows.Forms.Timer();
-
 		public AutoTradeAdd()
 		{
 			try
 			{
 				CoreManager.Current.WorldFilter.EnterTrade += new EventHandler<Decal.Adapter.Wrappers.EnterTradeEventArgs>(WorldFilter_EnterTrade);
 				CoreManager.Current.WorldFilter.EndTrade += new EventHandler<Decal.Adapter.Wrappers.EndTradeEventArgs>(WorldFilter_EndTrade);
-				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
-
-				addTimer.Tick += new EventHandler(addTimer_Tick);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -46,12 +41,10 @@ namespace MagTools.Macros
 			{
 				if (disposing)
 				{
+					Stop();
+
 					CoreManager.Current.WorldFilter.EnterTrade -= new EventHandler<Decal.Adapter.Wrappers.EnterTradeEventArgs>(WorldFilter_EnterTrade);
 					CoreManager.Current.WorldFilter.EndTrade -= new EventHandler<Decal.Adapter.Wrappers.EndTradeEventArgs>(WorldFilter_EndTrade);
-					CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
-
-					addTimer.Tick -= new EventHandler(addTimer_Tick);
-					addTimer.Dispose();
 				}
 
 				// Indicate that the instance has been disposed.
@@ -59,13 +52,6 @@ namespace MagTools.Macros
 			}
 		}
 
-		private int lastTraderId = 0;
-
-		private VTClassic.LootCore lootProfile = new VTClassic.LootCore();
-
-		Queue<int> itemQueue = new Queue<int>();
-		Collection<int> itemsWaitingForId = new Collection<int>();
-		Collection<int> itemsNeedChecking = new Collection<int>();
 
 		void WorldFilter_EnterTrade(object sender, Decal.Adapter.Wrappers.EnterTradeEventArgs e)
 		{
@@ -73,11 +59,6 @@ namespace MagTools.Macros
 			{
 				if (!Enabled)
 					return;
-
-				addTimer.Stop();
-				itemQueue.Clear();
-				itemsWaitingForId.Clear();
-				itemsNeedChecking.Clear();
 
 				int traderId = 0;
 
@@ -93,28 +74,12 @@ namespace MagTools.Macros
 				if (traderId == 0)
 					return;
 
-				if (lastTraderId != traderId)
-				{
-					if (lastTraderId != 0)
-						lootProfile.UnloadProfile();
+				FileInfo fileInfo = new FileInfo(PluginCore.PluginPersonalFolder + @"\" + CoreManager.Current.WorldFilter[traderId].Name + ".utl");
 
-					lastTraderId = 0;
+				if (!fileInfo.Exists)
+					return;
 
-					FileInfo fileInfo = new FileInfo(PluginCore.PluginPersonalFolder + @"\" + CoreManager.Current.WorldFilter[traderId].Name + ".utl");
-
-					if (!fileInfo.Exists)
-						return;
-
-					// Load our loot profile
-					lootProfile.LoadProfile(fileInfo.FullName, false);
-
-					lastTraderId = traderId;
-				}
-
-				ProcessInventory();
-
-				addTimer.Interval = 200;
-				addTimer.Start();
+				Start(fileInfo);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -123,20 +88,109 @@ namespace MagTools.Macros
 		{
 			try
 			{
-				addTimer.Stop();
-				itemQueue.Clear();
-				itemsWaitingForId.Clear();
-				itemsNeedChecking.Clear();
+				Stop();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		private void ProcessInventory()
+
+		bool started = false;
+
+		private VTClassic.LootCore lootCore = new VTClassic.LootCore();
+
+		bool idsRequested = false;
+
+		Collection<int> itemIdsAdded = new Collection<int>();
+
+		public void Start(FileInfo lootProfile)
 		{
+			if (started)
+				return;
+
+			if (!lootProfile.Exists)
+				return;
+
+			// Load our loot profile
+			lootCore.LoadProfile(lootProfile.FullName, false);
+
+			idsRequested = false;
+			itemIdsAdded.Clear();
+
+			CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
+
+			started = true;
+		}
+
+		public void Stop()
+		{
+			if (!started)
+				return;
+
+			CoreManager.Current.RenderFrame -= new EventHandler<EventArgs>(Current_RenderFrame);
+
+			lootCore.UnloadProfile();
+
+			started = false;
+		}
+
+		DateTime lastThought = DateTime.MinValue;
+
+		void Current_RenderFrame(object sender, EventArgs e)
+		{
+			try
+			{
+				if (DateTime.Now - lastThought < TimeSpan.FromMilliseconds(100))
+					return;
+
+				lastThought = DateTime.Now;
+
+				Think();
+
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void Think()
+		{
+			bool waitingForIds = false;
+
+			if (!idsRequested)
+			{
+				foreach (WorldObject item in CoreManager.Current.WorldFilter.GetInventory())
+				{
+					// If the item is equipped or wielded, don't process it.
+					if (item.Values(LongValueKey.EquippedSlots, 0) > 0 || item.Values(LongValueKey.Slot, -1) == -1)
+						continue;
+
+					// Convert the item into a VT GameItemInfo object
+					uTank2.LootPlugins.GameItemInfo itemInfo = uTank2.PluginCore.PC.FWorldTracker_GetWithID(item.Id);
+
+					if (itemInfo == null)
+					{
+						// This happens all the time for aetheria that has been converted
+						//Debug.WriteToChat("AutoTradeAdd.Think(), itemInfo == null for " + item.Name);
+
+						continue;
+					}
+
+					if (lootCore.DoesPotentialItemNeedID(itemInfo))
+					{
+						CoreManager.Current.Actions.RequestId(item.Id);
+
+						waitingForIds = true;
+					}
+				}
+
+				idsRequested = true;
+			}
+
 			foreach (WorldObject item in CoreManager.Current.WorldFilter.GetInventory())
 			{
 				// If the item is equipped or wielded, don't process it.
 				if (item.Values(LongValueKey.EquippedSlots, 0) > 0 || item.Values(LongValueKey.Slot, -1) == -1)
+					continue;
+
+				if (itemIdsAdded.Contains(item.Id))
 					continue;
 
 				// Convert the item into a VT GameItemInfo object
@@ -144,90 +198,35 @@ namespace MagTools.Macros
 
 				if (itemInfo == null)
 				{
-					Debug.WriteToChat("AutoTradeAdd.ProcessInventory(), itemInfo == null for " + item.Name);
+					// This happens all the time for aetheria that has been converted
+					//Debug.WriteToChat("AutoTradeAdd.Think(), itemInfo == null for " + item.Name);
+
 					continue;
 				}
 
-				if (lootProfile.DoesPotentialItemNeedID(itemInfo))
+				if (!lootCore.DoesPotentialItemNeedID(itemInfo))
 				{
-					itemsWaitingForId.Add(item.Id);
+					uTank2.LootPlugins.LootAction result = lootCore.GetLootDecision(itemInfo);
 
-					CoreManager.Current.Actions.RequestId(item.Id);
+					if (!result.IsKeep)
+						continue;
+
+					itemIdsAdded.Add(item.Id);
+
+					CoreManager.Current.Actions.TradeAdd(item.Id);
+
+					return;
 				}
 				else
-				{
-					uTank2.LootPlugins.LootAction result = lootProfile.GetLootDecision(itemInfo);
-
-					processVTankIdentLootAction(item.Id, result);
-				}
-
-				// Can't trade more than 102 items so don't bother.
-				if (itemQueue.Count >= 102)
-					break;
+					waitingForIds = true;
 			}
-		}
 
-		void WorldFilter_ChangeObject(object sender, ChangeObjectEventArgs e)
-		{
-			try
-			{
-				if (itemsWaitingForId.Count == 0 || e.Change != WorldChangeType.IdentReceived || !itemsWaitingForId.Contains(e.Changed.Id))
-					return;
-
-				itemsWaitingForId.Remove(e.Changed.Id);
-
-				itemsNeedChecking.Add(e.Changed.Id);
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		private void processVTankIdentLootAction(int itemId, uTank2.LootPlugins.LootAction result)
-		{
-			if (!result.IsKeep)
+			if (waitingForIds)
 				return;
 
-			itemQueue.Enqueue(itemId);
-		}
+			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Add To Trade - Inventory scan complete.", 5);
 
-		void addTimer_Tick(object sender, EventArgs e)
-		{
-			try
-			{
-				if (itemQueue.Count == 0 && itemsWaitingForId.Count == 0 && itemsNeedChecking.Count == 0)
-				{
-					addTimer.Stop();
-					CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Add To Trade - Inventory scan complete.", 5);
-					return;
-				}
-
-				foreach (int Id in itemsNeedChecking)
-				{
-					// Convert the item into a VT GameItemInfo object
-					uTank2.LootPlugins.GameItemInfo itemInfo = uTank2.PluginCore.PC.FWorldTracker_GetWithID(Id);
-
-					if (itemInfo == null)
-					{
-						Debug.WriteToChat("AutoTradeAdd.ProcessInventory(), itemInfo == null for " + Id);
-						continue;
-					}
-
-					uTank2.LootPlugins.LootAction result = lootProfile.GetLootDecision(itemInfo);
-
-					processVTankIdentLootAction(Id, result);
-				}
-
-				itemsNeedChecking.Clear();
-
-				if (itemQueue.Count == 0)
-					return;
-
-				int item = itemQueue.Dequeue();
-
-				// Should check here to see if the trade window has >= 102 items added.
-
-				CoreManager.Current.Actions.TradeAdd(item);
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
+			Stop();
 		}
 	}
 }

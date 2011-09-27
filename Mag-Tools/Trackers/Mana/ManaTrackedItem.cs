@@ -7,25 +7,21 @@ using Decal.Filters;
 
 namespace MagTools.Trackers.Mana
 {
-	public class ManaTrackedItem : IDisposable
+	class ManaTrackedItem : IDisposable, IManaTrackedItem
 	{
 		/// <summary>
 		/// This is raised when an item the tracker is watching has been changed.
 		/// </summary>
-		public event Action<ManaTrackedItem> Changed;
+		public event Action<IManaTrackedItem> Changed;
 
-		private readonly PluginHost Host;
-
-		public readonly int Id;
+		public int Id { get; private set; }
 
 		private DateTime timeOfLastManaIdent = DateTime.MinValue;
 
 		private System.Windows.Forms.Timer burnTimer = new System.Windows.Forms.Timer();
 
-		public ManaTrackedItem(PluginHost host, int id)
+		public ManaTrackedItem(int id)
 		{
-			this.Host = host;
-
 			this.Id = id;
 
 			WorldObject wo = CoreManager.Current.WorldFilter[Id];
@@ -33,7 +29,7 @@ namespace MagTools.Trackers.Mana
 			if (wo == null)
 				return;
 
-			Host.Actions.RequestId(Id);
+			CoreManager.Current.Actions.RequestId(Id);
 
 			CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 			CoreManager.Current.ChatBoxMessage += new EventHandler<ChatTextInterceptEventArgs>(Current_ChatBoxMessage);
@@ -89,7 +85,7 @@ namespace MagTools.Trackers.Mana
 				if (e.Changed.Id != Id)
 					return;
 
-				if (e.Change == WorldChangeType.IdentReceived && ItemState == ManaTrackedItemState.Active)
+				if (e.Change == WorldChangeType.IdentReceived && ItemState == ManaTrackedItemState.Active && SecondsPerBurn > 0)
 				{
 					burnTimer.Interval = (int)(SecondsPerBurn * 1000);
 					burnTimer.Start();
@@ -139,14 +135,14 @@ namespace MagTools.Trackers.Mana
 				if (e.Text.Contains("The Mana Stone gives "))
 				{
 					if (e.Text.Contains(wo.Name))
-						Host.Actions.RequestId(Id);
+						CoreManager.Current.Actions.RequestId(Id);
 				}
 
 				// Your Bronze Haebrean Breastplate is out of Mana.
 				if (e.Text.Contains("Your ") && e.Text.Contains(" is out of Mana."))
 				{
 					if (e.Text.Contains(wo.Name))
-						Host.Actions.RequestId(Id);
+						CoreManager.Current.Actions.RequestId(Id);
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -287,6 +283,9 @@ namespace MagTools.Trackers.Mana
 				if (wo == null || !wo.HasIdData)
 					return 0;
 
+				if (wo.Values(DoubleValueKey.ManaRateOfChange, 0) == 0)
+					return 0;
+
 				// This doesn't take into account any luminance augs. It should, so that fix would go here.
 
 				// Items can burn mana in 5 sec increments. If it says 1 every 18 sec, its really 1 every 20.
@@ -307,7 +306,7 @@ namespace MagTools.Trackers.Mana
 				if (wo == null || ItemState == ManaTrackedItemState.Unknown || ItemState == ManaTrackedItemState.NotActivatable)
 					return 0;
 
-				if (ItemState == ManaTrackedItemState.NotActive)
+				if (ItemState == ManaTrackedItemState.NotActive || SecondsPerBurn == 0)
 					return wo.Values(LongValueKey.CurrentMana);
 
 				int burnedMana = 0;
@@ -345,6 +344,9 @@ namespace MagTools.Trackers.Mana
 
 				if (wo == null || ItemState != ManaTrackedItemState.Active)
 					return new TimeSpan();
+
+				if (SecondsPerBurn == 0)
+					return new TimeSpan(99, 99, 0);
 
 				return TimeSpan.FromSeconds(CalculatedCurrentMana * SecondsPerBurn);
 			}

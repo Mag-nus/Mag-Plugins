@@ -5,103 +5,22 @@ using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 using Decal.Filters;
 
-namespace MagTools.VirindiTools
+namespace MagTools
 {
-	class ItemInfoOnIdent : IDisposable
+	class PrintItemInfo
 	{
-		private readonly PluginHost Host;
+		bool dontShowNoLootItems = false;
 
-		public bool Enabled { private get; set; }
+		bool hideSalvageRules = false;
 
-
-		public ItemInfoOnIdent(PluginHost host)
+		public PrintItemInfo(WorldObject wo, bool dontShowNoLootItems = false, bool hideSalvageRules = false)
 		{
 			try
 			{
-				this.Host = host;
+				this.dontShowNoLootItems = dontShowNoLootItems;
 
-				CoreManager.Current.ContainerOpened += new EventHandler<Decal.Adapter.ContainerOpenedEventArgs>(Core_ContainerOpened);
-				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
+				this.hideSalvageRules = hideSalvageRules;
 
-		private bool _disposed = false;
-
-		public void Dispose()
-		{
-			Dispose(true);
-
-			// Use SupressFinalize in case a subclass
-			// of this type implements a finalizer.
-			GC.SuppressFinalize(this);
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			// If you need thread safety, use a lock around these 
-			// operations, as well as in your methods that use the resource.
-			if (!_disposed)
-			{
-				if (disposing)
-				{
-					CoreManager.Current.ContainerOpened -= new EventHandler<Decal.Adapter.ContainerOpenedEventArgs>(Core_ContainerOpened);
-					CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
-				}
-
-				// Indicate that the instance has been disposed.
-				_disposed = true;
-			}
-		}
-
-		void Core_ContainerOpened(object sender, Decal.Adapter.ContainerOpenedEventArgs e)
-		{
-			try
-			{
-				if (!Enabled)
-					return;
-
-				foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetByContainer(e.ItemGuid))
-					ProcessItem(wo);
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		void WorldFilter_ChangeObject(object sender, Decal.Adapter.Wrappers.ChangeObjectEventArgs e)
-		{
-			try
-			{
-				if (!Enabled)
-					return;
-
-				if (e.Change != WorldChangeType.IdentReceived)
-					return;
-
-				if (Host.Actions.CurrentSelection != e.Changed.Id)
-					return;
-
-				ProcessItem(e.Changed);
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		private void ProcessItem(WorldObject wo)
-		{
-			// System.IO.FileNotFoundException
-			if (wo.ObjectClass == ObjectClass.Corpse ||
-				wo.ObjectClass == ObjectClass.Door ||
-				wo.ObjectClass == ObjectClass.Foci ||
-				wo.ObjectClass == ObjectClass.Housing ||
-				wo.ObjectClass == ObjectClass.Lifestone ||
-				wo.ObjectClass == ObjectClass.Monster ||
-				wo.ObjectClass == ObjectClass.Npc ||
-				wo.ObjectClass == ObjectClass.Player ||
-				wo.ObjectClass == ObjectClass.Portal ||
-				wo.ObjectClass == ObjectClass.Vendor)
-				return;
-
-			try
-			{
 				ProcessItemWithVTank(wo);
 			}
 			catch (System.IO.FileNotFoundException)
@@ -109,11 +28,11 @@ namespace MagTools.VirindiTools
 				// If this exception was raised, the uTank2 dll probably didn't load right.
 				// We'll display the ident info without the additional vtank loot rule header.
 
-				PluginCore.host.Actions.AddChatText(GetIdentStringForItem(wo), 14, 1);
+				CoreManager.Current.Actions.AddChatText(GetIdentStringForItem(wo), 14, 1);
 			}
 		}
 
-		private void ProcessItemWithVTank(WorldObject wo)
+		void ProcessItemWithVTank(WorldObject wo)
 		{
 			/*
 			 * me: FLootPluginClassifyCallback and immediate, difference being anything other than the obv?
@@ -149,7 +68,6 @@ namespace MagTools.VirindiTools
 					return;
 
 				processVTankIdentLootAction(obj, result);
-
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -162,7 +80,10 @@ namespace MagTools.VirindiTools
 				return;
 
 			// If a rule does not exist for this item and the user doesn't have it selected, ignore it
-			if (result.IsNoLoot && String.IsNullOrEmpty(result.RuleName) && itemId != Host.Actions.CurrentSelection)
+			if (dontShowNoLootItems && result.IsNoLoot)
+				return;
+
+			if (hideSalvageRules && result.IsSalvage)
 				return;
 
 			//<Tell:IIDString:221112:-2024140046>(Epics)<\\Tell>
@@ -182,10 +103,10 @@ namespace MagTools.VirindiTools
 
 			sb.Append(GetIdentStringForItem(wo));
 
-			PluginCore.host.Actions.AddChatText(sb.ToString(), 14, 1);
+			CoreManager.Current.Actions.AddChatText(sb.ToString(), 14, 1);
 		}
 
-		private string GetIdentStringForItem(WorldObject wo)
+		string GetIdentStringForItem(WorldObject wo)
 		{
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
@@ -312,7 +233,7 @@ namespace MagTools.VirindiTools
 					// <{Mag-Tools}>: Might of the Lugians,				Difficulty: 300,	Family: 1,		Generation: 1, Type: 1,		0	0		1 2087 -2.07525870829232E+20 0 0 0 0 0
 					// <{Mag-Tools}>: Executor's Blessing,				Difficulty: 300,	Family: 115,	Generation: 1, Type: 1,		0	0		1 2053 -2.07525870829232E+20 0 0 0 0 0
 					// <{Mag-Tools}>: Regeneration Other Incantation,	Difficulty: 400,	Family: 93,		Generation: 1, Type: 1,		5	0.25	1 3982 -2.07525870829232E+20 0 0 0 0 0
-					
+
 					// Focusing stone
 					// <{Mag-Tools}>: Brilliance,						Difficulty: 250,	Family: 15,		Generation: 1, Type: 1,		5	0.25	1 2348 -2.07525870829232E+20 0 0 0 0 0
 					// <{Mag-Tools}>: Concentration,					Difficulty: 100,	Family: 13,		Generation: 1, Type: 1,		0	0		1 2347 -2.07525870829232E+20 0 0 0 0 0
@@ -366,7 +287,7 @@ namespace MagTools.VirindiTools
 							continue;
 					}
 
-					ShowSpell:
+				ShowSpell:
 
 					sb.Append(", " + spellById.Name);
 				}
