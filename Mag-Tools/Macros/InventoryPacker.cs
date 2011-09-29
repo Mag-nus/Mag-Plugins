@@ -64,20 +64,6 @@ namespace MagTools.Macros
 
 		private VTClassic.LootCore lootProfile = new VTClassic.LootCore();
 
-		private struct ItemToProcess
-		{
-			public ItemToProcess(int id, int[] targetPackIds)
-			{
-				this.Id = id;
-				this.TargetPackIds = targetPackIds;
-			}
-
-			public readonly int Id;
-			public readonly int[] TargetPackIds;
-		}
-
-		private Collection<ItemToProcess> ItemsToProcess = new Collection<ItemToProcess>();
-
 		bool started = false;
 
 		public void Start()
@@ -92,11 +78,107 @@ namespace MagTools.Macros
 
 			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Started.", 5);
 
-
 			// Load our loot profile
 			lootProfile.LoadProfile(fileInfo.FullName, false);
 
+			CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
 
+			started = true;
+		}
+
+		public void Stop()
+		{
+			if (!started)
+				return;
+
+			CoreManager.Current.RenderFrame -= new EventHandler<EventArgs>(Current_RenderFrame);
+
+			lootProfile.UnloadProfile();
+
+			started = false;
+
+			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Completed.", 5);
+		}
+
+		DateTime lastThought = DateTime.MinValue;
+
+		void Current_RenderFrame(object sender, EventArgs e)
+		{
+			try
+			{
+				if (DateTime.Now - lastThought < TimeSpan.FromMilliseconds(100))
+					return;
+
+				lastThought = DateTime.Now;
+
+				Think();
+
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void Think()
+		{
+			if (DoAutoStack())
+				return;
+
+			if (DoAutoPack())
+				return;
+
+			// If we've gotten to this point no items were moved.
+			Stop();
+		}
+
+		bool DoAutoStack()
+		{
+			foreach (WorldObject item in CoreManager.Current.WorldFilter.GetInventory())
+			{
+				// If the item is equipped or wielded, don't process it.
+				if (item.Values(LongValueKey.EquippedSlots, 0) > 0 || item.Values(LongValueKey.Slot, -1) == -1)
+					continue;
+
+				// If the item isn't stackable, don't process it.
+				if (item.Values(LongValueKey.StackMax, 0) <= 1)
+					continue;
+
+				foreach (WorldObject secondItem in CoreManager.Current.WorldFilter.GetByContainer(item.Container))
+				{
+					if (item.Id == secondItem.Id || item.Name != secondItem.Name)
+						continue;
+
+					if (item.Values(LongValueKey.StackCount) + secondItem.Values(LongValueKey.StackCount) <= item.Values(LongValueKey.StackMax))
+					{
+						if (CoreManager.Current.Actions.CurrentSelection == 0 || CoreManager.Current.Actions.CurrentSelection == item.Id || CoreManager.Current.Actions.CurrentSelection == secondItem.Id || CoreManager.Current.WorldFilter[CoreManager.Current.Actions.CurrentSelection].Name == item.Name)
+						{
+							CoreManager.Current.Actions.SelectItem(CoreManager.Current.CharacterFilter.Id);
+
+							return true;
+						}
+
+						CoreManager.Current.Actions.MoveItem(item.Id, item.Container, 0, true);
+
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		private struct ItemToProcess
+		{
+			public ItemToProcess(int id, int[] targetPackIds)
+			{
+				this.Id = id;
+				this.TargetPackIds = targetPackIds;
+			}
+
+			public readonly int Id;
+			public readonly int[] TargetPackIds;
+		}
+
+		bool DoAutoPack()
+		{
 			// Get all of our side pack information and put them in the correct order
 			int[] Packs = new int[CoreManager.Current.WorldFilter[CoreManager.Current.CharacterFilter.Id].Values(LongValueKey.PackSlots) + 1];
 
@@ -114,7 +196,7 @@ namespace MagTools.Macros
 
 
 			// Process our inventory
-			ItemsToProcess.Clear();
+			Collection<ItemToProcess> ItemsToProcess = new Collection<ItemToProcess>();
 
 			foreach (WorldObject item in CoreManager.Current.WorldFilter.GetInventory())
 			{
@@ -153,58 +235,19 @@ namespace MagTools.Macros
 				ItemsToProcess.Add(itemToProcess);
 			}
 
-
-			lootProfile.UnloadProfile();
-
-			if (ItemsToProcess.Count == 0)
-			{
-				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Pack - All items alraedy packed.", 5);
-
-				return;
-			}
-
-			CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
-
-			started = true;
-		}
-
-		public void Stop()
-		{
-			if (!started)
-				return;
-
-			CoreManager.Current.RenderFrame -= new EventHandler<EventArgs>(Current_RenderFrame);
-
-			started = false;
-
-			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Completed.", 5);
-		}
-
-		DateTime lastThought = DateTime.MinValue;
-
-		void Current_RenderFrame(object sender, EventArgs e)
-		{
-			try
-			{
-				if (DateTime.Now - lastThought < TimeSpan.FromMilliseconds(100))
-					return;
-
-				lastThought = DateTime.Now;
-
-				Think();
-
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		void Think()
-		{
 			// Lets go through our list and see if any items are in their primary target pack
 			for (int i = ItemsToProcess.Count - 1 ; i >= 0 ; i--)
 			{
 				ItemToProcess itemToProcess = ItemsToProcess[i];
 
 				WorldObject item = CoreManager.Current.WorldFilter[itemToProcess.Id];
+
+				if (item == null)
+				{
+					ItemsToProcess.RemoveAt(i);
+
+					continue;
+				}
 
 				if (item.Container == itemToProcess.TargetPackIds[0])
 				{
@@ -241,21 +284,20 @@ namespace MagTools.Macros
 
 					// Check to see that the target is even a pack.
 					WorldObject target = CoreManager.Current.WorldFilter[itemToProcess.TargetPackIds[packIndex]];
-					
+
 					if (target == null || target.ObjectClass != ObjectClass.Container)
 						continue;
 
 					if (Util.GetFreePackSlots(itemToProcess.TargetPackIds[packIndex]) > 0)
 					{
-						CoreManager.Current.Actions.MoveItem(item.Id, itemToProcess.TargetPackIds[packIndex], 0, false);
+						CoreManager.Current.Actions.MoveItem(item.Id, itemToProcess.TargetPackIds[packIndex], 0, true);
 
-						return;
+						return true;
 					}
 				}
 			}
 
-			// If we've gotten to this point no items were moved.
-			Stop();
+			return false;
 		}
 	}
 }

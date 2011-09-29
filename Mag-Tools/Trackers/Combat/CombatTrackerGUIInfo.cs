@@ -53,8 +53,8 @@ namespace MagTools.Trackers.Combat
 				damageList.AddColumn(typeof(HudStaticText), 45, null);
 				damageList.AddColumn(typeof(HudStaticText), 45, null);
 				damageList.AddColumn(typeof(HudStaticText), 10, null);
-				damageList.AddColumn(typeof(HudStaticText), 50, null);
-				damageList.AddColumn(typeof(HudStaticText), 65, null);
+				damageList.AddColumn(typeof(HudStaticText), 35, null); // This cannot go any smaller without purning labels
+				damageList.AddColumn(typeof(HudStaticText), 85, null);
 
 				HudList.HudListRowAccessor newRow;
 
@@ -161,39 +161,39 @@ namespace MagTools.Trackers.Combat
 
 		public void LoadFromTrackedCombat(ITrackedCombat trackedCombat)
 		{
-			typelessMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Typeless].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Typeless].TotalDamage.ToString();
-			typelessMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Typeless].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Typeless].TotalDamage.ToString();
-			slashMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Slash].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Slash].TotalDamage.ToString();
-			slashMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Slash].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Slash].TotalDamage.ToString();
-			pierceMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Pierce].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Pierce].TotalDamage.ToString();
-			pierceMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Pierce].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Pierce].TotalDamage.ToString();
-			bludgeMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Bludge].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Bludge].TotalDamage.ToString();
-			bludgeMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Bludge].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Bludge].TotalDamage.ToString();
-			fireMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Fire].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Fire].TotalDamage.ToString();
-			fireMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Fire].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Fire].TotalDamage.ToString();
-			coldMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Cold].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Cold].TotalDamage.ToString();
-			coldMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Cold].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Cold].TotalDamage.ToString();
-			acidMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Acid].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Acid].TotalDamage.ToString();
-			acidMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Acid].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Acid].TotalDamage.ToString();
-			electricMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Electric].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Electric].TotalDamage.ToString();
-			electricMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Electric].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Electric].TotalDamage.ToString();
+			typelessMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Typeless].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Typeless].TotalDamage.ToString("#,##0");
+			typelessMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Typeless].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Typeless].TotalDamage.ToString("#,##0");
+			slashMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Slash].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Slash].TotalDamage.ToString("#,##0");
+			slashMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Slash].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Slash].TotalDamage.ToString("#,##0");
+			pierceMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Pierce].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Pierce].TotalDamage.ToString("#,##0");
+			pierceMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Pierce].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Pierce].TotalDamage.ToString("#,##0");
+			bludgeMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Bludge].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Bludge].TotalDamage.ToString("#,##0");
+			bludgeMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Bludge].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Bludge].TotalDamage.ToString("#,##0");
+			fireMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Fire].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Fire].TotalDamage.ToString("#,##0");
+			fireMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Fire].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Fire].TotalDamage.ToString("#,##0");
+			coldMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Cold].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Cold].TotalDamage.ToString("#,##0");
+			coldMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Cold].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Cold].TotalDamage.ToString("#,##0");
+			acidMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Acid].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Acid].TotalDamage.ToString("#,##0");
+			acidMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Acid].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Acid].TotalDamage.ToString("#,##0");
+			electricMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Electric].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle][DamageElement.Electric].TotalDamage.ToString("#,##0");
+			electricMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Electric].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic][DamageElement.Electric].TotalDamage.ToString("#,##0");
 
-			totalMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle].TotalDamage.ToString();
-			totalMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic].TotalDamage.ToString();
+			totalMeleeMissileText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle].TotalDamage.ToString("#,##0");
+			totalMagicText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic].TotalDamage.ToString("#,##0");
 
 
-			attacksText.Text = trackedCombat[AttackDirection.PlayerInitiated].TotalAttacks == 0 ? "" : trackedCombat[AttackDirection.PlayerInitiated].TotalAttacks.ToString() + " (" + trackedCombat[AttackDirection.PlayerInitiated].AttackSuccessPercent.ToString("F0") + "%)";
-			evadesText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle].TotalAttacks == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle].TotalAttacks.ToString() + " (" + (100 - trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle].AttackSuccessPercent).ToString("F0") + "%)";
-			resistsText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic].TotalAttacks == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic].TotalAttacks.ToString() + " (" + (100 - trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic].AttackSuccessPercent).ToString("F0") + "%)";
+			attacksText.Text = trackedCombat[AttackDirection.PlayerInitiated].TotalAttacks == 0 ? "" : trackedCombat[AttackDirection.PlayerInitiated].TotalAttacks.ToString("#,##0") + " (" + Math.Round(trackedCombat[AttackDirection.PlayerInitiated].AttackSuccessPercent, 0).ToString("F0") + "%)";
+			evadesText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle].TotalAttacks == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle].TotalAttacks.ToString("#,##0") + " (" + Math.Round(100 - trackedCombat[AttackDirection.PlayerReceived][AttackType.MeleeMissle].AttackSuccessPercent, 0).ToString("F0") + "%)";
+			resistsText.Text = trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic].TotalAttacks == 0 ? "" : trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic].TotalAttacks.ToString("#,##0") + " (" + Math.Round(100 - trackedCombat[AttackDirection.PlayerReceived][AttackType.Magic].AttackSuccessPercent, 0).ToString("F0") + "%)";
 
-			avgText.Text = trackedCombat[AttackDirection.PlayerInitiated].AverageNonCritAttack == 0 ? "" : trackedCombat[AttackDirection.PlayerInitiated].AverageNonCritAttack.ToString();
-			maxText.Text = trackedCombat[AttackDirection.PlayerInitiated].MaxNonCritAttack == 0 ? "" : trackedCombat[AttackDirection.PlayerInitiated].MaxNonCritAttack.ToString();
+			avgText.Text = trackedCombat[AttackDirection.PlayerInitiated].AverageNonCritAttack == 0 ? "" : trackedCombat[AttackDirection.PlayerInitiated].AverageNonCritAttack.ToString("#,##0");
+			maxText.Text = trackedCombat[AttackDirection.PlayerInitiated].MaxNonCritAttack == 0 ? "" : trackedCombat[AttackDirection.PlayerInitiated].MaxNonCritAttack.ToString("#,##0");
 
-			critsText.Text = trackedCombat[AttackDirection.PlayerInitiated].Crits == 0 ? "" : trackedCombat[AttackDirection.PlayerInitiated].Crits.ToString();
-			critsAvgText.Text = trackedCombat[AttackDirection.PlayerInitiated].AverageCritAttack == 0 ? "" : trackedCombat[AttackDirection.PlayerInitiated].AverageCritAttack.ToString();
-			critsMaxText.Text = trackedCombat[AttackDirection.PlayerInitiated].MaxCritAttack == 0 ? "" : trackedCombat[AttackDirection.PlayerInitiated].MaxCritAttack.ToString();
+			critsText.Text = trackedCombat[AttackDirection.PlayerInitiated].Crits == 0 ? "" : trackedCombat[AttackDirection.PlayerInitiated].Crits.ToString("#,##0") + " (" + Math.Round(trackedCombat[AttackDirection.PlayerInitiated].CritPercent, 0).ToString("F0") + "%)";
+			critsAvgText.Text = trackedCombat[AttackDirection.PlayerInitiated].AverageCritAttack == 0 ? "" : trackedCombat[AttackDirection.PlayerInitiated].AverageCritAttack.ToString("#,##0");
+			critsMaxText.Text = trackedCombat[AttackDirection.PlayerInitiated].MaxCritAttack == 0 ? "" : trackedCombat[AttackDirection.PlayerInitiated].MaxCritAttack.ToString("#,##0");
 
-			totalDmgText.Text = trackedCombat[AttackDirection.PlayerInitiated].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerInitiated].TotalDamage.ToString();
+			totalDmgText.Text = trackedCombat[AttackDirection.PlayerInitiated].TotalDamage == 0 ? "" : trackedCombat[AttackDirection.PlayerInitiated].TotalDamage.ToString("#,##0");
 		}
 	}
 }

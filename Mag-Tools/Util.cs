@@ -79,7 +79,7 @@ namespace MagTools
 
 			WorldObject target = CoreManager.Current.WorldFilter[container];
 
-			if (target == null || target.ObjectClass != ObjectClass.Container)
+			if (target == null || (target.ObjectClass != ObjectClass.Player && target.ObjectClass != ObjectClass.Container))
 				throw new ArgumentOutOfRangeException("Invalid container passed, null reference");
 
 			int slots_filled = 0;
@@ -228,6 +228,7 @@ namespace MagTools
 			// You split Blockade Guard apart! (Slash)
 			// You cleave Blockade Guard in twain! (Slash)
 			// You slay Blockade Guard viciously enough to impart death several times over! (Slash)
+			// You reduce ____ to a drained, twisted corpse! (Nether)
 			if (text.StartsWith("You "))
 			{
 				if (text.Contains("with the force of your assault!"))
@@ -251,6 +252,8 @@ namespace MagTools
 				if (text.StartsWith("You cleave ") && text.Contains("in twain!"))
 					return true;
 				if (text.StartsWith("You slay ") && text.Contains("several times over!"))
+					return true;
+				if (text.StartsWith("You reduce ") && text.Contains("twisted corpse!"))
 					return true;
 			}
 			// Your killing blow nearly turns Shivering Crystalline Wisp inside-out!
@@ -295,6 +298,8 @@ namespace MagTools
 			// Electricity tears Insatiable Eater apart! (Lightning)
 			// Blistered by lightning, Insatiable Eater falls! (Lightning)
 			// Uber Penguin is inscinerated by your assault! (Fire)
+			// ____'s last strength withers before you! (Nether)
+			// ____ is dessicated by your attack! (Nether)
 			else
 			{
 				if (text.Contains("seared corpse smolders before you!"))
@@ -326,6 +331,10 @@ namespace MagTools
 				if (text.Contains("Blistered by lightning") && text.Contains("falls!"))
 					return true;
 				if (text.Contains("inscinerated by your assault!") )
+					return true;
+				if (text.Contains("last strength withers before you!"))
+					return true;
+				if (text.Contains("dessicated by your attack!"))
 					return true;
 			}
 

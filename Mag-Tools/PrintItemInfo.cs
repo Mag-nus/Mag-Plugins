@@ -187,6 +187,12 @@ namespace MagTools
 			if (wo.Values(DoubleValueKey.MeleeDefenseBonus, 1) != 1)
 				sb.Append(", " + Math.Round(((wo.Values(DoubleValueKey.MeleeDefenseBonus) - 1) * 100)) + "%md");
 
+			if (wo.Values(DoubleValueKey.MagicDBonus, 1) != 1)
+				sb.Append(", " + Math.Round(((wo.Values(DoubleValueKey.MagicDBonus) - 1) * 100)) + "%mgc.d");
+
+			if (wo.Values(DoubleValueKey.MissileDBonus, 1) != 1)
+				sb.Append(", " + Math.Round(((wo.Values(DoubleValueKey.MissileDBonus) - 1) * 100)) + "%msl.d");
+
 			if (wo.Values(DoubleValueKey.ManaCBonus) != 0)
 				sb.Append(", " + Math.Round((wo.Values(DoubleValueKey.ManaCBonus) * 100)) + "%mc");
 

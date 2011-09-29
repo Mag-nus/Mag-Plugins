@@ -122,13 +122,6 @@ namespace MagTools.Trackers.Mana
 				if (wo == null)
 					return;
 
-				// This is triggered when an item has 2 minutes left of mana.
-				// Your Bronze Haebrean Breastplate is low on Mana.
-				if (e.Text.Contains("Your ") && e.Text.Contains(" is low on Mana."))
-				{
-					// Fire refill event here
-				}
-
 				// The Mana Stone is destroyed.
 				// The Mana Stone gives 11,376 points of mana to the following items: Satin Flared Shirt, Steel Chainmail Bracers, Velvet Trousers, Leather Loafers, Copper Chainmail Greaves, Enhanced White Empyrean Ring, Enhanced Red Empyrean Ring, Iron Diforsa Pauldrons, Bronze Chainmail Tassets, Copper Heavy Bracelet, Silver Olthoi Amuli Gauntlets, Ivory Heavy Bracelet, Steel Coronet, Emerald Amulet, Silver Puzzle Box, Sunstone Fire Sceptre
 				// Your items are fully charged.
@@ -138,8 +131,10 @@ namespace MagTools.Trackers.Mana
 						CoreManager.Current.Actions.RequestId(Id);
 				}
 
+				// This is triggered when an item has 2 minutes left of mana.
+				// Your Gold Olthoi Koujia Sleeves is low on Mana.
 				// Your Bronze Haebrean Breastplate is out of Mana.
-				if (e.Text.Contains("Your ") && e.Text.Contains(" is out of Mana."))
+				if (e.Text.Contains("Your ") && (e.Text.Contains(" is low on Mana.") || e.Text.Contains(" is out of Mana.")))
 				{
 					if (e.Text.Contains(wo.Name))
 						CoreManager.Current.Actions.RequestId(Id);

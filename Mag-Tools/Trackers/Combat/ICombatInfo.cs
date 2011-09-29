@@ -20,6 +20,8 @@ namespace MagTools.Trackers.Combat
 
 		int Crits { get; }
 
+		float CritPercent { get; }
+
 		int AverageCritAttack { get; }
 
 		int MaxCritAttack { get; }

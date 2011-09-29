@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
@@ -48,7 +48,7 @@ namespace MagTools
 			}
 		}
 
-		Collection<int> itemsSelected = new Collection<int>();
+		Dictionary<int, DateTime> itemsSelected = new Dictionary<int, DateTime>();
 
 		void Current_ItemSelected(object sender, ItemSelectedEventArgs e)
 		{
@@ -57,7 +57,13 @@ namespace MagTools
 				if (!Enabled)
 					return;
 
-				itemsSelected.Add(e.ItemGuid);
+				if (e.ItemGuid == 0)
+					return;
+
+				if (itemsSelected.ContainsKey(e.ItemGuid))
+					itemsSelected[e.ItemGuid] = DateTime.Now;
+				else
+					itemsSelected.Add(e.ItemGuid, DateTime.Now);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -72,7 +78,27 @@ namespace MagTools
 				if (e.Change != WorldChangeType.IdentReceived)
 					return;
 
-				if (!itemsSelected.Contains(e.Changed.Id))
+				// Remove id's that have been selected more than 10 seconds ago
+				while (true)
+				{
+					int idToRemove = 0;
+
+					foreach (KeyValuePair<int, DateTime> pair in itemsSelected)
+					{
+						if (pair.Value + TimeSpan.FromSeconds(10) < DateTime.Now)
+						{
+							idToRemove = pair.Key;
+							break;
+						}
+					}
+
+					if (idToRemove == 0)
+						break;
+					else
+						itemsSelected.Remove(idToRemove);
+				}
+
+				if (!itemsSelected.ContainsKey(e.Changed.Id))
 					return;
 
 				itemsSelected.Remove(e.Changed.Id);

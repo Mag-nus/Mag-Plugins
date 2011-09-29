@@ -54,7 +54,8 @@ namespace MagTools.Macros
 				if (e.Text.StartsWith("You say, ") || e.Text.Contains("says, \""))
 					return;
 
-				if (e.Text.Contains("Your") && e.Text.Contains(" is low on mana."))
+				// Your Gold Olthoi Koujia Sleeves is low on Mana.
+				if (e.Text.Contains("Your") && e.Text.Contains(" is low on Mana."))
 					ManaRecharger.Instance.Start();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }

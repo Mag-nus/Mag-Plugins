@@ -111,6 +111,14 @@ namespace MagTools.Trackers.Combat
 
 		public int Crits { get; private set; }
 
+		public float CritPercent
+		{
+			get
+			{
+				return (Crits / (float)SucceededAttacks) * 100;
+			}
+		}
+
 		public int AverageCritAttack { get; private set; }
 
 		public int MaxCritAttack { get; private set; }

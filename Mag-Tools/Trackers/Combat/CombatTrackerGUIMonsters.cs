@@ -25,9 +25,9 @@ namespace MagTools.Trackers.Combat
 				monsterList.ClearColumnsAndRows();
 
 				monsterList.AddColumn(typeof(HudStaticText), 5, null);
-				monsterList.AddColumn(typeof(HudStaticText), 163, null);
-				monsterList.AddColumn(typeof(HudStaticText), 55, null);
-				monsterList.AddColumn(typeof(HudStaticText), 62, null);
+				monsterList.AddColumn(typeof(HudStaticText), 153, null);
+				monsterList.AddColumn(typeof(HudStaticText), 55, null); // This cannot go any smaller without pruning text
+				monsterList.AddColumn(typeof(HudStaticText), 72, null);
 
 				HudList.HudListRowAccessor newRow = monsterList.AddRow();
 				((HudStaticText)newRow[2]).Text = "Dmg Rcvd";
@@ -132,18 +132,18 @@ namespace MagTools.Trackers.Combat
 					combatTrackerGUIInfo.LoadFromTrackedCombat(monster);
 
 				if (all[AttackDirection.PlayerReceived].TotalDamage != 0)
-					((HudStaticText)monsterList[1][2]).Text = all[AttackDirection.PlayerReceived].TotalDamage.ToString();
+					((HudStaticText)monsterList[1][2]).Text = all[AttackDirection.PlayerReceived].TotalDamage.ToString(("#,##0"));
 				if (all[AttackDirection.PlayerInitiated].TotalDamage != 0)
-					((HudStaticText)monsterList[1][3]).Text = all[AttackDirection.PlayerInitiated].TotalDamage.ToString();
+					((HudStaticText)monsterList[1][3]).Text = all[AttackDirection.PlayerInitiated].TotalDamage.ToString(("#,##0"));
 
 				for (int row = 2 ; row < monsterList.RowCount ; row++)
 				{
 					if (((HudStaticText)monsterList[row][1]).Text == e.MonsterName)
 					{
 						if (monster[AttackDirection.PlayerReceived].TotalDamage != 0)
-							((HudStaticText)monsterList[row][2]).Text = monster[AttackDirection.PlayerReceived].TotalDamage.ToString();
+							((HudStaticText)monsterList[row][2]).Text = monster[AttackDirection.PlayerReceived].TotalDamage.ToString(("#,##0"));
 						if (monster[AttackDirection.PlayerInitiated].TotalDamage != 0)
-							((HudStaticText)monsterList[row][3]).Text = monster[AttackDirection.PlayerInitiated].TotalDamage.ToString();
+							((HudStaticText)monsterList[row][3]).Text = monster[AttackDirection.PlayerInitiated].TotalDamage.ToString(("#,##0"));
 
 						break;
 					}
