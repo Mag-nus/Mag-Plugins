@@ -118,7 +118,12 @@ namespace MagTools
 
 				if (childNode == null)
 				{
-					childNode = PluginCore.pluginConfigFile.CreateNode(OptionGroup.Misc.Xpath + "/WindowPositions/WindowPosition", true);
+					System.Xml.XmlNode parentNode = PluginCore.pluginConfigFile.GetNode(OptionGroup.Misc.Xpath + "/WindowPositions");
+
+					if (parentNode != null)
+						childNode = PluginCore.pluginConfigFile.CreateNode(parentNode, "/WindowPosition", true);
+					else
+						childNode = PluginCore.pluginConfigFile.CreateNode(OptionGroup.Misc.Xpath + "/WindowPositions/WindowPosition");
 
 					if (childNode == null)
 						return;

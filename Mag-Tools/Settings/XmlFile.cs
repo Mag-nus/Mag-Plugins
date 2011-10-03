@@ -132,7 +132,7 @@ namespace MagTools.Settings
 		/// <param name="parent"></param>
 		/// <param name="xpath">The path in relation to the parent.</param>
 		/// <returns></returns>
-		private XmlNode CreateNode(XmlNode parent, string xpath)
+		public XmlNode CreateNode(XmlNode parent, string xpath, bool forceCreate = false)
 		{
 			string[] partsOfXPath = xpath.Trim('/').Split('/');
 
@@ -147,7 +147,7 @@ namespace MagTools.Settings
 			// get or create the node from the name
 			XmlNode node = parent.SelectSingleNode(nextNodeInXPath);
 
-			if (node == null)
+			if (node == null || forceCreate)
 				node = parent.AppendChild(xmlDoc.CreateElement(nextNodeInXPath));
 
 			// rejoin the remainder of the array as an xpath expression and recurse
@@ -166,9 +166,9 @@ namespace MagTools.Settings
 		/// </summary>
 		/// <param name="xpath">The path of the node not including the root node.</param>
 		/// <returns></returns>
-		public XmlNode CreateNode(string xpath, bool forceCreate = false)
+		public XmlNode CreateNode(string xpath)
 		{
-			if (NodeExists(xpath) && !forceCreate)
+			if (NodeExists(xpath))
 				return GetNode(xpath);
 
 			return CreateNode(xmlDoc.DocumentElement, xpath);
