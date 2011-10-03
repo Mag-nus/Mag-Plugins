@@ -114,6 +114,8 @@ namespace MagTools
 		{
 			try
 			{
+				PluginCore.pluginConfigFile.ReloadXmlFile();
+
 				System.Xml.XmlNode childNode = GetChildNode;
 
 				if (childNode == null)
@@ -151,6 +153,8 @@ namespace MagTools
 		{
 			get
 			{
+				PluginCore.pluginConfigFile.ReloadXmlFile();
+
 				System.Xml.XmlNode parentNode = PluginCore.pluginConfigFile.GetNode(OptionGroup.Misc.Xpath + "/WindowPositions");
 
 				if (parentNode == null || !parentNode.HasChildNodes)
