@@ -175,6 +175,9 @@ namespace MagTools
 			else if (wo.Values(LongValueKey.MaxDamage) != 0 && wo.Values(DoubleValueKey.Variance) == 0)
 				sb.Append(", " + wo.Values(LongValueKey.MaxDamage));
 
+			if (wo.Values(LongValueKey.ElementalDmgBonus, 0) != 0)
+				sb.Append(", +" + wo.Values(LongValueKey.ElementalDmgBonus));
+
 			if (wo.Values(DoubleValueKey.DamageBonus, 1) != 1)
 				sb.Append(", +" + Math.Round(((wo.Values(DoubleValueKey.DamageBonus) - 1) * 100)) + "%");
 
