@@ -37,6 +37,9 @@ namespace MagTools.Views
 				// Misc
 				OptionList = (HudList)view["OptionList"] ?? new HudList();
 
+				SetWindowPos = (HudButton)view["SetWindowPos"] ?? new HudButton();
+				DelWindowPos = (HudButton)view["DelWindowPos"] ?? new HudButton();
+
 				VersionLabel = (HudStaticText)view["VersionLabel"] ?? new HudStaticText();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -83,6 +86,9 @@ namespace MagTools.Views
 
 		// Misc
 		private HudList OptionList { get; set; }
+
+		public HudButton SetWindowPos { get; set; }
+		public HudButton DelWindowPos { get; set; }
 
 		private List<Option> options = new List<Option>();
 

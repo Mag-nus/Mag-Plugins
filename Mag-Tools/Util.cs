@@ -300,6 +300,7 @@ namespace MagTools
 			// Uber Penguin is inscinerated by your assault! (Fire)
 			// ____'s last strength withers before you! (Nether)
 			// ____ is dessicated by your attack! (Nether)
+			// ____ is incinerated by your assault!
 			else
 			{
 				if (text.Contains("seared corpse smolders before you!"))
@@ -335,6 +336,8 @@ namespace MagTools
 				if (text.Contains("last strength withers before you!"))
 					return true;
 				if (text.Contains("dessicated by your attack!"))
+					return true;
+				if (text.Contains("is incinerated by your assault!"))
 					return true;
 			}
 

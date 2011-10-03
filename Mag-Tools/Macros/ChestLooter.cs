@@ -5,7 +5,7 @@ using Decal.Adapter.Wrappers;
 
 namespace MagTools.Macros
 {
-	class ChestLooter : IDisposable
+	class ChestLooter : IDisposable, IChestLooter
 	{
 		public bool Enabled { private get; set; }
 
@@ -73,29 +73,30 @@ namespace MagTools.Macros
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		bool started = false;
+		public bool IsRunning { get; private set; }
+
 		bool idsRequested = false;
 
 		void Start()
 		{
-			if (started)
+			if (IsRunning)
 				return;
 
 			idsRequested = false;
 
 			CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
 
-			started = true;
+			IsRunning = true;
 		}
 
 		void Stop()
 		{
-			if (!started)
+			if (!IsRunning)
 				return;
 
 			CoreManager.Current.RenderFrame -= new EventHandler<EventArgs>(Current_RenderFrame);
 
-			started = false;
+			IsRunning = false;
 		}
 
 		DateTime lastThought = DateTime.MinValue;

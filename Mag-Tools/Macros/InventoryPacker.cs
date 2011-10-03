@@ -119,6 +119,9 @@ namespace MagTools.Macros
 
 		void Think()
 		{
+			if (CoreManager.Current.Actions.BusyState != 0)
+				return;
+
 			if (DoAutoStack())
 				return;
 
@@ -141,24 +144,22 @@ namespace MagTools.Macros
 				if (item.Values(LongValueKey.StackMax, 0) <= 1)
 					continue;
 
+				// If the item is already max stack, don't process it
+				if (item.Values(LongValueKey.StackCount, 0) == item.Values(LongValueKey.StackMax))
+					continue;
+
 				foreach (WorldObject secondItem in CoreManager.Current.WorldFilter.GetByContainer(item.Container))
 				{
 					if (item.Id == secondItem.Id || item.Name != secondItem.Name)
 						continue;
 
-					if (item.Values(LongValueKey.StackCount) + secondItem.Values(LongValueKey.StackCount) <= item.Values(LongValueKey.StackMax))
-					{
-						if (CoreManager.Current.Actions.CurrentSelection == 0 || CoreManager.Current.Actions.CurrentSelection == item.Id || CoreManager.Current.Actions.CurrentSelection == secondItem.Id || CoreManager.Current.WorldFilter[CoreManager.Current.Actions.CurrentSelection].Name == item.Name)
-						{
-							CoreManager.Current.Actions.SelectItem(CoreManager.Current.CharacterFilter.Id);
+					// If the item is already max stack, don't process it
+					if (secondItem.Values(LongValueKey.StackCount, 0) == secondItem.Values(LongValueKey.StackMax))
+						continue;
 
-							return true;
-						}
+					CoreManager.Current.Actions.MoveItem(item.Id, secondItem.Id);
 
-						CoreManager.Current.Actions.MoveItem(item.Id, item.Container, 0, true);
-
-						return true;
-					}
+					return true;
 				}
 			}
 

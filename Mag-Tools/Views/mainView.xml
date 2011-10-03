@@ -26,10 +26,13 @@
     
     <page label="Misc">
       <control progid="DecalControls.FixedLayout" clipped="">
-        <control progid="DecalControls.List" name="OptionList" left="1" top="1" width="318" height="325">
+        <control progid="DecalControls.List" name="OptionList" left="1" top="1" width="218" height="325">
           <column progid="DecalControls.CheckColumn" name="Enabled" />
           <column progid="DecalControls.TextColumn" name="Option" />
         </control>
+
+        <control progid="DecalControls.PushButton" name="SetWindowPos" left="225" top="1" width="94" height="20" text="Set Window Pos" />
+        <control progid="DecalControls.PushButton" name="DelWindowPos" left="225" top="25" width="94" height="20" text="Del Window Pos" />
         
         <control progid="DecalControls.StaticText" name="ThanksLabel" left="5" top="330" width="310" height="60" text="Parts of this plugin came from the ideas of Squire and ManaMinder plugins. Squire was created by Flynn: http://www.flynn1179.net/ac/"/>
         <control progid="DecalControls.StaticText" name="Website" left="5" top="385" width="310" height="60" text="http://magtools.codeplex.com/"/>

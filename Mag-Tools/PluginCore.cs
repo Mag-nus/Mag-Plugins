@@ -2,7 +2,6 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-//using System.Runtime.InteropServices;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
@@ -56,7 +55,7 @@ namespace MagTools
 		}
 
 		// View
-		private Views.MainView mainView;
+		internal static Views.MainView mainView;
 
 		// General
 		private ChatFilter chatFilter;
@@ -73,6 +72,7 @@ namespace MagTools
 		private Macros.AutoTradeAdd autoTradeAdd;
 		private Macros.AutoTradeAccept autoTradeAccept;
 		private Macros.ChestLooter chestLooter;
+		public Macros.IChestLooter ChestLooter { get { return chestLooter; } }
 
 		// Trackers
 		private Trackers.Mana.ManaTracker manaTracker;
@@ -82,6 +82,9 @@ namespace MagTools
 		public Trackers.Combat.ICombatTracker CombatTracker { get { return combatTracker; } }
 		private Trackers.Combat.CombatTrackerGUIInfo combatTrackerGUIInfo;
 		private Trackers.Combat.CombatTrackerGUIMonsters combatTrackerGUIMonsters;
+
+		private WindowFrameRemover windowFrameRemover;
+		private WindowMover windowMover;
 
 		/*
     <page label="Comp Tracker">
@@ -100,7 +103,7 @@ namespace MagTools
 		//
 
 		// Settings
-		private Settings.XmlFile pluginConfigFile;
+		internal static Settings.XmlFile pluginConfigFile;
 
 		Collection<string> startupErrors = new Collection<string>();
 
@@ -136,6 +139,9 @@ namespace MagTools
 				combatTracker = new Trackers.Combat.CombatTracker();
 				combatTrackerGUIInfo = new Trackers.Combat.CombatTrackerGUIInfo(mainView.DamageList);
 				combatTrackerGUIMonsters = new Trackers.Combat.CombatTrackerGUIMonsters(combatTracker, mainView.MonsterList, combatTrackerGUIInfo);
+
+				windowFrameRemover = new WindowFrameRemover();
+				windowMover = new WindowMover();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 
@@ -209,6 +215,9 @@ namespace MagTools
 		{
 			try
 			{
+				if (windowMover != null) windowMover.Dispose();
+				if (windowFrameRemover != null) windowFrameRemover.Dispose();
+
 				//
 				if (printItemInfoOnContainerOpen != null) printItemInfoOnContainerOpen.Dispose();
 				if (printItemInfoOnUserIdent != null) printItemInfoOnUserIdent.Dispose();
@@ -248,16 +257,6 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		/*
-		//Sets window attributes
-		[DllImport("USER32.DLL")]
-		static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-
-		//Gets window attributes
-		[DllImport("USER32.DLL")]
-		static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-		*/
-
   		[BaseEvent("LoginComplete", "CharacterFilter")]
 		private void CharacterFilter_LoginComplete(object sender, EventArgs e)
 		{
@@ -271,17 +270,6 @@ namespace MagTools
 				}
 
 				startupErrors.Clear();
-
-				/*
-				const int GWL_STYLE = -16;
-				const int WS_BORDER = 0x00800000; //window with border
-				const int WS_DLGFRAME = 0x00400000; //window with double border but no title
-				const int WS_CAPTION = WS_BORDER | WS_DLGFRAME; //window with a title bar
-
-				int style = GetWindowLong(Host.Decal.Hwnd, GWL_STYLE);
-				SetWindowLong(Host.Decal.Hwnd, GWL_STYLE, (style & ~WS_CAPTION));
-				*/
-
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -321,6 +309,7 @@ namespace MagTools
 			mainView.AddOption(Option.ChestLooterEnabled);
 
 			mainView.AddOption(Option.OpenMainPackOnLogin);
+			mainView.AddOption(Option.RemoveWindowFrame);
 			mainView.AddOption(Option.DebuggingEnabled);
 		}
 
@@ -450,6 +439,12 @@ namespace MagTools
 			{
 				mainView.SetOption(Option.OpenMainPackOnLogin, pluginConfigFile.GetBoolean(Option.OpenMainPackOnLogin.Xpath));
 				openMainPackOnLogin.Enabled = pluginConfigFile.GetBoolean(Option.OpenMainPackOnLogin.Xpath);
+			}
+
+			if (mainView != null && windowFrameRemover != null)
+			{
+				mainView.SetOption(Option.RemoveWindowFrame, pluginConfigFile.GetBoolean(Option.RemoveWindowFrame.Xpath));
+				windowFrameRemover.Enabled = pluginConfigFile.GetBoolean(Option.RemoveWindowFrame.Xpath);
 			}
 
 			if (mainView != null)

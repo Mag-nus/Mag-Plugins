@@ -101,8 +101,8 @@ namespace MagTools
 		private static readonly Option openMainPackOnLogin = new Option(OptionGroup.Misc, "OpenMainPackOnLogin", "Open Main Pack On Login");
 		public static Option OpenMainPackOnLogin { get { return openMainPackOnLogin; } }
 
-		private static readonly Option removeWindowBorder = new Option(OptionGroup.Misc, "RemoveWindowBorder", "Remove Window Border");
-		public static Option RemoveWindowBorder { get { return removeWindowBorder; } }
+		private static readonly Option removeWindowFrame = new Option(OptionGroup.Misc, "RemoveWindowFrame", "Remove Window Frame On Login");
+		public static Option RemoveWindowFrame { get { return removeWindowFrame; } }
 
 		private static readonly Option debuggingEnabled = new Option(OptionGroup.Misc, "DebuggingEnabled", "Debugging Enabled");
 		public static Option DebuggingEnabled { get { return debuggingEnabled; } }

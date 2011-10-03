@@ -166,9 +166,9 @@ namespace MagTools.Settings
 		/// </summary>
 		/// <param name="xpath">The path of the node not including the root node.</param>
 		/// <returns></returns>
-		protected XmlNode CreateNode(string xpath)
+		public XmlNode CreateNode(string xpath, bool forceCreate = false)
 		{
-			if (NodeExists(xpath))
+			if (NodeExists(xpath) && !forceCreate)
 				return GetNode(xpath);
 
 			return CreateNode(xmlDoc.DocumentElement, xpath);
@@ -179,9 +179,29 @@ namespace MagTools.Settings
 		/// </summary>
 		/// <param name="xpath">The path of the node not including the root node.</param>
 		/// <returns></returns>
-		protected XmlNode GetNode(string xpath)
+		public XmlNode GetNode(string xpath)
 		{
 			return xmlDoc.DocumentElement.SelectSingleNode("/" + xmlDoc.DocumentElement.Name + "/" + xpath);
+		}
+
+		/// <summary> 
+		/// 
+		/// </summary>
+		/// <param name="xpath">The path of the node not including the root node.</param>
+		/// <returns></returns>
+		public void DeleteNode(string xpath)
+		{
+			XmlNode node = xmlDoc.DocumentElement.SelectSingleNode("/" + xmlDoc.DocumentElement.Name + "/" + xpath);
+
+			if (node != null)
+				xmlDoc.RemoveChild(node);
+		}
+
+		public void AddAttribute(XmlNode node, string attributeName)
+		{
+			XmlAttribute attribute = xmlDoc.CreateAttribute(attributeName);
+
+			node.Attributes.SetNamedItem(attribute);
 		}
 
 		/// <summary>
