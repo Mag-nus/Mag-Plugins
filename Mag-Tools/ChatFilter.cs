@@ -39,6 +39,8 @@ namespace MagTools
 
 		public bool TradeBuffBotSpam { private get; set; }
 
+		public bool KillTaskComplete { private get; set; }
+
 		public ChatFilter()
 		{
 			try
@@ -224,6 +226,13 @@ namespace MagTools
 				if (e.Eat == false && TradeBuffBotSpam)
 				{
 					if (e.Text.Contains("says, \"") && (e.Text.Trim().EndsWith("-t-\"") || e.Text.Trim().EndsWith("-b-\"")))
+						e.Eat = true;
+				}
+
+				if (e.Eat == false && KillTaskComplete)
+				{
+					// You have killed 50 Drudge Raveners! Your task is complete!
+					if (e.Text.Contains("says, \"") && e.Text.StartsWith("You have killed ") && e.Text.Trim().EndsWith("Your task is complete!"))
 						e.Eat = true;
 				}
 			}

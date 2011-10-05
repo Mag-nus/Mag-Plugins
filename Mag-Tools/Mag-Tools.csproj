@@ -48,6 +48,9 @@
     <Reference Include="utank2-i">
       <HintPath>C:\Games\VirindiPlugins\VirindiTank\utank2-i.dll</HintPath>
     </Reference>
+    <Reference Include="VirindiHotkeySystem">
+      <HintPath>..\..\..\..\Games\VirindiPlugins\VirindiHotkeySystem\VirindiHotkeySystem.dll</HintPath>
+    </Reference>
     <Reference Include="VirindiItemTool">
       <HintPath>C:\Games\VirindiPlugins\VirindiItemTool\VirindiItemTool.dll</HintPath>
     </Reference>
@@ -102,6 +105,7 @@
     <Compile Include="Debug.cs" />
     <Compile Include="PrintItemInfoOnUserIdent.cs" />
     <Compile Include="VirindiTools\Util.cs" />
+    <Compile Include="VirindiTools\VHS_Connector.cs" />
     <Compile Include="WindowFrameRemover.cs" />
     <Compile Include="WindowMover.cs" />
   </ItemGroup>

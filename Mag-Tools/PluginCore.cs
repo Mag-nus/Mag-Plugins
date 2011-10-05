@@ -200,7 +200,6 @@ namespace MagTools
 				AddOptionsToGUI();
 				LoadOptionsFromConfig();
 
-
 				System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
 				System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
 				if (mainView != null) mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
@@ -270,8 +269,27 @@ namespace MagTools
 				}
 
 				startupErrors.Clear();
+
+				try
+				{
+					if (InventoryPacker != null)
+					{
+						// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
+						VirindiHotkeySystem.VHotkeyInfo key = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "Auto Pack", "Triggers the Auto Pack Macro", 0x50, false, true, false);
+
+						VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(key);
+
+						key.Fired2 += new EventHandler<VirindiHotkeySystem.VHotkeyInfo.cEatableFiredEventArgs>(key_Fired2);
+					}
+				}
+				catch (Exception ex) { Debug.LogException(ex); }
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void key_Fired2(object sender, VirindiHotkeySystem.VHotkeyInfo.cEatableFiredEventArgs e)
+		{
+			InventoryPacker.Start();
 		}
 
 		private void AddOptionsToGUI()
@@ -297,6 +315,7 @@ namespace MagTools
 			mainView.AddOption(Option.FilterSalvaging);
 			mainView.AddOption(Option.FilterSalvagingFails);
 			mainView.AddOption(Option.TradeBuffBotSpam);
+			mainView.AddOption(Option.KillTaskComplete);
 
 			mainView.AddOption(Option.ItemInfoOnIdent);
 
@@ -393,6 +412,9 @@ namespace MagTools
 
 				mainView.SetOption(Option.TradeBuffBotSpam, pluginConfigFile.GetBoolean(Option.TradeBuffBotSpam.Xpath));
 				chatFilter.TradeBuffBotSpam = pluginConfigFile.GetBoolean(Option.TradeBuffBotSpam.Xpath);
+
+				mainView.SetOption(Option.TradeBuffBotSpam, pluginConfigFile.GetBoolean(Option.KillTaskComplete.Xpath));
+				chatFilter.KillTaskComplete = pluginConfigFile.GetBoolean(Option.KillTaskComplete.Xpath);
 			}
 
 			if (mainView != null && (printItemInfoOnUserIdent != null || printItemInfoOnContainerOpen != null))

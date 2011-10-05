@@ -191,10 +191,10 @@ namespace MagTools
 				sb.Append(", " + Math.Round(((wo.Values(DoubleValueKey.MeleeDefenseBonus) - 1) * 100)) + "%md");
 
 			if (wo.Values(DoubleValueKey.MagicDBonus, 1) != 1)
-				sb.Append(", " + Math.Round(((wo.Values(DoubleValueKey.MagicDBonus) - 1) * 100)) + "%mgc.d");
+				sb.Append(", " + Math.Round(((wo.Values(DoubleValueKey.MagicDBonus) - 1) * 100), 1) + "%mgc.d");
 
 			if (wo.Values(DoubleValueKey.MissileDBonus, 1) != 1)
-				sb.Append(", " + Math.Round(((wo.Values(DoubleValueKey.MissileDBonus) - 1) * 100)) + "%msl.d");
+				sb.Append(", " + Math.Round(((wo.Values(DoubleValueKey.MissileDBonus) - 1) * 100), 1) + "%msl.d");
 
 			if (wo.Values(DoubleValueKey.ManaCBonus) != 0)
 				sb.Append(", " + Math.Round((wo.Values(DoubleValueKey.ManaCBonus) * 100)) + "%mc");
@@ -217,6 +217,10 @@ namespace MagTools
 
 					// If the item is not loot generated, show all spells
 					if (!wo.LongKeys.Contains((int)LongValueKey.Material))
+						goto ShowSpell;
+
+					// Always show Minor/Major/Epic Impen
+					if (spellById.Name.Contains("Minor Impenetrability") || spellById.Name.Contains("Major Impenetrability") || spellById.Name.Contains("Epic Impenetrability"))
 						goto ShowSpell;
 
 					if (wo.Values(LongValueKey.Unenchantable, 0) != 0)

@@ -77,6 +77,9 @@ namespace MagTools
 		private static readonly Option tradeBuffBotSpam = new Option(OptionGroup.Filters, "TradeBuffBotSpam", "Filter Trade/Buff Bot Spam");
 		public static Option TradeBuffBotSpam { get { return tradeBuffBotSpam; } }
 
+		private static readonly Option killTaskComplete = new Option(OptionGroup.Filters, "KillTaskComplete", "Filter Kill Task Complete");
+		public static Option KillTaskComplete { get { return killTaskComplete; } }
+
 
 		private static readonly Option itemInfoOnIdent = new Option(OptionGroup.ItemInfoOnIdent, "Enabled", "Show Item Info On Ident");
 		public static Option ItemInfoOnIdent { get { return itemInfoOnIdent; } }
