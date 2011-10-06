@@ -289,7 +289,11 @@ namespace MagTools
 
 		void key_Fired2(object sender, VirindiHotkeySystem.VHotkeyInfo.cEatableFiredEventArgs e)
 		{
-			InventoryPacker.Start();
+			try
+			{
+				InventoryPacker.Start();
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		private void AddOptionsToGUI()
@@ -317,6 +321,7 @@ namespace MagTools
 			mainView.AddOption(Option.TradeBuffBotSpam);
 			mainView.AddOption(Option.KillTaskComplete);
 			mainView.AddOption(Option.FailedAssess);
+			mainView.AddOption(Option.NPCChatter);
 
 			mainView.AddOption(Option.ItemInfoOnIdent);
 
@@ -419,6 +424,9 @@ namespace MagTools
 
 				mainView.SetOption(Option.FailedAssess, pluginConfigFile.GetBoolean(Option.FailedAssess.Xpath));
 				chatFilter.FailedAssess = pluginConfigFile.GetBoolean(Option.FailedAssess.Xpath);
+
+				mainView.SetOption(Option.NPCChatter, pluginConfigFile.GetBoolean(Option.NPCChatter.Xpath));
+				chatFilter.NPCChatter = pluginConfigFile.GetBoolean(Option.NPCChatter.Xpath);
 			}
 
 			if (mainView != null && (printItemInfoOnUserIdent != null || printItemInfoOnContainerOpen != null))

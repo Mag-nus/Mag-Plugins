@@ -108,9 +108,7 @@ namespace MagTools
 					e.Changed.ObjectClass == ObjectClass.Foci ||
 					e.Changed.ObjectClass == ObjectClass.Housing ||
 					e.Changed.ObjectClass == ObjectClass.Lifestone ||
-					e.Changed.ObjectClass == ObjectClass.Monster ||
 					e.Changed.ObjectClass == ObjectClass.Npc ||
-					e.Changed.ObjectClass == ObjectClass.Player ||
 					e.Changed.ObjectClass == ObjectClass.Portal ||
 					e.Changed.ObjectClass == ObjectClass.Vendor)
 					return;

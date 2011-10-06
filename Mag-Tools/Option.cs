@@ -83,6 +83,9 @@ namespace MagTools
 		private static readonly Option failedAssess = new Option(OptionGroup.Filters, "FailedAssess", "Filter Someone failed to assess you");
 		public static Option FailedAssess { get { return failedAssess; } }
 
+		private static readonly Option npcChatter = new Option(OptionGroup.Filters, "NPCChatter", "Filter NPC Chatter");
+		public static Option NPCChatter { get { return npcChatter; } }
+
 
 		private static readonly Option itemInfoOnIdent = new Option(OptionGroup.ItemInfoOnIdent, "Enabled", "Show Item Info On Ident");
 		public static Option ItemInfoOnIdent { get { return itemInfoOnIdent; } }

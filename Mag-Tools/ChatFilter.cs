@@ -43,6 +43,8 @@ namespace MagTools
 
 		public bool FailedAssess { private get; set; }
 
+		public bool NPCChatter { private get; set; }
+
 		public ChatFilter()
 		{
 			try
@@ -229,6 +231,9 @@ namespace MagTools
 				{
 					if (e.Text.Contains("says, \"") && (e.Text.Trim().EndsWith("-t-\"") || e.Text.Trim().EndsWith("-b-\"")))
 						e.Eat = true;
+
+					if ((!e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \"")) && (e.Text.Trim().EndsWith("-t-\"") || e.Text.Trim().EndsWith("-b-\"")))
+						e.Eat = true;
 				}
 
 				if (e.Eat == false && KillTaskComplete)
@@ -243,6 +248,22 @@ namespace MagTools
 					// Someone tried and failed to assess you!
 					if (!e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \"") && e.Text.Trim().EndsWith("tried and failed to assess you!"))
 						e.Eat = true;
+				}
+
+				if (e.Eat == false && NPCChatter)
+				{
+					if (!e.Text.StartsWith("You say, ") && e.Text.Contains(" says, \""))
+					{
+						string name = e.Text.Substring(0, e.Text.IndexOf(" says, \""));
+
+						if (!string.IsNullOrEmpty(name))
+						{
+							WorldObjectCollection collection = CoreManager.Current.WorldFilter.GetByName(name);
+
+							if (collection.Count == 1 && collection.First.ObjectClass == ObjectClass.Npc)
+								e.Eat = true;
+						}
+					}
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
