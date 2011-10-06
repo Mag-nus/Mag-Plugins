@@ -80,6 +80,9 @@ namespace MagTools
 		private static readonly Option killTaskComplete = new Option(OptionGroup.Filters, "KillTaskComplete", "Filter Kill Task Complete");
 		public static Option KillTaskComplete { get { return killTaskComplete; } }
 
+		private static readonly Option failedAssess = new Option(OptionGroup.Filters, "FailedAssess", "Filter Someone failed to assess you");
+		public static Option FailedAssess { get { return failedAssess; } }
+
 
 		private static readonly Option itemInfoOnIdent = new Option(OptionGroup.ItemInfoOnIdent, "Enabled", "Show Item Info On Ident");
 		public static Option ItemInfoOnIdent { get { return itemInfoOnIdent; } }

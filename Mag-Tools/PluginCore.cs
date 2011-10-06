@@ -275,7 +275,7 @@ namespace MagTools
 					if (InventoryPacker != null)
 					{
 						// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
-						VirindiHotkeySystem.VHotkeyInfo key = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "Auto Pack", "Triggers the Auto Pack Macro", 0x50, false, true, false);
+						VirindiHotkeySystem.VHotkeyInfo key = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "Pack Inventory", "Triggers the Inventory Packer Macro", 0x50, false, true, false);
 
 						VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(key);
 
@@ -316,6 +316,7 @@ namespace MagTools
 			mainView.AddOption(Option.FilterSalvagingFails);
 			mainView.AddOption(Option.TradeBuffBotSpam);
 			mainView.AddOption(Option.KillTaskComplete);
+			mainView.AddOption(Option.FailedAssess);
 
 			mainView.AddOption(Option.ItemInfoOnIdent);
 
@@ -413,8 +414,11 @@ namespace MagTools
 				mainView.SetOption(Option.TradeBuffBotSpam, pluginConfigFile.GetBoolean(Option.TradeBuffBotSpam.Xpath));
 				chatFilter.TradeBuffBotSpam = pluginConfigFile.GetBoolean(Option.TradeBuffBotSpam.Xpath);
 
-				mainView.SetOption(Option.TradeBuffBotSpam, pluginConfigFile.GetBoolean(Option.KillTaskComplete.Xpath));
+				mainView.SetOption(Option.KillTaskComplete, pluginConfigFile.GetBoolean(Option.KillTaskComplete.Xpath));
 				chatFilter.KillTaskComplete = pluginConfigFile.GetBoolean(Option.KillTaskComplete.Xpath);
+
+				mainView.SetOption(Option.FailedAssess, pluginConfigFile.GetBoolean(Option.FailedAssess.Xpath));
+				chatFilter.FailedAssess = pluginConfigFile.GetBoolean(Option.FailedAssess.Xpath);
 			}
 
 			if (mainView != null && (printItemInfoOnUserIdent != null || printItemInfoOnContainerOpen != null))

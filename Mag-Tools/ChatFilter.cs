@@ -41,6 +41,8 @@ namespace MagTools
 
 		public bool KillTaskComplete { private get; set; }
 
+		public bool FailedAssess { private get; set; }
+
 		public ChatFilter()
 		{
 			try
@@ -232,7 +234,14 @@ namespace MagTools
 				if (e.Eat == false && KillTaskComplete)
 				{
 					// You have killed 50 Drudge Raveners! Your task is complete!
-					if (e.Text.Contains("says, \"") && e.Text.StartsWith("You have killed ") && e.Text.Trim().EndsWith("Your task is complete!"))
+					if (!e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \"") && e.Text.StartsWith("You have killed ") && e.Text.Trim().EndsWith("Your task is complete!"))
+						e.Eat = true;
+				}
+
+				if (e.Eat == false && FailedAssess)
+				{
+					// Someone tried and failed to assess you!
+					if (!e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \"") && e.Text.Trim().EndsWith("tried and failed to assess you!"))
 						e.Eat = true;
 				}
 			}
