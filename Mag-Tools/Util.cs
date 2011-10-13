@@ -202,6 +202,7 @@ namespace MagTools
 			if (id == 0x27) return "Cooking";
 			if (id == 0x28) return "Salvaging";
 			if (id == 0x29) return "Two Handed Combat";
+			if (id == 0x2B) return "Nether";
 
 			return "Unknown skill id: " + id;
 		}

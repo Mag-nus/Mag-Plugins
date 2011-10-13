@@ -232,7 +232,7 @@ namespace MagTools
 					if (e.Text.Contains("says, \"") && (e.Text.Trim().EndsWith("-t-\"") || e.Text.Trim().EndsWith("-b-\"")))
 						e.Eat = true;
 
-					if ((!e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \"")) && (e.Text.Trim().EndsWith("-t-\"") || e.Text.Trim().EndsWith("-b-\"")))
+					if ((!e.Text.StartsWith("You say, ") && !e.Text.Contains("says, \"")) && (e.Text.Trim().EndsWith("-t-") || e.Text.Trim().EndsWith("-b-")))
 						e.Eat = true;
 				}
 
