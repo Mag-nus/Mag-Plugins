@@ -190,7 +190,7 @@ namespace MagTools.Views
 
 			SetAvgMax(0, 0);
 			SetCrits(0, 0);
-			SetCrits(0, 0);
+			SetCritsAvgMax(0, 0);
 
 			TotalDamage = 0;
 		}
