@@ -17,5 +17,7 @@ namespace MagTools.Trackers.Mana
 		int ManaNeededToRefillItems { get; }
 
 		int NumberOfInactiveItems { get; }
+
+		int NumberOfUnretainedItems { get; }
 	}
 }

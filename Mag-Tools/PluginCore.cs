@@ -1,11 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using Decal.Adapter;
-using Decal.Adapter.Wrappers;
-
 
 /*
  * Created by Mag-nus. 8/19/2011
@@ -26,11 +23,31 @@ using Decal.Adapter.Wrappers;
  * VirindiViewService should be in C:\Games\VirindiPlugins\VirindiViewService\
 */
 
+/*
+ * The design of this plugin is as follows.
+ * 
+ * Settings:
+ * Settings and configuration options that the user can set, or the plugin sets, that may or may not go into a config file are located in Settings.SettingsManager.cs
+ * 
+ * GUI:
+ * Currently, only VVS is supported.
+ * The main GUI xml, and the VVS loader/parser of that xml is located in Views.mainView.xml and Views.MainView.cs
+ * Any interaction with the VVS should go into the Views folder/namespace.
+ * The goal here is to isolate views from the actual plugin functionality so we can run with views disabled.
+ * 
+ * Design based on Dependancy:
+ * 
+ * [CorePluginObjects] -> [SettingsManager] -> [SettingsFile]
+ *         ^                     ^
+ *         |                     |
+ *          ------------------[Views]
+ * 
+ * CorePluginObjects depends on SettingsManager, which depends on SettingsFile.
+ * Views depend on CorePluginObjects and SettingsManager.
+*/
+
 namespace MagTools
 {
-    //Attaches events from core
-	[WireUpBaseEvents]
-
 	// FriendlyName is the name that will show up in the plugins list of the decal agent (the one in windows, not in-game)
 	[FriendlyName("Mag-Tools")]
 	public sealed class PluginCore : PluginBase, IPluginCore
@@ -42,73 +59,63 @@ namespace MagTools
 
 		internal static string PluginName = "Mag-Tools";
 
-		private static DirectoryInfo pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\" + PluginCore.PluginName);
 		internal static DirectoryInfo PluginPersonalFolder
 		{
 			get
 			{
-				if (!pluginPersonalFolder.Exists)
-					pluginPersonalFolder.Create();
-				
+				DirectoryInfo pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\" + PluginName);
+
+				try
+				{
+					if (!pluginPersonalFolder.Exists)
+						pluginPersonalFolder.Create();
+				}
+				catch (Exception ex) { Debug.LogException(ex); }
+
 				return pluginPersonalFolder;
 			}
 		}
 
-		// View
-		internal static Views.MainView mainView;
-
 		// General
-		private ChatFilter chatFilter;
-		private OpenMainPackOnLogin openMainPackOnLogin;
-		private PrintItemInfoOnUserIdent printItemInfoOnUserIdent;
-		private PrintItemInfoOnContainerOpen printItemInfoOnContainerOpen;
+		ChatFilter chatFilter;
 
 		// Macros
-		private Macros.AutoRecharge autoRecharge;
-		private Macros.AutoBuySell autoBuySell;
-		private Macros.InventoryPacker inventoryPacker;
+		Macros.OpenMainPackOnLogin openMainPackOnLogin;
+		Macros.AutoRecharge autoRecharge;
+		Macros.AutoTradeAccept autoTradeAccept;
+	
+		// Trackers
+		Trackers.Mana.ManaTracker manaTracker;
+		public Trackers.Mana.IManaTracker ManaTracker { get { return manaTracker; } }
+		Trackers.Combat.CombatTracker combatTracker;
+
+		// Misc
+		Client.WindowFrameRemover windowFrameRemover;
+		Client.WindowMover windowMover;
+
+		// These objects may reference other plugins
+		ItemInfo.ItemInfoPrinter itemInfoPrinter;
+
+		// Virindi Classic Looter Extensions, depends on VTClassic.dll
+		Macros.InventoryPacker inventoryPacker;
 		public Macros.IInventoryPacker InventoryPacker { get { return inventoryPacker; } }
-		private Macros.AutoGive autoGive;
-		private Macros.AutoTradeAdd autoTradeAdd;
-		private Macros.AutoTradeAccept autoTradeAccept;
-		private Macros.ChestLooter chestLooter;
+		Macros.AutoTradeAdd autoTradeAdd;
+		Macros.AutoBuySell autoBuySell;
+
+		// Virindi Tank Extensions, depends on utank2-i.dll
+		Macros.ChestLooter chestLooter;
 		public Macros.IChestLooter ChestLooter { get { return chestLooter; } }
 
-		// Trackers
-		private Trackers.Mana.ManaTracker manaTracker;
-		public Trackers.Mana.IManaTracker ManaTracker { get { return manaTracker; } }
-		private Trackers.Mana.ManaTrackerGUI manaTrackerGUI;
-		private Trackers.Combat.CombatTracker combatTracker;
-		public Trackers.Combat.ICombatTracker CombatTracker { get { return combatTracker; } }
-		private Trackers.Combat.CombatTrackerGUIInfo combatTrackerGUIInfo;
-		private Trackers.Combat.CombatTrackerGUIMonsters combatTrackerGUIMonsters;
+		// Views, depends on VirindiViewService.dll
+		Views.MainView mainView;
+		Views.ManaTrackerGUI manaTrackerGUI;
+		Views.CombatTrackerGUI combatTrackerGUI;
 
-		private WindowFrameRemover windowFrameRemover;
-		private WindowMover windowMover;
-
-		/*
-    <page label="Comp Tracker">
-      <control progid="DecalControls.FixedLayout" clipped="">
-        <control progid="DecalControls.List" name="lstStats" left="0" top="0" width="320" height="380">
-          <column progid="DecalControls.TextColumn" fixedwidth="60" />
-          <column progid="DecalControls.TextColumn" fixedwidth="34" justify="right" />
-          <column progid="DecalControls.TextColumn" fixedwidth="82" justify="right" />
-          <column progid="DecalControls.TextColumn" fixedwidth="82" justify="right" />
-          <column progid="DecalControls.TextColumn" fixedwidth="42" justify="right" />
-        </control>
-        <control progid="DecalControls.PushButton" name="pbResetStats" left="5" top="380" width="60" height="20" text="Reset" />
-      </control>
-    </page>
-		*/
-		//
-
-		// Settings
-		internal static Settings.XmlFile pluginConfigFile;
-
-		Collection<string> startupErrors = new Collection<string>();
+		readonly Collection<string> startupErrors = new Collection<string>();
 
 		/// <summary>
 		/// This is called when the plugin is started up. This happens only once.
+		/// We init most of our objects here, EXCEPT ones that depend on other assemblies (not counting decal assemblies).
 		/// </summary>
 		protected override void Startup()
 		{
@@ -116,93 +123,78 @@ namespace MagTools
 			{
 				Current = this;
 
-				// View
-				mainView = new Views.MainView();
-				mainView.OptionEnabled += new Action<Option>(mainView_OptionEnabled);
-				mainView.OptionDisabled += new Action<Option>(mainView_OptionDisabled);
-
-				// Settings
-				FileInfo pluginConfigFileInfo = new FileInfo(PluginPersonalFolder.FullName + @"\" + PluginName + ".xml");
-				pluginConfigFile = new Settings.XmlFile(pluginConfigFileInfo.FullName, PluginName);
+				CoreManager.Current.PluginInitComplete += new EventHandler<EventArgs>(Current_PluginInitComplete);
+				CoreManager.Current.CharacterFilter.LoginComplete +=new EventHandler(CharacterFilter_LoginComplete);
 
 				// General
 				chatFilter = new ChatFilter();
-				openMainPackOnLogin = new OpenMainPackOnLogin();
 
 				// Macros
+				openMainPackOnLogin = new Macros.OpenMainPackOnLogin();
 				autoRecharge = new Macros.AutoRecharge();
 				autoTradeAccept = new Macros.AutoTradeAccept();
 
 				// Trackers
 				manaTracker = new Trackers.Mana.ManaTracker();
-				manaTrackerGUI = new Trackers.Mana.ManaTrackerGUI(manaTracker, mainView);
 				combatTracker = new Trackers.Combat.CombatTracker();
-				combatTrackerGUIInfo = new Trackers.Combat.CombatTrackerGUIInfo(mainView.DamageList);
-				combatTrackerGUIMonsters = new Trackers.Combat.CombatTrackerGUIMonsters(combatTracker, mainView.MonsterList, combatTrackerGUIInfo);
 
-				windowFrameRemover = new WindowFrameRemover();
-				windowMover = new WindowMover();
+				// Misc
+				windowFrameRemover = new Client.WindowFrameRemover();
+				windowMover = new Client.WindowMover();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
+		}
 
-			// We init objects that have dependancies here. These might crash out.
+		/// <summary>
+		/// We init objects that depend on other assemblies here.
+		/// We don't do this in Startup() because our plugin may have loaded before theirs.
+		/// It is also possible that the assembly these objects refer to isn't loaded at all, or may not even exist.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void Current_PluginInitComplete(object sender, EventArgs e)
+		{
 			try
 			{
-				printItemInfoOnUserIdent = new PrintItemInfoOnUserIdent();
-			}
-			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("printItemInfoOnUserIdent failed to load: " + ex.Message); }
-			catch (Exception ex) { Debug.LogException(ex); }
+				// These objects may reference other plugins
+				try
+				{
+					itemInfoPrinter = new ItemInfo.ItemInfoPrinter();
+				}
+				catch (FileNotFoundException ex) { startupErrors.Add("itemInfoPrinter failed to load: " + ex.Message); }
+				catch (Exception ex) { Debug.LogException(ex); }
 
-			try
-			{
-				printItemInfoOnContainerOpen = new PrintItemInfoOnContainerOpen();
-			}
-			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("printItemInfoOnContainerOpen failed to load: " + ex.Message); }
-			catch (Exception ex) { Debug.LogException(ex); }
+				// Virindi Classic Looter Extensions, depends on VTClassic.dll
+				try
+				{
+					inventoryPacker = new Macros.InventoryPacker();
+					autoTradeAdd = new Macros.AutoTradeAdd();
+					autoBuySell = new Macros.AutoBuySell();
+				}
+				catch (FileNotFoundException ex) { startupErrors.Add("Object failed to load: " + ex.Message + Environment.NewLine + "Did you copy VTClassic.dll to the same folder as MagTools.dll?" + Environment.NewLine + "Is Virindi Tank running?"); }
+				catch (Exception ex) { Debug.LogException(ex); }
 
-			try
-			{
-				inventoryPacker = new Macros.InventoryPacker();
-			}
-			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("inventoryPacker failed to load: " + ex.Message); }
-			catch (Exception ex) { Debug.LogException(ex); }
+				// Virindi Tank Extensions, depends on utank2-i.dll
+				try
+				{
+					chestLooter = new Macros.ChestLooter();
+				}
+				catch (FileNotFoundException ex) { startupErrors.Add("chestLooter failed to load: " + ex.Message + Environment.NewLine + "Is Virindi Tank running?"); }
+				catch (Exception ex) { Debug.LogException(ex); }
 
-			try
-			{
-				autoGive = new Macros.AutoGive();
-			}
-			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("autoGive failed to load: " + ex.Message); }
-			catch (Exception ex) { Debug.LogException(ex); }
+				// Views, depends on VirindiViewService.dll
+				try
+				{
+					mainView = new Views.MainView(combatTracker);
+					manaTrackerGUI = new Views.ManaTrackerGUI(manaTracker, mainView);
+					combatTrackerGUI = new Views.CombatTrackerGUI(combatTracker, mainView);
 
-			try
-			{
-				autoTradeAdd = new Macros.AutoTradeAdd();
-			}
-			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("autoTradeAdd failed to load: " + ex.Message); }
-			catch (Exception ex) { Debug.LogException(ex); }
-
-			try
-			{
-				autoBuySell = new Macros.AutoBuySell();
-			}
-			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("autoBuySell failed to load: " + ex.Message); }
-			catch (Exception ex) { Debug.LogException(ex); }
-
-			try
-			{
-				chestLooter = new Macros.ChestLooter();
-			}
-			catch (System.IO.FileNotFoundException ex) { startupErrors.Add("chestLooter failed to load: " + ex.Message); }
-			catch (Exception ex) { Debug.LogException(ex); }
-
-			try
-			{
-				AddOptionsToGUI();
-				LoadOptionsFromConfig();
-
-				System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
-				System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-				if (mainView != null) mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
+					System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+					System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+					mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
+				}
+				catch (FileNotFoundException ex) { startupErrors.Add("Views failed to load: " + ex.Message + Environment.NewLine + "Is Virindi View Service Running?"); }
+				catch (Exception ex) { Debug.LogException(ex); }
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -214,278 +206,85 @@ namespace MagTools
 		{
 			try
 			{
-				if (windowMover != null) windowMover.Dispose();
-				if (windowFrameRemover != null) windowFrameRemover.Dispose();
+				CoreManager.Current.PluginInitComplete -= new EventHandler<EventArgs>(Current_PluginInitComplete);
+				CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
 
-				//
-				if (printItemInfoOnContainerOpen != null) printItemInfoOnContainerOpen.Dispose();
-				if (printItemInfoOnUserIdent != null) printItemInfoOnUserIdent.Dispose();
+				// Views, depends on VirindiViewService.dll
+				// We dispose these before our other objects (Trackers/Macros) as these probably reference those other objects.
+				if (combatTrackerGUI != null) combatTrackerGUI.Dispose();
+				if (manaTrackerGUI != null) manaTrackerGUI.Dispose();
+				if (mainView != null) mainView.Dispose(); // We dispose this last in the Views as the other Views reference it.
+
+				// These objects may reference other plugins
+				if (itemInfoPrinter != null) itemInfoPrinter.Dispose();
+
+				// Virindi Classic Looter Extensions, depends on VTClassic.dll
+				if (inventoryPacker != null) inventoryPacker.Dispose();
+				if (autoTradeAdd != null) autoTradeAdd.Dispose();
+				if (autoBuySell != null) autoBuySell.Dispose();
+
+				// Virindi Tank Extensions, depends on utank2-i.dll
+				if (chestLooter != null) chestLooter.Dispose();
+
+				// Misc
+				if (windowFrameRemover != null) windowFrameRemover.Dispose();
+				if (windowMover != null) windowMover.Dispose();
 
 				// Trackers
-				if (manaTrackerGUI != null) manaTrackerGUI.Dispose();
 				if (manaTracker != null) manaTracker.Dispose();
-				if (combatTrackerGUIMonsters != null) combatTrackerGUIMonsters.Dispose();
 				if (combatTracker != null) combatTracker.Dispose();
 
 				// Macros
+				if (openMainPackOnLogin != null) openMainPackOnLogin.Dispose();
 				if (autoRecharge != null) autoRecharge.Dispose();
-				if (chestLooter != null) chestLooter.Dispose();
-				if (autoBuySell != null) autoBuySell.Dispose();
-				if (autoTradeAdd != null) autoTradeAdd.Dispose();
-				if (autoGive != null) autoGive.Dispose();
-				if (inventoryPacker != null) inventoryPacker.Dispose();
 				if (autoTradeAccept != null) autoTradeAccept.Dispose();
 
 				// General
 				if (chatFilter != null) chatFilter.Dispose();
-				if (openMainPackOnLogin != null) openMainPackOnLogin.Dispose();
-
-				// Settings
-				if (pluginConfigFile != null) pluginConfigFile.Dispose();
-
-				// View
-				if (mainView != null)
-				{
-					mainView.OptionEnabled -= new Action<Option>(mainView_OptionEnabled);
-					mainView.OptionDisabled -= new Action<Option>(mainView_OptionDisabled);
-					mainView.Dispose();
-				}
 
 				Current = null;
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-  		[BaseEvent("LoginComplete", "CharacterFilter")]
-		private void CharacterFilter_LoginComplete(object sender, EventArgs e)
+		void CharacterFilter_LoginComplete(object sender, EventArgs e)
 		{
 			try
 			{
-				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
-
-				foreach (string startupError in startupErrors)
-				{
-					CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: Startup Error: " + startupError, 5);
-				}
-
-				startupErrors.Clear();
+				CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
 
 				try
 				{
 					if (InventoryPacker != null)
 					{
 						// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
-						VirindiHotkeySystem.VHotkeyInfo key = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "Pack Inventory", "Triggers the Inventory Packer Macro", 0x50, false, true, false);
+						VirindiHotkeySystem.VHotkeyInfo packInventoryHotkey = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "Pack Inventory", "Triggers the Inventory Packer Macro", 0x50, false, true, false);
 
-						VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(key);
+						VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(packInventoryHotkey);
 
-						key.Fired2 += new EventHandler<VirindiHotkeySystem.VHotkeyInfo.cEatableFiredEventArgs>(key_Fired2);
+						packInventoryHotkey.Fired2 += new EventHandler<VirindiHotkeySystem.VHotkeyInfo.cEatableFiredEventArgs>(PackInventoryHotkey_Fired2);
 					}
 				}
+				catch (FileNotFoundException ex) { startupErrors.Add("Pack Inventory hot key failed to bind: " + ex.Message + ". Is Virindi Hotkey System running?"); }
 				catch (Exception ex) { Debug.LogException(ex); }
+
+				foreach (string startupError in startupErrors)
+				{
+					CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: Startup Error: " + startupError, 5);
+				}
+
+				startupErrors.Clear();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void key_Fired2(object sender, VirindiHotkeySystem.VHotkeyInfo.cEatableFiredEventArgs e)
+		void PackInventoryHotkey_Fired2(object sender, VirindiHotkeySystem.VHotkeyInfo.cEatableFiredEventArgs e)
 		{
 			try
 			{
 				InventoryPacker.Start();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		private void AddOptionsToGUI()
-		{
-			if (mainView == null)
-				return;
-
-			mainView.AddOption(Option.AutoRechargeMana);
-
-			mainView.AddOption(Option.FilterAttackEvades);
-			mainView.AddOption(Option.FilterDefenseEvades);
-			mainView.AddOption(Option.FilterAttackResists);
-			mainView.AddOption(Option.FilterDefenseResists);
-			mainView.AddOption(Option.FilterSpellCasting);
-			mainView.AddOption(Option.FilterSpellCastFizzles);
-			mainView.AddOption(Option.FilterCompUsage);
-			mainView.AddOption(Option.FilterSpellExpires);
-			mainView.AddOption(Option.FilterNPKFails);
-			mainView.AddOption(Option.FilterVendorTells);
-			mainView.AddOption(Option.FilterHealingKitSuccess);
-			mainView.AddOption(Option.FilterHealingKitFail);
-			mainView.AddOption(Option.FilterMonsterDeaths);
-			mainView.AddOption(Option.FilterSalvaging);
-			mainView.AddOption(Option.FilterSalvagingFails);
-			mainView.AddOption(Option.TradeBuffBotSpam);
-			mainView.AddOption(Option.KillTaskComplete);
-			mainView.AddOption(Option.FailedAssess);
-			mainView.AddOption(Option.NPCChatter);
-
-			mainView.AddOption(Option.ItemInfoOnIdent);
-
-			mainView.AddOption(Option.AutoBuySellEnabled);
-
-			mainView.AddOption(Option.AutoTradeAdd);
-
-			mainView.AddOption(Option.AutoTradeAcceptEnabled);
-
-			mainView.AddOption(Option.ChestLooterEnabled);
-
-			mainView.AddOption(Option.OpenMainPackOnLogin);
-			mainView.AddOption(Option.RemoveWindowFrame);
-			mainView.AddOption(Option.DebuggingEnabled);
-		}
-
-		void mainView_OptionEnabled(Option obj)
-		{
-			if (pluginConfigFile == null)
-				return;
-
-			pluginConfigFile.SetBoolean(obj.Xpath, true);
-
-			LoadOptionsFromConfig();
-		}
-
-		void mainView_OptionDisabled(Option obj)
-		{
-			if (pluginConfigFile == null)
-				return;
-
-			pluginConfigFile.SetBoolean(obj.Xpath, false);
-
-			LoadOptionsFromConfig();
-		}
-
-		private void LoadOptionsFromConfig()
-		{
-			if (pluginConfigFile == null)
-				return;
-
-			if (mainView != null && autoRecharge != null)
-			{
-				mainView.SetOption(Option.AutoRechargeMana, pluginConfigFile.GetBoolean(Option.AutoRechargeMana.Xpath));
-				autoRecharge.Enabled = pluginConfigFile.GetBoolean(Option.AutoRechargeMana.Xpath);
-			}
-
-			if (mainView != null && chatFilter != null)
-			{
-				mainView.SetOption(Option.FilterAttackEvades, pluginConfigFile.GetBoolean(Option.FilterAttackEvades.Xpath));
-				chatFilter.FilterAttackEvades = pluginConfigFile.GetBoolean(Option.FilterAttackEvades.Xpath);
-
-				mainView.SetOption(Option.FilterDefenseEvades, pluginConfigFile.GetBoolean(Option.FilterDefenseEvades.Xpath));
-				chatFilter.FilterDefenseEvades = pluginConfigFile.GetBoolean(Option.FilterDefenseEvades.Xpath);
-
-				mainView.SetOption(Option.FilterAttackResists, pluginConfigFile.GetBoolean(Option.FilterAttackResists.Xpath));
-				chatFilter.FilterAttackResists = pluginConfigFile.GetBoolean(Option.FilterAttackResists.Xpath);
-
-				mainView.SetOption(Option.FilterDefenseResists, pluginConfigFile.GetBoolean(Option.FilterDefenseResists.Xpath));
-				chatFilter.FilterDefenseResists = pluginConfigFile.GetBoolean(Option.FilterDefenseResists.Xpath);
-
-				mainView.SetOption(Option.FilterSpellCasting, pluginConfigFile.GetBoolean(Option.FilterSpellCasting.Xpath));
-				chatFilter.FilterSpellCasting = pluginConfigFile.GetBoolean(Option.FilterSpellCasting.Xpath);
-
-				mainView.SetOption(Option.FilterSpellCastFizzles, pluginConfigFile.GetBoolean(Option.FilterSpellCastFizzles.Xpath));
-				chatFilter.FilterSpellCastFizzles = pluginConfigFile.GetBoolean(Option.FilterSpellCastFizzles.Xpath);
-
-				mainView.SetOption(Option.FilterCompUsage, pluginConfigFile.GetBoolean(Option.FilterCompUsage.Xpath));
-				chatFilter.FilterCompUsage = pluginConfigFile.GetBoolean(Option.FilterCompUsage.Xpath);
-
-				mainView.SetOption(Option.FilterSpellExpires, pluginConfigFile.GetBoolean(Option.FilterSpellExpires.Xpath));
-				chatFilter.FilterSpellExpires = pluginConfigFile.GetBoolean(Option.FilterSpellExpires.Xpath);
-
-				mainView.SetOption(Option.FilterNPKFails, pluginConfigFile.GetBoolean(Option.FilterNPKFails.Xpath));
-				chatFilter.FilterNPKFails = pluginConfigFile.GetBoolean(Option.FilterNPKFails.Xpath);
-
-				mainView.SetOption(Option.FilterVendorTells, pluginConfigFile.GetBoolean(Option.FilterVendorTells.Xpath));
-				chatFilter.FilterVendorTells = pluginConfigFile.GetBoolean(Option.FilterVendorTells.Xpath);
-
-				mainView.SetOption(Option.FilterHealingKitSuccess, pluginConfigFile.GetBoolean(Option.FilterHealingKitSuccess.Xpath));
-				chatFilter.FilterHealingKitSuccess = pluginConfigFile.GetBoolean(Option.FilterHealingKitSuccess.Xpath);
-
-				mainView.SetOption(Option.FilterHealingKitFail, pluginConfigFile.GetBoolean(Option.FilterHealingKitFail.Xpath));
-				chatFilter.FilterHealingKitFail = pluginConfigFile.GetBoolean(Option.FilterHealingKitFail.Xpath);
-
-				mainView.SetOption(Option.FilterMonsterDeaths, pluginConfigFile.GetBoolean(Option.FilterMonsterDeaths.Xpath));
-				chatFilter.FilterMonsterDeaths = pluginConfigFile.GetBoolean(Option.FilterMonsterDeaths.Xpath);
-
-				mainView.SetOption(Option.FilterSalvaging, pluginConfigFile.GetBoolean(Option.FilterSalvaging.Xpath));
-				chatFilter.FilterSalvaging = pluginConfigFile.GetBoolean(Option.FilterSalvaging.Xpath);
-
-				mainView.SetOption(Option.FilterSalvagingFails, pluginConfigFile.GetBoolean(Option.FilterSalvagingFails.Xpath));
-				chatFilter.FilterSalvagingFails = pluginConfigFile.GetBoolean(Option.FilterSalvagingFails.Xpath);
-
-				mainView.SetOption(Option.TradeBuffBotSpam, pluginConfigFile.GetBoolean(Option.TradeBuffBotSpam.Xpath));
-				chatFilter.TradeBuffBotSpam = pluginConfigFile.GetBoolean(Option.TradeBuffBotSpam.Xpath);
-
-				mainView.SetOption(Option.KillTaskComplete, pluginConfigFile.GetBoolean(Option.KillTaskComplete.Xpath));
-				chatFilter.KillTaskComplete = pluginConfigFile.GetBoolean(Option.KillTaskComplete.Xpath);
-
-				mainView.SetOption(Option.FailedAssess, pluginConfigFile.GetBoolean(Option.FailedAssess.Xpath));
-				chatFilter.FailedAssess = pluginConfigFile.GetBoolean(Option.FailedAssess.Xpath);
-
-				mainView.SetOption(Option.NPCChatter, pluginConfigFile.GetBoolean(Option.NPCChatter.Xpath));
-				chatFilter.NPCChatter = pluginConfigFile.GetBoolean(Option.NPCChatter.Xpath);
-			}
-
-			if (mainView != null && (printItemInfoOnUserIdent != null || printItemInfoOnContainerOpen != null))
-			{
-				mainView.SetOption(Option.ItemInfoOnIdent, pluginConfigFile.GetBoolean(Option.ItemInfoOnIdent.Xpath));
-				if (printItemInfoOnUserIdent != null)
-					printItemInfoOnUserIdent.Enabled = pluginConfigFile.GetBoolean(Option.ItemInfoOnIdent.Xpath);
-				if (printItemInfoOnContainerOpen != null)
-					printItemInfoOnContainerOpen.Enabled = pluginConfigFile.GetBoolean(Option.ItemInfoOnIdent.Xpath);
-			}
-
-			if (mainView != null && autoBuySell != null)
-			{
-				mainView.SetOption(Option.AutoBuySellEnabled, pluginConfigFile.GetBoolean(Option.AutoBuySellEnabled.Xpath));
-				autoBuySell.Enabled = pluginConfigFile.GetBoolean(Option.AutoBuySellEnabled.Xpath);
-			}
-
-			if (mainView != null && autoTradeAdd != null)
-			{
-				mainView.SetOption(Option.AutoTradeAdd, pluginConfigFile.GetBoolean(Option.AutoTradeAdd.Xpath));
-				autoTradeAdd.Enabled = pluginConfigFile.GetBoolean(Option.AutoTradeAdd.Xpath);
-			}
-
-			if (mainView != null && autoTradeAccept != null)
-			{
-				mainView.SetOption(Option.AutoTradeAcceptEnabled, pluginConfigFile.GetBoolean(Option.AutoTradeAcceptEnabled.Xpath));
-				autoTradeAccept.Enabled = pluginConfigFile.GetBoolean(Option.AutoTradeAcceptEnabled.Xpath);
-
-				IEnumerable<string> whitelist = pluginConfigFile.GetCollection(OptionGroup.AutoTradeAccept.Xpath + "/Whitelist");
-
-				foreach (string obj in whitelist)
-				{
-					autoTradeAccept.AddToWhitelist(new System.Text.RegularExpressions.Regex("^" + obj + "$"));
-				}
-			}
-
-			if (mainView != null && chestLooter != null)
-			{
-				mainView.SetOption(Option.ChestLooterEnabled, pluginConfigFile.GetBoolean(Option.ChestLooterEnabled.Xpath));
-				chestLooter.Enabled = pluginConfigFile.GetBoolean(Option.ChestLooterEnabled.Xpath);
-			}
-
-			if (mainView != null && openMainPackOnLogin != null)
-			{
-				mainView.SetOption(Option.OpenMainPackOnLogin, pluginConfigFile.GetBoolean(Option.OpenMainPackOnLogin.Xpath));
-				openMainPackOnLogin.Enabled = pluginConfigFile.GetBoolean(Option.OpenMainPackOnLogin.Xpath);
-			}
-
-			if (mainView != null && windowFrameRemover != null)
-			{
-				mainView.SetOption(Option.RemoveWindowFrame, pluginConfigFile.GetBoolean(Option.RemoveWindowFrame.Xpath));
-				windowFrameRemover.Enabled = pluginConfigFile.GetBoolean(Option.RemoveWindowFrame.Xpath);
-			}
-
-			if (mainView != null)
-			{
-				mainView.SetOption(Option.DebuggingEnabled, pluginConfigFile.GetBoolean(Option.DebuggingEnabled.Xpath));
-				Debug.Enabled = pluginConfigFile.GetBoolean(Option.DebuggingEnabled.Xpath);
-			}
 		}
 	}
 }

@@ -1,21 +1,23 @@
 ﻿using System;
 
+using MagTools.Trackers.Mana;
+
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
-namespace MagTools.Trackers.Mana
+namespace MagTools.Views
 {
 	class ManaTrackerGUI : IDisposable
 	{
-		private ManaTracker manaTracker;
-		private Views.MainView mainView;
+		private readonly ManaTracker manaTracker;
+		private readonly MainView mainView;
 
 		const int IconUnknown	= 0x60020B5;	// Cicle (Supposed to represent a question mark, a backwards one I guess...)
 		const int IconActive	= 0x60011F9;	// Green Circle
 		const int IconNotActive	= 0x60011F8;	// Red Circle
 		const int IconNone		= 0x600287A;	// Small Grayish Dot
 
-		public ManaTrackerGUI(ManaTracker manaTracker, Views.MainView mainView)
+		public ManaTrackerGUI(ManaTracker manaTracker, MainView mainView)
 		{
 			try
 			{
@@ -28,7 +30,7 @@ namespace MagTools.Trackers.Mana
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		private bool _disposed = false;
+		private bool disposed;
 
 		public void Dispose()
 		{
@@ -43,7 +45,7 @@ namespace MagTools.Trackers.Mana
 		{
 			// If you need thread safety, use a lock around these 
 			// operations, as well as in your methods that use the resource.
-			if (!_disposed)
+			if (!disposed)
 			{
 				if (disposing)
 				{
@@ -52,7 +54,7 @@ namespace MagTools.Trackers.Mana
 				}
 
 				// Indicate that the instance has been disposed.
-				_disposed = true;
+				disposed = true;
 			}
 		}
 
@@ -123,7 +125,7 @@ namespace MagTools.Trackers.Mana
 						else
 						{
 							((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row - 1][3]).Text = obj.CalculatedCurrentMana + " / " + obj.MaximumMana;
-							((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row - 1][4]).Text = string.Format("{0:d}h{1:d2}m", (int)obj.ManaTimeRemaining.TotalHours, (int)obj.ManaTimeRemaining.Minutes);
+							((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row - 1][4]).Text = string.Format("{0:d}h{1:d2}m", (int)obj.ManaTimeRemaining.TotalHours, obj.ManaTimeRemaining.Minutes);
 							((VirindiViewService.Controls.HudStaticText)mainView.ManaList[row - 1][6]).Text = obj.ManaTimeRemaining.TotalSeconds.ToString();
 						}
 
@@ -137,6 +139,8 @@ namespace MagTools.Trackers.Mana
 		private void SortList()
 		{
 			mainView.ManaTotal.Text = "Mana needed: " + manaTracker.ManaNeededToRefillItems;
+
+			mainView.UnretainedTotal.Text = "Unretained Items: " + manaTracker.NumberOfUnretainedItems;
 
 			if (mainView.ManaList.RowCount == 0)
 				return;

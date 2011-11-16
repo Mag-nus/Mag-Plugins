@@ -18,11 +18,11 @@ namespace MagTools.Trackers.Mana
 
 		private DateTime timeOfLastManaIdent = DateTime.MinValue;
 
-		private System.Windows.Forms.Timer burnTimer = new System.Windows.Forms.Timer();
+		private readonly System.Windows.Forms.Timer burnTimer = new System.Windows.Forms.Timer();
 
 		public ManaTrackedItem(int id)
 		{
-			this.Id = id;
+			Id = id;
 
 			WorldObject wo = CoreManager.Current.WorldFilter[Id];
 
@@ -37,7 +37,7 @@ namespace MagTools.Trackers.Mana
 			burnTimer.Tick += new EventHandler(burnTimer_Tick);
 		}
 
-		private bool _disposed = false;
+		private bool disposed;
 
 		public void Dispose()
 		{
@@ -52,7 +52,7 @@ namespace MagTools.Trackers.Mana
 		{
 			// If you need thread safety, use a lock around these 
 			// operations, as well as in your methods that use the resource.
-			if (!_disposed)
+			if (!disposed)
 			{
 				if (disposing)
 				{
@@ -64,7 +64,7 @@ namespace MagTools.Trackers.Mana
 				}
 
 				// Indicate that the instance has been disposed.
-				_disposed = true;
+				disposed = true;
 			}
 		}
 
@@ -304,13 +304,11 @@ namespace MagTools.Trackers.Mana
 				if (ItemState == ManaTrackedItemState.NotActive || SecondsPerBurn == 0)
 					return wo.Values(LongValueKey.CurrentMana);
 
-				int burnedMana = 0;
-
 				//DateTime utcLastIdTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(wo.LastIdTime);
 				TimeSpan timeSinceLastIdent = DateTime.UtcNow - timeOfLastManaIdent;
 
 				// Calculate how much mana has been burned off since we last identified the object.
-				burnedMana = (int)(timeSinceLastIdent.TotalSeconds / SecondsPerBurn);
+				int burnedMana = (int)(timeSinceLastIdent.TotalSeconds / SecondsPerBurn);
 
 				if (burnedMana > wo.Values(LongValueKey.CurrentMana))
 					burnedMana = wo.Values(LongValueKey.CurrentMana);

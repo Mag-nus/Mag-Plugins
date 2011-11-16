@@ -7,8 +7,6 @@ namespace MagTools.Macros
 {
 	class ChestLooter : IDisposable, IChestLooter
 	{
-		public bool Enabled { private get; set; }
-
 		public ChestLooter()
 		{
 			try
@@ -18,7 +16,7 @@ namespace MagTools.Macros
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		private bool _disposed = false;
+		private bool disposed;
 
 		public void Dispose()
 		{
@@ -33,7 +31,7 @@ namespace MagTools.Macros
 		{
 			// If you need thread safety, use a lock around these 
 			// operations, as well as in your methods that use the resource.
-			if (!_disposed)
+			if (!disposed)
 			{
 				if (disposing)
 				{
@@ -43,7 +41,7 @@ namespace MagTools.Macros
 				}
 
 				// Indicate that the instance has been disposed.
-				_disposed = true;
+				disposed = true;
 			}
 		}
 
@@ -51,6 +49,9 @@ namespace MagTools.Macros
 		{
 			try
 			{
+				if (!Settings.SettingsManager.Looting.Enabled.Value)
+					return;
+
 				WorldObject container = CoreManager.Current.WorldFilter[e.ItemGuid];
 
 				if (container == null)
@@ -65,7 +66,7 @@ namespace MagTools.Macros
 					return;
 
 				// Only loot chests and vaults, etc...
-				if (!container.Name.Contains("Chest") && !container.Name.Contains("Vault"))
+				if (!container.Name.Contains("Chest") && !container.Name.Contains("Vault") && !container.Name.Contains("Reliquary"))
 					return;
 
 				Start();
@@ -75,7 +76,7 @@ namespace MagTools.Macros
 
 		public bool IsRunning { get; private set; }
 
-		bool idsRequested = false;
+		bool idsRequested;
 
 		void Start()
 		{
@@ -158,8 +159,8 @@ namespace MagTools.Macros
 
 					return;
 				}
-				else
-					waitingForIds = true;
+
+				waitingForIds = true;
 			}
 
 			if (!waitingForIds)

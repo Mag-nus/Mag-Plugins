@@ -18,7 +18,7 @@ namespace MagTools.Trackers.Mana
 		/// </summary>
 		public event Action<IManaTrackedItem> ItemRemoved;
 
-		private List<ManaTrackedItem> trackedItems = new List<ManaTrackedItem>();
+		private readonly List<ManaTrackedItem> trackedItems = new List<ManaTrackedItem>();
 
 		public ManaTracker()
 		{
@@ -27,12 +27,12 @@ namespace MagTools.Trackers.Mana
 				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 				CoreManager.Current.WorldFilter.ReleaseObject += new EventHandler<ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
-				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
+				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<LogoffEventArgs>(CharacterFilter_Logoff);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		private bool _disposed = false;
+		private bool disposed;
 
 		public void Dispose()
 		{
@@ -47,20 +47,20 @@ namespace MagTools.Trackers.Mana
 		{
 			// If you need thread safety, use a lock around these 
 			// operations, as well as in your methods that use the resource.
-			if (!_disposed)
+			if (!disposed)
 			{
 				if (disposing)
 				{
 					CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
 					CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 					CoreManager.Current.WorldFilter.ReleaseObject -= new EventHandler<ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
-					CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
+					CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<LogoffEventArgs>(CharacterFilter_Logoff);
 
 					RemoveAllTrackedItems();
 				}
 
 				// Indicate that the instance has been disposed.
-				_disposed = true;
+				disposed = true;
 			}
 		}
 
@@ -73,7 +73,7 @@ namespace MagTools.Trackers.Mana
 				// Add all of our items
 				foreach (WorldObject obj in CoreManager.Current.WorldFilter.GetInventory())
 				{
-					if (ItemIsEquippedByMe(obj) && ShoudlWeWatchItem(obj))
+					if (ShoudlWeWatchItem(obj))
 						AddItem(obj);
 				}
 			}
@@ -112,7 +112,7 @@ namespace MagTools.Trackers.Mana
 				// The process will call AddItem, then RemoveItem, then AddItem
 				if (e.Change == WorldChangeType.StorageChange && e.Changed.Values(LongValueKey.Container) != 0)
 				{
-					if (ItemIsEquippedByMe(e.Changed) && ShoudlWeWatchItem(e.Changed))
+					if (ShoudlWeWatchItem(e.Changed))
 						AddItem(e.Changed);
 					else
 						RemoveItem(e.Changed);
@@ -130,7 +130,7 @@ namespace MagTools.Trackers.Mana
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void CharacterFilter_Logoff(object sender, Decal.Adapter.Wrappers.LogoffEventArgs e)
+		void CharacterFilter_Logoff(object sender, LogoffEventArgs e)
 		{
 			try
 			{
@@ -145,11 +145,15 @@ namespace MagTools.Trackers.Mana
 			if (!ItemIsEquippedByMe(obj))
 				return false;
 
-			// We also don't load aetheria
+			// We don't load aetheria
 			if (obj.Name != null && obj.Name.Contains("Aetheria"))
 				return false;
-			
-			// Don't show arrows
+
+			// We don't load cloaks (EquipableSlots: 134217728)
+			if (obj.Values(LongValueKey.EquipableSlots) == 134217728)
+				return false;
+
+			// We don't show archer/missile ammo (arrows)
 			if (obj.Values(LongValueKey.EquippedSlots) == 8388608)
 				return false;
 
@@ -250,6 +254,27 @@ namespace MagTools.Trackers.Mana
 				}
 
 				return inactiveItems;
+			}
+		}
+
+		public int NumberOfUnretainedItems
+		{
+			get
+			{
+				int unretainedItems = 0;
+
+				foreach (ManaTrackedItem trackedItem in trackedItems)
+				{
+					WorldObject wo = CoreManager.Current.WorldFilter[trackedItem.Id];
+
+					if (wo == null)
+						continue;
+
+					if (wo.HasIdData && wo.Values(LongValueKey.Material) > 0 && !wo.Values(BoolValueKey.Retained))
+						unretainedItems++;
+				}
+
+				return unretainedItems;
 			}
 		}
 	}

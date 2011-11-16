@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Decal.Adapter;
-using Decal.Adapter.Wrappers;
+﻿/*
+using System;
 using System.Reflection;
 
 namespace MagTools.VirindiTools
@@ -14,12 +11,12 @@ namespace MagTools.VirindiTools
 			try
 			{
 				//See if VCS assembly is loaded
-				System.Reflection.Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
+				Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
 				bool loaded = false;
-				foreach (System.Reflection.Assembly a in asms)
+				foreach (Assembly a in asms)
 				{
 					AssemblyName nmm = a.GetName();
-					if ((nmm.Name == "VirindiHotkeySystem") && (nmm.Version >= new System.Version("1.0.0.0")))
+					if ((nmm.Name == "VirindiHotkeySystem") && (nmm.Version >= new Version("1.0.0.0")))
 					{
 						loaded = true;
 						break;
@@ -44,3 +41,4 @@ namespace MagTools.VirindiTools
 		}
 	}
 }
+*/

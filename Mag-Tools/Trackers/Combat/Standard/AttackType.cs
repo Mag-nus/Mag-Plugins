@@ -1,5 +1,5 @@
 ﻿
-namespace MagTools.Trackers.Combat
+namespace MagTools.Trackers.Combat.Standard
 {
 	public enum AttackType
 	{

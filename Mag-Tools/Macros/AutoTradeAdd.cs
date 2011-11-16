@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using Decal.Adapter;
@@ -10,19 +9,17 @@ namespace MagTools.Macros
 {
 	class AutoTradeAdd : IDisposable
 	{
-		public bool Enabled { private get; set; }
-
 		public AutoTradeAdd()
 		{
 			try
 			{
-				CoreManager.Current.WorldFilter.EnterTrade += new EventHandler<Decal.Adapter.Wrappers.EnterTradeEventArgs>(WorldFilter_EnterTrade);
-				CoreManager.Current.WorldFilter.EndTrade += new EventHandler<Decal.Adapter.Wrappers.EndTradeEventArgs>(WorldFilter_EndTrade);
+				CoreManager.Current.WorldFilter.EnterTrade += new EventHandler<EnterTradeEventArgs>(WorldFilter_EnterTrade);
+				CoreManager.Current.WorldFilter.EndTrade += new EventHandler<EndTradeEventArgs>(WorldFilter_EndTrade);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		private bool _disposed = false;
+		private bool disposed;
 
 		public void Dispose()
 		{
@@ -37,27 +34,27 @@ namespace MagTools.Macros
 		{
 			// If you need thread safety, use a lock around these 
 			// operations, as well as in your methods that use the resource.
-			if (!_disposed)
+			if (!disposed)
 			{
 				if (disposing)
 				{
 					Stop();
 
-					CoreManager.Current.WorldFilter.EnterTrade -= new EventHandler<Decal.Adapter.Wrappers.EnterTradeEventArgs>(WorldFilter_EnterTrade);
-					CoreManager.Current.WorldFilter.EndTrade -= new EventHandler<Decal.Adapter.Wrappers.EndTradeEventArgs>(WorldFilter_EndTrade);
+					CoreManager.Current.WorldFilter.EnterTrade -= new EventHandler<EnterTradeEventArgs>(WorldFilter_EnterTrade);
+					CoreManager.Current.WorldFilter.EndTrade -= new EventHandler<EndTradeEventArgs>(WorldFilter_EndTrade);
 				}
 
 				// Indicate that the instance has been disposed.
-				_disposed = true;
+				disposed = true;
 			}
 		}
 
 
-		void WorldFilter_EnterTrade(object sender, Decal.Adapter.Wrappers.EnterTradeEventArgs e)
+		void WorldFilter_EnterTrade(object sender, EnterTradeEventArgs e)
 		{
 			try
 			{
-				if (!Enabled)
+				if (!Settings.SettingsManager.AutoTradeAdd.Enabled.Value)
 					return;
 
 				int traderId = 0;
@@ -84,7 +81,7 @@ namespace MagTools.Macros
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void WorldFilter_EndTrade(object sender, Decal.Adapter.Wrappers.EndTradeEventArgs e)
+		void WorldFilter_EndTrade(object sender, EndTradeEventArgs e)
 		{
 			try
 			{
@@ -94,13 +91,13 @@ namespace MagTools.Macros
 		}
 
 
-		bool started = false;
+		bool started;
 
-		private VTClassic.LootCore lootCore = new VTClassic.LootCore();
+		private readonly VTClassic.LootCore lootCore = new VTClassic.LootCore();
 
-		bool idsRequested = false;
+		bool idsRequested;
 
-		Collection<int> itemIdsAdded = new Collection<int>();
+		readonly Collection<int> itemIdsAdded = new Collection<int>();
 
 		public void Start(FileInfo lootProfile)
 		{
@@ -217,8 +214,8 @@ namespace MagTools.Macros
 
 					return;
 				}
-				else
-					waitingForIds = true;
+
+				waitingForIds = true;
 			}
 
 			if (waitingForIds)

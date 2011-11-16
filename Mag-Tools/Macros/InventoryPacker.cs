@@ -9,8 +9,6 @@ namespace MagTools.Macros
 {
 	class InventoryPacker : IDisposable, IInventoryPacker
 	{
-		public bool Enabled { private get; set; }
-
 		public InventoryPacker()
 		{
 			try
@@ -20,7 +18,7 @@ namespace MagTools.Macros
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		private bool _disposed = false;
+		private bool disposed;
 
 		public void Dispose()
 		{
@@ -35,7 +33,7 @@ namespace MagTools.Macros
 		{
 			// If you need thread safety, use a lock around these 
 			// operations, as well as in your methods that use the resource.
-			if (!_disposed)
+			if (!disposed)
 			{
 				if (disposing)
 				{
@@ -45,7 +43,7 @@ namespace MagTools.Macros
 				}
 
 				// Indicate that the instance has been disposed.
-				_disposed = true;
+				disposed = true;
 			}
 		}
 
@@ -62,9 +60,9 @@ namespace MagTools.Macros
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		private VTClassic.LootCore lootProfile = new VTClassic.LootCore();
+		private readonly VTClassic.LootCore lootProfile = new VTClassic.LootCore();
 
-		bool started = false;
+		bool started;
 
 		public void Start()
 		{
@@ -170,8 +168,8 @@ namespace MagTools.Macros
 		{
 			public ItemToProcess(int id, int[] targetPackIds)
 			{
-				this.Id = id;
-				this.TargetPackIds = targetPackIds;
+				Id = id;
+				TargetPackIds = targetPackIds;
 			}
 
 			public readonly int Id;
@@ -181,10 +179,10 @@ namespace MagTools.Macros
 		bool DoAutoPack()
 		{
 			// Get all of our side pack information and put them in the correct order
-			int[] Packs = new int[CoreManager.Current.WorldFilter[CoreManager.Current.CharacterFilter.Id].Values(LongValueKey.PackSlots) + 1];
+			int[] packs = new int[CoreManager.Current.WorldFilter[CoreManager.Current.CharacterFilter.Id].Values(LongValueKey.PackSlots) + 1];
 
 			// Main pack
-			Packs[0] = CoreManager.Current.CharacterFilter.Id;
+			packs[0] = CoreManager.Current.CharacterFilter.Id;
 
 			// Load the side pack information
 			foreach (WorldObject obj in CoreManager.Current.WorldFilter.GetByContainer(CoreManager.Current.CharacterFilter.Id))
@@ -192,12 +190,12 @@ namespace MagTools.Macros
 				if (obj.ObjectClass != ObjectClass.Container)
 					continue;
 
-				Packs[obj.Values(LongValueKey.Slot) + 1] = obj.Id;
+				packs[obj.Values(LongValueKey.Slot) + 1] = obj.Id;
 			}
 
 
 			// Process our inventory
-			Collection<ItemToProcess> ItemsToProcess = new Collection<ItemToProcess>();
+			Collection<ItemToProcess> itemsToProcess = new Collection<ItemToProcess>();
 
 			foreach (WorldObject item in CoreManager.Current.WorldFilter.GetInventory())
 			{
@@ -224,35 +222,35 @@ namespace MagTools.Macros
 					packNumbers[i] = byte.Parse(packNumbersAsChar[i].ToString());
 
 				// If this item is already in its primary pack, we don't need to queue it up.
-				if (item.Container == Packs[packNumbers[0]])
+				if (item.Container == packs[packNumbers[0]])
 					continue;
 
 				int[] targetPackIds = new int[packNumbers.Length];
 				for (int i = 0 ; i < packNumbers.Length ; i++)
-					targetPackIds[i] = Packs[packNumbers[i]];
+					targetPackIds[i] = packs[packNumbers[i]];
 
 				ItemToProcess itemToProcess = new ItemToProcess(item.Id, targetPackIds);
 
-				ItemsToProcess.Add(itemToProcess);
+				itemsToProcess.Add(itemToProcess);
 			}
 
 			// Lets go through our list and see if any items are in their primary target pack
-			for (int i = ItemsToProcess.Count - 1 ; i >= 0 ; i--)
+			for (int i = itemsToProcess.Count - 1 ; i >= 0 ; i--)
 			{
-				ItemToProcess itemToProcess = ItemsToProcess[i];
+				ItemToProcess itemToProcess = itemsToProcess[i];
 
 				WorldObject item = CoreManager.Current.WorldFilter[itemToProcess.Id];
 
 				if (item == null)
 				{
-					ItemsToProcess.RemoveAt(i);
+					itemsToProcess.RemoveAt(i);
 
 					continue;
 				}
 
 				if (item.Container == itemToProcess.TargetPackIds[0])
 				{
-					ItemsToProcess.RemoveAt(i);
+					itemsToProcess.RemoveAt(i);
 
 					continue;
 				}
@@ -263,9 +261,9 @@ namespace MagTools.Macros
 			// Lets see if we can find an item that can be moved to its target pack
 			for (int packIndex = 0 ; packIndex < 10 ; packIndex++)
 			{
-				for (int i = ItemsToProcess.Count - 1 ; i >= 0 ; i--)
+				for (int i = itemsToProcess.Count - 1 ; i >= 0 ; i--)
 				{
-					ItemToProcess itemToProcess = ItemsToProcess[i];
+					ItemToProcess itemToProcess = itemsToProcess[i];
 
 					WorldObject item = CoreManager.Current.WorldFilter[itemToProcess.Id];
 

@@ -3,22 +3,20 @@ using System.Runtime.InteropServices;
 
 using Decal.Adapter;
 
-namespace MagTools
+namespace MagTools.Client
 {
 	class WindowFrameRemover : IDisposable
 	{
-		public bool Enabled { private get; set; }
-
 		public WindowFrameRemover()
 		{
 			try
 			{
-				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete);
+				CoreManager.Current.CharacterFilter.Login += new EventHandler<Decal.Adapter.Wrappers.LoginEventArgs>(CharacterFilter_Login);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		private bool _disposed = false;
+		private bool disposed;
 
 		public void Dispose()
 		{
@@ -33,28 +31,40 @@ namespace MagTools
 		{
 			// If you need thread safety, use a lock around these 
 			// operations, as well as in your methods that use the resource.
-			if (!_disposed)
+			if (!disposed)
 			{
 				if (disposing)
 				{
-					CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
+					CoreManager.Current.CharacterFilter.Login -= new EventHandler<Decal.Adapter.Wrappers.LoginEventArgs>(CharacterFilter_Login);
 				}
 
 				// Indicate that the instance has been disposed.
-				_disposed = true;
+				disposed = true;
 			}
+		}
+
+		void CharacterFilter_Login(object sender, Decal.Adapter.Wrappers.LoginEventArgs e)
+		{
+			try
+			{
+				if (!Settings.SettingsManager.Misc.RemoveWindowFrame.Value)
+					return;
+
+				ShowWindowFrame(false);
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		internal struct RECT
 		{
-			public int left;
-			public int top;
-			public int right;
-			public int bottom;
-
+			public int Left;
+			public int Top;
+			public int Right;
+			public int Bottom;
 		}
+
 		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, ExactSpelling = true, SetLastError = true)]
-		internal static extern bool GetWindowRect(IntPtr hWnd, ref RECT rect);
+		static extern bool GetWindowRect(IntPtr hWnd, ref RECT rect);
 
 		//Gets window attributes
 		[DllImport("USER32.DLL")]
@@ -68,45 +78,42 @@ namespace MagTools
 		/// The MoveWindow function changes the position and dimensions of the specified window. For a top-level window, the position and dimensions are relative to the upper-left corner of the screen. For a child window, they are relative to the upper-left corner of the parent window's client area.
 		/// </summary>
 		/// <param name="hWnd">Handle to the window.</param>
-		/// <param name="X">Specifies the new position of the left side of the window.</param>
-		/// <param name="Y">Specifies the new position of the top of the window.</param>
+		/// <param name="x">Specifies the new position of the left side of the window.</param>
+		/// <param name="y">Specifies the new position of the top of the window.</param>
 		/// <param name="nWidth">Specifies the new width of the window.</param>
 		/// <param name="nHeight">Specifies the new height of the window.</param>
 		/// <param name="bRepaint">Specifies whether the window is to be repainted. If this parameter is TRUE, the window receives a message. If the parameter is FALSE, no repainting of any kind occurs. This applies to the client area, the nonclient area (including the title bar and scroll bars), and any part of the parent window uncovered as a result of moving a child window.</param>
 		/// <returns>If the function succeeds, the return value is nonzero.
 		/// <para>If the function fails, the return value is zero. To get extended error information, call GetLastError.</para></returns>
 		[DllImport("user32.dll", SetLastError = true)]
+		static extern bool MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
 
-		internal static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
-		void CharacterFilter_LoginComplete(object sender, EventArgs e)
+		/// <summary>
+		/// Right now this just removes the the window frame. visible param has no function.
+		/// </summary>
+		/// <param name="visible"></param>
+		static void ShowWindowFrame(bool visible)
 		{
-			try
-			{
-				if (!Enabled)
-					return;
+			RECT rect = new RECT();
 
-				RECT rect = new RECT();
+			GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
 
-				GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
+			// 1686 1078 -> 1680 1050
+			//Debug.WriteToChat((rect.Right - rect.Left) + " " + (rect.Bottom - rect.Top));
 
-				// 1686 1078 -> 1680 1050
-				Debug.WriteToChat((rect.right - rect.left) + " " + (rect.bottom - rect.top));
+			const int GWL_STYLE = -16;
+			const int WS_BORDER = 0x00800000; //window with border
+			const int WS_DLGFRAME = 0x00400000; //window with double border but no title
+			const int WS_CAPTION = WS_BORDER | WS_DLGFRAME; //window with a title bar
 
-				const int GWL_STYLE = -16;
-				const int WS_BORDER = 0x00800000; //window with border
-				const int WS_DLGFRAME = 0x00400000; //window with double border but no title
-				const int WS_CAPTION = WS_BORDER | WS_DLGFRAME; //window with a title bar
+			int style = GetWindowLong(CoreManager.Current.Decal.Hwnd, GWL_STYLE);
 
-				int style = GetWindowLong(CoreManager.Current.Decal.Hwnd, GWL_STYLE);
+			SetWindowLong(CoreManager.Current.Decal.Hwnd, GWL_STYLE, (style & ~WS_CAPTION));
 
-				SetWindowLong(CoreManager.Current.Decal.Hwnd, GWL_STYLE, (style & ~WS_CAPTION));
-
-				MoveWindow(CoreManager.Current.Decal.Hwnd, rect.left, rect.top, (rect.right - rect.left) - TotalWindowFrameWidth, (rect.bottom - rect.top) - TotalWindowFrameHeight, true);
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
+			MoveWindow(CoreManager.Current.Decal.Hwnd, rect.Left, rect.Top, (rect.Right - rect.Left) - TotalWindowFrameWidth, (rect.Bottom - rect.Top) - TotalWindowFrameHeight, true);
 		}
 
-		int TotalWindowFrameWidth
+		static int TotalWindowFrameWidth
 		{
 			get
 			{
@@ -117,7 +124,7 @@ namespace MagTools
 
 				GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
 
-				int width = rect.right - rect.left;
+				int width = rect.Right - rect.Left;
 
 				// Widths: 800 1024 1152 1280 1360 1400 1440 1600 1680 1792 1800 1856 1920 2048 2560
 				if (width >= 2560) return width - 2560;
@@ -141,7 +148,7 @@ namespace MagTools
 			}
 		}
 
-		int TotalWindowFrameHeight
+		static int TotalWindowFrameHeight
 		{
 			get
 			{
@@ -152,7 +159,7 @@ namespace MagTools
 
 				GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
 
-				int height = rect.bottom - rect.top;
+				int height = rect.Bottom - rect.Top;
 
 				// Workarounds go here:
 				if (height == (1024 + 28)) return 28;

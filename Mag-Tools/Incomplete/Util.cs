@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Reflection;
 
 namespace MagTools.VirindiTools
@@ -15,9 +16,9 @@ namespace MagTools.VirindiTools
 			{
 				//uTank2.eCombatSpellType temp = uTank2.eCombatSpellType.Arc;
 
-				System.Reflection.Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
+				Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
 
-				foreach (System.Reflection.Assembly a in asms)
+				foreach (Assembly a in asms)
 				{
 					AssemblyName nmm = a.GetName();
 
@@ -39,9 +40,9 @@ namespace MagTools.VirindiTools
 			{
 				//VTClassic.LootCore core = null;
 
-				System.Reflection.Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
+				Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
 
-				foreach (System.Reflection.Assembly a in asms)
+				foreach (Assembly a in asms)
 				{
 					AssemblyName nmm = a.GetName();
 
@@ -63,9 +64,9 @@ namespace MagTools.VirindiTools
 			{
 				//VirindiItemTool.PluginCore.ePluginActivityState temp = VirindiItemTool.PluginCore.ePluginActivityState.Idle;
 
-				System.Reflection.Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
+				Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
 
-				foreach (System.Reflection.Assembly a in asms)
+				foreach (Assembly a in asms)
 				{
 					AssemblyName nmm = a.GetName();
 
@@ -82,3 +83,4 @@ namespace MagTools.VirindiTools
 		}
 	}
 }
+*/

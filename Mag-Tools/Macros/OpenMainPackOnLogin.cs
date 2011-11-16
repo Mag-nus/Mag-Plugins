@@ -2,12 +2,10 @@
 
 using Decal.Adapter;
 
-namespace MagTools
+namespace MagTools.Macros
 {
 	class OpenMainPackOnLogin : IDisposable
 	{
-		public bool Enabled { private get; set; }
-
 		public OpenMainPackOnLogin()
 		{
 			try
@@ -17,7 +15,7 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		private bool _disposed = false;
+		private bool disposed;
 
 		public void Dispose()
 		{
@@ -32,7 +30,7 @@ namespace MagTools
 		{
 			// If you need thread safety, use a lock around these 
 			// operations, as well as in your methods that use the resource.
-			if (!_disposed)
+			if (!disposed)
 			{
 				if (disposing)
 				{
@@ -40,7 +38,7 @@ namespace MagTools
 				}
 
 				// Indicate that the instance has been disposed.
-				_disposed = true;
+				disposed = true;
 			}
 		}
 
@@ -48,7 +46,7 @@ namespace MagTools
 		{
 			try
 			{
-				if (!Enabled)
+				if (!Settings.SettingsManager.Misc.OpenMainPackOnLogin.Value)
 					return;
 
 				CoreManager.Current.Actions.UseItem(CoreManager.Current.CharacterFilter.Id, 0);

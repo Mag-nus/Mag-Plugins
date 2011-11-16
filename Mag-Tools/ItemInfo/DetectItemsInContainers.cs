@@ -4,13 +4,13 @@ using System.Collections.ObjectModel;
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
-namespace MagTools
+namespace MagTools.ItemInfo
 {
-	class PrintItemInfoOnContainerOpen : IDisposable
+	class DetectItemsInContainers : IDisposable
 	{
-		public bool Enabled { private get; set; }
+		public event EventHandler<ItemInfoIdentArgs> ItemIdentified;
 
-		public PrintItemInfoOnContainerOpen()
+		public DetectItemsInContainers()
 		{
 			try
 			{
@@ -19,7 +19,7 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		private bool _disposed = false;
+		private bool disposed;
 
 		public void Dispose()
 		{
@@ -34,7 +34,7 @@ namespace MagTools
 		{
 			// If you need thread safety, use a lock around these 
 			// operations, as well as in your methods that use the resource.
-			if (!_disposed)
+			if (!disposed)
 			{
 				if (disposing)
 				{
@@ -44,7 +44,7 @@ namespace MagTools
 				}
 
 				// Indicate that the instance has been disposed.
-				_disposed = true;
+				disposed = true;
 			}
 		}
 
@@ -52,7 +52,7 @@ namespace MagTools
 		{
 			try
 			{
-				if (!Enabled)
+				if (!Settings.SettingsManager.ItemInfoOnIdent.Enabled.Value)
 					return;
 
 				Start();
@@ -60,11 +60,11 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		bool started = false;
+		bool started;
 		
 		DateTime startTime;
 
-		Collection<int> itemsProcessed = new Collection<int>();
+		readonly Collection<int> itemsProcessed = new Collection<int>();
 
 		void Start()
 		{
@@ -118,12 +118,12 @@ namespace MagTools
 				return;
 
 			// Do not show salvage rules for chests and vaults
-			bool hideSalvageRules = false;
+			bool dontShowIfIsSalvageRule = false;
 
 			WorldObject container = CoreManager.Current.WorldFilter[CoreManager.Current.Actions.OpenedContainer];
 
-			if (container != null && (container.Name.Contains("Chest") || container.Name.Contains("Vault")))
-				hideSalvageRules = true;
+			if (container != null && (container.Name.Contains("Chest") || container.Name.Contains("Vault") || container.Name.Contains("Reliquary")))
+				dontShowIfIsSalvageRule = true;
 
 			foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetByContainer(CoreManager.Current.Actions.OpenedContainer))
 			{
@@ -132,7 +132,12 @@ namespace MagTools
 
 				itemsProcessed.Add(wo.Id);
 
-				PrintItemInfo printItemInfo = new PrintItemInfo(wo, true, hideSalvageRules);
+				if (ItemIdentified != null)
+				{
+					ItemInfoIdentArgs itemInfoIdentArgs = new ItemInfoIdentArgs(wo, true, dontShowIfIsSalvageRule);
+
+					ItemIdentified(this, itemInfoIdentArgs);
+				}
 			}
 
 			// Some chests take a few seconds to print out ALL item info

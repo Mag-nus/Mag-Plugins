@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
@@ -13,14 +14,17 @@ namespace MagTools
 		/// In AC there are 240 meters in a kilometer; thus if you set your attack range to 1 in the UI it
 		/// will showas 0.00416666666666667in the manual options (0.00416666666666667 being 1/240). 
 		/// </summary>
-		/// <param name="id1"></param>
-		/// <param name="ind2"></param>
+		/// <param name="obj1"></param>
+		/// <param name="obj2"></param>
 		/// <returns></returns>
 		/// <exception cref="ArgumentOutOfRangeException">Object passed with an Id of 0</exception>
 		public static double GetDistance(WorldObject obj1, WorldObject obj2)
 		{
-			if (obj1.Id == 0 || obj2.Id == 0)
-				throw new ArgumentOutOfRangeException("Object passed with an Id of 0");
+			if (obj1.Id == 0)
+				throw new ArgumentOutOfRangeException("obj1", "Object passed with an Id of 0");
+
+			if (obj2.Id == 0)
+				throw new ArgumentOutOfRangeException("obj2", "Object passed with an Id of 0");
 
 			return CoreManager.Current.WorldFilter.Distance(obj1.Id, obj2.Id) * 240;
 		}
@@ -31,17 +35,16 @@ namespace MagTools
 		/// In AC there are 240 meters in a kilometer; thus if you set your attack range to 1 in the UI it
 		/// will showas 0.00416666666666667in the manual options (0.00416666666666667 being 1/240). 
 		/// </summary>
-		/// <param name="id1"></param>
-		/// <param name="ind2"></param>
+		/// <param name="destObj"></param>
 		/// <returns></returns>
 		/// <exception cref="ArgumentOutOfRangeException">CharacterFilder.Id or Object passed with an Id of 0</exception>
 		public static double GetDistanceFromPlayer(WorldObject destObj)
 		{
 			if (CoreManager.Current.CharacterFilter.Id == 0)
-				throw new ArgumentOutOfRangeException("CharacterFilter.Id of 0");
+				throw new ArgumentOutOfRangeException("destObj", "CharacterFilter.Id of 0");
 
 			if (destObj.Id == 0)
-				throw new ArgumentOutOfRangeException("Object passed with an Id of 0");
+				throw new ArgumentOutOfRangeException("destObj", "Object passed with an Id of 0");
 
 			return CoreManager.Current.WorldFilter.Distance(CoreManager.Current.CharacterFilter.Id, destObj.Id) * 240;
 		}
@@ -52,18 +55,18 @@ namespace MagTools
 		/// <returns></returns>
 		public static WorldObject GetClosestObject(ObjectClass objectClass)
 		{
-			WorldObject Closest = null;
+			WorldObject closest = null;
 
 			foreach (WorldObject obj in CoreManager.Current.WorldFilter.GetLandscape())
 			{
 				if (obj.ObjectClass != objectClass)
 					continue;
 
-				if (Closest == null || GetDistanceFromPlayer(obj) < GetDistanceFromPlayer(Closest))
-					Closest = obj;
+				if (closest == null || GetDistanceFromPlayer(obj) < GetDistanceFromPlayer(closest))
+					closest = obj;
 			}
 
-			return Closest;
+			return closest;
 		}
 
 		/// <summary>
@@ -75,84 +78,24 @@ namespace MagTools
 		public static int GetFreePackSlots(int container)
 		{
 			if (container == 0)
-				throw new ArgumentOutOfRangeException("Invalid container passed, id of 0.");
+				throw new ArgumentOutOfRangeException("container", "Invalid container passed, id of 0.");
 
 			WorldObject target = CoreManager.Current.WorldFilter[container];
 
 			if (target == null || (target.ObjectClass != ObjectClass.Player && target.ObjectClass != ObjectClass.Container))
-				throw new ArgumentOutOfRangeException("Invalid container passed, null reference");
+				throw new ArgumentOutOfRangeException("container", "Invalid container passed, null reference");
 
-			int slots_filled = 0;
+			int slotsFilled = 0;
 
 			foreach (WorldObject obj in CoreManager.Current.WorldFilter.GetByContainer(container))
 			{
 				if (obj.ObjectClass == ObjectClass.Container || obj.ObjectClass == ObjectClass.Foci || obj.Values(LongValueKey.EquippedSlots) != 0)
 					continue;
 
-				slots_filled++;
+				slotsFilled++;
 			}
 
-			return CoreManager.Current.WorldFilter[container].Values(LongValueKey.ItemSlots) - slots_filled;
-		}
-
-		public static bool IsSpellCastMessage(string text)
-		{
-			if (text == null)
-				return false;
-
-			// Fat Guy In A Little Coat says, "Zojak
-			if (text.Contains("says, \""))
-			{
-				if (text.Contains("says, \"Zojak") ||
-					text.Contains("says, \"Malar") ||
-					text.Contains("says, \"Puish") ||
-					text.Contains("says, \"Cruath") ||
-					text.Contains("says, \"Volae") ||
-					text.Contains("says, \"Quavosh") ||
-					text.Contains("says, \"Shurov") ||
-					text.Contains("says, \"Boquar") ||
-					text.Contains("says, \"Helkas") ||
-					text.Contains("says, \"Equin") ||
-					text.Contains("says, \"Roiga") ||
-					text.Contains("says, \"Malar") ||
-					text.Contains("says, \"Jevak") ||
-					text.Contains("says, \"Tugak") ||
-					text.Contains("says, \"Slavu") ||
-					text.Contains("says, \"Drostu") ||
-					text.Contains("says, \"Traku") ||
-					text.Contains("says, \"Yanoi") ||
-					text.Contains("says, \"Drosta") ||
-					text.Contains("says, \"Feazh"))
-					return true;
-			}
-
-			// You say, "Zojak 
-			else if (text.StartsWith("You say, "))
-			{
-				if (text.StartsWith("You say, \"Zojak") ||
-					text.StartsWith("You say, \"Malar") ||
-					text.StartsWith("You say, \"Puish") ||
-					text.StartsWith("You say, \"Cruath") ||
-					text.StartsWith("You say, \"Volae") ||
-					text.StartsWith("You say, \"Quavosh") ||
-					text.StartsWith("You say, \"Shurov") ||
-					text.StartsWith("You say, \"Boquar") ||
-					text.StartsWith("You say, \"Helkas") ||
-					text.StartsWith("You say, \"Equin") ||
-					text.StartsWith("You say, \"Roiga") ||
-					text.StartsWith("You say, \"Malar") ||
-					text.StartsWith("You say, \"Jevak") ||
-					text.StartsWith("You say, \"Tugak") ||
-					text.StartsWith("You say, \"Slavu") ||
-					text.StartsWith("You say, \"Drostu") ||
-					text.StartsWith("You say, \"Traku") ||
-					text.StartsWith("You say, \"Yanoi") ||
-					text.StartsWith("You say, \"Drosta") ||
-					text.StartsWith("You say, \"Feazh"))
-					return true;
-			}
-
-			return false;
+			return CoreManager.Current.WorldFilter[container].Values(LongValueKey.ItemSlots) - slotsFilled;
 		}
 
 		/// <summary>
@@ -208,141 +151,208 @@ namespace MagTools
 		}
 
 		/// <summary>
-		/// Returns true if the text is a monster killed by you death message. ex:
-		/// You flatten Noble Remains's body with the force of your assault!
+		/// This will return an armor attribute set name based on its id.
+		/// For example, 27 returns "Acid Proof Set".
+		/// If the set is unknown the following is returned: "Unknown set id: " + id
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public static string GetAttributeSetNameById(int id)
+		{
+			// This list was taken from Virindi Tank Loot Editor
+			// 01-04
+			if (id == 05) return "Noble Relic Set";
+			if (id == 06) return "Ancient Relic Set";
+			if (id == 07) return "Relic Alduressa Set";
+			if (id == 08) return "Shou-jen Set";
+			if (id == 09) return "Empyrean Rings Set";
+			if (id == 10) return "Arm, Mind, Heart Set";
+			if (id == 11) return "Coat of the Perfect Light Set";
+			if (id == 12) return "Leggings of Perfect Light Set";
+			if (id == 13) return "Soldier's Set";
+			if (id == 14) return "Adept's Set";
+			if (id == 15) return "Archer's Set";
+			if (id == 16) return "Defender's Set";
+			if (id == 17) return "Tinker's Set";
+			if (id == 18) return "Crafter's Set";
+			if (id == 19) return "Hearty Set";
+			if (id == 20) return "Dexterous Set";
+			if (id == 21) return "Wise Set";
+			if (id == 22) return "Swift Set";
+			if (id == 23) return "Hardenend Set";
+			if (id == 24) return "Reinforced Set";
+			if (id == 25) return "Interlocking Set";
+			if (id == 26) return "Flame Proof Set";
+			if (id == 27) return "Acid Proof Set";
+			if (id == 28) return "Cold Proof Set";
+			if (id == 29) return "Lightning Proof Set";
+			if (id == 30) return "Dedication Set";
+			if (id == 31) return "Gladiatorial Clothing Set";
+			if (id == 32) return "Protective Clothing Set";
+			// 33-34
+			if (id == 35) return "Sigil of Defense";
+			if (id == 36) return "Sigil of Destruction";
+			if (id == 37) return "Sigil of Fury";
+			if (id == 38) return "Sigil of Growth";
+			if (id == 39) return "Sigil of Vigor";
+			// 40-48
+			if (id == 49) return "Alchemy Set";
+			if (id == 50) return "Arcane Lore Set";
+			if (id == 51) return "Armor Tinkering Set";
+			if (id == 52) return "Assess Person Set";
+			if (id == 53) return "Axe Set";
+			if (id == 54) return "Bow Set";
+			if (id == 55) return "Cooking Set";
+			if (id == 56) return "Creature Enchantment Set";
+			if (id == 57) return "Crossbow Set";
+			if (id == 58) return "Dagger Set";
+			if (id == 59) return "Deception Set";
+			if (id == 60) return "Fletching Set";
+			if (id == 61) return "Healing Set";
+			if (id == 62) return "Item Enchantment Set";
+			if (id == 63) return "Item Tinkering Set";
+			if (id == 64) return "Leadership Set";
+			if (id == 65) return "Life Magic Set";
+			if (id == 66) return "Loyalty Set";
+			if (id == 67) return "Mace Set";
+			if (id == 68) return "Magic Defense Set";
+			if (id == 69) return "Magic Item Tinkering Set";
+			if (id == 70) return "Mana Conversion Set";
+			if (id == 71) return "Melee Defense Set";
+			if (id == 72) return "Missile Defense Set";
+			if (id == 73) return "Salvaging Set";
+			if (id == 74) return "Spear Set";
+			if (id == 75) return "Staff Set";
+			if (id == 76) return "Sword Set";
+			if (id == 77) return "Thrown Weapons Set";
+			if (id == 78) return "Two Handed Combat Set";
+			if (id == 79) return "Unarmed Combat Set";
+			if (id == 80) return "Void Magic Set";
+			if (id == 81) return "War Magic Set";
+			if (id == 82) return "Weapon Tinkering Set";
+			if (id == 83) return "Assess Creature  Set";
+
+			return "Unknown set id: " + id;
+		}
+
+		// http://www.regular-expressions.info/reference.html
+
+		// Local Chat
+		// You say, "test"
+		private static readonly Regex YouSay = new Regex("^You say, \"(?<msg>.*)\"$");
+		// <Tell:IIDString:1343111160:PlayerName>PlayerName<\Tell> says, "asdf"
+		private static readonly Regex PlayerSaysLocal = new Regex("^<Tell:IIDString:[0-9]+:(?<name>[\\w\\s'-]+)>[\\w\\s'-]+<\\\\Tell> says, \"(?<msg>.*)\"$");
+		//
+		// Master Arbitrator says, "Arena Three is now available for new warriors!"
+		private static readonly Regex NpcSays = new Regex("^(?<name>[\\w\\s'-]+) says, \"(?<msg>.*)\"$");
+
+		// Channel Chat
+		// [Allegiance] <Tell:IIDString:0:PlayerName>PlayerName<\Tell> says, "kk"
+		// [General] <Tell:IIDString:0:PlayerName>PlayerName<\Tell> says, "asdfasdfasdf"
+		// [Fellowship] <Tell:IIDString:0:PlayerName>PlayerName<\Tell> says, "test"
+		private static readonly Regex PlayerSaysChannel = new Regex("^\\[(?<channel>.+)]+ <Tell:IIDString:[0-9]+:(?<name>[\\w\\s'-]+)>[\\w\\s'-]+<\\\\Tell> says, \"(?<msg>.*)\"$");
+		//
+		// [Fellowship] <Tell:IIDString:0:Master Arbitrator>Master Arbitrator<\Tell> says, "Good Luck!"
+
+		// Tells
+		// You tell PlayerName, "test"
+		private static readonly Regex YouTell = new Regex("^You tell .+, \"(?<msg>.*)\"$");
+		// <Tell:IIDString:1343111160:PlayerName>PlayerName<\Tell> tells you, "test"
+		private static readonly Regex PlayerTellsYou = new Regex("^<Tell:IIDString:[0-9]+:(?<name>[\\w\\s'-]+)>[\\w\\s'-]+<\\\\Tell> tells you, \"(?<msg>.*)\"$");
+		//
+		// Master Arbitrator tells you, "You fought in the Colosseum's Arenas too recently. I cannot reward you for 4s."
+		private static readonly Regex NpcTellsYou = new Regex("^(?<name>[\\w\\s'-]+) tells you, \"(?<msg>.*)\"$");
+
+		[Flags]
+		public enum ChatFlags : byte
+		{
+			PlayerSaysLocal		= 0x01,
+			PlayerSaysChannel	= 0x02,
+			YouSay				= 0x04,
+
+			PlayerTellsYou		= 0x08,
+			YouTell				= 0x10,
+
+			NpcSays				= 0x20,
+			NpcTellsYou			= 0x40,
+
+			All					= 0xFF,
+		}
+
+		/// <summary>
+		/// Returns true if the text was said by a person, envoy, npc, monster, etc..
+		/// </summary>
+		/// <param name="text"></param>
+		/// <param name="chatFlags"></param>
+		/// <returns></returns>
+		public static bool IsChat(string text, ChatFlags chatFlags = ChatFlags.All)
+		{
+			if ((chatFlags & ChatFlags.PlayerSaysLocal) == ChatFlags.PlayerSaysLocal && PlayerSaysLocal.IsMatch(text))
+				return true;
+
+			if ((chatFlags & ChatFlags.PlayerSaysChannel) == ChatFlags.PlayerSaysChannel && PlayerSaysChannel.IsMatch(text))
+				return true;
+
+			if ((chatFlags & ChatFlags.YouSay) == ChatFlags.YouSay && YouSay.IsMatch(text))
+				return true;
+
+
+			if ((chatFlags & ChatFlags.PlayerTellsYou) == ChatFlags.PlayerTellsYou && PlayerTellsYou.IsMatch(text))
+				return true;
+
+			if ((chatFlags & ChatFlags.YouTell) == ChatFlags.YouTell && YouTell.IsMatch(text))
+				return true;
+
+
+			if ((chatFlags & ChatFlags.NpcSays) == ChatFlags.NpcSays && NpcSays.IsMatch(text))
+				return true;
+
+			if ((chatFlags & ChatFlags.NpcTellsYou) == ChatFlags.NpcTellsYou && NpcTellsYou.IsMatch(text))
+				return true;
+
+			return false;
+		}
+
+		/// <summary>
+		/// This will return the name of the person/monster/npc of a chat message or tell.
 		/// </summary>
 		/// <param name="text"></param>
 		/// <returns></returns>
-		public static bool IsMonsterKilledByYouDeathMessage(string text)
+		public static string GetSourceOfChat(string text)
 		{
-			if (text.StartsWith("You say, ") || text.Contains("says, \""))
-				return false;
+			bool isSays = IsChat(text, ChatFlags.NpcSays | ChatFlags.PlayerSaysChannel | ChatFlags.PlayerSaysLocal);
+			bool isTell = IsChat(text, ChatFlags.NpcTellsYou | ChatFlags.PlayerTellsYou);
 
-			// You flatten Noble Remains's body with the force of your assault!
-			// You bring Wight Blade Sorcerer to a fiery end! (Fire)
-			// You beat Door to a lifeless pulp!
-			// You smite Famished Eater mightily!
-			// You obliterate Drudge Skulker!
-			// You run Insatiable Eater through! (Pierce)
-			// You reduce Insatiable Eater to a sizzling, oozing mass! (Acid)
-			// You knock Blockade Guard into next Morningthaw!
-			// You split Blockade Guard apart! (Slash)
-			// You cleave Blockade Guard in twain! (Slash)
-			// You slay Blockade Guard viciously enough to impart death several times over! (Slash)
-			// You reduce ____ to a drained, twisted corpse! (Nether)
-			if (text.StartsWith("You "))
+			if (isSays && isTell)
 			{
-				if (text.Contains("with the force of your assault!"))
-					return true;
-				if (text.Contains("to a fiery end!"))
-					return true;
-				if (text.Contains("to a lifeless pulp!"))
-					return true;
-				if (text.Contains("smite") && text.Contains("mightily!"))
-					return true;
-				if (text.StartsWith("You obliterate ") && text.Contains("!"))
-					return true;
-				if (text.StartsWith("You run ") && text.Contains("through!"))
-					return true;
-				if (text.StartsWith("You reduce ") && text.Contains("to a sizzling, oozing mass!"))
-					return true;
-				if (text.StartsWith("You knock ") && text.Contains("into next Morningthaw!"))
-					return true;
-				if (text.StartsWith("You split ") && text.Contains("apart!"))
-					return true;
-				if (text.StartsWith("You cleave ") && text.Contains("in twain!"))
-					return true;
-				if (text.StartsWith("You slay ") && text.Contains("several times over!"))
-					return true;
-				if (text.StartsWith("You reduce ") && text.Contains("twisted corpse!"))
-					return true;
+				int indexOfSays = text.IndexOf(" says, \"");
+				int indexOfTell = text.IndexOf(" tells you");
+
+				if (indexOfSays <= indexOfTell)
+					isTell = false;
+				else
+					isSays = false;
 			}
-			// Your killing blow nearly turns Shivering Crystalline Wisp inside-out!
-			// Your attack stops Ruschk Draktehn cold! (Frost)
-			// Your lightning coruscates over Insatiable Eater's mortal remains! (Lightning)
-			// Your assault sends Ardent Moar to an icy death!
-			else if (text.StartsWith("Your "))
-			{
-				if (text.Contains("killing blow nearly turns") && text.Contains("inside-out!"))
-					return true;
-				if (text.Contains("attack stops") && text.Contains("cold!"))
-					return true;
-				if (text.Contains("lightning coruscates") && text.Contains("mortal remains!"))
-					return true;
-				if (text.Contains("assault sends") && text.Contains("to an icy death!"))
-					return true;
-			}
-			// The thunder of crushing Pyre Minion is followed by the deafening silence of death!
-			// The deadly force of your attack is so strong that Young Banderling's ancestors feel it!
-			// The force of your killing blow violently dislocated Insatiable Eaters jaw!
-			else if (text.StartsWith("The "))
-			{
-				if (text.Contains("is followed by the deafening silence of death!"))
-					return true;
-				if (text.Contains("ancestors feel it!"))
-					return true;
-				if (text.Contains("force of your killing blow"))
-					return true;
-			}
-			// Wight Blade Sorcerer's seared corpse smolders before you! (Fire)
-			// Wight is reduced to cinders! (Fire)
-			// Old Bones is shattered by your assault!
-			// Gnawer Shreth catches your attack, with dire consequences!
-			// Gnawer Shreth is utterly destroyed by your attack!
-			// Ruschk Laktar suffers a frozen fate! (Frost)
-			// Insatiable Eater's perforated corpse falls before you! (Pierce)
-			// Insatiable Eater is fatally punctured! (Pierce)
-			// Insatiable Eater's death is preceded by a sharp, stabbing pain! (Pierce)
-			// Insatiable Eater is torn to ribbons by your assault! (Slash)
-			// Insatiable Eater is liquified by your attack! (Acid)
-			// Insatiable Eater's last strength dissolves before you! (Acid)
-			// Electricity tears Insatiable Eater apart! (Lightning)
-			// Blistered by lightning, Insatiable Eater falls! (Lightning)
-			// Uber Penguin is inscinerated by your assault! (Fire)
-			// ____'s last strength withers before you! (Nether)
-			// ____ is dessicated by your attack! (Nether)
-			// ____ is incinerated by your assault!
+
+			string source = string.Empty;
+
+			if (isSays)
+				source = text.Substring(0, text.IndexOf(" says, \""));
+			else if (isTell)
+				source = text.Substring(0, text.IndexOf(" tells you"));
 			else
+				return source;
+
+			source = source.Trim();
+
+			if (source.Contains(">") && source.Contains("<"))
 			{
-				if (text.Contains("seared corpse smolders before you!"))
-					return true;
-				if (text.Contains("is reduced to cinders!"))
-					return true;
-				if (text.Contains("is shattered by your assault!"))
-					return true;
-				if (text.Contains("catches your attack, with dire consequences!"))
-					return true;
-				if (text.Contains("is utterly destroyed by your attack!"))
-					return true;
-				if (text.Contains("suffers a frozen fate!"))
-					return true;
-				if (text.Contains("perforated corpse falls before you!"))
-					return true;
-				if (text.Contains("is fatally punctured!"))
-					return true;
-				if (text.Contains("death is preceded by a sharp, stabbing pain!"))
-					return true;
-				if (text.Contains("is torn to ribbons by your assault!"))
-					return true;
-				if (text.Contains("is liquified by your attack!"))
-					return true;
-				if (text.Contains("last strength dissolves before you!"))
-					return true;
-				if (text.Contains("Electricity tears") && text.Contains("apart!"))
-					return true;
-				if (text.Contains("Blistered by lightning") && text.Contains("falls!"))
-					return true;
-				if (text.Contains("inscinerated by your assault!") )
-					return true;
-				if (text.Contains("last strength withers before you!"))
-					return true;
-				if (text.Contains("dessicated by your attack!"))
-					return true;
-				if (text.Contains("is incinerated by your assault!"))
-					return true;
+				source = source.Remove(0, source.IndexOf('>') + 1);
+				if (source.Contains("<"))
+					source = source.Substring(0, source.IndexOf('<'));
 			}
 
-			return false;
+			return source;
 		}
 	}
 }

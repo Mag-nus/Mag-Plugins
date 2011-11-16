@@ -9,18 +9,16 @@ namespace MagTools.Macros
 {
 	class AutoBuySell : IDisposable
 	{
-		public bool Enabled { private get; set; }
-
 		public AutoBuySell()
 		{
 			try
 			{
-				CoreManager.Current.WorldFilter.ApproachVendor += new EventHandler<Decal.Adapter.Wrappers.ApproachVendorEventArgs>(WorldFilter_ApproachVendor);
+				CoreManager.Current.WorldFilter.ApproachVendor += new EventHandler<ApproachVendorEventArgs>(WorldFilter_ApproachVendor);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		private bool _disposed = false;
+		private bool disposed;
 
 		public void Dispose()
 		{
@@ -35,21 +33,21 @@ namespace MagTools.Macros
 		{
 			// If you need thread safety, use a lock around these 
 			// operations, as well as in your methods that use the resource.
-			if (!_disposed)
+			if (!disposed)
 			{
 				if (disposing)
 				{
-					CoreManager.Current.WorldFilter.ApproachVendor -= new EventHandler<Decal.Adapter.Wrappers.ApproachVendorEventArgs>(WorldFilter_ApproachVendor);
+					CoreManager.Current.WorldFilter.ApproachVendor -= new EventHandler<ApproachVendorEventArgs>(WorldFilter_ApproachVendor);
 				}
 
 				// Indicate that the instance has been disposed.
-				_disposed = true;
+				disposed = true;
 			}
 		}
 
-		private int lastMerchantId = 0;
+		private int lastMerchantId;
 
-		private VTClassic.LootCore lootProfile = new VTClassic.LootCore();
+		private readonly VTClassic.LootCore lootProfile = new VTClassic.LootCore();
 
 		/// <summary>
 		/// Step 1.
@@ -59,11 +57,11 @@ namespace MagTools.Macros
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void WorldFilter_ApproachVendor(object sender, Decal.Adapter.Wrappers.ApproachVendorEventArgs e)
+		void WorldFilter_ApproachVendor(object sender, ApproachVendorEventArgs e)
 		{
 			try
 			{
-				if (!Enabled)
+				if (!Settings.SettingsManager.AutoBuySell.Enabled.Value)
 					return;
 
 				if (VirindiItemTool.PluginCore.ActivityState != VirindiItemTool.PluginCore.ePluginActivityState.Idle)
@@ -119,7 +117,7 @@ namespace MagTools.Macros
 		/// </summary>
 		private void KickOffBuySell()
 		{
-			if (!Enabled)
+			if (!Settings.SettingsManager.AutoBuySell.Enabled.Value)
 				return;
 
 			if (VirindiItemTool.PluginCore.ActivityState != VirindiItemTool.PluginCore.ePluginActivityState.Idle)
@@ -165,10 +163,11 @@ namespace MagTools.Macros
 		/// <summary>
 		/// This will return an object to buy. Keep # rules are returned first, then Keep rules.
 		/// </summary>
-		/// <param name="lootProfile"></param>
+		/// <param name="looter"></param>
+		/// <param name="openVendor"></param>
 		/// <param name="buyAmount"></param>
 		/// <returns></returns>
-		private WorldObject GetBuyItem(VTClassic.LootCore lootProfile, Vendor openVendor, out int buyAmount)
+		private WorldObject GetBuyItem(VTClassic.LootCore looter, Vendor openVendor, out int buyAmount)
 		{
 			// See if we can find a Keep # rule first.
 			foreach (WorldObject vendorObj in openVendor)
@@ -185,7 +184,7 @@ namespace MagTools.Macros
 				// Get the loot profile result for this object
 				// result.IsNoLoot will always be false so we must check the Keep # against items in inventory.
 				// The keep # is returned as Data1
-				uTank2.LootPlugins.LootAction result = lootProfile.GetLootDecision(itemInfo);
+				uTank2.LootPlugins.LootAction result = looter.GetLootDecision(itemInfo);
 
 				if (!result.IsKeepUpTo)
 					continue;
@@ -232,13 +231,13 @@ namespace MagTools.Macros
 
 				// Get the loot profile result for this object
 				// result.IsNoLoot will always be false
-				uTank2.LootPlugins.LootAction result = lootProfile.GetLootDecision(itemInfo);
+				uTank2.LootPlugins.LootAction result = looter.GetLootDecision(itemInfo);
 
 				if (!result.IsKeep)
 					continue;
 
 				// Ok, we need to buy some of this item, how many should we buy?
-				buyAmount = 1;
+				buyAmount = 5000;
 
 				return vendorObj;
 			}
@@ -251,9 +250,9 @@ namespace MagTools.Macros
 		/// <summary>
 		/// This will return an item to sell in the following Priority: Any Non SpellComponent (Pea)/TradeNote, SpellComponent (Peas), TradeNote
 		/// </summary>
-		/// <param name="lootProfile"></param>
+		/// <param name="looter"></param>
 		/// <returns></returns>
-		private WorldObject GetSellItem(VTClassic.LootCore lootProfile)
+		private WorldObject GetSellItem(VTClassic.LootCore looter)
 		{
 			Collection<WorldObject> sellObjects = new Collection<WorldObject>();
 
@@ -274,7 +273,7 @@ namespace MagTools.Macros
 
 				// Get the loot profile result for this object
 				// result.IsNoLoot will always be false so we must check the Keep # against items in inventory.
-				uTank2.LootPlugins.LootAction result = lootProfile.GetLootDecision(itemInfo);
+				uTank2.LootPlugins.LootAction result = looter.GetLootDecision(itemInfo);
 
 				if (!result.IsSell)
 					continue;

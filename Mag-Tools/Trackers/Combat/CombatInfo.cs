@@ -1,154 +1,265 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using MagTools.Trackers.Combat.Standard;
 
 namespace MagTools.Trackers.Combat
 {
-	class CombatInfo : ICombatInfo
+	class CombatInfo
 	{
-		Dictionary<DamageElement, CombatInfo> combatInfoByElement = new Dictionary<DamageElement, CombatInfo>();
-		Dictionary<AttackType, CombatInfo> combatInfoByAttackType = new Dictionary<AttackType, CombatInfo>();
+		public readonly string SourceName;
+		public readonly string TargetName;
 
-		public void AddFromCombatEventArgs(CombatEventArgs e)
+		public CombatInfo(string sourceName, string targetName)
 		{
-			PopulateData(this, e);
-
-
-			if (!combatInfoByElement.ContainsKey(e.DamageElemenet))
-				combatInfoByElement.Add(e.DamageElemenet, new CombatInfo());
-
-			PopulateData(combatInfoByElement[e.DamageElemenet], e);
-
-			if (!combatInfoByElement[e.DamageElemenet].combatInfoByAttackType.ContainsKey(e.AttackType))
-				combatInfoByElement[e.DamageElemenet].combatInfoByAttackType.Add(e.AttackType, new CombatInfo());
-
-			PopulateData(combatInfoByElement[e.DamageElemenet].combatInfoByAttackType[e.AttackType], e);
-
-
-			if (!combatInfoByAttackType.ContainsKey(e.AttackType))
-				combatInfoByAttackType.Add(e.AttackType, new CombatInfo());
-
-			PopulateData(combatInfoByAttackType[e.AttackType], e);
-
-			if (!combatInfoByAttackType[e.AttackType].combatInfoByElement.ContainsKey(e.DamageElemenet))
-				combatInfoByAttackType[e.AttackType].combatInfoByElement.Add(e.DamageElemenet, new CombatInfo());
-
-			PopulateData(combatInfoByAttackType[e.AttackType].combatInfoByElement[e.DamageElemenet], e);
+			SourceName = sourceName;
+			TargetName = targetName;
 		}
 
-		private uint totalNonCritAttacks = 0;
-		private uint nonCritAttackTotal = 0;
-
-		private uint totalCritAttacks = 0;
-		private uint critAttackTotal = 0;
-
-		private static void PopulateData(CombatInfo combatInfo, CombatEventArgs e)
+		public void AddFromCombatEventArgs(CombatEventArgs combatEventArgs)
 		{
-			combatInfo.TotalAttacks++;
+			if (combatEventArgs.IsKillingBlow)
+				KillingBlows++;
 
-			combatInfo.TotalDamage += e.DamageAmount;
+			if (!DamageByAttackTypes.ContainsKey(combatEventArgs.AttackType))
+				DamageByAttackTypes.Add(combatEventArgs.AttackType, new DamageByAttackType());
 
-			if (e.IsFailedAttack)
-				combatInfo.FailedAttacks++;
+			DamageByAttackType damageByAttackType = DamageByAttackTypes[combatEventArgs.AttackType];
 
-			if (e.IsCriticalHit)
-				combatInfo.Crits++;
+			if (!damageByAttackType.DamageByElements.ContainsKey(combatEventArgs.DamageElemenet))
+				damageByAttackType.DamageByElements.Add(combatEventArgs.DamageElemenet, new DamageByAttackType.DamageByElement());
 
-			if (e.IsKillingBlow)
-				combatInfo.KillingBlows++;
+			DamageByAttackType.DamageByElement damageByElement = damageByAttackType.DamageByElements[combatEventArgs.DamageElemenet];
 
-			if (!e.IsFailedAttack && !e.IsKillingBlow)
+			damageByElement.TotalAttacks++;
+
+			if (combatEventArgs.IsFailedAttack)
+				damageByElement.FailedAttacks++;
+
+			if (combatEventArgs.IsCriticalHit)
+				damageByElement.Crits++;
+
+			if (!combatEventArgs.IsCriticalHit)
 			{
-				if (!e.IsCriticalHit)
-				{
-					combatInfo.totalNonCritAttacks++;
-					combatInfo.nonCritAttackTotal += (uint)e.DamageAmount;
+				damageByElement.TotalNormalDamage += combatEventArgs.DamageAmount;
 
-					combatInfo.AverageNonCritAttack = (int)(combatInfo.nonCritAttackTotal / combatInfo.totalNonCritAttacks);
+				if (combatEventArgs.DamageAmount > damageByElement.MaxNormalDamage)
+					damageByElement.MaxNormalDamage = combatEventArgs.DamageAmount;
+			}
+			else
+			{
+				damageByElement.TotalCritDamage += combatEventArgs.DamageAmount;
 
-					if (e.DamageAmount > combatInfo.MaxNonCritAttack)
-						combatInfo.MaxNonCritAttack = e.DamageAmount;
-				}
-				else
-				{
-					combatInfo.totalCritAttacks++;
-					combatInfo.critAttackTotal += (uint)e.DamageAmount;
-
-					combatInfo.AverageCritAttack = (int)(combatInfo.critAttackTotal / combatInfo.totalCritAttacks);
-
-					if (e.DamageAmount > combatInfo.MaxCritAttack)
-						combatInfo.MaxCritAttack = e.DamageAmount;
-				}
+				if (combatEventArgs.DamageAmount > damageByElement.MaxNormalDamage)
+					damageByElement.MaxCritDamage = combatEventArgs.DamageAmount;
 			}
 		}
-
-
-		public int TotalAttacks { get; private set; }
-
-		public int SucceededAttacks
-		{
-			get
-			{
-				return TotalAttacks - FailedAttacks;
-			}
-		}
-
-		public float AttackSuccessPercent
-		{
-			get
-			{
-				return (SucceededAttacks / (float)TotalAttacks) * 100;
-			}
-		}
-
-		public int FailedAttacks { get; private set; }
-
-
-		public int AverageNonCritAttack { get; private set; }
-
-		public int MaxNonCritAttack { get; private set; }
-
-
-		public int Crits { get; private set; }
-
-		public float CritPercent
-		{
-			get
-			{
-				return (Crits / (float)SucceededAttacks) * 100;
-			}
-		}
-
-		public int AverageCritAttack { get; private set; }
-
-		public int MaxCritAttack { get; private set; }
 
 
 		public int KillingBlows { get; private set; }
 
 
-		public int TotalDamage { get; private set; }
-
-
-		public ICombatInfo this[DamageElement element]
+		public class DamageByAttackType
 		{
-			get
+			public class DamageByElement
 			{
-				if (combatInfoByElement.ContainsKey(element))
-					return combatInfoByElement[element];
+				public int TotalAttacks;
 
-				return new CombatInfo();
+				public int FailedAttacks;
+
+				public int Crits;
+
+				public int TotalNormalDamage;
+
+				public int MaxNormalDamage;
+
+				public int TotalCritDamage;
+
+				public int MaxCritDamage;
+
+				public int Damage
+				{
+					get
+					{
+						return TotalNormalDamage + TotalCritDamage;
+					}
+				}
+			}
+
+			public readonly Dictionary<DamageElement, DamageByElement> DamageByElements = new Dictionary<DamageElement, DamageByElement>();
+
+
+			public int TotalAttacks
+			{
+				get
+				{
+					int value = 0;
+					foreach (DamageByElement damageByElement in DamageByElements.Values) value += damageByElement.TotalAttacks;
+					return value;
+				}
+			}
+
+			public int FailedAttacks
+			{
+				get
+				{
+					int value = 0;
+					foreach (DamageByElement damageByElement in DamageByElements.Values) value += damageByElement.FailedAttacks;
+					return value;
+				}
+			}
+
+			public int TotalNormalDamage
+			{
+				get
+				{
+					int value = 0;
+					foreach (DamageByElement damageByElement in DamageByElements.Values)
+						value += damageByElement.TotalNormalDamage;
+					return value;
+				}
+			}
+
+			public int MaxNormalDamage
+			{
+				get
+				{
+					int value = 0;
+					foreach (DamageByElement damageByElement in DamageByElements.Values)
+						if (value < damageByElement.MaxNormalDamage)
+							value = damageByElement.MaxNormalDamage;
+					return value;
+				}
+			}
+
+			public int Crits
+			{
+				get
+				{
+					int value = 0;
+					foreach (DamageByElement damageByElement in DamageByElements.Values) value += damageByElement.Crits;
+					return value;
+				}
+			}
+
+			public int TotalCritDamage
+			{
+				get
+				{
+					int value = 0;
+					foreach (DamageByElement damageByElement in DamageByElements.Values)
+						value += damageByElement.TotalCritDamage;
+					return value;
+				}
+			}
+
+			public int MaxCritDamage
+			{
+				get
+				{
+					int value = 0;
+					foreach (DamageByElement damageByElement in DamageByElements.Values)
+						if (value < damageByElement.MaxCritDamage)
+							value = damageByElement.MaxCritDamage;
+					return value;
+				}
+			}
+
+			public int Damage
+			{
+				get
+				{
+					int value = 0;
+					foreach (DamageByElement damageByElement in DamageByElements.Values) value += damageByElement.Damage;
+					return value;
+				}
 			}
 		}
 
-		public ICombatInfo this[AttackType type]
+		public readonly Dictionary<AttackType, DamageByAttackType> DamageByAttackTypes = new Dictionary<AttackType, DamageByAttackType>();
+
+
+		public int TotalAttacks
 		{
 			get
 			{
-				if (combatInfoByAttackType.ContainsKey(type))
-					return combatInfoByAttackType[type];
+				int value = 0;
+				foreach (DamageByAttackType damageByAttackType in DamageByAttackTypes.Values) value += damageByAttackType.TotalAttacks;
+				return value;
+			}
+		}
 
-				return new CombatInfo();
+		public int FailedAttacks
+		{
+			get
+			{
+				int value = 0;
+				foreach (DamageByAttackType damageByAttackType in DamageByAttackTypes.Values) value += damageByAttackType.FailedAttacks;
+				return value;
+			}
+		}
+
+		public int TotalNormalDamage
+		{
+			get
+			{
+				int value = 0;
+				foreach (DamageByAttackType damageByAttackType in DamageByAttackTypes.Values)
+					value += damageByAttackType.TotalNormalDamage;
+				return value;
+			}
+		}
+
+		public int MaxNormalDamage
+		{
+			get
+			{
+				int value = 0;
+				foreach (DamageByAttackType damageByAttackType in DamageByAttackTypes.Values)
+					if (value < damageByAttackType.MaxNormalDamage)
+						value = damageByAttackType.MaxNormalDamage;
+				return value;
+			}
+		}
+
+		public int Crits
+		{
+			get
+			{
+				int value = 0;
+				foreach (DamageByAttackType damageByAttackType in DamageByAttackTypes.Values) value += damageByAttackType.Crits;
+				return value;
+			}
+		}
+
+		public int TotalCritDamage
+		{
+			get
+			{
+				int value = 0;
+				foreach (DamageByAttackType damageByAttackType in DamageByAttackTypes.Values)
+					value += damageByAttackType.TotalCritDamage;
+				return value;
+			}
+		}
+
+		public int MaxCritDamage
+		{
+			get
+			{
+				int value = 0;
+				foreach (DamageByAttackType damageByAttackType in DamageByAttackTypes.Values)
+					if (value < damageByAttackType.MaxCritDamage)
+						value = damageByAttackType.MaxCritDamage;
+				return value;
+			}
+		}
+
+		public int Damage
+		{
+			get
+			{
+				int value = 0;
+				foreach (DamageByAttackType damageByAttackType in DamageByAttackTypes.Values) value += damageByAttackType.Damage;
+				return value;
 			}
 		}
 	}

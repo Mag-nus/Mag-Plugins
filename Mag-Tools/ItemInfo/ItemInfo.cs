@@ -5,183 +5,32 @@ using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 using Decal.Filters;
 
-namespace MagTools
+namespace MagTools.ItemInfo
 {
-	class PrintItemInfo
+	/// <summary>
+	/// Instantiate this object with the item you want info for.
+	/// ToString() this object for the info.
+	/// </summary>
+	class ItemInfo
 	{
-		bool dontShowNoLootItems = false;
+		private readonly WorldObject wo;
 
-		bool hideSalvageRules = false;
-
-		public PrintItemInfo(WorldObject wo, bool dontShowNoLootItems = false, bool hideSalvageRules = false)
+		public ItemInfo(WorldObject worldObject)
 		{
-			try
-			{
-				this.dontShowNoLootItems = dontShowNoLootItems;
-
-				this.hideSalvageRules = hideSalvageRules;
-
-				ProcessItemWithVTank(wo);
-			}
-			catch (System.IO.FileNotFoundException)
-			{
-				// If this exception was raised, the uTank2 dll probably didn't load right.
-				// We'll display the ident info without the additional vtank loot rule header.
-
-				CoreManager.Current.Actions.AddChatText(GetIdentStringForItem(wo), 14, 1);
-			}
+			wo = worldObject;
 		}
 
-		void ProcessItemWithVTank(WorldObject wo)
-		{
-			/*
-			 * me: FLootPluginClassifyCallback and immediate, difference being anything other than the obv?
-				V: immediate should only be called after queryneedsid and then IDing if needed
-				V: and with all those you need to wait 1 frame after the packet
-			 * 
-			 * (12:25:27 AM) V: you can create something like a vtankinterface class
-				(12:25:38 AM) V: and then only create an instance of it when vtank is present
-				(12:25:57 AM) me: ok, i'll do that when I'm ready to distribute, for now I'd like to work on getting my ideas working
-				(12:26:03 AM) V: so everytime you want to call something you check to see if that instance is null and if not you call the interface class which calls vtank
-			 * 
-			 * */
-
-			if (uTank2.PluginCore.PC.FLootPluginQueryNeedsID(wo.Id))
-			{
-				// public delegate void delFLootPluginClassifyCallback(int obj, LootAction result, bool getsuccess);
-				uTank2.PluginCore.delFLootPluginClassifyCallback callback = new uTank2.PluginCore.delFLootPluginClassifyCallback(uTankCallBack);
-				uTank2.PluginCore.PC.FLootPluginClassifyCallback(wo.Id, callback);
-			}
-			else
-			{
-				uTank2.LootPlugins.LootAction result = uTank2.PluginCore.PC.FLootPluginClassifyImmediate(wo.Id);
-
-				processVTankIdentLootAction(wo.Id, result);
-			}
-		}
-
-		void uTankCallBack(int obj, uTank2.LootPlugins.LootAction result, bool getsuccess)
-		{
-			try
-			{
-				if (!getsuccess)
-					return;
-
-				processVTankIdentLootAction(obj, result);
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		private void processVTankIdentLootAction(int itemId, uTank2.LootPlugins.LootAction result)
-		{
-			WorldObject wo = CoreManager.Current.WorldFilter[itemId];
-
-			if (wo == null)
-				return;
-
-			// If a rule does not exist for this item and the user doesn't have it selected, ignore it
-			if (dontShowNoLootItems && result.IsNoLoot)
-				return;
-
-			if (hideSalvageRules && result.IsSalvage)
-				return;
-
-			//<Tell:IIDString:221112:-2024140046>(Epics)<\\Tell>
-
-			System.Text.StringBuilder sb = new System.Text.StringBuilder();
-
-			sb.Append(@"<Tell:IIDString:221112:-2024140046>");
-
-			sb.Append(result.IsNoLoot ? "-" : "+");
-
-			if (!String.IsNullOrEmpty(result.RuleName))
-				sb.Append("(" + result.RuleName + ")");
-
-			sb.Append(@"<\\Tell>");
-
-			sb.Append(" ");
-
-			sb.Append(GetIdentStringForItem(wo));
-
-			CoreManager.Current.Actions.AddChatText(sb.ToString(), 14, 1);
-		}
-
-		string GetIdentStringForItem(WorldObject wo)
+		public override string ToString()
 		{
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
 			sb.Append(wo.Name);
 
-			int set = wo.Values((Decal.Adapter.Wrappers.LongValueKey)265, 0);
+			int set = wo.Values((LongValueKey)265, 0);
 			if (set != 0)
 			{
-				// This list was taken from Virindi Tank Loot Editor
-				if (set == 27) sb.Append(", Acid Proof Set");
-				else if (set == 14) sb.Append(", Adept's Set");
-				else if (set == 6) sb.Append(", Ancient Relic Set");
-				else if (set == 15) sb.Append(", Archer's Set");
-				else if (set == 10) sb.Append(", Arm, Mind, Heart Set");
-				else if (set == 11) sb.Append(", Coat of the Perfect Light Set");
-				else if (set == 28) sb.Append(", Cold Proof Set");
-				else if (set == 18) sb.Append(", Crafter's Set");
-				else if (set == 30) sb.Append(", Dedication Set");
-				else if (set == 16) sb.Append(", Defender's Set");
-				else if (set == 20) sb.Append(", Dexterous Set");
-				else if (set == 9) sb.Append(", Empyrean Rings Set");
-				else if (set == 26) sb.Append(", Flame Proof Set");
-				else if (set == 31) sb.Append(", Gladiatorial Clothing Set");
-				else if (set == 23) sb.Append(", Hardenend Set");
-				else if (set == 19) sb.Append(", Hearty Set");
-				else if (set == 25) sb.Append(", Interlocking Set");
-				else if (set == 12) sb.Append(", Leggings of Perfect Light Set");
-				else if (set == 29) sb.Append(", Lightning Proof Set");
-				else if (set == 5) sb.Append(", Noble Relic Set");
-				else if (set == 32) sb.Append(", Protective Clothing Set");
-				else if (set == 24) sb.Append(", Reinforced Set");
-				else if (set == 7) sb.Append(", Relic Alduressa Set");
-				else if (set == 8) sb.Append(", Shou-jen Set");
-				else if (set == 13) sb.Append(", Soldier's Set");
-				else if (set == 22) sb.Append(", Swift Set");
-				else if (set == 17) sb.Append(", Tinker's Set");
-				else if (set == 21) sb.Append(", Wise Set");
-
-				else if (set == 49) sb.Append(", Alchemy Set");
-				else if (set == 50) sb.Append(", Arcane Lore Set");
-				else if (set == 51) sb.Append(", Armor Tinkering Set");
-				else if (set == 52) sb.Append(", Assess Person Set");
-				else if (set == 53) sb.Append(", Axe Set");
-				else if (set == 54) sb.Append(", Bow Set");
-				else if (set == 55) sb.Append(", Cooking Set");
-				else if (set == 56) sb.Append(", Creature Enchantment Set");
-				else if (set == 57) sb.Append(", Crossbow Set");
-				else if (set == 58) sb.Append(", Dagger Set");
-				else if (set == 59) sb.Append(", Deception Set");
-				else if (set == 60) sb.Append(", Fletching Set");
-				else if (set == 61) sb.Append(", Healing Set");
-				else if (set == 62) sb.Append(", Item Enchantment Set");
-				else if (set == 63) sb.Append(", Item Tinkering Set");
-				else if (set == 64) sb.Append(", Leadership Set");
-				else if (set == 65) sb.Append(", Life Magic Set");
-				else if (set == 66) sb.Append(", Loyalty Set");
-				else if (set == 67) sb.Append(", Mace Set");
-				else if (set == 68) sb.Append(", Magic Defense Set");
-				else if (set == 69) sb.Append(", Magic Item Tinkering Set");
-				else if (set == 70) sb.Append(", Mana Conversion Set");
-				else if (set == 71) sb.Append(", Melee Defense Set");
-				else if (set == 72) sb.Append(", Missile Defense Set");
-				else if (set == 73) sb.Append(", Salvaging Set");
-				else if (set == 74) sb.Append(", Spear Set");
-				else if (set == 75) sb.Append(", Staff Set");
-				else if (set == 76) sb.Append(", Sword Set");
-				else if (set == 77) sb.Append(", Thrown Weapons Set");
-				else if (set == 78) sb.Append(", Two Handed Combat Set");
-				else if (set == 79) sb.Append(", Unarmed Combat Set");
-				else if (set == 80) sb.Append(", Void Magic Set");
-				else if (set == 81) sb.Append(", War Magic Set");
-				else if (set == 82) sb.Append(", Weapon Tinkering Set");
-				else if (set == 83) sb.Append(", Assess Creature  Set");
-
-				else sb.Append(", Set id: " + set);
+				sb.Append(", ");
+				sb.Append(Util.GetAttributeSetNameById(set));
 			}
 
 			if (wo.Values(LongValueKey.ArmorLevel) > 0)
@@ -261,6 +110,10 @@ namespace MagTools
 					if (spellById.Name.Contains("Minor Impenetrability") || spellById.Name.Contains("Major Impenetrability") || spellById.Name.Contains("Epic Impenetrability"))
 						goto ShowSpell;
 
+					// Always show trinket spells
+					if (spellById.Name.Contains("Augmented"))
+						goto ShowSpell;
+
 					if (wo.Values(LongValueKey.Unenchantable, 0) != 0)
 					{
 						// Show banes and impen on unenchantable equipment
@@ -303,40 +156,38 @@ namespace MagTools
 					{
 						// This is a weapon buff
 
+						// Lvl 6
 						if (spellById.Difficulty == 250)
-						{
-							// Lvl 6
-							continue;
-						}
-						else if (spellById.Difficulty == 300)
-						{
-							// Lvl 7
-						}
-						else if (spellById.Difficulty >= 400)
-						{
-							// Lvl 8+
-						}
-						else
-							continue;
-					}
-					else
-					{
-						// Filter all 1-5 spells
-						if (spellById.Name.EndsWith(" I") || spellById.Name.EndsWith(" II") || spellById.Name.EndsWith(" III") || spellById.Name.EndsWith(" IV") || spellById.Name.EndsWith(" V"))
 							continue;
 
-						// Filter 6's
-						if (spellById.Name.EndsWith(" VI"))
-							continue;
-
-						// Filter 7's
+						// Lvl 7
 						if (spellById.Difficulty == 300)
-							continue;
+							goto ShowSpell;
 
-						// Filter 8's
-						if (spellById.Name.Contains("Incantation"))
-							continue;
+						// Lvl 8+
+						if (spellById.Difficulty >= 400)
+							goto ShowSpell;
+
+						continue;
 					}
+
+					// This is not a weapon buff.
+
+					// Filter all 1-5 spells
+					if (spellById.Name.EndsWith(" I") || spellById.Name.EndsWith(" II") || spellById.Name.EndsWith(" III") || spellById.Name.EndsWith(" IV") || spellById.Name.EndsWith(" V"))
+						continue;
+
+					// Filter 6's
+					if (spellById.Name.EndsWith(" VI"))
+						continue;
+
+					// Filter 7's
+					if (spellById.Difficulty == 300)
+						continue;
+
+					// Filter 8's
+					if (spellById.Name.Contains("Incantation"))
+						continue;
 
 				ShowSpell:
 
@@ -351,14 +202,14 @@ namespace MagTools
 				if (wo.Values(LongValueKey.WieldReqType) == 7 && wo.Values(LongValueKey.WieldReqAttribute) == 1)
 					sb.Append(", Wield Lvl " + wo.Values(LongValueKey.WieldReqValue));
 				else
-					sb.Append(", " + MagTools.Util.GetSkillNameById(wo.Values(LongValueKey.WieldReqAttribute)) + " " + wo.Values(LongValueKey.WieldReqValue) + " to Wield");
+					sb.Append(", " + Util.GetSkillNameById(wo.Values(LongValueKey.WieldReqAttribute)) + " " + wo.Values(LongValueKey.WieldReqValue) + " to Wield");
 			}
 
 			// Melee Defense 300 to Activate
 			// If the activation is lower than the wield requirement, don't show it.
 			if (wo.Values(LongValueKey.SkillLevelReq) > 0 && (wo.Values(LongValueKey.WieldReqAttribute) != wo.Values(LongValueKey.ActivationReqSkillId) || wo.Values(LongValueKey.WieldReqValue) < wo.Values(LongValueKey.SkillLevelReq)))
 			{
-				sb.Append(", " + MagTools.Util.GetSkillNameById(wo.Values(LongValueKey.ActivationReqSkillId)) + " " + wo.Values(LongValueKey.SkillLevelReq) + " to Activate");
+				sb.Append(", " + Util.GetSkillNameById(wo.Values(LongValueKey.ActivationReqSkillId)) + " " + wo.Values(LongValueKey.SkillLevelReq) + " to Activate");
 			}
 
 			if (wo.Values(LongValueKey.LoreRequirement) > 0)

@@ -3,7 +3,7 @@
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
-namespace MagTools
+namespace MagTools.Macros
 {
 	sealed class ManaRecharger
 	{
@@ -19,7 +19,7 @@ namespace MagTools
 			}
 		}
 
-		bool started = false;
+		bool started;
 
 		DateTime utcTimeStarted = DateTime.MinValue;
 
@@ -84,7 +84,7 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		int lastChargeId = 0;
+		int lastChargeId;
 		DateTime lastChargeAttempTime = DateTime.MinValue;
 
 		void Think()

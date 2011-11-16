@@ -8,24 +8,15 @@ namespace MagTools
 	static class Debug
 	{
 		/// <summary>
-		/// This option is defaultd on.
-		/// </summary>
-		public static bool Enabled { private get; set; }
-
-		static Debug()
-		{
-			Enabled = true;
-		}
-
-		/// <summary>
 		/// This will only write the exception to the errors.txt file if DebugEnabled is true.
 		/// </summary>
 		/// <param name="ex"></param>
+		/// <param name="note"></param>
 		public static void LogException(Exception ex, string note = null)
 		{
 			try
 			{
-				if (!Enabled)
+				if (!Settings.SettingsManager.Misc.DebuggingEnabled.Value)
 					return;
 
 				if (note != null)
@@ -75,14 +66,16 @@ namespace MagTools
 		/// This will only write the message to the chat if DebugEnabled is true.
 		/// </summary>
 		/// <param name="message"></param>
-		public static void WriteToChat(string message)
+		/// <param name="color"></param>
+		/// <param name="target"></param>
+		public static void WriteToChat(string message, int color = 5, int target = 1)
 		{
 			try
 			{
-				if (!Enabled)
+				if (!Settings.SettingsManager.Misc.DebuggingEnabled.Value)
 					return;
 
-				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + message, 5);
+				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + message, color, target);
 			}
 			catch (Exception ex) { LogException(ex); }
 		}

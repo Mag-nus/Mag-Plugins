@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 
 using Decal.Adapter;
@@ -9,18 +8,16 @@ namespace MagTools.Macros
 {
 	class AutoTradeAccept : IDisposable
 	{
-		public bool Enabled { private get; set; }
-
 		public AutoTradeAccept()
 		{
 			try
 			{
-				CoreManager.Current.WorldFilter.AcceptTrade += new EventHandler<Decal.Adapter.Wrappers.AcceptTradeEventArgs>(WorldFilter_AcceptTrade);
+				CoreManager.Current.WorldFilter.AcceptTrade += new EventHandler<AcceptTradeEventArgs>(WorldFilter_AcceptTrade);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		private bool _disposed = false;
+		private bool disposed;
 
 		public void Dispose()
 		{
@@ -35,25 +32,25 @@ namespace MagTools.Macros
 		{
 			// If you need thread safety, use a lock around these 
 			// operations, as well as in your methods that use the resource.
-			if (!_disposed)
+			if (!disposed)
 			{
 				if (disposing)
 				{
-					CoreManager.Current.WorldFilter.AcceptTrade -= new EventHandler<Decal.Adapter.Wrappers.AcceptTradeEventArgs>(WorldFilter_AcceptTrade);
+					CoreManager.Current.WorldFilter.AcceptTrade -= new EventHandler<AcceptTradeEventArgs>(WorldFilter_AcceptTrade);
 				}
 
 				// Indicate that the instance has been disposed.
-				_disposed = true;
+				disposed = true;
 			}
 		}
 
 		DateTime lastTradeAcceptTime = DateTime.MinValue;
 
-		void WorldFilter_AcceptTrade(object sender, Decal.Adapter.Wrappers.AcceptTradeEventArgs e)
+		void WorldFilter_AcceptTrade(object sender, AcceptTradeEventArgs e)
 		{
 			try
 			{
-				if (!Enabled)
+				if (!Settings.SettingsManager.AutoTradeAccept.Enabled.Value)
 					return;
 
 				// We only auto accept the trade every 2 seconds to avoid double spamming it from our own TradeAccept() action.
@@ -72,7 +69,7 @@ namespace MagTools.Macros
 				if (target == null)
 					return;
 
-				foreach (Regex regex in whitelist)
+				foreach (Regex regex in Settings.SettingsManager.AutoTradeAccept.Whitelist)
 				{
 					if (regex.IsMatch(target.Name))
 					{
@@ -82,31 +79,6 @@ namespace MagTools.Macros
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		Collection<Regex> whitelist = new Collection<Regex>();
-
-		/// <summary>
-		/// Adds a regex pattern used to compare against the traders name.
-		/// </summary>
-		/// <param name="regex"></param>
-		public void AddToWhitelist(Regex regex)
-		{
-			whitelist.Add(regex);
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="regex"></param>
-		public void RemoveFromWhitelist(Regex regex)
-		{
-			whitelist.Remove(regex);
-		}
-
-		public void ClearWhitelist()
-		{
-			whitelist.Clear();
 		}
 	}
 }

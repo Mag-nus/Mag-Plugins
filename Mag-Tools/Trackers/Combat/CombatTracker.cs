@@ -1,24 +1,38 @@
 ﻿using System;
+using System.Collections.Generic;
+
+using MagTools.Trackers.Combat.Standard;
+using MagTools.Trackers.Combat.Aetheria;
+using MagTools.Trackers.Combat.Cloaks;
 
 using Decal.Adapter;
-using Decal.Adapter.Wrappers;
 
 namespace MagTools.Trackers.Combat
 {
-	class CombatTracker : IDisposable, ICombatTracker
+	class CombatTracker : IDisposable
 	{
-		public event Action<CombatEventArgs> CombatEvent;
+		readonly StandardTracker standardTracker;
+		readonly AetheriaTracker aetheriaTracker;
+		readonly CloakTracker cloakTracker;
 
 		public CombatTracker()
 		{
 			try
 			{
-				CoreManager.Current.ChatBoxMessage += new EventHandler<ChatTextInterceptEventArgs>(Current_ChatBoxMessage);
+				standardTracker = new StandardTracker();
+				aetheriaTracker = new AetheriaTracker();
+				cloakTracker = new CloakTracker();
+
+				standardTracker.CombatEvent += new Action<CombatEventArgs>(standardTracker_CombatEvent);
+				aetheriaTracker.SurgeEvent += new Action<Aetheria.SurgeEventArgs>(aetheriaTracker_SurgeEvent);
+				cloakTracker.SurgeEvent += new Action<Cloaks.SurgeEventArgs>(cloakTracker_SurgeEvent);
+
+				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		private bool _disposed = false;
+		private bool disposed;
 
 		public void Dispose()
 		{
@@ -33,203 +47,152 @@ namespace MagTools.Trackers.Combat
 		{
 			// If you need thread safety, use a lock around these 
 			// operations, as well as in your methods that use the resource.
-			if (!_disposed)
+			if (!disposed)
 			{
 				if (disposing)
 				{
-					CoreManager.Current.ChatBoxMessage -= new EventHandler<ChatTextInterceptEventArgs>(Current_ChatBoxMessage);
+					standardTracker.Dispose();
+					aetheriaTracker.Dispose();
+					cloakTracker.Dispose();
+
+					CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 				}
 
 				// Indicate that the instance has been disposed.
-				_disposed = true;
+				disposed = true;
 			}
 		}
 
-		void Current_ChatBoxMessage(object sender, ChatTextInterceptEventArgs e)
+		void CharacterFilter_Logoff(object sender, Decal.Adapter.Wrappers.LogoffEventArgs e)
 		{
 			try
 			{
-				if (CombatEvent == null)
-					return;
-
-				if (e.Text.Contains(" says, ") || e.Text.Contains(" tells you"))
-					return;
-
-				string monsterName = null;
-
-				AttackDirection attackDirection = AttackDirection.Unknown;
-				AttackType attackType = AttackType.Unknown;
-				DamageElement damageElemenet = DamageElement.Unknown;
-
-				bool isFailedAttack = false;
-				bool isKillingBlow = false;
-				bool isCriticalHit = e.Text.Contains("Critical hit!");
-
-				int damageAmount = 0;
-
-				// A bow attack that doesn't hit the target
-				// Your missile attack hit the environment.
-
-				// An attack on a player that would have been a crit without the protection aug.
-				// Viamontian Mercenary scratches your foot for 3 points of slashing damage! Your Critical Protection augmentation allows you to avoid a critical hit!
-
-				// Parsing the monster name from the string can be a bit tricky.
-				// First we remove common phrases that we know are not the monster name.
-				// The first chunk of capitalized words is the monster name.
-				string parsedString = e.Text.Replace("Critical hit!", "").Replace("Your ", "").Replace("You ", "").Replace("The ", "").Replace("Critical Protection", "").Replace("Magical energies", "").Replace("Electricity tears", "").Replace("Blistered by", "").Replace("to a", "").Replace("in twain!", "");
-				string[] words = parsedString.Trim().Split(' ');
-				foreach (string word in words)
+				if (Settings.SettingsManager.CombatTracker.Persistent.Value)
 				{
-					// This is broken for monsters that names start with The
-					if (!string.IsNullOrEmpty(word) && (char.IsUpper(word[0]) || (monsterName != null && (word == "of" || word == "the" || word == "a" || word == "to" || word == "in"))))
-						monsterName += monsterName == null ? word : " " + word;
-					else if (monsterName != null)
-						break;
-				}
-				if (monsterName != null)
-					monsterName = monsterName.Replace("!", "").Replace("'s", "");
-
-				// Ruschk Sadist evaded your attack.
-				if (e.Text.Contains(" evaded your attack"))
-				{
-					attackDirection = AttackDirection.PlayerInitiated;
-					// This is the message for both melee and missile combat failures.
-					attackType = AttackType.MeleeMissle;
-
-					isFailedAttack = true;
-				}
-				// Sentient Crystal Shard resists your spell
-				else if (e.Text.Contains(" resists your spell"))
-				{
-					attackDirection = AttackDirection.PlayerInitiated;
-					attackType = AttackType.Magic;
-
-					isFailedAttack = true;
-				}
-				// You resist the spell cast by Remoran Corsair
-				else if (e.Text.StartsWith("You resist the spell cast by "))
-				{
-					attackDirection = AttackDirection.PlayerReceived;
-					attackType = AttackType.Magic;
-
-					isFailedAttack = true;
-				}
-				// You evaded Remoran Corsair!
-				else if (e.Text.StartsWith("You evaded "))
-				{
-					attackDirection = AttackDirection.PlayerReceived;
-					// This is the message for both melee and missile combat failures.
-					attackType = AttackType.MeleeMissle;
-
-					isFailedAttack = true;
-				}
-				else if (MagTools.Util.IsMonsterKilledByYouDeathMessage(e.Text))
-				{
-					attackDirection = AttackDirection.PlayerInitiated;
-
-					isKillingBlow = true;
-				}
-				else
-				{
-					if (!e.Text.Contains(" point"))
-						return;
-
-					if (e.Text.StartsWith("You cast") ||
-						e.Text.StartsWith("You suffer") ||
-						e.Text.Contains(" restore") ||
-						e.Text.Contains(" yourself ") ||
-						e.Text.Contains(" Vassals ") ||
-						e.Text.Contains("Mana Stone") ||
-						e.Text.Contains(" your stamina") ||
-						e.Text.Contains(" of stamina") ||
-						e.Text.Contains(" your mana") ||
-						e.Text.Contains(" of mana") ||
-						e.Text.Contains(" and dispels") ||
-						e.Text.Contains("periodic healing") ||
-						e.Text.Contains("Spells points") ||
-						e.Text.Contains("points and "))
-						return;
-
-					// Determine attackDirection
-					if ((e.Text.StartsWith("You ") || e.Text.StartsWith("Critical hit! You ") || e.Text.StartsWith("Critical hit!  You ")) &&
-							!e.Text.StartsWith("You lose") && !e.Text.StartsWith("Critical hit! You lose") && !e.Text.StartsWith("Critical hit!  You lose"))
-					{
-						// Damage Given
-						attackDirection = AttackDirection.PlayerInitiated;
-					}
-					else
-					{
-						// Damage Received
-						attackDirection = AttackDirection.PlayerReceived;
-					}
-
-					// Determine attackType and damageElemenet
-
-					// Magical energies lose 1 point of health due to Sentient Crystal Shard casting Vitality Siphon
-					// You lose 39 points of health due to Infernal Zefir casting Drain Health Other V on you
-					// Crystal Minion casts Harm Other VI and drains 39 points ...
-					// Tendril of T'thuun depletes you for 188 points with Martyr's Hecatomb V.
-					if (((e.Text.Contains(" lose ") || e.Text.Contains(" and drains ")) && e.Text.Contains("health")) || e.Text.Contains(" exhausts ") || e.Text.Contains(" depletes "))
-					{
-						attackType = AttackType.Magic;
-						damageElemenet = DamageElement.Typeless;
-					}
-					// Critical hit! Virindi Executor scratches your upper leg for 3 points of slashing damage!
-					// Crystal Shard Sentinel scorches you for 47 points with Flame Arc VII.
-					// Ruschk Sadist numbs your lower leg for 2 points of cold damage!
-					else
-					{
-						if (e.Text.Contains(" with "))
-							attackType = AttackType.Magic;
-						else
-							attackType = AttackType.MeleeMissle;
-
-						// Slash
-						if (e.Text.Contains("slash") || e.Text.Contains(" cut") || e.Text.Contains(" scratch") || e.Text.Contains(" mangle"))
-							damageElemenet = DamageElement.Slash;
-						// Pierce
-						else if (e.Text.Contains("pierc") || e.Text.Contains(" gore") || e.Text.Contains(" impale") || e.Text.Contains(" nick") || e.Text.Contains(" stab"))
-							damageElemenet = DamageElement.Pierce;
-						// Bludge
-						else if (e.Text.Contains("bludge") || e.Text.Contains(" smash") || e.Text.Contains(" bash") || e.Text.Contains(" graze") || e.Text.Contains(" crush"))
-							damageElemenet = DamageElement.Bludge;
-						// Fire
-						else if (e.Text.Contains("fire") || e.Text.Contains(" burn") || e.Text.Contains(" singe") || e.Text.Contains(" scorch") || e.Text.Contains(" incinerate"))
-							damageElemenet = DamageElement.Fire;
-						// Cold
-						else if (e.Text.Contains("cold") || e.Text.Contains(" frost") || e.Text.Contains(" chill") || e.Text.Contains(" numb"))
-							damageElemenet = DamageElement.Cold;
-						// Acid
-						else if (e.Text.Contains("acid") || e.Text.Contains(" blister") || e.Text.Contains(" sear") || e.Text.Contains(" corrode") || e.Text.Contains(" dissolve"))
-							damageElemenet = DamageElement.Acid;
-						// Electric
-						else if (e.Text.Contains("electric") || e.Text.Contains(" lightning") || e.Text.Contains(" jolt") || e.Text.Contains(" shock") || e.Text.Contains(" spark"))
-							damageElemenet = DamageElement.Electric;
-
-						if (damageElemenet == DamageElement.Unknown)
-						{
-							// Blessed Moar hits your upper leg for 36 points of damage!
-							if (e.Text.Contains(" hits your "))
-								damageElemenet = DamageElement.Typeless;
-						}
-					}
-
-					if (damageElemenet == DamageElement.Unknown)
-						Debug.WriteToChat("Unable to parse element from damage message: " + e.Text);
-
-					// Calculate the DamageAmount
-					string damageString = e.Text.Substring(0, e.Text.IndexOf(" point"));
-					damageString = damageString.Substring(damageString.LastIndexOf(' ') + 1, damageString.Length - damageString.LastIndexOf(' ') - 1);
-
-					int.TryParse(damageString, out damageAmount);
+					// todo hack fix
 				}
 
-				CombatEventArgs combatEventArgs = new CombatEventArgs(monsterName, attackDirection, attackType, damageElemenet, isFailedAttack, isKillingBlow, isCriticalHit, damageAmount);
-
-				if (CombatEvent != null)
-					CombatEvent(combatEventArgs);
+				if (Settings.SettingsManager.CombatTracker.ExportOnLogOff.Value)
+				{
+					// todo hack fix
+				}
 			}
-			catch (Exception ex) { Debug.LogException(ex, e.Text); }
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		readonly List<CombatInfo> combatInfos = new List<CombatInfo>();
+		readonly List<AetheriaInfo> aetheriaInfos = new List<AetheriaInfo>();
+		readonly List<CloakInfo> cloakInfos = new List<CloakInfo>();
+
+		void standardTracker_CombatEvent(CombatEventArgs obj)
+		{
+			//Debug.WriteToChat("Combat: SourceName: " + obj.SourceName + ", TargetName: " + obj.TargetName + ", AttackType: " + obj.AttackType + ", DamageElemenet: " + obj.DamageElemenet + ", IsKillingBlow: " + obj.IsKillingBlow + ", IsCriticalHit: " + obj.IsCriticalHit + ", IsFailedAttack: " + obj.IsFailedAttack + ", DamageAmount: " + obj.DamageAmount);
+
+			// We only track events that interact with us
+			if (obj.SourceName != CoreManager.Current.CharacterFilter.Name && obj.TargetName != CoreManager.Current.CharacterFilter.Name)
+				return;
+
+			CombatInfo combatInfo = combatInfos.Find(i => i.SourceName == obj.SourceName && i.TargetName == obj.TargetName);
+
+			if (combatInfo == null)
+			{
+				combatInfo = new CombatInfo(obj.SourceName, obj.TargetName);
+
+				combatInfos.Add(combatInfo);
+			}
+
+			combatInfo.AddFromCombatEventArgs(obj);
+
+			if (CombatInfoUpdated != null)
+				CombatInfoUpdated(combatInfo);
+		}
+
+		void aetheriaTracker_SurgeEvent(Aetheria.SurgeEventArgs obj)
+		{
+			//Debug.WriteToChat("Aetheria: SourceName: " + obj.SourceName + ", TargetName: " + obj.TargetName + ", SurgeType: " + obj.SurgeType);
+
+			// We only track our own surge events
+			if (obj.SourceName != CoreManager.Current.CharacterFilter.Name)
+				return;
+
+			AetheriaInfo aetheriaInfo = aetheriaInfos.Find(i => i.SourceName == obj.SourceName && i.TargetName == obj.TargetName);
+
+			if (aetheriaInfo == null)
+			{
+				aetheriaInfo = new AetheriaInfo(obj.SourceName, obj.TargetName);
+
+				aetheriaInfos.Add(aetheriaInfo);
+			}
+
+			aetheriaInfo.AddFromSurgeEventArgs(obj);
+
+			if (AetheriaInfoUpdated != null)
+				AetheriaInfoUpdated(aetheriaInfo);
+		}
+
+		void cloakTracker_SurgeEvent(Cloaks.SurgeEventArgs obj)
+		{
+			//Debug.WriteToChat("Cloak: SourceName: " + obj.SourceName + ", TargetName: " + obj.TargetName + ", SurgeType: " + obj.SurgeType);
+
+			// We only track our own surge events
+			if (obj.SourceName != CoreManager.Current.CharacterFilter.Name)
+				return;
+
+			CloakInfo cloakInfo = cloakInfos.Find(i => i.SourceName == obj.SourceName && i.TargetName == obj.TargetName);
+
+			if (cloakInfo == null)
+			{
+				cloakInfo = new CloakInfo(obj.SourceName, obj.TargetName);
+
+				cloakInfos.Add(cloakInfo);
+			}
+
+			cloakInfo.AddFromSurgeEventArgs(obj);
+
+			if (CloakInfoUpdated != null)
+				CloakInfoUpdated(cloakInfo);
+		}
+
+		public event Action<bool> InfoCleared;
+		public event Action<CombatInfo> CombatInfoUpdated;
+		public event Action<AetheriaInfo> AetheriaInfoUpdated;
+		public event Action<CloakInfo> CloakInfoUpdated;
+
+		public List<CombatInfo> GetCombatInfos(string name)
+		{
+			return combatInfos.FindAll(i => i.SourceName == name || i.TargetName == name);
+		}
+
+		public List<AetheriaInfo> GetAetheriaInfos(string name)
+		{
+			return aetheriaInfos.FindAll(i => i.SourceName == name || i.TargetName == name);
+		}
+
+		public List<CloakInfo> GetCloakInfos(string name)
+		{
+			return cloakInfos.FindAll(i => i.SourceName == name || i.TargetName == name);
+		}
+
+		public void ClearCurrentStats()
+		{
+			combatInfos.Clear();
+			aetheriaInfos.Clear();
+			cloakInfos.Clear();
+
+			if (InfoCleared != null)
+				InfoCleared(true);
+		}
+
+		public void ExportCurrentStats()
+		{
+			// todo hack fix
+			Debug.WriteToChat("Export stats SHOULD be implemented in the next version.");
+		}
+
+		public void ClearPersistantStats()
+		{
+			// todo hack fix
+			Debug.WriteToChat("Persistant stats SHOULD be implemented in the next version.");
 		}
 	}
 }
