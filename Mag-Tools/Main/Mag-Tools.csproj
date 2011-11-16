@@ -49,7 +49,7 @@
       <HintPath>C:\Games\VirindiPlugins\VirindiTank\utank2-i.dll</HintPath>
     </Reference>
     <Reference Include="VirindiHotkeySystem">
-      <HintPath>..\..\..\..\Games\VirindiPlugins\VirindiHotkeySystem\VirindiHotkeySystem.dll</HintPath>
+      <HintPath>C:\Games\VirindiPlugins\VirindiHotkeySystem\VirindiHotkeySystem.dll</HintPath>
     </Reference>
     <Reference Include="VirindiItemTool">
       <HintPath>C:\Games\VirindiPlugins\VirindiItemTool\VirindiItemTool.dll</HintPath>
