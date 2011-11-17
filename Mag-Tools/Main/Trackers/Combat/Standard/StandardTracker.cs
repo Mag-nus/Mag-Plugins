@@ -251,8 +251,8 @@ namespace MagTools.Trackers.Combat.Standard
 			if (text.Contains(" eradicate") || text.Contains(" wither") || text.Contains(" scar") || text.Contains(" twist"))
 				return DamageElement.Typeless;
 
-			// Typeless
-			if (text.Contains(" depletes ") || text.Contains(" siphon ") || text.Contains(" exhaust ") || text.Contains(" drain ") || text.Contains(" and drains ") || text.Contains(" lose ") || text.Contains(" health "))
+			// Typeless/Life
+			if (text.Contains(" deplete") || text.Contains(" siphon") || text.Contains(" exhaust") || text.Contains(" drain") || text.Contains(" lose ") || text.Contains(" health "))
 				return DamageElement.Typeless;
 
 			return DamageElement.Unknown;
