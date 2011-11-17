@@ -58,8 +58,10 @@ namespace MagTools.Trackers.Combat.Standard
 			// Magic given
 			// Critical hit! You smash Mag-lite for 147 points with Incantation of Shock Wave Streak.
 			// Critical hit! You exhaust Mag-lite for 39 points with Martyr's Hecatomb VII.
+			// Critical hit! You eradicate Invading Bronze Gauntlet Knight for 743 points with Incantation of Nether Arc.
 			MagicGivenAttacks.Add(new Regex("^Critical hit! You [\\w]+ (?<targetname>.+) for (?<points>.+) point.* with .+$"));
 			// You nick Tremendous Monouga for 595 points with Incantation of Force Bolt.
+			// You wither Invading Silver Scope Phalanx for 253 points with Incantation of Nether Arc.
 			// You siphon Mag-lite for 121 points with Martyr's Hecatomb VII.
 			// You exhaust Mag-lite for 42 points with Martyr's Hecatomb VII.
 			// You drain Mag-lite for 34 points with Martyr's Hecatomb VII.

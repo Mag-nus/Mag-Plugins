@@ -247,6 +247,10 @@ namespace MagTools.Trackers.Combat.Standard
 			if (text.Contains("electric") || text.Contains(" lightning") || text.Contains(" jolt") || text.Contains(" shock") || text.Contains(" spark") || text.Contains(" blast"))
 				return DamageElement.Electric;
 
+			// Nether
+			if (text.Contains(" eradicate") || text.Contains(" wither") || text.Contains(" scar") || text.Contains(" twist"))
+				return DamageElement.Typeless;
+
 			// Typeless
 			if (text.Contains(" depletes ") || text.Contains(" siphon ") || text.Contains(" exhaust ") || text.Contains(" drain ") || text.Contains(" and drains ") || text.Contains(" lose ") || text.Contains(" health "))
 				return DamageElement.Typeless;
