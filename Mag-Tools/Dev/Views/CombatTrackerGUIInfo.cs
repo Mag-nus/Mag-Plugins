@@ -290,27 +290,27 @@ namespace MagTools.Views
 
 		public void SetAttacks(int total, float percent)
 		{
-			attacksText.Text = total == 0 ? "" : total.ToString("#,##0") + " (" + percent.ToString("F0") + "%)";
+			attacksText.Text = total == 0 ? "" : total.ToString("#,##0") + " (" + Math.Round(percent, 0).ToString("F0") + "%)";
 		}
 
 		public void SetEvades(int total, float percent)
 		{
-			evadesText.Text = total == 0 ? "" : total.ToString("#,##0") + " (" + percent.ToString("F0") + "%)";
+			evadesText.Text = total == 0 ? "" : total.ToString("#,##0") + " (" + Math.Round(percent, 0).ToString("F0") + "%)";
 		}
 
 		public void SetResists(int total, float percent)
 		{
-			resistsText.Text = total == 0 ? "" : total.ToString("#,##0") + " (" + percent.ToString("F0") + "%)";
+			resistsText.Text = total == 0 ? "" : total.ToString("#,##0") + " (" + Math.Round(percent, 0).ToString("F0") + "%)";
 		}
 
 		public void SetAetheriaSurges(int total, float percent)
 		{
-			aSurgesText.Text = total == 0 ? "" : total.ToString("#,##0") + " (" + percent.ToString("F1") + "%)";
+			aSurgesText.Text = total == 0 ? "" : total.ToString("#,##0") + " (" + Math.Round(percent, 1).ToString("F1") + "%)";
 		}
 
 		public void SetCloakSurges(int total, float percent)
 		{
-			cSurgesText.Text = total == 0 ? "" : total.ToString("#,##0") + " (" + percent.ToString("F1") + "%)";
+			cSurgesText.Text = total == 0 ? "" : total.ToString("#,##0") + " (" + Math.Round(percent, 1).ToString("F1") + "%)";
 		}
 
 
@@ -321,7 +321,7 @@ namespace MagTools.Views
 
 		public void SetCrits(int total, float percent)
 		{
-			critsText.Text = total == 0 ? "" : total.ToString("#,##0") + " (" + percent.ToString("F1") + "%)";
+			critsText.Text = total == 0 ? "" : total.ToString("#,##0") + " (" + Math.Round(percent, 1).ToString("F1") + "%)";
 		}
 
 		public void SetCritsAvgMax(int avg, int max)
