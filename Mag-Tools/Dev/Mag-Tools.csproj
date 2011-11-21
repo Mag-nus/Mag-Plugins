@@ -95,6 +95,8 @@
     <Compile Include="Trackers\Combat\Cloaks\SurgeType.cs" />
     <Compile Include="Trackers\Combat\CombatInfo.cs" />
     <Compile Include="Trackers\Combat\CombatTracker.cs" />
+    <Compile Include="Trackers\Combat\CombatTrackerExporter.cs" />
+    <Compile Include="Trackers\Combat\CombatTrackerImporter.cs" />
     <Compile Include="Trackers\Combat\Standard\CombatEventArgs.cs" />
     <Compile Include="Trackers\Combat\Standard\CombatMessages.cs" />
     <Compile Include="Trackers\Combat\Standard\StandardTracker.cs" />

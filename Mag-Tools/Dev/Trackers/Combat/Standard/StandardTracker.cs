@@ -236,7 +236,7 @@ namespace MagTools.Trackers.Combat.Standard
 				return DamageElement.Fire;
 			
 			// Cold
-			if (text.Contains("cold") || text.Contains(" frost") || text.Contains(" chill") || text.Contains(" numb"))
+			if (text.Contains("cold") || text.Contains(" frost") || text.Contains(" chill") || text.Contains(" numb") || text.Contains(" freeze"))
 				return DamageElement.Cold;
 			
 			// Acid

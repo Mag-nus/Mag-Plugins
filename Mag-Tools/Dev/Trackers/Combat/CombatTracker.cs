@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.IO;
 using MagTools.Trackers.Combat.Standard;
 using MagTools.Trackers.Combat.Aetheria;
 using MagTools.Trackers.Combat.Cloaks;
@@ -27,6 +27,7 @@ namespace MagTools.Trackers.Combat
 				aetheriaTracker.SurgeEvent += new Action<Aetheria.SurgeEventArgs>(aetheriaTracker_SurgeEvent);
 				cloakTracker.SurgeEvent += new Action<Cloaks.SurgeEventArgs>(cloakTracker_SurgeEvent);
 
+				CoreManager.Current.CharacterFilter.Login += new EventHandler<Decal.Adapter.Wrappers.LoginEventArgs>(CharacterFilter_Login);
 				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -55,6 +56,7 @@ namespace MagTools.Trackers.Combat
 					aetheriaTracker.Dispose();
 					cloakTracker.Dispose();
 
+					CoreManager.Current.CharacterFilter.Login -= new EventHandler<Decal.Adapter.Wrappers.LoginEventArgs>(CharacterFilter_Login);
 					CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 				}
 
@@ -63,18 +65,39 @@ namespace MagTools.Trackers.Combat
 			}
 		}
 
+		void CharacterFilter_Login(object sender, Decal.Adapter.Wrappers.LoginEventArgs e)
+		{
+			try
+			{
+				if (Settings.SettingsManager.CombatTracker.Persistent.Value)
+				{
+					CombatTrackerImporter importer = new CombatTrackerImporter(PluginCore.PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
+
+					importer.Import(combatInfos, aetheriaInfos, cloakInfos);
+				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
 		void CharacterFilter_Logoff(object sender, Decal.Adapter.Wrappers.LogoffEventArgs e)
 		{
 			try
 			{
 				if (Settings.SettingsManager.CombatTracker.Persistent.Value)
 				{
-					// todo hack fix
+					CombatTrackerExporter exporter = new CombatTrackerExporter(combatInfos, aetheriaInfos, cloakInfos);
+
+					exporter.Export(PluginCore.PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
 				}
 
 				if (Settings.SettingsManager.CombatTracker.ExportOnLogOff.Value)
 				{
-					// todo hack fix
+					if (combatInfos.Count != 0 || aetheriaInfos.Count != 0 || cloakInfos.Count != 0)
+					{
+						CombatTrackerExporter exporter = new CombatTrackerExporter(combatInfos, aetheriaInfos, cloakInfos);
+
+						exporter.Export(PluginCore.PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker." + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ".xml");
+					}
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -185,14 +208,29 @@ namespace MagTools.Trackers.Combat
 
 		public void ExportCurrentStats()
 		{
-			// todo hack fix
-			Debug.WriteToChat("Export stats SHOULD be implemented in the next version.");
+			string fileName = PluginCore.PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker." + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ".xml";
+
+			CombatTrackerExporter exporter = new CombatTrackerExporter(combatInfos, aetheriaInfos, cloakInfos);
+
+			exporter.Export(fileName);
+
+			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Stats exported to: " + fileName, 5);
 		}
 
 		public void ClearPersistantStats()
 		{
-			// todo hack fix
-			Debug.WriteToChat("Persistant stats SHOULD be implemented in the next version.");
+			FileInfo fileInfo = new FileInfo(PluginCore.PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
+
+			if (fileInfo.Exists)
+			{
+				fileInfo.Delete();
+
+				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "File deleted: " + fileInfo.FullName, 5);
+			}
+			else
+			{
+				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "No persistant stats found: " + fileInfo.FullName, 5);
+			}
 		}
 	}
 }

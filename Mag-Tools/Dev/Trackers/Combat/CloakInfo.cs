@@ -18,6 +18,6 @@ namespace MagTools.Trackers.Combat
 			TotalSurges++;
 		}
 
-		public int TotalSurges { get; private set; }
+		public int TotalSurges;
 	}
 }

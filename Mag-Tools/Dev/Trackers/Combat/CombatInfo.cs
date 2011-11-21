@@ -54,7 +54,7 @@ namespace MagTools.Trackers.Combat
 		}
 
 
-		public int KillingBlows { get; private set; }
+		public int KillingBlows;
 
 
 		public class DamageByAttackType
