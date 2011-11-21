@@ -32,11 +32,12 @@ namespace MagTools.Views
 
 				monsterList.ClearColumnsAndRows();
 
+				// Each character is a max of 6 pixels wide
 				monsterList.AddColumn(typeof(HudStaticText), 5, null);
-				monsterList.AddColumn(typeof(HudStaticText), 123, null);
-				monsterList.AddColumn(typeof(HudStaticText), 30, null);
+				monsterList.AddColumn(typeof(HudStaticText), 111, null);
+				monsterList.AddColumn(typeof(HudStaticText), 37, null);
 				monsterList.AddColumn(typeof(HudStaticText), 55, null); // This cannot go any smaller without pruning text
-				monsterList.AddColumn(typeof(HudStaticText), 72, null);
+				monsterList.AddColumn(typeof(HudStaticText), 77, null);
 
 				HudList.HudListRowAccessor newRow = monsterList.AddRow();
 				((HudStaticText)newRow[2]).Text = "KB's";
@@ -52,7 +53,7 @@ namespace MagTools.Views
 				((HudStaticText)newRow[2]).TextAlignment = VirindiViewService.WriteTextFormats.Right;
 				((HudStaticText)newRow[3]).TextAlignment = VirindiViewService.WriteTextFormats.Right;
 				((HudStaticText)newRow[4]).TextAlignment = VirindiViewService.WriteTextFormats.Right;
-
+				
 				selectedRow = 1;
 
 				monsterList.Click += new HudList.delClickedControl(monsterList_Click);
