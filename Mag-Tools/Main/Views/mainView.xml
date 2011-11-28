@@ -24,25 +24,34 @@
       <control progid="DecalControls.FixedLayout" clipped="">
         <control progid="DecalControls.Notebook" left="0" top="0" width="320" height="409">
 
-          <page label="Tracker">
+          <page label="Current Session Stats">
             <control progid="DecalControls.FixedLayout" clipped="">
-              <control progid="DecalControls.List" name="CombatTrackerMonsterList" left="1" top="1" width="318" height="186" />
-              <control progid="DecalControls.List" name="CombatTrackerDamageList" left="1" top="188" width="318" height="205" />
+              <control progid="DecalControls.List" name="CombatTrackerMonsterListCurrent" left="1" top="1" width="318" height="186" />
+              <control progid="DecalControls.List" name="CombatTrackerDamageListCurrent" left="1" top="188" width="318" height="205" />
             </control>
           </page>
 
-          <page label="Options">
+          <page label="Persistant Stats">
             <control progid="DecalControls.FixedLayout" clipped="">
-              <control progid="DecalControls.PushButton" name="CombatTrackerClearCurrentStats" left="10" top="10" width="120" height="20" text="Clear Current Stats" />
-              <control progid="DecalControls.PushButton" name="CombatTrackerExportCurrentStats" left="150" top="10" width="120" height="20" text="Export Current Stats" />
-              <control progid="DecalControls.PushButton" name="CombatTrackerClearPersistentStats" left="10" top="40" width="120" height="20" text="Clear Persistent Stats" />
-
-              <control progid="DecalControls.CheckBox" name="CombatTrackerExportOnLogOff" left="10" top="80" width="140" height="18" text="Export Stats On LogOff" />
-              <control progid="DecalControls.CheckBox" name="CombatTrackerPersistent" left="10" top="100" width="95" height="18" text="Persistent Stats" />
+              <control progid="DecalControls.List" name="CombatTrackerMonsterListPersistent" left="1" top="1" width="318" height="186" />
+              <control progid="DecalControls.List" name="CombatTrackerDamageListPersistent" left="1" top="188" width="318" height="205" />
             </control>
           </page>
           
+          <page label="Options">
+            <control progid="DecalControls.FixedLayout" clipped="">
+              <control progid="DecalControls.PushButton" name="CombatTrackerClearCurrentStats" left="10" top="10" width="120" height="20" text="Clear Current Stats" />
+              <control progid="DecalControls.PushButton" name="CombatTrackerExportCurrentStats" left="10" top="40" width="120" height="20" text="Export Current Stats" />
+              
+              <control progid="DecalControls.PushButton" name="CombatTrackerClearPersistentStats" left="150" top="10" width="120" height="20" text="Clear Persistent Stats" />
+
+              <control progid="DecalControls.CheckBox" name="CombatTrackerExportOnLogOff" left="10" top="80" width="185" height="18" text="Export Current Stats On LogOff" />
+              <control progid="DecalControls.CheckBox" name="CombatTrackerPersistent" left="10" top="100" width="140" height="18" text="Keep Persistent Stats" />
+            </control>
+          </page>
+
         </control>
+
       </control>
     </page>
     

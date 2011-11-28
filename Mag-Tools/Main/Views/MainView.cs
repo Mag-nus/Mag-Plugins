@@ -18,13 +18,15 @@ namespace MagTools.Views
 		public HudStaticText UnretainedTotal { get; private set; }
 
 		// Combat Tracker - Tracker
-		public HudList CombatTrackerMonsterList { get; private set; }
-		public HudList CombatTrackerDamageList { get; private set; }
+		public HudList CombatTrackerMonsterListCurrent { get; private set; }
+		public HudList CombatTrackerDamageListCurrent { get; private set; }
+		public HudList CombatTrackerMonsterListPersistent { get; private set; }
+		public HudList CombatTrackerDamageListPersistent { get; private set; }
 
 		// Combat Tracker - Options
-		HudButton CombatTrackerClearCurrentStats { get; set; }
-		HudButton CombatTrackerExportCurrentStats { get; set; }
-		HudButton CombatTrackerClearPersistentStats { get; set; }
+		public HudButton CombatTrackerClearCurrentStats { get; private set; }
+		public HudButton CombatTrackerExportCurrentStats { get; private set; }
+		public HudButton CombatTrackerClearPersistentStats { get; private set; }
 
 		HudCheckBox CombatTrackerExportOnLogOff { get; set; }
 		HudCheckBox CombatTrackerPersistent { get; set; }
@@ -45,7 +47,7 @@ namespace MagTools.Views
 		// Misc - About
 		public HudStaticText VersionLabel { get; private set; }
 
-		public MainView(Trackers.Combat.CombatTracker combatTracker)
+		public MainView()
 		{
 			try
 			{
@@ -67,8 +69,10 @@ namespace MagTools.Views
 				UnretainedTotal = view != null ? (HudStaticText)view["UnretainedTotal"] : new HudStaticText();
 
 				// Combat Tracker - Tracker
-				CombatTrackerMonsterList = view != null ? (HudList)view["CombatTrackerMonsterList"] : new HudList();
-				CombatTrackerDamageList = view != null ? (HudList)view["CombatTrackerDamageList"] : new HudList();
+				CombatTrackerMonsterListCurrent = view != null ? (HudList)view["CombatTrackerMonsterListCurrent"] : new HudList();
+				CombatTrackerDamageListCurrent = view != null ? (HudList)view["CombatTrackerDamageListCurrent"] : new HudList();
+				CombatTrackerMonsterListPersistent = view != null ? (HudList)view["CombatTrackerMonsterListPersistent"] : new HudList();
+				CombatTrackerDamageListPersistent = view != null ? (HudList)view["CombatTrackerDamageListPersistent"] : new HudList();
 
 				// Combat Tracker - Options
 				CombatTrackerClearCurrentStats = view != null ? (HudButton)view["CombatTrackerClearCurrentStats"] : new HudButton();
@@ -112,31 +116,6 @@ namespace MagTools.Views
 				};
 
 				// Combat Tracker
-				CombatTrackerClearCurrentStats.Hit += (s, e) =>
-				{
-					try
-					{
-						combatTracker.ClearCurrentStats();
-					}
-					catch (Exception ex) { Debug.LogException(ex); }
-				};
-				CombatTrackerExportCurrentStats.Hit += (s, e) =>
-				{
-					try
-					{
-						combatTracker.ExportCurrentStats();
-					}
-					catch (Exception ex) { Debug.LogException(ex); }
-				};
-				CombatTrackerClearPersistentStats.Hit += (s, e) =>
-				{
-					try
-					{
-						combatTracker.ClearPersistantStats();
-					}
-					catch (Exception ex) { Debug.LogException(ex); }
-				};
-
 				CombatTrackerExportOnLogOff.Checked = Settings.SettingsManager.CombatTracker.ExportOnLogOff.Value;
 				Settings.SettingsManager.CombatTracker.ExportOnLogOff.Changed += (obj) => { CombatTrackerExportOnLogOff.Checked = obj.Value; };
 				CombatTrackerExportOnLogOff.Change += (s, e) =>

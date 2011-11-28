@@ -87,7 +87,8 @@ namespace MagTools
 		// Trackers
 		Trackers.Mana.ManaTracker manaTracker;
 		public Trackers.Mana.IManaTracker ManaTracker { get { return manaTracker; } }
-		Trackers.Combat.CombatTracker combatTracker;
+		Trackers.Combat.CombatTracker combatTrackerCurrent;
+		Trackers.Combat.CombatTracker combatTrackerPersistent;
 
 		// Misc
 		Client.WindowFrameRemover windowFrameRemover;
@@ -109,7 +110,8 @@ namespace MagTools
 		// Views, depends on VirindiViewService.dll
 		Views.MainView mainView;
 		Views.ManaTrackerGUI manaTrackerGUI;
-		Views.CombatTrackerGUI combatTrackerGUI;
+		Views.CombatTrackerGUI combatTrackerGUICurrent;
+		Views.CombatTrackerGUI combatTrackerGUIPersistent;
 
 		readonly Collection<string> startupErrors = new Collection<string>();
 
@@ -124,7 +126,9 @@ namespace MagTools
 				Current = this;
 
 				CoreManager.Current.PluginInitComplete += new EventHandler<EventArgs>(Current_PluginInitComplete);
+				CoreManager.Current.CharacterFilter.Login += new EventHandler<Decal.Adapter.Wrappers.LoginEventArgs>(CharacterFilter_Login);
 				CoreManager.Current.CharacterFilter.LoginComplete +=new EventHandler(CharacterFilter_LoginComplete);
+				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 
 				// General
 				chatFilter = new ChatFilter();
@@ -136,7 +140,8 @@ namespace MagTools
 
 				// Trackers
 				manaTracker = new Trackers.Mana.ManaTracker();
-				combatTracker = new Trackers.Combat.CombatTracker();
+				combatTrackerCurrent = new Trackers.Combat.CombatTracker();
+				combatTrackerPersistent = new Trackers.Combat.CombatTracker();
 
 				// Misc
 				windowFrameRemover = new Client.WindowFrameRemover();
@@ -185,9 +190,14 @@ namespace MagTools
 				// Views, depends on VirindiViewService.dll
 				try
 				{
-					mainView = new Views.MainView(combatTracker);
+					mainView = new Views.MainView();
 					manaTrackerGUI = new Views.ManaTrackerGUI(manaTracker, mainView);
-					combatTrackerGUI = new Views.CombatTrackerGUI(combatTracker, mainView);
+					combatTrackerGUICurrent = new Views.CombatTrackerGUI(combatTrackerCurrent, mainView.CombatTrackerMonsterListCurrent, mainView.CombatTrackerDamageListCurrent);
+					combatTrackerGUIPersistent = new Views.CombatTrackerGUI(combatTrackerPersistent, mainView.CombatTrackerMonsterListPersistent, mainView.CombatTrackerDamageListPersistent);
+
+					mainView.CombatTrackerClearCurrentStats.Hit += new EventHandler(CombatTrackerClearCurrentStats_Hit);
+					mainView.CombatTrackerExportCurrentStats.Hit += new EventHandler(CombatTrackerExportCurrentStats_Hit);
+					mainView.CombatTrackerClearPersistentStats.Hit += new EventHandler(CombatTrackerClearPersistentStats_Hit);
 
 					System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
 					System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
@@ -207,11 +217,14 @@ namespace MagTools
 			try
 			{
 				CoreManager.Current.PluginInitComplete -= new EventHandler<EventArgs>(Current_PluginInitComplete);
+				CoreManager.Current.CharacterFilter.Login -= new EventHandler<Decal.Adapter.Wrappers.LoginEventArgs>(CharacterFilter_Login);
 				CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
+				CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 
 				// Views, depends on VirindiViewService.dll
 				// We dispose these before our other objects (Trackers/Macros) as these probably reference those other objects.
-				if (combatTrackerGUI != null) combatTrackerGUI.Dispose();
+				if (combatTrackerGUIPersistent != null) combatTrackerGUIPersistent.Dispose();
+				if (combatTrackerGUICurrent != null) combatTrackerGUICurrent.Dispose();
 				if (manaTrackerGUI != null) manaTrackerGUI.Dispose();
 				if (mainView != null) mainView.Dispose(); // We dispose this last in the Views as the other Views reference it.
 
@@ -232,7 +245,8 @@ namespace MagTools
 
 				// Trackers
 				if (manaTracker != null) manaTracker.Dispose();
-				if (combatTracker != null) combatTracker.Dispose();
+				if (combatTrackerCurrent != null) combatTrackerCurrent.Dispose();
+				if (combatTrackerPersistent != null) combatTrackerPersistent.Dispose();
 
 				// Macros
 				if (openMainPackOnLogin != null) openMainPackOnLogin.Dispose();
@@ -243,6 +257,16 @@ namespace MagTools
 				if (chatFilter != null) chatFilter.Dispose();
 
 				Current = null;
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void CharacterFilter_Login(object sender, Decal.Adapter.Wrappers.LoginEventArgs e)
+		{
+			try
+			{
+				if (Settings.SettingsManager.CombatTracker.Persistent.Value)
+					combatTrackerPersistent.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -278,11 +302,60 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		void CharacterFilter_Logoff(object sender, Decal.Adapter.Wrappers.LogoffEventArgs e)
+		{
+			try
+			{
+				if (Settings.SettingsManager.CombatTracker.ExportOnLogOff.Value)
+					combatTrackerCurrent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker." + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ".xml");
+
+				if (Settings.SettingsManager.CombatTracker.Persistent.Value)
+					combatTrackerPersistent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
 		void PackInventoryHotkey_Fired2(object sender, VirindiHotkeySystem.VHotkeyInfo.cEatableFiredEventArgs e)
 		{
 			try
 			{
 				InventoryPacker.Start();
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void CombatTrackerClearCurrentStats_Hit(object sender, EventArgs e)
+		{
+			try
+			{
+				combatTrackerCurrent.ClearStats();
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void CombatTrackerExportCurrentStats_Hit(object sender, EventArgs e)
+		{
+			try
+			{
+				combatTrackerCurrent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker." + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ".xml", true);
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void CombatTrackerClearPersistentStats_Hit(object sender, EventArgs e)
+		{
+			try
+			{
+				combatTrackerPersistent.ClearStats();
+
+				FileInfo fileInfo = new FileInfo(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
+
+				if (fileInfo.Exists)
+				{
+					fileInfo.Delete();
+
+					CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "File deleted: " + fileInfo.FullName, 5);
+				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
