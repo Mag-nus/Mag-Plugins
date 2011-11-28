@@ -18,17 +18,17 @@ namespace MagTools.Views
 
 		int selectedRow;
 
-		public CombatTrackerGUI(CombatTracker combatTracker, MainView mainView)
+		public CombatTrackerGUI(CombatTracker combatTracker, HudList monsterList, HudList damageInfoList)
 		{
 			try
 			{
-				if (combatTracker == null || mainView == null)
+				if (combatTracker == null)
 					return;
 
 				this.combatTracker = combatTracker;
-				monsterList = mainView.CombatTrackerMonsterList;
+				this.monsterList = monsterList;
 
-				combatTrackerGUIInfo = new CombatTrackerGUIInfo(mainView);
+				combatTrackerGUIInfo = new CombatTrackerGUIInfo(damageInfoList);
 
 				monsterList.ClearColumnsAndRows();
 
@@ -59,6 +59,7 @@ namespace MagTools.Views
 				monsterList.Click += new HudList.delClickedControl(monsterList_Click);
 
 				combatTracker.InfoCleared += new Action<bool>(combatTracker_InfoCleared);
+				combatTracker.StatsLoaded += new Action<List<CombatInfo>>(combatTracker_StatsLoaded);
 				combatTracker.CombatInfoUpdated += new Action<CombatInfo>(combatTracker_CombatInfoUpdated);
 				combatTracker.AetheriaInfoUpdated += new Action<AetheriaInfo>(combatTracker_AetheriaInfoUpdated);
 				combatTracker.CloakInfoUpdated += new Action<CloakInfo>(combatTracker_CloakInfoUpdated);
@@ -87,6 +88,8 @@ namespace MagTools.Views
 				{
 					monsterList.Click -= new HudList.delClickedControl(monsterList_Click);
 
+					combatTracker.InfoCleared -= new Action<bool>(combatTracker_InfoCleared);
+					combatTracker.StatsLoaded -= new Action<List<CombatInfo>>(combatTracker_StatsLoaded);
 					combatTracker.CombatInfoUpdated -= new Action<CombatInfo>(combatTracker_CombatInfoUpdated);
 					combatTracker.AetheriaInfoUpdated -= new Action<AetheriaInfo>(combatTracker_AetheriaInfoUpdated);
 					combatTracker.CloakInfoUpdated -= new Action<CloakInfo>(combatTracker_CloakInfoUpdated);
@@ -139,6 +142,14 @@ namespace MagTools.Views
 			((HudStaticText)monsterList[selectedRow][2]).Text = "";
 			((HudStaticText)monsterList[selectedRow][3]).Text = "";
 			((HudStaticText)monsterList[selectedRow][4]).Text = "";
+		}
+
+		void combatTracker_StatsLoaded(List<CombatInfo> obj)
+		{
+			foreach (CombatInfo combatInfo in obj)
+			{
+				combatTracker_CombatInfoUpdated(combatInfo);
+			}
 		}
 
 		void combatTracker_CombatInfoUpdated(CombatInfo obj)

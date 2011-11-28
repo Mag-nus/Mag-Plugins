@@ -6,7 +6,7 @@ namespace MagTools.Views
 {
 	class CombatTrackerGUIInfo
 	{
-		readonly HudList damageList;
+		readonly HudList hudList;
 
 		readonly HudStaticText typelessMeleeMissileText;
 		readonly HudStaticText typelessMagicText;
@@ -40,24 +40,24 @@ namespace MagTools.Views
 
 		readonly HudStaticText totalDmgText;
 
-		public CombatTrackerGUIInfo(MainView mainView)
+		public CombatTrackerGUIInfo(HudList hudList)
 		{
 			try
 			{
-				damageList = mainView.CombatTrackerDamageList;
+				this.hudList = hudList;
 
-				damageList.ClearColumnsAndRows();
+				hudList.ClearColumnsAndRows();
 
 				// Each character is a max of 6 pixels wide
-				damageList.AddColumn(typeof(HudStaticText), 40, null);
-				damageList.AddColumn(typeof(HudStaticText), 55, null);
-				damageList.AddColumn(typeof(HudStaticText), 55, null);
-				damageList.AddColumn(typeof(HudStaticText), 45, null); // This cannot go any smaller without purning labels
-				damageList.AddColumn(typeof(HudStaticText), 90, null);
+				hudList.AddColumn(typeof(HudStaticText), 40, null);
+				hudList.AddColumn(typeof(HudStaticText), 52, null);
+				hudList.AddColumn(typeof(HudStaticText), 52, null);
+				hudList.AddColumn(typeof(HudStaticText), 45, null); // This cannot go any smaller without purning labels
+				hudList.AddColumn(typeof(HudStaticText), 96, null);
 
 				HudList.HudListRowAccessor newRow;
 
-				newRow = damageList.AddRow();
+				newRow = hudList.AddRow();
 				((HudStaticText)newRow[1]).Text = "Mel/Msl";
 				((HudStaticText)newRow[1]).TextAlignment = VirindiViewService.WriteTextFormats.Right;
 				((HudStaticText)newRow[2]).Text = "Magic";
@@ -66,7 +66,7 @@ namespace MagTools.Views
 				attacksText = ((HudStaticText)newRow[4]);
 				attacksText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
 
-				newRow = damageList.AddRow();
+				newRow = hudList.AddRow();
 				((HudStaticText)newRow[0]).Text = "Typeless";
 				typelessMeleeMissileText = ((HudStaticText)newRow[1]);
 				typelessMeleeMissileText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
@@ -76,7 +76,7 @@ namespace MagTools.Views
 				evadesText = ((HudStaticText)newRow[4]);
 				evadesText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
 
-				newRow = damageList.AddRow();
+				newRow = hudList.AddRow();
 				((HudStaticText)newRow[0]).Text = "Slash";
 				slashMeleeMissileText = ((HudStaticText)newRow[1]);
 				slashMeleeMissileText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
@@ -86,7 +86,7 @@ namespace MagTools.Views
 				resistsText = ((HudStaticText)newRow[4]);
 				resistsText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
 
-				newRow = damageList.AddRow();
+				newRow = hudList.AddRow();
 				((HudStaticText)newRow[0]).Text = "Pierce";
 				pierceMeleeMissileText = ((HudStaticText)newRow[1]);
 				pierceMeleeMissileText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
@@ -96,7 +96,7 @@ namespace MagTools.Views
 				aSurgesText = ((HudStaticText)newRow[4]);
 				aSurgesText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
 
-				newRow = damageList.AddRow();
+				newRow = hudList.AddRow();
 				((HudStaticText)newRow[0]).Text = "Bludge";
 				bludgeMeleeMissileText = ((HudStaticText)newRow[1]);
 				bludgeMeleeMissileText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
@@ -106,14 +106,14 @@ namespace MagTools.Views
 				cSurgesText = ((HudStaticText)newRow[4]);
 				cSurgesText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
 
-				newRow = damageList.AddRow();
+				newRow = hudList.AddRow();
 				((HudStaticText)newRow[0]).Text = "Fire";
 				fireMeleeMissileText = ((HudStaticText)newRow[1]);
 				fireMeleeMissileText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
 				fireMagicText = ((HudStaticText)newRow[2]);
 				fireMagicText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
 
-				newRow = damageList.AddRow();
+				newRow = hudList.AddRow();
 				((HudStaticText)newRow[0]).Text = "Cold";
 				coldMeleeMissileText = ((HudStaticText)newRow[1]);
 				coldMeleeMissileText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
@@ -123,7 +123,7 @@ namespace MagTools.Views
 				avgMaxText = ((HudStaticText)newRow[4]);
 				avgMaxText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
 
-				newRow = damageList.AddRow();
+				newRow = hudList.AddRow();
 				((HudStaticText)newRow[0]).Text = "Acid";
 				acidMeleeMissileText = ((HudStaticText)newRow[1]);
 				acidMeleeMissileText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
@@ -133,7 +133,7 @@ namespace MagTools.Views
 				critsText = ((HudStaticText)newRow[4]);
 				critsText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
 
-				newRow = damageList.AddRow();
+				newRow = hudList.AddRow();
 				((HudStaticText)newRow[0]).Text = "Electric";
 				electricMeleeMissileText = ((HudStaticText)newRow[1]);
 				electricMeleeMissileText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
@@ -143,9 +143,9 @@ namespace MagTools.Views
 				critsAvgMaxText = ((HudStaticText)newRow[4]);
 				critsAvgMaxText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
 
-				newRow = damageList.AddRow();
+				newRow = hudList.AddRow();
 
-				newRow = damageList.AddRow();
+				newRow = hudList.AddRow();
 				((HudStaticText)newRow[0]).Text = "Total";
 				totalMeleeMissileText = ((HudStaticText)newRow[1]);
 				totalMeleeMissileText.TextAlignment = VirindiViewService.WriteTextFormats.Right;

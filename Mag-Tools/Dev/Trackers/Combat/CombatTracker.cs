@@ -26,9 +26,6 @@ namespace MagTools.Trackers.Combat
 				standardTracker.CombatEvent += new Action<CombatEventArgs>(standardTracker_CombatEvent);
 				aetheriaTracker.SurgeEvent += new Action<Aetheria.SurgeEventArgs>(aetheriaTracker_SurgeEvent);
 				cloakTracker.SurgeEvent += new Action<Cloaks.SurgeEventArgs>(cloakTracker_SurgeEvent);
-
-				CoreManager.Current.CharacterFilter.Login += new EventHandler<Decal.Adapter.Wrappers.LoginEventArgs>(CharacterFilter_Login);
-				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -55,52 +52,11 @@ namespace MagTools.Trackers.Combat
 					standardTracker.Dispose();
 					aetheriaTracker.Dispose();
 					cloakTracker.Dispose();
-
-					CoreManager.Current.CharacterFilter.Login -= new EventHandler<Decal.Adapter.Wrappers.LoginEventArgs>(CharacterFilter_Login);
-					CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 				}
 
 				// Indicate that the instance has been disposed.
 				disposed = true;
 			}
-		}
-
-		void CharacterFilter_Login(object sender, Decal.Adapter.Wrappers.LoginEventArgs e)
-		{
-			try
-			{
-				if (Settings.SettingsManager.CombatTracker.Persistent.Value)
-				{
-					CombatTrackerImporter importer = new CombatTrackerImporter(PluginCore.PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
-
-					importer.Import(combatInfos, aetheriaInfos, cloakInfos);
-				}
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		void CharacterFilter_Logoff(object sender, Decal.Adapter.Wrappers.LogoffEventArgs e)
-		{
-			try
-			{
-				if (Settings.SettingsManager.CombatTracker.Persistent.Value)
-				{
-					CombatTrackerExporter exporter = new CombatTrackerExporter(combatInfos, aetheriaInfos, cloakInfos);
-
-					exporter.Export(PluginCore.PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
-				}
-
-				if (Settings.SettingsManager.CombatTracker.ExportOnLogOff.Value)
-				{
-					if (combatInfos.Count != 0 || aetheriaInfos.Count != 0 || cloakInfos.Count != 0)
-					{
-						CombatTrackerExporter exporter = new CombatTrackerExporter(combatInfos, aetheriaInfos, cloakInfos);
-
-						exporter.Export(PluginCore.PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker." + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ".xml");
-					}
-				}
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		readonly List<CombatInfo> combatInfos = new List<CombatInfo>();
@@ -177,6 +133,7 @@ namespace MagTools.Trackers.Combat
 		}
 
 		public event Action<bool> InfoCleared;
+		public event Action<List<CombatInfo>> StatsLoaded;
 		public event Action<CombatInfo> CombatInfoUpdated;
 		public event Action<AetheriaInfo> AetheriaInfoUpdated;
 		public event Action<CloakInfo> CloakInfoUpdated;
@@ -196,7 +153,7 @@ namespace MagTools.Trackers.Combat
 			return cloakInfos.FindAll(i => i.SourceName == name || i.TargetName == name);
 		}
 
-		public void ClearCurrentStats()
+		public void ClearStats()
 		{
 			combatInfos.Clear();
 			aetheriaInfos.Clear();
@@ -206,31 +163,27 @@ namespace MagTools.Trackers.Combat
 				InfoCleared(true);
 		}
 
-		public void ExportCurrentStats()
+		public void ImportStats(string xmlFileName)
 		{
-			string fileName = PluginCore.PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker." + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ".xml";
+			CombatTrackerImporter importer = new CombatTrackerImporter(xmlFileName);
+
+			importer.Import(combatInfos, aetheriaInfos, cloakInfos);
+
+			if (StatsLoaded != null)
+				StatsLoaded(combatInfos);
+		}
+
+		public void ExportStats(string xmlFileName, bool showMessage = false)
+		{
+			if (combatInfos.Count == 0 && aetheriaInfos.Count == 0 && cloakInfos.Count == 0)
+				return;
 
 			CombatTrackerExporter exporter = new CombatTrackerExporter(combatInfos, aetheriaInfos, cloakInfos);
 
-			exporter.Export(fileName);
+			exporter.Export(xmlFileName);
 
-			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Stats exported to: " + fileName, 5);
-		}
-
-		public void ClearPersistantStats()
-		{
-			FileInfo fileInfo = new FileInfo(PluginCore.PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
-
-			if (fileInfo.Exists)
-			{
-				fileInfo.Delete();
-
-				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "File deleted: " + fileInfo.FullName, 5);
-			}
-			else
-			{
-				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "No persistant stats found: " + fileInfo.FullName, 5);
-			}
+			if (showMessage)
+				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Stats exported to: " + xmlFileName, 5);
 		}
 	}
 }
