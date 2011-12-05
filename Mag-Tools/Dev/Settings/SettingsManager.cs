@@ -183,6 +183,17 @@ namespace MagTools.Settings
 
 		public static class Filters
 		{
+			static Filters()
+			{
+				// In 1.0.8.5 we split SpellCasting into SpellCastingMine and SpellCastingOthers
+				if (SpellCasting.Value)
+				{
+					SpellCastingMine.Value = true;
+					SpellCastingOthers.Value = true;
+					SpellCasting.Value = false;
+				}
+			}
+
 			public static readonly Setting<bool> AttackEvades = new Setting<bool>("Filters/AttackEvades", "Attack Evades");
 
 			public static readonly Setting<bool> DefenseEvades = new Setting<bool>("Filters/DefenseEvades", "Defense Evades");
@@ -197,6 +208,10 @@ namespace MagTools.Settings
 
 
 			public static readonly Setting<bool> SpellCasting = new Setting<bool>("Filters/SpellCasting", "Spell Casting");
+
+			public static readonly Setting<bool> SpellCastingMine = new Setting<bool>("Filters/SpellCastingMine", "Spell Casting - Mine");
+
+			public static readonly Setting<bool> SpellCastingOthers = new Setting<bool>("Filters/SpellCastingOthers", "Spell Casting - Others");
 
 			public static readonly Setting<bool> SpellCastFizzles = new Setting<bool>("Filters/SpellCastFizzles", "Spell Cast Fizzles");
 

@@ -161,7 +161,8 @@ namespace MagTools.Views
 				AddOption(FiltersList, Settings.SettingsManager.Filters.NPKFails);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.MonsterDeaths);
 
-				AddOption(FiltersList, Settings.SettingsManager.Filters.SpellCasting);
+				AddOption(FiltersList, Settings.SettingsManager.Filters.SpellCastingMine);
+				AddOption(FiltersList, Settings.SettingsManager.Filters.SpellCastingOthers);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.SpellCastFizzles);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.CompUsage);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.SpellExpires);
