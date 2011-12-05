@@ -31,7 +31,7 @@
             </control>
           </page>
 
-          <page label="Persistant Stats">
+          <page label="Persistent Stats">
             <control progid="DecalControls.FixedLayout" clipped="">
               <control progid="DecalControls.List" name="CombatTrackerMonsterListPersistent" left="1" top="1" width="318" height="186" />
               <control progid="DecalControls.List" name="CombatTrackerDamageListPersistent" left="1" top="188" width="318" height="205" />

@@ -60,7 +60,10 @@ namespace MagTools.Macros
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		private readonly VTClassic.LootCore lootProfile = new VTClassic.LootCore();
+		// We store our lootProfile as an object instead of a VTClassic.LootCore.
+		// We do this so that if this object is instantiated before vtank's plugins are loaded, we don't throw a VTClassic.dll error.
+		// By delaying the object initialization to use, we can make sure we're using the VTClassic.dll that Virindi Tank loads.
+		private object lootProfile;
 
 		bool started;
 
@@ -68,6 +71,10 @@ namespace MagTools.Macros
 		{
 			if (started)
 				return;
+
+			// Init our LootCore object at the very last minute (looks for VTClassic.dll if its not already loaded)
+			if (lootProfile == null)
+				lootProfile = new VTClassic.LootCore();
 
 			FileInfo fileInfo = new FileInfo(PluginCore.PluginPersonalFolder + @"\" + CoreManager.Current.CharacterFilter.Name + ".AutoPack.utl");
 
@@ -77,7 +84,7 @@ namespace MagTools.Macros
 			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Started.", 5);
 
 			// Load our loot profile
-			lootProfile.LoadProfile(fileInfo.FullName, false);
+			((VTClassic.LootCore)lootProfile).LoadProfile(fileInfo.FullName, false);
 
 			CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
 
@@ -91,7 +98,7 @@ namespace MagTools.Macros
 
 			CoreManager.Current.RenderFrame -= new EventHandler<EventArgs>(Current_RenderFrame);
 
-			lootProfile.UnloadProfile();
+			((VTClassic.LootCore)lootProfile).UnloadProfile();
 
 			started = false;
 
@@ -210,7 +217,7 @@ namespace MagTools.Macros
 				// Convert the item into a VT GameItemInfo object
 				uTank2.LootPlugins.GameItemInfo itemInfo = uTank2.PluginCore.PC.FWorldTracker_GetWithID(item.Id);
 
-				uTank2.LootPlugins.LootAction result = lootProfile.GetLootDecision(itemInfo);
+				uTank2.LootPlugins.LootAction result = ((VTClassic.LootCore)lootProfile).GetLootDecision(itemInfo);
 
 				if (!result.IsKeepUpTo)
 					continue;

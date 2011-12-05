@@ -170,13 +170,17 @@ namespace MagTools
 				catch (Exception ex) { Debug.LogException(ex); }
 
 				// Virindi Classic Looter Extensions, depends on VTClassic.dll
+				string objectName = null;
 				try
 				{
+					objectName = "inventoryPacker";
 					inventoryPacker = new Macros.InventoryPacker();
+					objectName = "autoTradeAdd";
 					autoTradeAdd = new Macros.AutoTradeAdd();
+					objectName = "autoBuySell";
 					autoBuySell = new Macros.AutoBuySell();
 				}
-				catch (FileNotFoundException ex) { startupErrors.Add("Object failed to load: " + ex.Message + Environment.NewLine + "Did you copy VTClassic.dll to the same folder as MagTools.dll?" + Environment.NewLine + "Is Virindi Tank running?"); }
+				catch (FileNotFoundException ex) { startupErrors.Add(objectName + " failed to load: " + ex.Message + Environment.NewLine + "Did you copy VTClassic.dll to the same folder as MagTools.dll?" + Environment.NewLine + "Is Virindi Tank running?"); }
 				catch (Exception ex) { Debug.LogException(ex); }
 
 				// Virindi Tank Extensions, depends on utank2-i.dll

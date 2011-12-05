@@ -47,7 +47,10 @@ namespace MagTools.Macros
 
 		private int lastMerchantId;
 
-		private readonly VTClassic.LootCore lootProfile = new VTClassic.LootCore();
+		// We store our lootProfile as an object instead of a VTClassic.LootCore.
+		// We do this so that if this object is instantiated before vtank's plugins are loaded, we don't throw a VTClassic.dll error.
+		// By delaying the object initialization to use, we can make sure we're using the VTClassic.dll that Virindi Tank loads.
+		private object lootProfile;
 
 		/// <summary>
 		/// Step 1.
@@ -67,10 +70,14 @@ namespace MagTools.Macros
 				if (VirindiItemTool.PluginCore.ActivityState != VirindiItemTool.PluginCore.ePluginActivityState.Idle)
 					return;
 
+				// Init our LootCore object at the very last minute (looks for VTClassic.dll if its not already loaded)
+				if (lootProfile == null)
+					lootProfile = new VTClassic.LootCore();
+
 				if (lastMerchantId != e.MerchantId)
 				{
 					if (lastMerchantId != 0)
-						lootProfile.UnloadProfile();
+						((VTClassic.LootCore)lootProfile).UnloadProfile();
 
 					lastMerchantId = 0;
 
@@ -80,7 +87,7 @@ namespace MagTools.Macros
 						return;
 
 					// Load our loot profile
-					lootProfile.LoadProfile(fileInfo.FullName, false);
+					((VTClassic.LootCore)lootProfile).LoadProfile(fileInfo.FullName, false);
 
 					lastMerchantId = e.MerchantId;
 				}
@@ -129,8 +136,8 @@ namespace MagTools.Macros
 					return;
 
 				int buyAmount;
-				WorldObject buyItem = GetBuyItem(lootProfile, openVendor, out buyAmount);
-				WorldObject sellItem = GetSellItem(lootProfile);
+				WorldObject buyItem = GetBuyItem(((VTClassic.LootCore)lootProfile), openVendor, out buyAmount);
+				WorldObject sellItem = GetSellItem(((VTClassic.LootCore)lootProfile));
 
 				if (buyItem != null && sellItem != null)
 				{

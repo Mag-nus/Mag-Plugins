@@ -109,8 +109,36 @@ namespace MagTools
 						e.Eat = true;
 				}
 
+				if (e.Eat == false && Settings.SettingsManager.Filters.SpellCastingMine.Value)
+				{
+					// You say, "Zojak 
+					if (e.Text.StartsWith("You say, "))
+					{
+						if (e.Text.StartsWith("You say, \"Zojak") ||
+							e.Text.StartsWith("You say, \"Malar") ||
+							e.Text.StartsWith("You say, \"Puish") ||
+							e.Text.StartsWith("You say, \"Cruath") ||
+							e.Text.StartsWith("You say, \"Volae") ||
+							e.Text.StartsWith("You say, \"Quavosh") ||
+							e.Text.StartsWith("You say, \"Shurov") ||
+							e.Text.StartsWith("You say, \"Boquar") ||
+							e.Text.StartsWith("You say, \"Helkas") ||
+							e.Text.StartsWith("You say, \"Equin") ||
+							e.Text.StartsWith("You say, \"Roiga") ||
+							e.Text.StartsWith("You say, \"Malar") ||
+							e.Text.StartsWith("You say, \"Jevak") ||
+							e.Text.StartsWith("You say, \"Tugak") ||
+							e.Text.StartsWith("You say, \"Slavu") ||
+							e.Text.StartsWith("You say, \"Drostu") ||
+							e.Text.StartsWith("You say, \"Traku") ||
+							e.Text.StartsWith("You say, \"Yanoi") ||
+							e.Text.StartsWith("You say, \"Drosta") ||
+							e.Text.StartsWith("You say, \"Feazh"))
+							e.Eat = true;
+					}
+				}
 
-				if (e.Eat == false && Settings.SettingsManager.Filters.SpellCasting.Value)
+				if (e.Eat == false && Settings.SettingsManager.Filters.SpellCastingOthers.Value)
 				{
 					// Fat Guy In A Little Coat says, "Zojak
 					if (Util.IsChat(e.Text, Util.ChatFlags.PlayerSaysLocal))
@@ -135,31 +163,6 @@ namespace MagTools
 							e.Text.Contains("says, \"Yanoi") ||
 							e.Text.Contains("says, \"Drosta") ||
 							e.Text.Contains("says, \"Feazh"))
-							e.Eat = true;
-					}
-					// You say, "Zojak 
-					else if (e.Text.StartsWith("You say, "))
-					{
-						if (e.Text.StartsWith("You say, \"Zojak") ||
-							e.Text.StartsWith("You say, \"Malar") ||
-							e.Text.StartsWith("You say, \"Puish") ||
-							e.Text.StartsWith("You say, \"Cruath") ||
-							e.Text.StartsWith("You say, \"Volae") ||
-							e.Text.StartsWith("You say, \"Quavosh") ||
-							e.Text.StartsWith("You say, \"Shurov") ||
-							e.Text.StartsWith("You say, \"Boquar") ||
-							e.Text.StartsWith("You say, \"Helkas") ||
-							e.Text.StartsWith("You say, \"Equin") ||
-							e.Text.StartsWith("You say, \"Roiga") ||
-							e.Text.StartsWith("You say, \"Malar") ||
-							e.Text.StartsWith("You say, \"Jevak") ||
-							e.Text.StartsWith("You say, \"Tugak") ||
-							e.Text.StartsWith("You say, \"Slavu") ||
-							e.Text.StartsWith("You say, \"Drostu") ||
-							e.Text.StartsWith("You say, \"Traku") ||
-							e.Text.StartsWith("You say, \"Yanoi") ||
-							e.Text.StartsWith("You say, \"Drosta") ||
-							e.Text.StartsWith("You say, \"Feazh"))
 							e.Eat = true;
 					}
 				}

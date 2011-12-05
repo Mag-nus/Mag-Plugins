@@ -93,22 +93,29 @@ namespace MagTools.Macros
 
 		bool started;
 
-		private readonly VTClassic.LootCore lootCore = new VTClassic.LootCore();
+		// We store our lootProfile as an object instead of a VTClassic.LootCore.
+		// We do this so that if this object is instantiated before vtank's plugins are loaded, we don't throw a VTClassic.dll error.
+		// By delaying the object initialization to use, we can make sure we're using the VTClassic.dll that Virindi Tank loads.
+		private object lootProfile;
 
 		bool idsRequested;
 
 		readonly Collection<int> itemIdsAdded = new Collection<int>();
 
-		public void Start(FileInfo lootProfile)
+		public void Start(FileInfo lootProfileFileInfo)
 		{
 			if (started)
 				return;
 
-			if (!lootProfile.Exists)
+			if (!lootProfileFileInfo.Exists)
 				return;
 
+			// Init our LootCore object at the very last minute (looks for VTClassic.dll if its not already loaded)
+			if (lootProfile == null)
+				lootProfile = new VTClassic.LootCore();
+
 			// Load our loot profile
-			lootCore.LoadProfile(lootProfile.FullName, false);
+			((VTClassic.LootCore)lootProfile).LoadProfile(lootProfileFileInfo.FullName, false);
 
 			idsRequested = false;
 			itemIdsAdded.Clear();
@@ -125,7 +132,7 @@ namespace MagTools.Macros
 
 			CoreManager.Current.RenderFrame -= new EventHandler<EventArgs>(Current_RenderFrame);
 
-			lootCore.UnloadProfile();
+			((VTClassic.LootCore)lootProfile).UnloadProfile();
 
 			started = false;
 		}
@@ -170,7 +177,7 @@ namespace MagTools.Macros
 						continue;
 					}
 
-					if (lootCore.DoesPotentialItemNeedID(itemInfo))
+					if (((VTClassic.LootCore)lootProfile).DoesPotentialItemNeedID(itemInfo))
 					{
 						CoreManager.Current.Actions.RequestId(item.Id);
 
@@ -201,9 +208,9 @@ namespace MagTools.Macros
 					continue;
 				}
 
-				if (!lootCore.DoesPotentialItemNeedID(itemInfo))
+				if (!((VTClassic.LootCore)lootProfile).DoesPotentialItemNeedID(itemInfo))
 				{
-					uTank2.LootPlugins.LootAction result = lootCore.GetLootDecision(itemInfo);
+					uTank2.LootPlugins.LootAction result = ((VTClassic.LootCore)lootProfile).GetLootDecision(itemInfo);
 
 					if (!result.IsKeep)
 						continue;
