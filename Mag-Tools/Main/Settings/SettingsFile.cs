@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Xml;
 
 namespace MagTools.Settings
@@ -23,7 +24,10 @@ namespace MagTools.Settings
 		{
 			try
 			{
-				XmlDocument.Load(DocumentPath);
+				if (File.Exists(DocumentPath))
+					XmlDocument.Load(DocumentPath);
+				else
+					XmlDocument.LoadXml("<" + RootNodeName + "></" + RootNodeName + ">");
 			}
 			catch (Exception ex)
 			{
