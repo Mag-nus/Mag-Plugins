@@ -7,6 +7,6 @@ namespace MagTools
 
 		Trackers.Mana.IManaTracker ManaTracker { get; }
 
-		Macros.IChestLooter ChestLooter { get; }
+		Macros.ILooter Looter { get; }
 	}
 }

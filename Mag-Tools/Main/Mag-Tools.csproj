@@ -73,8 +73,8 @@
     <Compile Include="Macros\AutoBuySell.cs" />
     <Compile Include="Incomplete\AutoGive.cs" />
     <Compile Include="Macros\AutoRecharge.cs" />
-    <Compile Include="Macros\ChestLooter.cs" />
-    <Compile Include="Macros\IChestLooter.cs" />
+    <Compile Include="Macros\Looter.cs" />
+    <Compile Include="Macros\ILooter.cs" />
     <Compile Include="Macros\InventoryPacker.cs" />
     <Compile Include="Macros\AutoTradeAccept.cs" />
     <Compile Include="Macros\AutoTradeAdd.cs" />

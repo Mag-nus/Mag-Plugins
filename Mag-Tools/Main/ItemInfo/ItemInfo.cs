@@ -86,6 +86,96 @@ namespace MagTools.ItemInfo
 			if (wo.Values(DoubleValueKey.ManaCBonus) != 0)
 				sb.Append(", " + Math.Round((wo.Values(DoubleValueKey.ManaCBonus) * 100)) + "%mc");
 
+			if (Settings.SettingsManager.ItemInfoOnIdent.ShowBuffedValues.Value && (wo.ObjectClass == ObjectClass.MeleeWeapon || wo.ObjectClass == ObjectClass.MissileWeapon || wo.ObjectClass == ObjectClass.WandStaffOrb))
+			{
+				int maxDamage = wo.Values(LongValueKey.MaxDamage);
+				int elementalDmgBonus = wo.Values(LongValueKey.ElementalDmgBonus, 0);
+				double damageBonus = wo.Values(DoubleValueKey.DamageBonus, 1);
+				double elementalDamageVersusMonsters = wo.Values(DoubleValueKey.ElementalDamageVersusMonsters, 1);
+				double attackBonus = wo.Values(DoubleValueKey.AttackBonus, 1);
+				double meleeDefenseBonus = wo.Values(DoubleValueKey.MeleeDefenseBonus, 1);
+				double manaCBonus = wo.Values(DoubleValueKey.ManaCBonus);
+
+				for (int i = 0 ; i < wo.Values(LongValueKey.SpellCount) ; i++)
+				{
+					int spellId = wo.Spell(i);
+
+					// LongValueKey.MaxDamage
+					if (spellId == 4395) maxDamage += 2; // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
+					if (spellId == 2598 && !IsActiveSpell(2598)) maxDamage += 2; // Minor Blood Thirst
+					if (spellId == 2586 && !IsActiveSpell(2586)) maxDamage += 4; // Major Blood Thirst
+					if (spellId == 4661 && !IsActiveSpell(4661)) maxDamage += 7; // Epic Blood Thirst
+
+					// DoubleValueKey.ElementalDamageVersusMonsters
+					if (spellId == 4414) elementalDamageVersusMonsters += .01; // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
+					if (spellId == 3251 && !IsActiveSpell(3251)) elementalDamageVersusMonsters += .01; // Minor Spirit Thirst
+					if (spellId == 3250 && !IsActiveSpell(3250)) elementalDamageVersusMonsters += .03; // Major Spirit Thirst
+					if (spellId == 4670 && !IsActiveSpell(4670)) elementalDamageVersusMonsters += .04; // Epic Spirit Thirst
+
+					// DoubleValueKey.AttackBonus
+					if (spellId == 2603 && !IsActiveSpell(2603)) attackBonus += .03; // Minor Heart Thirst
+					if (spellId == 2591 && !IsActiveSpell(2591)) attackBonus += .05; // Major Heart Thirst
+					if (spellId == 4666 && !IsActiveSpell(4666)) attackBonus += .07; // Epic Heart Thirst
+
+					// DoubleValueKey.MeleeDefenseBonus
+					if (spellId == 2600 && !IsActiveSpell(2600)) meleeDefenseBonus += .03; // Minor Defender
+					if (spellId == 2588 && !IsActiveSpell(2588)) meleeDefenseBonus += .05; // Major Defender
+					if (spellId == 4633 && !IsActiveSpell(4633)) meleeDefenseBonus += .07; // Epic Defender
+
+					// DoubleValueKey.ManaCBonus
+					if (spellId == 3201 && !IsActiveSpell(3201)) manaCBonus *= 1.05; // Feeble Hermetic Link
+					if (spellId == 3199 && !IsActiveSpell(3199)) manaCBonus *= 1.10; // Minor Hermetic Link
+					if (spellId == 3302 && !IsActiveSpell(3302)) manaCBonus *= 1.15; // Moderate Hermetic Link
+					if (spellId == 3200 && !IsActiveSpell(3200)) manaCBonus *= 1.20; // Major Hermetic Link
+				}
+
+				// LongValueKey.MaxDamage
+				if (IsActiveSpell(1616)) maxDamage -= 20; // Blood Drinker VI
+				if (IsActiveSpell(2096)) maxDamage -= 22; // Infected Caress
+				if (IsActiveSpell(5183)) maxDamage -= 22; // Incantation of Blood Drinker
+				if (IsActiveSpell(4395)) maxDamage -= 22; // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
+
+				// DoubleValueKey.ElementalDamageVersusMonsters:
+				if (IsActiveSpell(3258)) elementalDamageVersusMonsters -= .06; // Spirit Drinker VI
+				if (IsActiveSpell(3259)) elementalDamageVersusMonsters -= .07; // Infected Spirit Caress
+				if (IsActiveSpell(5182)) elementalDamageVersusMonsters -= .07; // Incantation of Spirit Drinker
+				if (IsActiveSpell(4414)) elementalDamageVersusMonsters -= .08; // Incantation of Spirit Drinker
+
+				// DoubleValueKey.AttackBonus
+				if (IsActiveSpell(1592)) attackBonus -= .15; // Heart Seeker VI
+				if (IsActiveSpell(2106)) attackBonus -= .17; // Elysa's Sight
+				if (IsActiveSpell(4405)) attackBonus -= .20; // Incantation of Heart Seeker
+
+				// DoubleValueKey.MeleeDefenseBonus
+				if (IsActiveSpell(1605)) meleeDefenseBonus -= .15; // Defender VI
+				if (IsActiveSpell(2101)) meleeDefenseBonus -= .17; // Cragstone's Will
+				if (IsActiveSpell(4400)) meleeDefenseBonus -= .17; // Incantation of Defender
+
+				// DoubleValueKey.ManaCBonus
+				if (IsActiveSpell(1480)) manaCBonus /= 1.60; // Hermetic Link VI
+				if (IsActiveSpell(2117)) manaCBonus /= 1.70; // Mystic's Blessing
+				if (IsActiveSpell(4418)) manaCBonus /= 1.80; // Incantation of Hermetic Link
+
+				if (wo.ObjectClass == ObjectClass.MeleeWeapon)
+				{
+					double variance = wo.Values(DoubleValueKey.Variance, 0.0);
+					double minDamage = maxDamage - (variance * maxDamage);
+
+					sb.Append(", (" + ((minDamage + maxDamage) / 2).ToString("N2") + "/" + ((attackBonus - 1) * 100).ToString("N1") + "/" + ((meleeDefenseBonus - 1) * 100).ToString("N1") + ")");
+				}
+
+				if (wo.ObjectClass == ObjectClass.MissileWeapon)
+				{
+					// need to fix the bow calc
+					sb.Append(", (" + (maxDamage + (((damageBonus - 1) * 100) / 3) + elementalDmgBonus).ToString("N2") + "/" + ((meleeDefenseBonus - 1) * 100).ToString("N1") + ")");
+				}
+
+				if (wo.ObjectClass == ObjectClass.WandStaffOrb && (elementalDamageVersusMonsters != 1 || meleeDefenseBonus != 1 || manaCBonus != 0))
+				{
+					sb.Append(", (" + ((elementalDamageVersusMonsters - 1) * 100).ToString("N1") + "/" + ((meleeDefenseBonus - 1) * 100).ToString("N1") + "/" + (manaCBonus * 100).ToString("N1") + ")");
+				}
+			}
+
 			if (wo.Values(LongValueKey.SpellCount) > 0)
 			{
 				FileService service = CoreManager.Current.Filter<FileService>();
@@ -231,6 +321,17 @@ namespace MagTools.ItemInfo
 			}
 
 			return sb.ToString();
+		}
+
+		bool IsActiveSpell(int activeSpellId)
+		{
+			for (int i = 0 ; i < wo.ActiveSpellCount ; i++)
+			{
+				if (wo.ActiveSpell(i) == activeSpellId)
+					return true;
+			}
+
+			return false;
 		}
 	}
 }

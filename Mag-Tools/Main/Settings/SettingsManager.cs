@@ -46,12 +46,30 @@ namespace MagTools.Settings
 
 		public static class Looting
 		{
+			static Looting()
+			{
+				// In 1.0.8.7 we added corpse looting
+				if (Enabled.Value)
+				{
+					AutoLootChests.Value = true;
+					Enabled.Value = false;
+				}
+			}
+
 			public static readonly Setting<bool> Enabled = new Setting<bool>("Looting/Enabled", "Auto Loot Chests");
+
+			public static readonly Setting<bool> AutoLootChests = new Setting<bool>("Looting/AutoLootChests", "Auto Loot Chests");
+
+			public static readonly Setting<bool> AutoLootCorpses = new Setting<bool>("Looting/AutoLootCorpses", "Auto Loot Corpses");
 		}
 
 		public static class ItemInfoOnIdent
 		{
 			public static readonly Setting<bool> Enabled = new Setting<bool>("ItemInfoOnIdent/Enabled", "Show Item Info On Ident", true);
+
+			public static readonly Setting<bool> ShowBuffedValues = new Setting<bool>("ItemInfoOnIdent/ShowBuffedValues", "Show Item Info Buffed* Values", true);
+
+			public static readonly Setting<bool> LeftClickIdent = new Setting<bool>("ItemInfoOnIdent/LeftClickIdent", "Ident Items on Left Click", true);
 
 			public static readonly Setting<bool> AutoClipboard = new Setting<bool>("ItemInfoOnIdent/AutoClipboard", "Clipboard Item Info On Ident");
 		}
@@ -227,6 +245,8 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> Salvaging = new Setting<bool>("Filters/Salvaging", "Salvaging");
 
 			public static readonly Setting<bool> SalvagingFails = new Setting<bool>("Filters/SalvagingFails", "Salvaging Fails");
+
+			public static readonly Setting<bool> ManaStoneUsage = new Setting<bool>("Filters/ManaStoneUsage", "Mana Stone Usage");
 
 
 			public static readonly Setting<bool> TradeBuffBotSpam = new Setting<bool>("Filters/TradeBuffBotSpam", "Trade/Buff Bot Spam");

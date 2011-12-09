@@ -227,6 +227,22 @@ namespace MagTools
 						e.Eat = true;
 				}
 
+				if (e.Eat == false && Settings.SettingsManager.Filters.ManaStoneUsage.Value)
+				{
+					// The Mana Stone gives 6,127 points of mana to the following items: 
+					if (!isChat && e.Text.StartsWith("The Mana Stone gives "))
+						e.Eat = true;
+					// You need 6,833 more mana to fully charge your items.
+					if (!isChat && e.Text.StartsWith("You need ") && e.Text.Trim().EndsWith(" more mana to fully charge your items."))
+						e.Eat = true;
+					// The Mana Stone drains 3,153 points of mana from the Fez.
+					if (!isChat && e.Text.StartsWith("The Mana Stone drains "))
+						e.Eat = true;
+					// The Fez is destroyed.
+					if (!isChat && e.Text.StartsWith("The ") && e.Text.Trim().EndsWith(" is destroyed."))
+						e.Eat = true;
+				}
+
 
 				if (e.Eat == false && Settings.SettingsManager.Filters.TradeBuffBotSpam.Value)
 				{
