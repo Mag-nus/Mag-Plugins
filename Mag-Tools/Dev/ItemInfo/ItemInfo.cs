@@ -166,7 +166,6 @@ namespace MagTools.ItemInfo
 
 				if (wo.ObjectClass == ObjectClass.MissileWeapon)
 				{
-					// need to fix the bow calc
 					sb.Append(", (" + (maxDamage + (((damageBonus - 1) * 100) / 3) + elementalDmgBonus).ToString("N2") + "/" + ((meleeDefenseBonus - 1) * 100).ToString("N1") + ")");
 				}
 
