@@ -1,13 +1,13 @@
 ﻿using System;
-
+using System.Collections.ObjectModel;
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
 namespace MagTools.Macros
 {
-	class ChestLooter : IDisposable, IChestLooter
+	class Looter : IDisposable, ILooter
 	{
-		public ChestLooter()
+		public Looter()
 		{
 			try
 			{
@@ -49,25 +49,26 @@ namespace MagTools.Macros
 		{
 			try
 			{
-				if (!Settings.SettingsManager.Looting.Enabled.Value)
-					return;
-
 				WorldObject container = CoreManager.Current.WorldFilter[e.ItemGuid];
 
 				if (container == null)
-					return;
-
-				// Do not loot monster corpses
-				if (container.ObjectClass == ObjectClass.Corpse)
 					return;
 
 				// Do not loot housing chests
 				if (container.Name == "Storage")
 					return;
 
-				// Only loot chests and vaults, etc...
-				if (!container.Name.Contains("Chest") && !container.Name.Contains("Vault") && !container.Name.Contains("Reliquary"))
-					return;
+				if (container.ObjectClass == ObjectClass.Corpse)
+				{
+					if (!Settings.SettingsManager.Looting.AutoLootCorpses.Value)
+						return;
+				}
+				else
+				{
+					// Only loot chests and vaults, etc...
+					if (!Settings.SettingsManager.Looting.AutoLootChests.Value || (!container.Name.Contains("Chest") && !container.Name.Contains("Vault") && !container.Name.Contains("Reliquary")))
+						return;
+				}
 
 				Start();
 			}
@@ -78,12 +79,16 @@ namespace MagTools.Macros
 
 		bool idsRequested;
 
+		readonly Collection<int> blackLitedItems = new Collection<int>();
+
 		void Start()
 		{
 			if (IsRunning)
 				return;
 
 			idsRequested = false;
+
+			blackLitedItems.Clear();
 
 			CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
 
@@ -116,6 +121,9 @@ namespace MagTools.Macros
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		int currentWorkingId;
+		DateTime currentWorkingIdFirstAttempt;
+
 		void Think()
 		{
 			if (CoreManager.Current.Actions.OpenedContainer == 0)
@@ -146,6 +154,9 @@ namespace MagTools.Macros
 				idsRequested = true;
 			}
 
+			if (CoreManager.Current.Actions.BusyState != 0)
+				return;
+
 			foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetByContainer(CoreManager.Current.Actions.OpenedContainer))
 			{
 				if (!uTank2.PluginCore.PC.FLootPluginQueryNeedsID(wo.Id))
@@ -154,6 +165,24 @@ namespace MagTools.Macros
 
 					if (result.IsNoLoot || (!result.IsKeep && !result.IsKeepUpTo))
 						continue;
+
+					if (blackLitedItems.Contains(wo.Id))
+						continue;
+
+					if (currentWorkingId != wo.Id)
+					{
+						currentWorkingId = wo.Id;
+						currentWorkingIdFirstAttempt = DateTime.Now;
+					}
+					else
+					{
+						if (DateTime.Now - currentWorkingIdFirstAttempt > TimeSpan.FromSeconds(10))
+						{
+							Debug.WriteToChat("Blacklisting item: " + wo.Id + ", " + wo.Name);
+							blackLitedItems.Add(wo.Id);
+							continue;
+						}
+					}
 
 					CoreManager.Current.Actions.MoveItem(wo.Id, CoreManager.Current.CharacterFilter.Id);
 
@@ -165,7 +194,8 @@ namespace MagTools.Macros
 
 			if (!waitingForIds)
 			{
-				Debug.WriteToChat("No more lootable items found.");
+				if (CoreManager.Current.WorldFilter[CoreManager.Current.Actions.OpenedContainer].ObjectClass != ObjectClass.Corpse)
+					Debug.WriteToChat("No more lootable items found.");
 
 				Stop();
 			}

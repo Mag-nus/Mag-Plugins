@@ -104,8 +104,8 @@ namespace MagTools
 		Macros.AutoBuySell autoBuySell;
 
 		// Virindi Tank Extensions, depends on utank2-i.dll
-		Macros.ChestLooter chestLooter;
-		public Macros.IChestLooter ChestLooter { get { return chestLooter; } }
+		Macros.Looter looter;
+		public Macros.ILooter Looter { get { return looter; } }
 
 		// Views, depends on VirindiViewService.dll
 		Views.MainView mainView;
@@ -180,15 +180,15 @@ namespace MagTools
 					objectName = "autoBuySell";
 					autoBuySell = new Macros.AutoBuySell();
 				}
-				catch (FileNotFoundException ex) { startupErrors.Add(objectName + " failed to load: " + ex.Message + Environment.NewLine + "Did you copy VTClassic.dll to the same folder as MagTools.dll?" + Environment.NewLine + "Is Virindi Tank running?"); }
+				catch (FileNotFoundException ex) { startupErrors.Add(objectName + " failed to load: " + ex.Message + Environment.NewLine + "Is Virindi Tank running?"); }
 				catch (Exception ex) { Debug.LogException(ex); }
 
 				// Virindi Tank Extensions, depends on utank2-i.dll
 				try
 				{
-					chestLooter = new Macros.ChestLooter();
+					looter = new Macros.Looter();
 				}
-				catch (FileNotFoundException ex) { startupErrors.Add("chestLooter failed to load: " + ex.Message + Environment.NewLine + "Is Virindi Tank running?"); }
+				catch (FileNotFoundException ex) { startupErrors.Add("looter failed to load: " + ex.Message + Environment.NewLine + "Is Virindi Tank running?"); }
 				catch (Exception ex) { Debug.LogException(ex); }
 
 				// Views, depends on VirindiViewService.dll
@@ -241,7 +241,7 @@ namespace MagTools
 				if (autoBuySell != null) autoBuySell.Dispose();
 
 				// Virindi Tank Extensions, depends on utank2-i.dll
-				if (chestLooter != null) chestLooter.Dispose();
+				if (looter != null) looter.Dispose();
 
 				// Misc
 				if (windowFrameRemover != null) windowFrameRemover.Dispose();

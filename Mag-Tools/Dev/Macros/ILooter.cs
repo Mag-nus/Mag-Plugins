@@ -1,7 +1,7 @@
 ﻿
 namespace MagTools.Macros
 {
-	public interface IChestLooter
+	public interface ILooter
 	{
 		bool IsRunning { get; }
 	}

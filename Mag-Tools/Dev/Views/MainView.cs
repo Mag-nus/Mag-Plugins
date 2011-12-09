@@ -140,6 +140,8 @@ namespace MagTools.Views
 
 				// Misc.Options
 				AddOption(OptionList, Settings.SettingsManager.ItemInfoOnIdent.Enabled);
+				AddOption(OptionList, Settings.SettingsManager.ItemInfoOnIdent.ShowBuffedValues);
+				AddOption(OptionList, Settings.SettingsManager.ItemInfoOnIdent.LeftClickIdent);
 				AddOption(OptionList, Settings.SettingsManager.ItemInfoOnIdent.AutoClipboard);
 
 				AddOption(OptionList, Settings.SettingsManager.AutoBuySell.Enabled);
@@ -148,7 +150,8 @@ namespace MagTools.Views
 
 				AddOption(OptionList, Settings.SettingsManager.AutoTradeAccept.Enabled);
 
-				AddOption(OptionList, Settings.SettingsManager.Looting.Enabled);
+				AddOption(OptionList, Settings.SettingsManager.Looting.AutoLootChests);
+				AddOption(OptionList, Settings.SettingsManager.Looting.AutoLootCorpses);
 
 				AddOption(OptionList, Settings.SettingsManager.Misc.OpenMainPackOnLogin);
 				AddOption(OptionList, Settings.SettingsManager.Misc.DebuggingEnabled);
@@ -171,6 +174,7 @@ namespace MagTools.Views
 				AddOption(FiltersList, Settings.SettingsManager.Filters.HealingKitFail);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.Salvaging);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.SalvagingFails);
+				AddOption(FiltersList, Settings.SettingsManager.Filters.ManaStoneUsage);
 
 				AddOption(FiltersList, Settings.SettingsManager.Filters.TradeBuffBotSpam);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.FailedAssess);

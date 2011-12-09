@@ -64,6 +64,10 @@ namespace MagTools.ItemInfo
 					itemsSelected[e.ItemGuid] = DateTime.Now;
 				else
 					itemsSelected.Add(e.ItemGuid, DateTime.Now);
+
+				// This needs work. It idents items whenever they are selected, not just via the users left click, but by other plugins as well.
+				if (Settings.SettingsManager.ItemInfoOnIdent.LeftClickIdent.Value)
+					CoreManager.Current.Actions.RequestId(e.ItemGuid);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
