@@ -14,6 +14,7 @@ namespace MagTools.ItemInfo
 		{
 			try
 			{
+				CoreManager.Current.WindowMessage += new EventHandler<WindowMessageEventArgs>(Current_WindowMessage);
 				CoreManager.Current.ItemSelected += new EventHandler<ItemSelectedEventArgs>(Current_ItemSelected);
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 			}
@@ -39,6 +40,7 @@ namespace MagTools.ItemInfo
 			{
 				if (disposing)
 				{
+					CoreManager.Current.WindowMessage -= new EventHandler<WindowMessageEventArgs>(Current_WindowMessage);
 					CoreManager.Current.ItemSelected -= new EventHandler<ItemSelectedEventArgs>(Current_ItemSelected);
 					CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 				}
@@ -46,6 +48,20 @@ namespace MagTools.ItemInfo
 				// Indicate that the instance has been disposed.
 				disposed = true;
 			}
+		}
+
+		DateTime lastLeftClick = DateTime.MinValue;
+
+		const int WM_LBUTTONDOWN = 0x201;
+
+		void Current_WindowMessage(object sender, WindowMessageEventArgs e)
+		{
+			try
+			{
+				if (e.Msg == WM_LBUTTONDOWN)
+					lastLeftClick = DateTime.Now;
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		readonly Dictionary<int, DateTime> itemsSelected = new Dictionary<int, DateTime>();
@@ -65,9 +81,11 @@ namespace MagTools.ItemInfo
 				else
 					itemsSelected.Add(e.ItemGuid, DateTime.Now);
 
-				// This needs work. It idents items whenever they are selected, not just via the users left click, but by other plugins as well.
-				if (Settings.SettingsManager.ItemInfoOnIdent.LeftClickIdent.Value)
+				if (Settings.SettingsManager.ItemInfoOnIdent.LeftClickIdent.Value && DateTime.Now - lastLeftClick < TimeSpan.FromSeconds(1))
+				{
 					CoreManager.Current.Actions.RequestId(e.ItemGuid);
+					lastLeftClick = DateTime.MinValue;
+				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
