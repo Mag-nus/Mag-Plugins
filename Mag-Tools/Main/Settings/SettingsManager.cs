@@ -69,7 +69,7 @@ namespace MagTools.Settings
 
 			public static readonly Setting<bool> ShowBuffedValues = new Setting<bool>("ItemInfoOnIdent/ShowBuffedValues", "Show Item Info Buffed* Values", true);
 
-			public static readonly Setting<bool> LeftClickIdent = new Setting<bool>("ItemInfoOnIdent/LeftClickIdent", "Ident Items on Left Click", true);
+			public static readonly Setting<bool> LeftClickIdent = new Setting<bool>("ItemInfoOnIdent/LeftClickIdent", "Ident Items on Left Click");
 
 			public static readonly Setting<bool> AutoClipboard = new Setting<bool>("ItemInfoOnIdent/AutoClipboard", "Clipboard Item Info On Ident");
 		}
