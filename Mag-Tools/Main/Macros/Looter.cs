@@ -79,7 +79,7 @@ namespace MagTools.Macros
 
 		bool idsRequested;
 
-		readonly Collection<int> blackLitedItems = new Collection<int>();
+		readonly Collection<string> blackLitedItems = new Collection<string>();
 
 		void Start()
 		{
@@ -166,8 +166,25 @@ namespace MagTools.Macros
 					if (result.IsNoLoot || (!result.IsKeep && !result.IsKeepUpTo))
 						continue;
 
-					if (blackLitedItems.Contains(wo.Id))
+					if (blackLitedItems.Contains(wo.Name))
 						continue;
+
+					// Check the keep #
+					if (result.IsKeepUpTo)
+					{
+						int totalInInventory = 0;
+
+						foreach (WorldObject inventoryItem in CoreManager.Current.WorldFilter.GetInventory())
+						{
+							uTank2.LootPlugins.LootAction inventoryItemResult = uTank2.PluginCore.PC.FLootPluginClassifyImmediate(inventoryItem.Id);
+
+							if (inventoryItemResult.IsKeepUpTo && result.RuleName == inventoryItemResult.RuleName && result.Data1 == inventoryItemResult.Data1 && wo.Name == inventoryItem.Name)
+								totalInInventory++;
+						}
+
+						if (totalInInventory >= result.Data1)
+							continue;
+					}
 
 					if (currentWorkingId != wo.Id)
 					{
@@ -179,7 +196,7 @@ namespace MagTools.Macros
 						if (DateTime.Now - currentWorkingIdFirstAttempt > TimeSpan.FromSeconds(10))
 						{
 							Debug.WriteToChat("Blacklisting item: " + wo.Id + ", " + wo.Name);
-							blackLitedItems.Add(wo.Id);
+							blackLitedItems.Add(wo.Name);
 							continue;
 						}
 					}
