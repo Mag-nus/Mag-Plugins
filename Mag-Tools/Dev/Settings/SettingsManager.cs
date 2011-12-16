@@ -15,6 +15,19 @@ namespace MagTools.Settings
 		public static class AutoBuySell
 		{
 			public static readonly Setting<bool> Enabled = new Setting<bool>("AutoBuySell/Enabled", "Auto Buy/Sell Enabled", true);
+
+			public static readonly Setting<bool> TestMode = new Setting<bool>("AutoBuySell/TestMode", "Auto Buy/Sell Test Mode");
+
+			static AutoBuySell()
+			{
+				TestMode.Changed += new System.Action<Setting<bool>>(ChildOption_Changed);
+			}
+
+			static void ChildOption_Changed(Setting<bool> obj)
+			{
+				if (obj.Value)
+					Enabled.Value = true;
+			}
 		}
 
 		public static class AutoTradeAdd
@@ -72,6 +85,19 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> LeftClickIdent = new Setting<bool>("ItemInfoOnIdent/LeftClickIdent", "Ident Items on Left Click");
 
 			public static readonly Setting<bool> AutoClipboard = new Setting<bool>("ItemInfoOnIdent/AutoClipboard", "Clipboard Item Info On Ident");
+
+			static ItemInfoOnIdent()
+			{
+				ShowBuffedValues.Changed += new System.Action<Setting<bool>>(ChildOption_Changed);
+				LeftClickIdent.Changed += new System.Action<Setting<bool>>(ChildOption_Changed);
+				AutoClipboard.Changed += new System.Action<Setting<bool>>(ChildOption_Changed);
+			}
+
+			static void ChildOption_Changed(Setting<bool> obj)
+			{
+				if (obj.Value)
+					Enabled.Value = true;
+			}
 		}
 
 		public static class CombatTracker
