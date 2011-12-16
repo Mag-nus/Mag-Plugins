@@ -84,7 +84,12 @@ namespace MagTools.Macros
 					FileInfo fileInfo = new FileInfo(PluginCore.PluginPersonalFolder + @"\" + CoreManager.Current.WorldFilter[e.MerchantId].Name + ".utl");
 
 					if (!fileInfo.Exists)
+					{
+						if (Settings.SettingsManager.AutoBuySell.TestMode.Value)
+							Debug.WriteToChat("AutoBuySell.WorldFilter_ApproachVendor(), vendor profile file not found at: " + fileInfo.FullName);
+
 						return;
+					}
 
 					// Load our loot profile
 					((VTClassic.LootCore)lootProfile).LoadProfile(fileInfo.FullName, false);
@@ -110,7 +115,10 @@ namespace MagTools.Macros
 			{
 				CoreManager.Current.RenderFrame -= new EventHandler<EventArgs>(Current_RenderFrame);
 
-				KickOffBuySell();
+				if (Settings.SettingsManager.AutoBuySell.TestMode.Value)
+					DoTestMode();
+				else
+					KickOffBuySell();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -318,6 +326,59 @@ namespace MagTools.Macros
 			}
 
 			return cheapest;
+		}
+
+		private void DoTestMode()
+		{
+			Debug.WriteToChat("Buy Items:");
+
+			using (Vendor openVendor = CoreManager.Current.WorldFilter.OpenVendor)
+			{
+				foreach (WorldObject vendorObj in openVendor)
+				{
+					// Convert the vendor item into a VT GameItemInfo object
+					uTank2.LootPlugins.GameItemInfo itemInfo = uTank2.PluginCore.PC.FWorldTracker_GetWithVendorObjectTemplateID(vendorObj.Id);
+
+					if (itemInfo == null)
+					{
+						Debug.WriteToChat("AutoBuySell.DoTestMode(), itemInfo == null for " + vendorObj.Name);
+						continue;
+					}
+
+					// Get the loot profile result for this object
+					// result.IsNoLoot will always be false so we must check the Keep # against items in inventory.
+					// The keep # is returned as Data1
+					uTank2.LootPlugins.LootAction result = ((VTClassic.LootCore)lootProfile).GetLootDecision(itemInfo);
+
+					if (result.IsKeepUpTo || result.IsKeep)
+						Debug.WriteToChat(vendorObj.Name);
+				}
+			}
+
+			Debug.WriteToChat("Sell Items:");
+
+			foreach (WorldObject playerObj in CoreManager.Current.WorldFilter.GetInventory())
+			{
+				// Safety check to prevent equipped items from being sold.
+				if (playerObj.Values(LongValueKey.EquipableSlots, 0) > 0)
+					continue;
+
+				// Convert the vendor item into a VT GameItemInfo object
+				uTank2.LootPlugins.GameItemInfo itemInfo = uTank2.PluginCore.PC.FWorldTracker_GetWithID(playerObj.Id);
+
+				if (itemInfo == null)
+				{
+					Debug.WriteToChat("AutoBuySell.DoTestMode(), itemInfo == null for " + playerObj.Name);
+					continue;
+				}
+
+				// Get the loot profile result for this object
+				// result.IsNoLoot will always be false so we must check the Keep # against items in inventory.
+				uTank2.LootPlugins.LootAction result = ((VTClassic.LootCore)lootProfile).GetLootDecision(itemInfo);
+
+				if (result.IsSell)
+					Debug.WriteToChat(playerObj.Name);
+			}
 		}
 	}
 }

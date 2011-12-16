@@ -37,7 +37,8 @@ namespace MagTools.Macros
 			{
 				if (disposing)
 				{
-					Stop();
+					if (started)
+						Stop();
 
 					CoreManager.Current.ChatBoxMessage -= new EventHandler<ChatTextInterceptEventArgs>(Current_ChatBoxMessage);
 				}
@@ -60,12 +61,14 @@ namespace MagTools.Macros
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		bool started;
+
 		// We store our lootProfile as an object instead of a VTClassic.LootCore.
 		// We do this so that if this object is instantiated before vtank's plugins are loaded, we don't throw a VTClassic.dll error.
 		// By delaying the object initialization to use, we can make sure we're using the VTClassic.dll that Virindi Tank loads.
 		private object lootProfile;
 
-		bool started;
+		bool idsRequested;
 
 		public void Start()
 		{
@@ -85,6 +88,8 @@ namespace MagTools.Macros
 
 			// Load our loot profile
 			((VTClassic.LootCore)lootProfile).LoadProfile(fileInfo.FullName, false);
+
+			idsRequested = false;
 
 			CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
 
@@ -124,6 +129,30 @@ namespace MagTools.Macros
 
 		void Think()
 		{
+			if (!idsRequested)
+			{
+				foreach (WorldObject item in CoreManager.Current.WorldFilter.GetInventory())
+				{
+					// If the item is equipped or wielded, don't process it.
+					if (item.Values(LongValueKey.EquippedSlots, 0) > 0 || item.Values(LongValueKey.Slot, -1) == -1)
+						continue;
+
+					// Convert the item into a VT GameItemInfo object
+					uTank2.LootPlugins.GameItemInfo itemInfo = uTank2.PluginCore.PC.FWorldTracker_GetWithID(item.Id);
+
+					if (itemInfo == null)
+					{
+						// This happens all the time for aetheria that has been converted
+						continue;
+					}
+
+					if (((VTClassic.LootCore)lootProfile).DoesPotentialItemNeedID(itemInfo))
+						CoreManager.Current.Actions.RequestId(item.Id);
+				}
+
+				idsRequested = true;
+			}
+
 			if (CoreManager.Current.Actions.BusyState != 0)
 				return;
 
@@ -185,6 +214,8 @@ namespace MagTools.Macros
 
 		bool DoAutoPack()
 		{
+			bool waitingForIds = false;
+
 			// Get all of our side pack information and put them in the correct order
 			int[] packs = new int[CoreManager.Current.WorldFilter[CoreManager.Current.CharacterFilter.Id].Values(LongValueKey.PackSlots) + 1];
 
@@ -216,6 +247,19 @@ namespace MagTools.Macros
 
 				// Convert the item into a VT GameItemInfo object
 				uTank2.LootPlugins.GameItemInfo itemInfo = uTank2.PluginCore.PC.FWorldTracker_GetWithID(item.Id);
+
+				if (itemInfo == null)
+				{
+					// This happens all the time for aetheria that has been converted
+					continue;
+				}
+
+				if (((VTClassic.LootCore)lootProfile).DoesPotentialItemNeedID(itemInfo))
+				{
+					waitingForIds = true;
+
+					continue;
+				}
 
 				uTank2.LootPlugins.LootAction result = ((VTClassic.LootCore)lootProfile).GetLootDecision(itemInfo);
 
@@ -302,6 +346,9 @@ namespace MagTools.Macros
 					}
 				}
 			}
+
+			if (waitingForIds)
+				return true;
 
 			return false;
 		}

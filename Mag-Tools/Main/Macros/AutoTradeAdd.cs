@@ -38,7 +38,8 @@ namespace MagTools.Macros
 			{
 				if (disposing)
 				{
-					Stop();
+					if (started)
+						Stop();
 
 					CoreManager.Current.WorldFilter.EnterTrade -= new EventHandler<EnterTradeEventArgs>(WorldFilter_EnterTrade);
 					CoreManager.Current.WorldFilter.EndTrade -= new EventHandler<EndTradeEventArgs>(WorldFilter_EndTrade);
@@ -78,6 +79,7 @@ namespace MagTools.Macros
 
 				Start(fileInfo);
 			}
+			catch (FileNotFoundException) { CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Unable to start Auto Add to Trade. Is Virindi Tank running?", 5); }
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
@@ -85,7 +87,8 @@ namespace MagTools.Macros
 		{
 			try
 			{
-				Stop();
+				if (started)
+					Stop();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -172,8 +175,6 @@ namespace MagTools.Macros
 					if (itemInfo == null)
 					{
 						// This happens all the time for aetheria that has been converted
-						//Debug.WriteToChat("AutoTradeAdd.Think(), itemInfo == null for " + item.Name);
-
 						continue;
 					}
 
@@ -203,8 +204,6 @@ namespace MagTools.Macros
 				if (itemInfo == null)
 				{
 					// This happens all the time for aetheria that has been converted
-					//Debug.WriteToChat("AutoTradeAdd.Think(), itemInfo == null for " + item.Name);
-
 					continue;
 				}
 

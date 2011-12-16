@@ -83,6 +83,7 @@ namespace MagTools
 		Macros.OpenMainPackOnLogin openMainPackOnLogin;
 		Macros.AutoRecharge autoRecharge;
 		Macros.AutoTradeAccept autoTradeAccept;
+		Macros.OneTouchHeal oneTouchHeal;
 	
 		// Trackers
 		Trackers.Mana.ManaTracker manaTracker;
@@ -137,6 +138,7 @@ namespace MagTools
 				openMainPackOnLogin = new Macros.OpenMainPackOnLogin();
 				autoRecharge = new Macros.AutoRecharge();
 				autoTradeAccept = new Macros.AutoTradeAccept();
+				oneTouchHeal = new Macros.OneTouchHeal();
 
 				// Trackers
 				manaTracker = new Trackers.Mana.ManaTracker();
@@ -290,10 +292,33 @@ namespace MagTools
 
 						VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(packInventoryHotkey);
 
-						packInventoryHotkey.Fired2 += new EventHandler<VirindiHotkeySystem.VHotkeyInfo.cEatableFiredEventArgs>(PackInventoryHotkey_Fired2);
-					}
+						packInventoryHotkey.Fired2 += (s, e2) =>
+							{
+								try
+								{
+									InventoryPacker.Start();
+								}
+								catch (FileNotFoundException) { CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Unable to start Inventory Packer. Is Virindi Tank running?", 5); }
+								catch (Exception ex) { Debug.LogException(ex); }
+							};
+					} 
 				}
 				catch (FileNotFoundException ex) { startupErrors.Add("Pack Inventory hot key failed to bind: " + ex.Message + ". Is Virindi Hotkey System running?"); }
+				catch (Exception ex) { Debug.LogException(ex); }
+
+				try
+				{
+					if (oneTouchHeal != null)
+					{
+						// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
+						VirindiHotkeySystem.VHotkeyInfo oneTouchHealHotkey = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "One Touch Heal", "Triggers the One Touch Healing Macro", 0, false, false, false);
+
+						VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(oneTouchHealHotkey);
+
+						oneTouchHealHotkey.Fired2 += (s, e2) => { oneTouchHeal.Start(); };
+					}
+				}
+				catch (FileNotFoundException ex) { startupErrors.Add("One Touch Heal hot key failed to bind: " + ex.Message + ". Is Virindi Hotkey System running?"); }
 				catch (Exception ex) { Debug.LogException(ex); }
 
 				foreach (string startupError in startupErrors)
@@ -315,15 +340,6 @@ namespace MagTools
 
 				if (Settings.SettingsManager.CombatTracker.Persistent.Value)
 					combatTrackerPersistent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		void PackInventoryHotkey_Fired2(object sender, VirindiHotkeySystem.VHotkeyInfo.cEatableFiredEventArgs e)
-		{
-			try
-			{
-				InventoryPacker.Start();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}

@@ -33,22 +33,29 @@ namespace MagTools.ItemInfo
 
 		public bool GetLootRuleInfoFromItemInfo(ItemInfoIdentArgs itemInfoIdentArgs, ItemInfoCallback itemInfoCallback)
 		{
-			if (uTank2.PluginCore.PC.FLootPluginQueryNeedsID(itemInfoIdentArgs.IdentifiedItem.Id))
+			try
 			{
-				// public delegate void delFLootPluginClassifyCallback(int obj, LootAction result, bool getsuccess);
-				//uTank2.PluginCore.delFLootPluginClassifyCallback callback = new uTank2.PluginCore.delFLootPluginClassifyCallback(uTankCallBack);
-				//uTank2.PluginCore.PC.FLootPluginClassifyCallback(itemInfoIdentArgs.IdentifiedItem.Id, callback);
+				if (uTank2.PluginCore.PC.FLootPluginQueryNeedsID(itemInfoIdentArgs.IdentifiedItem.Id))
+				{
+					// public delegate void delFLootPluginClassifyCallback(int obj, LootAction result, bool getsuccess);
+					//uTank2.PluginCore.delFLootPluginClassifyCallback callback = new uTank2.PluginCore.delFLootPluginClassifyCallback(uTankCallBack);
+					//uTank2.PluginCore.PC.FLootPluginClassifyCallback(itemInfoIdentArgs.IdentifiedItem.Id, callback);
 
-				ItemWaitingForCallback itemWaitingForCallback = new ItemWaitingForCallback(itemInfoIdentArgs, itemInfoCallback);
-				itemsWaitingForCallback.Add(itemWaitingForCallback);
+					ItemWaitingForCallback itemWaitingForCallback = new ItemWaitingForCallback(itemInfoIdentArgs, itemInfoCallback);
+					itemsWaitingForCallback.Add(itemWaitingForCallback);
 
-				uTank2.PluginCore.PC.FLootPluginClassifyCallback(itemInfoIdentArgs.IdentifiedItem.Id, uTankCallBack);
+					uTank2.PluginCore.PC.FLootPluginClassifyCallback(itemInfoIdentArgs.IdentifiedItem.Id, uTankCallBack);
+				}
+				else
+				{
+					uTank2.LootPlugins.LootAction result = uTank2.PluginCore.PC.FLootPluginClassifyImmediate(itemInfoIdentArgs.IdentifiedItem.Id);
+
+					itemInfoCallback(itemInfoIdentArgs, !result.IsNoLoot, result.IsSalvage, result.RuleName);
+				}
 			}
-			else
+			catch (NullReferenceException) // Virindi tank probably not loaded.
 			{
-				uTank2.LootPlugins.LootAction result = uTank2.PluginCore.PC.FLootPluginClassifyImmediate(itemInfoIdentArgs.IdentifiedItem.Id);
-
-				itemInfoCallback(itemInfoIdentArgs, !result.IsNoLoot, result.IsSalvage, result.RuleName);
+				return false;
 			}
 
 			return true;

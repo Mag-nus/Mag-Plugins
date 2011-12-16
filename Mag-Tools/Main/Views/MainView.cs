@@ -145,6 +145,7 @@ namespace MagTools.Views
 				AddOption(OptionList, Settings.SettingsManager.ItemInfoOnIdent.AutoClipboard);
 
 				AddOption(OptionList, Settings.SettingsManager.AutoBuySell.Enabled);
+				AddOption(OptionList, Settings.SettingsManager.AutoBuySell.TestMode);
 
 				AddOption(OptionList, Settings.SettingsManager.AutoTradeAdd.Enabled);
 
