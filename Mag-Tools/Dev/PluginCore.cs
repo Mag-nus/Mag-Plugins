@@ -315,7 +315,14 @@ namespace MagTools
 
 						VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(oneTouchHealHotkey);
 
-						oneTouchHealHotkey.Fired2 += (s, e2) => { oneTouchHeal.Start(); };
+						oneTouchHealHotkey.Fired2 += (s, e2) =>
+						{
+							try
+							{
+								oneTouchHeal.Start();
+							}
+							catch (Exception ex) { Debug.LogException(ex); }
+						};
 					}
 				}
 				catch (FileNotFoundException ex) { startupErrors.Add("One Touch Heal hot key failed to bind: " + ex.Message + ". Is Virindi Hotkey System running?"); }
