@@ -179,7 +179,12 @@ namespace MagTools.Macros
 							uTank2.LootPlugins.LootAction inventoryItemResult = uTank2.PluginCore.PC.FLootPluginClassifyImmediate(inventoryItem.Id);
 
 							if (inventoryItemResult.IsKeepUpTo && result.RuleName == inventoryItemResult.RuleName && result.Data1 == inventoryItemResult.Data1 && wo.Name == inventoryItem.Name)
-								totalInInventory++;
+							{
+								if (inventoryItem.Values(LongValueKey.StackMax, 0) > 0)
+									totalInInventory += inventoryItem.Values(LongValueKey.StackCount, 1);
+								else
+									totalInInventory++;
+							}
 						}
 
 						if (totalInInventory >= result.Data1)

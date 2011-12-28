@@ -30,6 +30,7 @@ namespace MagTools.Views
 
 		HudCheckBox CombatTrackerExportOnLogOff { get; set; }
 		HudCheckBox CombatTrackerPersistent { get; set; }
+		HudCheckBox CombatTrackerSortAlphabetically { get; set; }
 		
 		// Misc - Options
 		HudList OptionList { get; set; }
@@ -81,6 +82,7 @@ namespace MagTools.Views
 
 				CombatTrackerExportOnLogOff = view != null ? (HudCheckBox)view["CombatTrackerExportOnLogOff"] : new HudCheckBox();
 				CombatTrackerPersistent = view != null ? (HudCheckBox)view["CombatTrackerPersistent"] : new HudCheckBox();
+				CombatTrackerSortAlphabetically = view != null ? (HudCheckBox)view["CombatTrackerSortAlphabetically"] : new HudCheckBox();
 
 				// Misc - Options
 				OptionList = view != null ? (HudList)view["OptionList"] : new HudList();
@@ -138,6 +140,17 @@ namespace MagTools.Views
 					catch (Exception ex) { Debug.LogException(ex); }
 				};
 
+				CombatTrackerSortAlphabetically.Checked = Settings.SettingsManager.CombatTracker.SortAlphabetically.Value;
+				Settings.SettingsManager.CombatTracker.SortAlphabetically.Changed += (obj) => { CombatTrackerSortAlphabetically.Checked = obj.Value; };
+				CombatTrackerSortAlphabetically.Change += (s, e) =>
+				{
+					try
+					{
+						Settings.SettingsManager.CombatTracker.SortAlphabetically.Value = ((HudCheckBox)s).Checked;
+					}
+					catch (Exception ex) { Debug.LogException(ex); }
+				};
+
 				// Misc.Options
 				AddOption(OptionList, Settings.SettingsManager.ItemInfoOnIdent.Enabled);
 				AddOption(OptionList, Settings.SettingsManager.ItemInfoOnIdent.ShowBuffedValues);
@@ -186,6 +199,10 @@ namespace MagTools.Views
 				AddOption(FiltersList, Settings.SettingsManager.Filters.NpcChatter);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.MasterArbitratorSpam);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.AllMasterArbitratorChat);
+
+				AddOption(FiltersList, Settings.SettingsManager.Filters.StatusTextYoureTooBusy);
+				AddOption(FiltersList, Settings.SettingsManager.Filters.StatusTextCasting);
+				AddOption(FiltersList, Settings.SettingsManager.Filters.StatusTextAll);
 
 				// Misc.Client
 				ClientRemoveFrame.Checked = Settings.SettingsManager.Misc.RemoveWindowFrame.Value;

@@ -47,6 +47,7 @@
 
               <control progid="DecalControls.CheckBox" name="CombatTrackerExportOnLogOff" left="10" top="80" width="185" height="18" text="Export Current Stats On LogOff" />
               <control progid="DecalControls.CheckBox" name="CombatTrackerPersistent" left="10" top="100" width="140" height="18" text="Keep Persistent Stats" />
+              <control progid="DecalControls.CheckBox" name="CombatTrackerSortAlphabetically" left="10" top="140" width="140" height="18" text="Sort Alphabetically" />
             </control>
           </page>
 

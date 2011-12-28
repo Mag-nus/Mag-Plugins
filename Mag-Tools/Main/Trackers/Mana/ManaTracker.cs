@@ -270,7 +270,15 @@ namespace MagTools.Trackers.Mana
 					if (wo == null)
 						continue;
 
-					if (wo.HasIdData && wo.Values(LongValueKey.Material) > 0 && !wo.Values(BoolValueKey.Retained))
+					// We don't load aetheria
+					if (wo.Name != null && wo.Name.Contains("Aetheria"))
+						continue;
+
+					// We don't show archer/missile ammo (arrows)
+					if (wo.Values(LongValueKey.EquippedSlots) == 8388608)
+						continue;
+
+					if (wo.HasIdData && !wo.Values(BoolValueKey.Retained))
 						unretainedItems++;
 				}
 

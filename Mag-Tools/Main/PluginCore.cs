@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.ObjectModel;
 
 using Decal.Adapter;
+using Decal.Adapter.Wrappers;
 
 /*
  * Created by Mag-nus. 8/19/2011
@@ -56,6 +57,8 @@ namespace MagTools
 		/// Returns the current instance of the plugin in Decal. If the plugin hasn't been loaded yet this will return null.
 		/// </summary>
 		public static IPluginCore Current { get; private set; }
+
+		internal new static PluginHost Host { get; private set; }
 
 		internal static string PluginName = "Mag-Tools";
 
@@ -125,6 +128,7 @@ namespace MagTools
 			try
 			{
 				Current = this;
+				Host = base.Host;
 
 				CoreManager.Current.PluginInitComplete += new EventHandler<EventArgs>(Current_PluginInitComplete);
 				CoreManager.Current.CharacterFilter.Login += new EventHandler<Decal.Adapter.Wrappers.LoginEventArgs>(CharacterFilter_Login);
@@ -262,6 +266,7 @@ namespace MagTools
 				// General
 				if (chatFilter != null) chatFilter.Dispose();
 
+				Host = null;
 				Current = null;
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -296,7 +301,10 @@ namespace MagTools
 							{
 								try
 								{
-									InventoryPacker.Start();
+									VirindiHotkeySystem.VHotkeyInfo keyInfo = (VirindiHotkeySystem.VHotkeyInfo)s;
+
+									if (!CoreManager.Current.Actions.ChatState || keyInfo.AltState || keyInfo.ControlState)
+										InventoryPacker.Start();
 								}
 								catch (FileNotFoundException) { CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Unable to start Inventory Packer. Is Virindi Tank running?", 5); }
 								catch (Exception ex) { Debug.LogException(ex); }
@@ -319,7 +327,10 @@ namespace MagTools
 						{
 							try
 							{
-								oneTouchHeal.Start();
+								VirindiHotkeySystem.VHotkeyInfo keyInfo = (VirindiHotkeySystem.VHotkeyInfo)s;
+
+								if (!CoreManager.Current.Actions.ChatState || keyInfo.AltState || keyInfo.ControlState)
+									oneTouchHeal.Start();
 							}
 							catch (Exception ex) { Debug.LogException(ex); }
 						};

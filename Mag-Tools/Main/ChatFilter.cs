@@ -12,6 +12,8 @@ namespace MagTools
 			try
 			{
 				CoreManager.Current.ChatBoxMessage += new EventHandler<ChatTextInterceptEventArgs>(Current_ChatBoxMessage);
+
+				PluginCore.Host.Underlying.Hooks.StatusTextIntercept += new Decal.Interop.Core.IACHooksEvents_StatusTextInterceptEventHandler(Hooks_StatusTextIntercept);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -36,6 +38,8 @@ namespace MagTools
 				if (disposing)
 				{
 					CoreManager.Current.ChatBoxMessage -= new EventHandler<ChatTextInterceptEventArgs>(Current_ChatBoxMessage);
+
+					PluginCore.Host.Underlying.Hooks.StatusTextIntercept -= new Decal.Interop.Core.IACHooksEvents_StatusTextInterceptEventHandler(Hooks_StatusTextIntercept);
 				}
 
 				// Indicate that the instance has been disposed.
@@ -369,6 +373,24 @@ namespace MagTools
 					if (Settings.SettingsManager.Filters.AllMasterArbitratorChat.Value && e.Text.StartsWith("Your fellowship is now locked.") && e.Text.Contains("you have 15 minutes to be recruited"))
 						e.Eat = true;
 				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void Hooks_StatusTextIntercept(string bstrText, ref bool bEat)
+		{
+			try
+			{
+				// You're too busy!
+				if (Settings.SettingsManager.Filters.StatusTextYoureTooBusy.Value && !bEat && bstrText == "You're too busy!")
+					bEat = true;
+
+				// Casting .....
+				if (Settings.SettingsManager.Filters.StatusTextCasting.Value && !bEat && bstrText.StartsWith("Casting "))
+					bEat = true;
+
+				if (Settings.SettingsManager.Filters.StatusTextAll.Value)
+					bEat = true;
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
