@@ -48,7 +48,7 @@ namespace MagTools.Trackers.Combat
 			{
 				damageByElement.TotalCritDamage += combatEventArgs.DamageAmount;
 
-				if (combatEventArgs.DamageAmount > damageByElement.MaxNormalDamage)
+				if (combatEventArgs.DamageAmount > damageByElement.MaxCritDamage)
 					damageByElement.MaxCritDamage = combatEventArgs.DamageAmount;
 			}
 		}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using MagTools.Trackers.Combat;
 using MagTools.Trackers.Combat.Standard;
+
 using VirindiViewService.Controls;
 
 using Decal.Adapter;
@@ -198,6 +199,7 @@ namespace MagTools.Views
 
 			for (int row = 2 ; row <= monsterList.RowCount ; row++)
 			{
+				// Have we reached the end of the row list? If so, we haven't found this name in the list
 				if (row == monsterList.RowCount)
 				{
 					HudList.HudListRowAccessor newRow = monsterList.AddRow();
@@ -215,6 +217,10 @@ namespace MagTools.Views
 					((HudStaticText)newRow[3]).TextAlignment = VirindiViewService.WriteTextFormats.Right;
 					((HudStaticText)newRow[4]).TextAlignment = VirindiViewService.WriteTextFormats.Right;
 
+					// Sort the list
+					if (Settings.SettingsManager.CombatTracker.SortAlphabetically.Value)
+						SortListAlphabetically();
+
 					break;
 				}
 
@@ -223,6 +229,38 @@ namespace MagTools.Views
 
 				if (!String.IsNullOrEmpty(targetName) && ((HudStaticText)monsterList[row][1]).Text == targetName)
 					break;
+			}
+		}
+
+		void SortListAlphabetically()
+		{
+			for (int row = 2 ; row < monsterList.RowCount - 1 ; row++)
+			{
+				for (int compareRow = row + 1 ; compareRow < monsterList.RowCount ; compareRow++)
+				{
+					if (String.Compare(((HudStaticText)monsterList[row][1]).Text, ((HudStaticText)monsterList[compareRow][1]).Text) == 1)
+					{
+						string obj0 = ((HudStaticText)monsterList[row][0]).Text;
+						((HudStaticText)monsterList[row][0]).Text = ((HudStaticText)monsterList[compareRow][0]).Text;
+						((HudStaticText)monsterList[compareRow][0]).Text = obj0;
+
+						string obj1 = ((HudStaticText)monsterList[row][1]).Text;
+						((HudStaticText)monsterList[row][1]).Text = ((HudStaticText)monsterList[compareRow][1]).Text;
+						((HudStaticText)monsterList[compareRow][1]).Text = obj1;
+
+						string obj2 = ((HudStaticText)monsterList[row][2]).Text;
+						((HudStaticText)monsterList[row][2]).Text = ((HudStaticText)monsterList[compareRow][2]).Text;
+						((HudStaticText)monsterList[compareRow][2]).Text = obj2;
+
+						string obj3 = ((HudStaticText)monsterList[row][3]).Text;
+						((HudStaticText)monsterList[row][3]).Text = ((HudStaticText)monsterList[compareRow][3]).Text;
+						((HudStaticText)monsterList[compareRow][3]).Text = obj3;
+
+						string obj4 = ((HudStaticText)monsterList[row][4]).Text;
+						((HudStaticText)monsterList[row][4]).Text = ((HudStaticText)monsterList[compareRow][4]).Text;
+						((HudStaticText)monsterList[compareRow][4]).Text = obj4;
+					}
+				}
 			}
 		}
 

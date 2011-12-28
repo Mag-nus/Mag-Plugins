@@ -105,6 +105,8 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> Persistent = new Setting<bool>("CombatTracker/Persistent", "Keep Stats Persistent");
 
 			public static readonly Setting<bool> ExportOnLogOff = new Setting<bool>("CombatTracker/ExportOnLogOff", "Export Stats on LogOff");
+
+			public static readonly Setting<bool> SortAlphabetically = new Setting<bool>("CombatTracker/SortAlphabetically", "Sort Alphabetically");
 		}
 
 		public static class Misc
@@ -291,6 +293,13 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> MasterArbitratorSpam = new Setting<bool>("Filters/MasterArbitratorSpam", "Master Arbitrator Spam");
 
 			public static readonly Setting<bool> AllMasterArbitratorChat = new Setting<bool>("Filters/AllMasterArbitratorChat", "All Master Arbitrator Chat");
+
+
+			public static readonly Setting<bool> StatusTextYoureTooBusy = new Setting<bool>("Filters/StatusTextYoureTooBusy", "Status Text: You're too busy!");
+
+			public static readonly Setting<bool> StatusTextCasting = new Setting<bool>("Filters/StatusTextCasting", "Status Text: Casting ...");
+
+			public static readonly Setting<bool> StatusTextAll = new Setting<bool>("Filters/StatusTextAll", "Status Text: All");
 		}
 	}
 }
