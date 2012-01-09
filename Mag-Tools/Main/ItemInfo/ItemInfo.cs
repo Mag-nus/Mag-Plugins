@@ -120,12 +120,12 @@ namespace MagTools.ItemInfo
 					// DoubleValueKey.MeleeDefenseBonus
 					if (spellId == 2600 && !IsActiveSpell(2600)) meleeDefenseBonus += .03; // Minor Defender
 					if (spellId == 2588 && !IsActiveSpell(2588)) meleeDefenseBonus += .05; // Major Defender
-					if (spellId == 4633 && !IsActiveSpell(4633)) meleeDefenseBonus += .07; // Epic Defender
+					if (spellId == 4663 && !IsActiveSpell(4663)) meleeDefenseBonus += .07; // Epic Defender
 
 					// DoubleValueKey.ManaCBonus
 					if (spellId == 3201 && !IsActiveSpell(3201)) manaCBonus *= 1.05; // Feeble Hermetic Link
 					if (spellId == 3199 && !IsActiveSpell(3199)) manaCBonus *= 1.10; // Minor Hermetic Link
-					if (spellId == 3302 && !IsActiveSpell(3302)) manaCBonus *= 1.15; // Moderate Hermetic Link
+					if (spellId == 3202 && !IsActiveSpell(3202)) manaCBonus *= 1.15; // Moderate Hermetic Link
 					if (spellId == 3200 && !IsActiveSpell(3200)) manaCBonus *= 1.20; // Major Hermetic Link
 				}
 

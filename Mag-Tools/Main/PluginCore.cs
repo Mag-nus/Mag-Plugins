@@ -135,9 +135,6 @@ namespace MagTools
 				CoreManager.Current.CharacterFilter.LoginComplete +=new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 
-				// General
-				chatFilter = new ChatFilter();
-
 				// Macros
 				openMainPackOnLogin = new Macros.OpenMainPackOnLogin();
 				autoRecharge = new Macros.AutoRecharge();
@@ -167,6 +164,14 @@ namespace MagTools
 		{
 			try
 			{
+				// Relies on other decal assemblies
+				try
+				{
+					chatFilter = new ChatFilter(); // Decal.Interop.Core
+				}
+				catch (FileNotFoundException ex) { startupErrors.Add("chatFilter failed to load: " + ex.Message); }
+				catch (Exception ex) { Debug.LogException(ex); }
+
 				// These objects may reference other plugins
 				try
 				{
