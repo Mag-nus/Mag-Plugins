@@ -1,11 +1,13 @@
 ﻿
+using MagTools.Trackers.Equipment;
+
 namespace MagTools
 {
 	public interface IPluginCore
 	{
 		Macros.IInventoryPacker InventoryPacker { get; }
 
-		Trackers.Mana.IManaTracker ManaTracker { get; }
+		IEquipmentTracker EquipmentTracker { get; }
 
 		Macros.ILooter Looter { get; }
 	}

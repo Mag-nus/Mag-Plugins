@@ -1,7 +1,5 @@
 ﻿using System;
-
-using MagTools.Trackers.Mana;
-
+using MagTools.Trackers.Equipment;
 using VirindiViewService.Controls;
 
 using Decal.Adapter;
@@ -11,7 +9,7 @@ namespace MagTools.Views
 {
 	class ManaTrackerGUI : IDisposable
 	{
-		private readonly ManaTracker manaTracker;
+		private readonly EquipmentTracker manaTracker;
 		private readonly MainView mainView;
 
 		const int IconUnknown	= 0x60020B5;	// Cicle (Supposed to represent a question mark, a backwards one I guess...)
@@ -19,15 +17,15 @@ namespace MagTools.Views
 		const int IconNotActive	= 0x60011F8;	// Red Circle
 		const int IconNone		= 0x600287A;	// Small Grayish Dot
 
-		public ManaTrackerGUI(ManaTracker manaTracker, MainView mainView)
+		public ManaTrackerGUI(EquipmentTracker manaTracker, MainView mainView)
 		{
 			try
 			{
 				this.manaTracker = manaTracker;
 				this.mainView = mainView;
 
-				manaTracker.ItemAdded += new Action<IManaTrackedItem>(manaTracker_ItemAdded);
-				manaTracker.ItemRemoved += new Action<IManaTrackedItem>(manaTracker_ItemRemoved);
+				manaTracker.ItemAdded += new Action<IEquipmentTrackedItem>(manaTracker_ItemAdded);
+				manaTracker.ItemRemoved += new Action<IEquipmentTrackedItem>(manaTracker_ItemRemoved);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -51,8 +49,8 @@ namespace MagTools.Views
 			{
 				if (disposing)
 				{
-					manaTracker.ItemAdded -= new Action<IManaTrackedItem>(manaTracker_ItemAdded);
-					manaTracker.ItemRemoved -= new Action<IManaTrackedItem>(manaTracker_ItemRemoved);
+					manaTracker.ItemAdded -= new Action<IEquipmentTrackedItem>(manaTracker_ItemAdded);
+					manaTracker.ItemRemoved -= new Action<IEquipmentTrackedItem>(manaTracker_ItemRemoved);
 				}
 
 				// Indicate that the instance has been disposed.
@@ -60,7 +58,7 @@ namespace MagTools.Views
 			}
 		}
 
-		void manaTracker_ItemAdded(IManaTrackedItem obj)
+		void manaTracker_ItemAdded(IEquipmentTrackedItem obj)
 		{
 			try
 			{
@@ -69,24 +67,32 @@ namespace MagTools.Views
 				if (wo == null)
 					return;
 
-				HudList.HudListRowAccessor newRow = mainView.ManaList.AddRow();
+				if (wo.Name != null && wo.Name.Contains("Aetheria") ||			// // We don't display aetheria
+					wo.Values(LongValueKey.EquipableSlots) == 134217728 ||		// // We don't display cloaks (EquipableSlots: 134217728)
+					wo.Values(LongValueKey.EquippedSlots) == 8388608)			// // We don't display archer/missile ammo (arrows)
+				{
+				}
+				else
+				{
+					HudList.HudListRowAccessor newRow = mainView.ManaList.AddRow();
 
-				((HudPictureBox)newRow[0]).Image = wo.Icon + 0x6000000;
-				((HudStaticText)newRow[1]).Text = wo.Name;
-				((HudStaticText)newRow[5]).Text = obj.Id.ToString();
+					((HudPictureBox)newRow[0]).Image = wo.Icon + 0x6000000;
+					((HudStaticText)newRow[1]).Text = wo.Name;
+					((HudStaticText)newRow[5]).Text = obj.Id.ToString();
+				}
 
 				Item_Changed(obj);
 
-				obj.Changed += new Action<IManaTrackedItem>(Item_Changed);
+				obj.Changed += new Action<IEquipmentTrackedItem>(Item_Changed);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void manaTracker_ItemRemoved(IManaTrackedItem obj)
+		void manaTracker_ItemRemoved(IEquipmentTrackedItem obj)
 		{
 			try
 			{
-				obj.Changed -= new Action<IManaTrackedItem>(Item_Changed);
+				obj.Changed -= new Action<IEquipmentTrackedItem>(Item_Changed);
 
 				for (int row = 1 ; row <= mainView.ManaList.RowCount ; row++)
 				{
@@ -101,7 +107,7 @@ namespace MagTools.Views
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void Item_Changed(IManaTrackedItem obj)
+		void Item_Changed(IEquipmentTrackedItem obj)
 		{
 			try
 			{
@@ -109,16 +115,16 @@ namespace MagTools.Views
 				{
 					if (int.Parse(((HudStaticText)mainView.ManaList[row - 1][5]).Text) == obj.Id)
 					{
-						if (obj.ItemState == ManaTrackedItemState.Active)
+						if (obj.ItemState == EquipmentTrackedItemState.Active)
 							((HudPictureBox)mainView.ManaList[row - 1][2]).Image = IconActive;
-						else if (obj.ItemState == ManaTrackedItemState.NotActive)
+						else if (obj.ItemState == EquipmentTrackedItemState.NotActive)
 							((HudPictureBox)mainView.ManaList[row - 1][2]).Image = IconNotActive;
-						else if (obj.ItemState == ManaTrackedItemState.Unknown)
+						else if (obj.ItemState == EquipmentTrackedItemState.Unknown)
 							((HudPictureBox)mainView.ManaList[row - 1][2]).Image = IconUnknown;
 						else
 							((HudPictureBox)mainView.ManaList[row - 1][2]).Image = IconNone;
 
-						if (obj.ItemState != ManaTrackedItemState.Active && obj.ItemState != ManaTrackedItemState.NotActive)
+						if (obj.ItemState != EquipmentTrackedItemState.Active && obj.ItemState != EquipmentTrackedItemState.NotActive)
 						{
 							((HudStaticText)mainView.ManaList[row - 1][3]).Text = "-";
 							((HudStaticText)mainView.ManaList[row - 1][4]).Text = "-";

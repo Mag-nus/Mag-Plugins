@@ -1,7 +1,7 @@
 ﻿
-namespace MagTools.Trackers.Mana
+namespace MagTools.Trackers.Equipment
 {
-	public enum ManaTrackedItemState
+	public enum EquipmentTrackedItemState
 	{
 		/// <summary>
 		/// We don't know what state the item is in yet. Probably because it doesn't have IdData

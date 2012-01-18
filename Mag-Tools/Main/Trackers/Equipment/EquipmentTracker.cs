@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
-namespace MagTools.Trackers.Mana
+namespace MagTools.Trackers.Equipment
 {
-	class ManaTracker : IDisposable, IManaTracker
+	class EquipmentTracker : IDisposable, IEquipmentTracker
 	{
 		/// <summary>
 		/// This is raised when an item has been added to the tracker.
 		/// </summary>
-		public event Action<IManaTrackedItem> ItemAdded;
+		public event Action<IEquipmentTrackedItem> ItemAdded;
 
 		/// <summary>
 		/// This is raised when we have stopped tracking an item. After this is raised the ManaTrackedItem is disposed.
 		/// </summary>
-		public event Action<IManaTrackedItem> ItemRemoved;
+		public event Action<IEquipmentTrackedItem> ItemRemoved;
 
-		private readonly List<ManaTrackedItem> trackedItems = new List<ManaTrackedItem>();
+		private readonly List<EquipmentTrackedItem> trackedItems = new List<EquipmentTrackedItem>();
 
-		public ManaTracker()
+		public EquipmentTracker()
 		{
 			try
 			{
@@ -144,7 +143,7 @@ namespace MagTools.Trackers.Mana
 			// Only watch items equipped by me
 			if (!ItemIsEquippedByMe(obj))
 				return false;
-
+			/*
 			// We don't load aetheria
 			if (obj.Name != null && obj.Name.Contains("Aetheria"))
 				return false;
@@ -156,7 +155,7 @@ namespace MagTools.Trackers.Mana
 			// We don't show archer/missile ammo (arrows)
 			if (obj.Values(LongValueKey.EquippedSlots) == 8388608)
 				return false;
-
+			*/
 			return true;
 		}
 
@@ -179,13 +178,13 @@ namespace MagTools.Trackers.Mana
 		/// <param name="obj"></param>
 		void AddItem(WorldObject obj)
 		{
-			foreach (ManaTrackedItem item in trackedItems)
+			foreach (EquipmentTrackedItem item in trackedItems)
 			{
 				if (item.Id == obj.Id)
 					return;
 			}
 
-			ManaTrackedItem trackedItem = new ManaTrackedItem(obj.Id);
+			EquipmentTrackedItem trackedItem = new EquipmentTrackedItem(obj.Id);
 
 			trackedItems.Add(trackedItem);
 
@@ -199,7 +198,7 @@ namespace MagTools.Trackers.Mana
 			{
 				if (trackedItems[i].Id == obj.Id)
 				{
-					ManaTrackedItem trackedItem = trackedItems[i];
+					EquipmentTrackedItem trackedItem = trackedItems[i];
 
 					trackedItems.RemoveAt(i);
 
@@ -215,7 +214,7 @@ namespace MagTools.Trackers.Mana
 		{
 			for (int i = trackedItems.Count - 1 ; i >= 0 ; i--)
 			{
-				ManaTrackedItem trackedItem = trackedItems[i];
+				EquipmentTrackedItem trackedItem = trackedItems[i];
 
 				trackedItems.RemoveAt(i);
 
@@ -232,7 +231,7 @@ namespace MagTools.Trackers.Mana
 			{
 				int manaNeeded = 0;
 
-				foreach (ManaTrackedItem trackedItem in trackedItems)
+				foreach (EquipmentTrackedItem trackedItem in trackedItems)
 				{
 					manaNeeded += trackedItem.ManaNeededToRefill;
 				}
@@ -247,9 +246,9 @@ namespace MagTools.Trackers.Mana
 			{
 				int inactiveItems = 0;
 
-				foreach (ManaTrackedItem trackedItem in trackedItems)
+				foreach (EquipmentTrackedItem trackedItem in trackedItems)
 				{
-					if (trackedItem.ItemState == ManaTrackedItemState.NotActive)
+					if (trackedItem.ItemState == EquipmentTrackedItemState.NotActive)
 						inactiveItems++;
 				}
 
@@ -263,15 +262,11 @@ namespace MagTools.Trackers.Mana
 			{
 				int unretainedItems = 0;
 
-				foreach (ManaTrackedItem trackedItem in trackedItems)
+				foreach (EquipmentTrackedItem trackedItem in trackedItems)
 				{
 					WorldObject wo = CoreManager.Current.WorldFilter[trackedItem.Id];
 
 					if (wo == null)
-						continue;
-
-					// We don't load aetheria
-					if (wo.Name != null && wo.Name.Contains("Aetheria"))
 						continue;
 
 					// We don't show archer/missile ammo (arrows)

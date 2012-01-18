@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 using Decal.Filters;
 
-namespace MagTools.Trackers.Mana
+namespace MagTools.Trackers.Equipment
 {
-	class ManaTrackedItem : IDisposable, IManaTrackedItem
+	class EquipmentTrackedItem : IDisposable, IEquipmentTrackedItem
 	{
 		/// <summary>
 		/// This is raised when an item the tracker is watching has been changed.
 		/// </summary>
-		public event Action<IManaTrackedItem> Changed;
+		public event Action<IEquipmentTrackedItem> Changed;
 
 		public int Id { get; private set; }
 
@@ -20,7 +19,7 @@ namespace MagTools.Trackers.Mana
 
 		private readonly System.Windows.Forms.Timer burnTimer = new System.Windows.Forms.Timer();
 
-		public ManaTrackedItem(int id)
+		public EquipmentTrackedItem(int id)
 		{
 			Id = id;
 
@@ -85,7 +84,7 @@ namespace MagTools.Trackers.Mana
 				if (e.Changed.Id != Id)
 					return;
 
-				if (e.Change == WorldChangeType.IdentReceived && ItemState == ManaTrackedItemState.Active && SecondsPerBurn > 0)
+				if (e.Change == WorldChangeType.IdentReceived && ItemState == EquipmentTrackedItemState.Active && SecondsPerBurn > 0)
 				{
 					burnTimer.Interval = (int)(SecondsPerBurn * 1000);
 					burnTimer.Start();
@@ -157,16 +156,16 @@ namespace MagTools.Trackers.Mana
 		}
 
 		private DateTime lastIdTime = DateTime.MinValue;
-		private ManaTrackedItemState itemState = ManaTrackedItemState.Unknown;
+		private EquipmentTrackedItemState itemState = EquipmentTrackedItemState.Unknown;
 
-		public ManaTrackedItemState ItemState
+		public EquipmentTrackedItemState ItemState
 		{
 			get
 			{
 				WorldObject wo = CoreManager.Current.WorldFilter[Id];
 
 				if (wo == null)
-					return ManaTrackedItemState.Unknown;
+					return EquipmentTrackedItemState.Unknown;
 
 				if (lastIdTime != timeOfLastManaIdent || lastIdTime == DateTime.MinValue)
 				{
@@ -178,19 +177,19 @@ namespace MagTools.Trackers.Mana
 			}
 		}
 
-		private ManaTrackedItemState RecaclulteState(WorldObject wo)
+		private EquipmentTrackedItemState RecaclulteState(WorldObject wo)
 		{
 			// We need basic IdData to determine if an item is active
 			if (!wo.HasIdData)
-				return ManaTrackedItemState.Unknown;
+				return EquipmentTrackedItemState.Unknown;
 
 			// If this item has no spells, its not activateable
 			if (wo.Values(LongValueKey.SpellCount) == 0 || wo.Values(LongValueKey.MaximumMana) == 0)
-				return ManaTrackedItemState.NotActivatable;
+				return EquipmentTrackedItemState.NotActivatable;
 
 			// If this item has no mana in it, it's not active
 			if (wo.Values(LongValueKey.CurrentMana, 0) == 0)
-				return ManaTrackedItemState.NotActive;
+				return EquipmentTrackedItemState.NotActive;
 
 
 			// Go through and find all of our current active spells (enchantments)
@@ -264,9 +263,9 @@ namespace MagTools.Trackers.Mana
 
 
 			if (inactiveSpellFound)
-				return ManaTrackedItemState.NotActive;
+				return EquipmentTrackedItemState.NotActive;
 
-			return ManaTrackedItemState.Active;
+			return EquipmentTrackedItemState.Active;
 		}
 
 		private double SecondsPerBurn
@@ -298,10 +297,10 @@ namespace MagTools.Trackers.Mana
 			{
 				WorldObject wo = CoreManager.Current.WorldFilter[Id];
 
-				if (wo == null || ItemState == ManaTrackedItemState.Unknown || ItemState == ManaTrackedItemState.NotActivatable)
+				if (wo == null || ItemState == EquipmentTrackedItemState.Unknown || ItemState == EquipmentTrackedItemState.NotActivatable)
 					return 0;
 
-				if (ItemState == ManaTrackedItemState.NotActive || SecondsPerBurn == 0)
+				if (ItemState == EquipmentTrackedItemState.NotActive || SecondsPerBurn == 0)
 					return wo.Values(LongValueKey.CurrentMana);
 
 				//DateTime utcLastIdTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(wo.LastIdTime);
@@ -335,7 +334,7 @@ namespace MagTools.Trackers.Mana
 			{
 				WorldObject wo = CoreManager.Current.WorldFilter[Id];
 
-				if (wo == null || ItemState != ManaTrackedItemState.Active)
+				if (wo == null || ItemState != EquipmentTrackedItemState.Active)
 					return new TimeSpan();
 
 				if (SecondsPerBurn == 0)

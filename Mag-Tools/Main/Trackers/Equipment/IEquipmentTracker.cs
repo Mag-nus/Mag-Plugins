@@ -1,18 +1,18 @@
 ﻿using System;
 
-namespace MagTools.Trackers.Mana
+namespace MagTools.Trackers.Equipment
 {
-	public interface IManaTracker
+	public interface IEquipmentTracker
 	{
 		/// <summary>
 		/// This is raised when an item has been added to the tracker.
 		/// </summary>
-		event Action<IManaTrackedItem> ItemAdded;
+		event Action<IEquipmentTrackedItem> ItemAdded;
 
 		/// <summary>
 		/// This is raised when we have stopped tracking an item. After this is raised the ManaTrackedItem is disposed.
 		/// </summary>
-		event Action<IManaTrackedItem> ItemRemoved;
+		event Action<IEquipmentTrackedItem> ItemRemoved;
 
 		int ManaNeededToRefillItems { get; }
 
