@@ -16,7 +16,7 @@ namespace MagTools.Settings
 		{
 			public static readonly Setting<bool> Enabled = new Setting<bool>("AutoBuySell/Enabled", "Auto Buy/Sell Enabled", true);
 
-			public static readonly Setting<bool> TestMode = new Setting<bool>("AutoBuySell/TestMode", "Auto Buy/Sell Test Mode");
+			public static readonly Setting<bool> TestMode = new Setting<bool>("AutoBuySell/TestMode", "- Auto Buy/Sell Test Mode");
 
 			static AutoBuySell()
 			{
@@ -80,15 +80,18 @@ namespace MagTools.Settings
 		{
 			public static readonly Setting<bool> Enabled = new Setting<bool>("ItemInfoOnIdent/Enabled", "Show Item Info On Ident", true);
 
-			public static readonly Setting<bool> ShowBuffedValues = new Setting<bool>("ItemInfoOnIdent/ShowBuffedValues", "Show Item Info Buffed* Values", true);
+			public static readonly Setting<bool> ShowBuffedValues = new Setting<bool>("ItemInfoOnIdent/ShowBuffedValues", "- Show Item Info Buffed* Values", true);
 
-			public static readonly Setting<bool> LeftClickIdent = new Setting<bool>("ItemInfoOnIdent/LeftClickIdent", "Ident Items on Left Click");
+			public static readonly Setting<bool> ShowValueAndBurden = new Setting<bool>("ItemInfoOnIdent/ShowValueAndBurden", "- Show Value and Burden");
 
-			public static readonly Setting<bool> AutoClipboard = new Setting<bool>("ItemInfoOnIdent/AutoClipboard", "Clipboard Item Info On Ident");
+			public static readonly Setting<bool> LeftClickIdent = new Setting<bool>("ItemInfoOnIdent/LeftClickIdent", "- Ident Items on Left Click");
+
+			public static readonly Setting<bool> AutoClipboard = new Setting<bool>("ItemInfoOnIdent/AutoClipboard", "- Clipboard Item Info On Ident");
 
 			static ItemInfoOnIdent()
 			{
 				ShowBuffedValues.Changed += new System.Action<Setting<bool>>(ChildOption_Changed);
+				ShowValueAndBurden.Changed += new System.Action<Setting<bool>>(ChildOption_Changed);
 				LeftClickIdent.Changed += new System.Action<Setting<bool>>(ChildOption_Changed);
 				AutoClipboard.Changed += new System.Action<Setting<bool>>(ChildOption_Changed);
 			}

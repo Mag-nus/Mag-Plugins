@@ -1,16 +1,16 @@
 ﻿using System;
 
-namespace MagTools.Trackers.Mana
+namespace MagTools.Trackers.Equipment
 {
-	public interface IManaTrackedItem
+	public interface IEquipmentTrackedItem
 	{
-		event Action<IManaTrackedItem> Changed;
+		event Action<IEquipmentTrackedItem> Changed;
 
 		int Id { get; }
 
 		int MaximumMana { get; }
 
-		ManaTrackedItemState ItemState { get; }
+		EquipmentTrackedItemState ItemState { get; }
 
 		int CalculatedCurrentMana { get; }
 

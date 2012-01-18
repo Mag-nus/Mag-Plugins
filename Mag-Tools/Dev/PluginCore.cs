@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
+using MagTools.Trackers.Equipment;
+
 /*
  * Created by Mag-nus. 8/19/2011
  * 
@@ -89,8 +91,8 @@ namespace MagTools
 		Macros.OneTouchHeal oneTouchHeal;
 	
 		// Trackers
-		Trackers.Mana.ManaTracker manaTracker;
-		public Trackers.Mana.IManaTracker ManaTracker { get { return manaTracker; } }
+		EquipmentTracker equipmentTracker;
+		public IEquipmentTracker EquipmentTracker { get { return equipmentTracker; } }
 		Trackers.Combat.CombatTracker combatTrackerCurrent;
 		Trackers.Combat.CombatTracker combatTrackerPersistent;
 
@@ -142,7 +144,7 @@ namespace MagTools
 				oneTouchHeal = new Macros.OneTouchHeal();
 
 				// Trackers
-				manaTracker = new Trackers.Mana.ManaTracker();
+				equipmentTracker = new EquipmentTracker();
 				combatTrackerCurrent = new Trackers.Combat.CombatTracker();
 				combatTrackerPersistent = new Trackers.Combat.CombatTracker();
 
@@ -206,7 +208,7 @@ namespace MagTools
 				try
 				{
 					mainView = new Views.MainView();
-					manaTrackerGUI = new Views.ManaTrackerGUI(manaTracker, mainView);
+					manaTrackerGUI = new Views.ManaTrackerGUI(equipmentTracker, mainView);
 					combatTrackerGUICurrent = new Views.CombatTrackerGUI(combatTrackerCurrent, mainView.CombatTrackerMonsterListCurrent, mainView.CombatTrackerDamageListCurrent);
 					combatTrackerGUIPersistent = new Views.CombatTrackerGUI(combatTrackerPersistent, mainView.CombatTrackerMonsterListPersistent, mainView.CombatTrackerDamageListPersistent);
 
@@ -259,7 +261,7 @@ namespace MagTools
 				if (windowMover != null) windowMover.Dispose();
 
 				// Trackers
-				if (manaTracker != null) manaTracker.Dispose();
+				if (equipmentTracker != null) equipmentTracker.Dispose();
 				if (combatTrackerCurrent != null) combatTrackerCurrent.Dispose();
 				if (combatTrackerPersistent != null) combatTrackerPersistent.Dispose();
 

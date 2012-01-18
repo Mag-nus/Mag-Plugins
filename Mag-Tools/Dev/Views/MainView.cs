@@ -154,6 +154,7 @@ namespace MagTools.Views
 				// Misc.Options
 				AddOption(OptionList, Settings.SettingsManager.ItemInfoOnIdent.Enabled);
 				AddOption(OptionList, Settings.SettingsManager.ItemInfoOnIdent.ShowBuffedValues);
+				AddOption(OptionList, Settings.SettingsManager.ItemInfoOnIdent.ShowValueAndBurden);
 				AddOption(OptionList, Settings.SettingsManager.ItemInfoOnIdent.LeftClickIdent);
 				AddOption(OptionList, Settings.SettingsManager.ItemInfoOnIdent.AutoClipboard);
 

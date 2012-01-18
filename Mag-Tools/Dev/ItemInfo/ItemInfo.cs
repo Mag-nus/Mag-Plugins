@@ -319,6 +319,15 @@ namespace MagTools.ItemInfo
 					wo.Values(DoubleValueKey.LightningProt).ToString("N1") + "]");
 			}
 
+			if (Settings.SettingsManager.ItemInfoOnIdent.ShowValueAndBurden.Value)
+			{
+				if (wo.Values(LongValueKey.Value) > 0)
+					sb.Append(", Value " + String.Format("{0:n0}", wo.Values(LongValueKey.Value)));
+
+				if (wo.Values(LongValueKey.Burden) > 0)
+					sb.Append(", BU " + wo.Values(LongValueKey.Burden));
+			}
+
 			return sb.ToString();
 		}
 
