@@ -85,6 +85,7 @@
     <Compile Include="Macros\AutoTradeAdd.cs" />
     <Compile Include="Macros\IInventoryPacker.cs" />
     <Compile Include="Macros\ManaRecharger.cs" />
+    <Compile Include="Macros\MaximizeChatOnLogin.cs" />
     <Compile Include="Macros\OneTouchHeal.cs" />
     <Compile Include="Macros\OpenMainPackOnLogin.cs" />
     <Compile Include="Settings\Setting.cs" />

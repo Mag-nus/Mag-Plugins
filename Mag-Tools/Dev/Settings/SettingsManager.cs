@@ -74,6 +74,8 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> AutoLootChests = new Setting<bool>("Looting/AutoLootChests", "Auto Loot Chests");
 
 			public static readonly Setting<bool> AutoLootCorpses = new Setting<bool>("Looting/AutoLootCorpses", "Auto Loot Corpses");
+
+			public static readonly Setting<bool> AutoLootMyCorpses = new Setting<bool>("Looting/AutoLootMyCorpse", "Auto Loot My Corpses");
 		}
 
 		public static class ItemInfoOnIdent
@@ -115,6 +117,8 @@ namespace MagTools.Settings
 		public static class Misc
 		{
 			public static readonly Setting<bool> OpenMainPackOnLogin = new Setting<bool>("Misc/OpenMainPackOnLogin", "Open Main Pack On Login");
+
+			public static readonly Setting<bool> MaximizeChatOnLogin = new Setting<bool>("Misc/MaximizeChatOnLogin", "Maximize Chat On Login");
 
 			public static readonly Setting<bool> RemoveWindowFrame = new Setting<bool>("Misc/RemoveWindowFrame", "Remove Window Frame");
 

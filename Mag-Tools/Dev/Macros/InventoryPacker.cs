@@ -82,7 +82,13 @@ namespace MagTools.Macros
 			FileInfo fileInfo = new FileInfo(PluginCore.PluginPersonalFolder + @"\" + CoreManager.Current.CharacterFilter.Name + ".AutoPack.utl");
 
 			if (!fileInfo.Exists)
-				return;
+			{
+				// Try to find a Default.AutoPack.utl
+				fileInfo = new FileInfo(PluginCore.PluginPersonalFolder + @"\" + "Default.AutoPack.utl");
+
+				if (!fileInfo.Exists)
+					return;
+			}
 
 			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Started.", 5);
 

@@ -86,6 +86,7 @@ namespace MagTools
 
 		// Macros
 		Macros.OpenMainPackOnLogin openMainPackOnLogin;
+		Macros.MaximizeChatOnLogin maximizeChatOnLogin;
 		Macros.AutoRecharge autoRecharge;
 		Macros.AutoTradeAccept autoTradeAccept;
 		Macros.OneTouchHeal oneTouchHeal;
@@ -139,6 +140,7 @@ namespace MagTools
 
 				// Macros
 				openMainPackOnLogin = new Macros.OpenMainPackOnLogin();
+				maximizeChatOnLogin = new Macros.MaximizeChatOnLogin();
 				autoRecharge = new Macros.AutoRecharge();
 				autoTradeAccept = new Macros.AutoTradeAccept();
 				oneTouchHeal = new Macros.OneTouchHeal();
@@ -267,6 +269,7 @@ namespace MagTools
 
 				// Macros
 				if (openMainPackOnLogin != null) openMainPackOnLogin.Dispose();
+				if (maximizeChatOnLogin != null) maximizeChatOnLogin.Dispose();
 				if (autoRecharge != null) autoRecharge.Dispose();
 				if (autoTradeAccept != null) autoTradeAccept.Dispose();
 

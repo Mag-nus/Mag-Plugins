@@ -61,6 +61,9 @@ namespace MagTools.Client
 			public int Top;
 			public int Right;
 			public int Bottom;
+
+			public int Width { get { return Right - Left; } }
+			public int Height { get { return Bottom - Top; } }
 		}
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, ExactSpelling = true, SetLastError = true)]
@@ -124,24 +127,22 @@ namespace MagTools.Client
 
 				GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
 
-				int width = rect.Right - rect.Left;
-
 				// Widths: 800 1024 1152 1280 1360 1400 1440 1600 1680 1792 1800 1856 1920 2048 2560
-				if (width >= 2560) return width - 2560;
-				if (width >= 2048) return width - 2048;
-				if (width >= 1920) return width - 1920;
-				if (width >= 1856) return width - 1856;
-				if (width >= 1800) return width - 1800;
-				if (width >= 1792) return width - 1792; // This would be broken for styles that have a border with >= 8, as it would be 1800+ then.
-				if (width >= 1680) return width - 1680;
-				if (width >= 1600) return width - 1600;
-				if (width >= 1440) return width - 1440;
-				if (width >= 1400) return width - 1400;
-				if (width >= 1360) return width - 1360;
-				if (width >= 1280) return width - 1280;
-				if (width >= 1152) return width - 1152;
-				if (width >= 1024) return width - 1024;
-				if (width >= 800) return width - 800;
+				if (rect.Width >= 2560) return rect.Width - 2560;
+				if (rect.Width >= 2048) return rect.Width - 2048;
+				if (rect.Width >= 1920) return rect.Width - 1920;
+				if (rect.Width >= 1856) return rect.Width - 1856;
+				if (rect.Width >= 1800) return rect.Width - 1800;
+				if (rect.Width >= 1792) return rect.Width - 1792; // This would be broken for styles that have a border with >= 8, as it would be 1800+ then.
+				if (rect.Width >= 1680) return rect.Width - 1680;
+				if (rect.Width >= 1600) return rect.Width - 1600;
+				if (rect.Width >= 1440) return rect.Width - 1440;
+				if (rect.Width >= 1400) return rect.Width - 1400;
+				if (rect.Width >= 1360) return rect.Width - 1360;
+				if (rect.Width >= 1280) return rect.Width - 1280;
+				if (rect.Width >= 1152) return rect.Width - 1152;
+				if (rect.Width >= 1024) return rect.Width - 1024;
+				if (rect.Width >= 800) return rect.Width - 800;
 
 				// Windows 7 default: 6
 				return 0;
@@ -159,28 +160,26 @@ namespace MagTools.Client
 
 				GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
 
-				int height = rect.Bottom - rect.Top;
-
 				// Workarounds go here:
-				if (height == (1024 + 28)) return 28;
+				if (rect.Height == (1024 + 28)) return 28;
 
 				// Heights: 600 720 768 800 864 900 960 1024 1050 1080 1200 1344 1392 1440 1536 1600
-				if (height >= 1600) return height - 1600;
-				if (height >= 1536) return height - 1536;
-				if (height >= 1440) return height - 1440;
-				if (height >= 1392) return height - 1392;
-				if (height >= 1344) return height - 1344;
-				if (height >= 1200) return height - 1200;
-				if (height >= 1080) return height - 1080;
-				if (height >= 1050) return height - 1050;
-				if (height >= 1024) return height - 1024;
-				if (height >= 960) return height - 960;
-				if (height >= 900) return height - 900;
-				if (height >= 864) return height - 864;
-				if (height >= 800) return height - 800;
-				if (height >= 768) return height - 768;
-				if (height >= 720) return height - 720;
-				if (height >= 600) return height - 600;
+				if (rect.Height >= 1600) return rect.Height - 1600;
+				if (rect.Height >= 1536) return rect.Height - 1536;
+				if (rect.Height >= 1440) return rect.Height - 1440;
+				if (rect.Height >= 1392) return rect.Height - 1392;
+				if (rect.Height >= 1344) return rect.Height - 1344;
+				if (rect.Height >= 1200) return rect.Height - 1200;
+				if (rect.Height >= 1080) return rect.Height - 1080;
+				if (rect.Height >= 1050) return rect.Height - 1050;
+				if (rect.Height >= 1024) return rect.Height - 1024;
+				if (rect.Height >= 960) return rect.Height - 960;
+				if (rect.Height >= 900) return rect.Height - 900;
+				if (rect.Height >= 864) return rect.Height - 864;
+				if (rect.Height >= 800) return rect.Height - 800;
+				if (rect.Height >= 768) return rect.Height - 768;
+				if (rect.Height >= 720) return rect.Height - 720;
+				if (rect.Height >= 600) return rect.Height - 600;
 
 				// Windows 7 default: 28
 				return 0;

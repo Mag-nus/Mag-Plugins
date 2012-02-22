@@ -167,8 +167,10 @@ namespace MagTools.Views
 
 				AddOption(OptionList, Settings.SettingsManager.Looting.AutoLootChests);
 				AddOption(OptionList, Settings.SettingsManager.Looting.AutoLootCorpses);
+				AddOption(OptionList, Settings.SettingsManager.Looting.AutoLootMyCorpses);
 
 				AddOption(OptionList, Settings.SettingsManager.Misc.OpenMainPackOnLogin);
+				AddOption(OptionList, Settings.SettingsManager.Misc.MaximizeChatOnLogin);
 				AddOption(OptionList, Settings.SettingsManager.Misc.DebuggingEnabled);
 
 				// Misc.Filters

@@ -24,7 +24,13 @@ namespace MagTools.ItemInfo
 		{
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
+			if (wo.Values(LongValueKey.Material) > 0)
+				sb.Append(Util.GetMaterialNameById(wo.Values(LongValueKey.Material)) + " ");
+
 			sb.Append(wo.Name);
+
+			if (wo.Values((LongValueKey)353) > 0)
+				sb.Append(" (" + Util.GetMasteryNameById(wo.Values((LongValueKey)353)) + ")");
 
 			int set = wo.Values((LongValueKey)265, 0);
 			if (set != 0)
@@ -304,8 +310,16 @@ namespace MagTools.ItemInfo
 			if (wo.Values(LongValueKey.LoreRequirement) > 0)
 				sb.Append(", Diff " + wo.Values(LongValueKey.LoreRequirement));
 
-			if (wo.Values(LongValueKey.Workmanship) > 0 && wo.Values(LongValueKey.NumberTimesTinkered) != 10) // Don't show the work if its already 10 tinked.
-				sb.Append(", Craft " + wo.Values(LongValueKey.Workmanship));
+			if (wo.ObjectClass == ObjectClass.Salvage)
+			{
+				if (wo.Values(DoubleValueKey.SalvageWorkmanship) > 0)
+					sb.Append(", Work " + wo.Values(DoubleValueKey.SalvageWorkmanship).ToString("N2"));
+			}
+			else
+			{
+				if (wo.Values(LongValueKey.Workmanship) > 0 && wo.Values(LongValueKey.NumberTimesTinkered) != 10) // Don't show the work if its already 10 tinked.
+					sb.Append(", Craft " + wo.Values(LongValueKey.Workmanship));
+			}
 
 			if (wo.ObjectClass == ObjectClass.Armor && wo.Values(LongValueKey.Unenchantable, 0) != 0)
 			{

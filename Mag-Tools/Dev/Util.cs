@@ -115,6 +115,7 @@ namespace MagTools
 			if (id == 0x5) return "Mace";
 			if (id == 0x6) return "Melee Defense";
 			if (id == 0x7) return "Missile Defense";
+			// 0x8
 			if (id == 0x9) return "Spear";
 			if (id == 0xA) return "Staff";
 			if (id == 0xB) return "Sword";
@@ -145,9 +146,44 @@ namespace MagTools
 			if (id == 0x27) return "Cooking";
 			if (id == 0x28) return "Salvaging";
 			if (id == 0x29) return "Two Handed Combat";
-			if (id == 0x2B) return "Nether";
+			// 0x2A
+			if (id == 0x2B) return "Void";
+			if (id == 0x2C) return "Heavy Weapons";
+			if (id == 0x2D) return "Light Weapons";
+			if (id == 0x2E) return "Finesse Weapons";
+			if (id == 0x2F) return "Missile Weapons";
+			if (id == 0x30) return "Shield";
+			if (id == 0x31) return "Dual Wield";
+			if (id == 0x32) return "Recklessness";
+			if (id == 0x33) return "Sneak Attack";
+			if (id == 0x34) return "Dirty Fighting";
 
 			return "Unknown skill id: " + id;
+		}
+
+		/// <summary>
+		/// This will return a mastery name by its id.
+		/// For example, 1 returns "Unearmed Weapon".
+		/// If the skill is unknown the following is returned: "Unknown mastery id: " + id
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public static string GetMasteryNameById(int id)
+		{
+			// This list was taken from the Alinco source
+			if (id == 0x1) return "Unarmed Weapon";
+			if (id == 0x2) return "Sword";
+			if (id == 0x3) return "Axe";
+			if (id == 0x4) return "Mace";
+			if (id == 0x5) return "Spear";
+			if (id == 0x6) return "Dagger";
+			if (id == 0x7) return "Staff";
+			if (id == 0x8) return "Bow";
+			if (id == 0x9) return "Crossbow";
+			if (id == 0xA) return "Thrown";
+			if (id == 0xB) return "Two Handed Combat";
+
+			return "Unknown mastery id: " + id;
 		}
 
 		/// <summary>
@@ -233,6 +269,102 @@ namespace MagTools
 			if (id == 83) return "Assess Creature  Set";
 
 			return "Unknown set id: " + id;
+		}
+
+		/// <summary>
+		/// This will return a material name based on its id.
+		/// For example, 27 returns "Acid Proof Set".
+		/// If the set is unknown the following is returned: "Unknown set id: " + id
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public static string GetMaterialNameById(int id)
+		{
+			if (id == 1) return "Ceramic";
+			if (id == 2) return "Porcelain";
+			// 3
+			if (id == 4) return "Linen";
+			if (id == 5) return "Satin";
+			if (id == 6) return "Silk";
+			if (id == 7) return "Velvet";
+			if (id == 8) return "Wool";
+			// 9
+
+			if (id == 10) return "Agate";
+			if (id == 11) return "Amber";
+			if (id == 12) return "Amethyst";
+			if (id == 13) return "Aquamarine";
+			if (id == 14) return "Azurite";
+			if (id == 15) return "Black Garnet";
+			if (id == 16) return "Black Opal";
+			if (id == 17) return "Bloodstone";
+			if (id == 18) return "Carnelian";
+			if (id == 19) return "Citrine";
+
+			if (id == 20) return "Diamond";
+			if (id == 21) return "Emerald";
+			if (id == 22) return "Fire Opal";
+			if (id == 23) return "Green Garnet";
+			if (id == 24) return "Green Jade";
+			if (id == 25) return "Hematite";
+			if (id == 26) return "Imperial Topaz";
+			if (id == 27) return "Jet";
+			if (id == 28) return "Lapis Lazuli";
+			if (id == 29) return "Lavender Jade";
+
+			if (id == 30) return "Malachite";
+			if (id == 31) return "Moonstone";
+			if (id == 32) return "Onyx";
+			if (id == 33) return "Opal";
+			if (id == 34) return "Peridot";
+			if (id == 35) return "Red Garnet";
+			if (id == 36) return "Red Jade";
+			if (id == 37) return "Rose Quartz";
+			if (id == 38) return "Ruby";
+			if (id == 39) return "Sapphire";
+
+			if (id == 40) return "Smokey Quartz";
+			if (id == 41) return "Sunstone";
+			if (id == 42) return "Tiger Eye";
+			if (id == 43) return "Tourmaline";
+			if (id == 44) return "Turquoise";
+			if (id == 45) return "White Jade";
+			if (id == 46) return "White Quartz";
+			if (id == 47) return "White Sapphire";
+			if (id == 48) return "Yellow Garnet";
+			if (id == 49) return "Yellow Topaz";
+			
+			if (id == 50) return "Zircon";
+			if (id == 51) return "Ivory";
+			if (id == 52) return "Leather";
+			if (id == 53) return "Armoredillo Hide";
+			if (id == 54) return "Gromnie Hide";
+			if (id == 55) return "Reed Shark Hide";
+			// 56
+			if (id == 57) return "Brass";
+			if (id == 58) return "Bronze";
+			if (id == 59) return "Copper";
+
+			if (id == 60) return "Gold";
+			if (id == 61) return "Iron";
+			if (id == 62) return "Pyreal";
+			if (id == 63) return "Silver";
+			if (id == 64) return "Steel";
+			// 65
+			if (id == 66) return "Alabaster";
+			if (id == 67) return "Granite";
+			if (id == 68) return "Marble";
+			if (id == 69) return "Obsidian";
+
+			if (id == 70) return "Sandstone";
+			if (id == 71) return "Serpentine";
+			if (id == 73) return "Ebony";
+			if (id == 74) return "Mahogany";
+			if (id == 75) return "Oak";
+			if (id == 76) return "Pine";
+			if (id == 77) return "Teak";
+
+			return "Unknown material id: " + id;
 		}
 
 		// http://www.regular-expressions.info/reference.html
