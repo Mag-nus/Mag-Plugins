@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="ChatFilter.cs" />
     <Compile Include="Client\WindowPosition.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="IPluginCore.cs" />
     <Compile Include="ItemInfo\ILootRuleProcessor.cs" />
     <Compile Include="ItemInfo\ItemInfo.cs" />

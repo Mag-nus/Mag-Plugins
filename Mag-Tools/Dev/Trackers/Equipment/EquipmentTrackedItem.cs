@@ -184,7 +184,7 @@ namespace MagTools.Trackers.Equipment
 				return EquipmentTrackedItemState.Unknown;
 
 			// If this item has no spells, its not activateable
-			if (wo.Values(LongValueKey.SpellCount) == 0 || wo.Values(LongValueKey.MaximumMana) == 0)
+			if (wo.SpellCount == 0 || wo.Values(LongValueKey.MaximumMana) == 0)
 				return EquipmentTrackedItemState.NotActivatable;
 
 			// If this item has no mana in it, it's not active
@@ -209,7 +209,7 @@ namespace MagTools.Trackers.Equipment
 			bool inactiveSpellFound = false;
 
 			// Go through all of this items spells to determine if all are active.
-			for (int i = 0 ; i < wo.Values(LongValueKey.SpellCount) ; i++)
+			for (int i = 0 ; i < wo.SpellCount ; i++)
 			{
 				int spellOnItemId = wo.Spell(i);
 
@@ -228,7 +228,7 @@ namespace MagTools.Trackers.Equipment
 
 
 				// Check to see if this item cast any spells on itself.
-				for (int j = 0 ; j < wo.Values(LongValueKey.ActiveSpellCount) ; j++)
+				for (int j = 0 ; j < wo.ActiveSpellCount ; j++)
 				{
 					int activeSpellOnItemId = wo.ActiveSpell(j);
 

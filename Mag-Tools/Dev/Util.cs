@@ -1,8 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Text.RegularExpressions;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
+
+using Decal.Filters;
 
 namespace MagTools
 {
@@ -96,275 +99,6 @@ namespace MagTools
 			}
 
 			return CoreManager.Current.WorldFilter[container].Values(LongValueKey.ItemSlots) - slotsFilled;
-		}
-
-		/// <summary>
-		/// This will return a skills name by its id.
-		/// For example, 1 returns "Axe".
-		/// If the skill is unknown the following is returned: "Unknown skill id: " + id
-		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
-		public static string GetSkillNameById(int id)
-		{
-			// This list was taken from the Alinco source
-			if (id == 0x1) return "Axe";
-			if (id == 0x2) return "Bow";
-			if (id == 0x3) return "Crossbow";
-			if (id == 0x4) return "Dagger";
-			if (id == 0x5) return "Mace";
-			if (id == 0x6) return "Melee Defense";
-			if (id == 0x7) return "Missile Defense";
-			// 0x8
-			if (id == 0x9) return "Spear";
-			if (id == 0xA) return "Staff";
-			if (id == 0xB) return "Sword";
-			if (id == 0xC) return "Thrown Weapons";
-			if (id == 0xD) return "Unarmed Combat";
-			if (id == 0xE) return "Arcane Lore";
-			if (id == 0xF) return "Magic Defense";
-			if (id == 0x10) return "Mana Conversion";
-			if (id == 0x12) return "Item Tinkering";
-			if (id == 0x13) return "Assess Person";
-			if (id == 0x14) return "Deception";
-			if (id == 0x15) return "Healing";
-			if (id == 0x16) return "Jump";
-			if (id == 0x17) return "Lockpick";
-			if (id == 0x18) return "Run";
-			if (id == 0x1B) return "Assess Creature";
-			if (id == 0x1C) return "Weapon Tinkering";
-			if (id == 0x1D) return "Armor Tinkering";
-			if (id == 0x1E) return "Magic Item Tinkering";
-			if (id == 0x1F) return "Creature Enchantment";
-			if (id == 0x20) return "Item Enchantment";
-			if (id == 0x21) return "Life Magic";
-			if (id == 0x22) return "War Magic";
-			if (id == 0x23) return "Leadership";
-			if (id == 0x24) return "Loyalty";
-			if (id == 0x25) return "Fletching";
-			if (id == 0x26) return "Alchemy";
-			if (id == 0x27) return "Cooking";
-			if (id == 0x28) return "Salvaging";
-			if (id == 0x29) return "Two Handed Combat";
-			// 0x2A
-			if (id == 0x2B) return "Void";
-			if (id == 0x2C) return "Heavy Weapons";
-			if (id == 0x2D) return "Light Weapons";
-			if (id == 0x2E) return "Finesse Weapons";
-			if (id == 0x2F) return "Missile Weapons";
-			if (id == 0x30) return "Shield";
-			if (id == 0x31) return "Dual Wield";
-			if (id == 0x32) return "Recklessness";
-			if (id == 0x33) return "Sneak Attack";
-			if (id == 0x34) return "Dirty Fighting";
-
-			return "Unknown skill id: " + id;
-		}
-
-		/// <summary>
-		/// This will return a mastery name by its id.
-		/// For example, 1 returns "Unearmed Weapon".
-		/// If the skill is unknown the following is returned: "Unknown mastery id: " + id
-		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
-		public static string GetMasteryNameById(int id)
-		{
-			// This list was taken from the Alinco source
-			if (id == 0x1) return "Unarmed Weapon";
-			if (id == 0x2) return "Sword";
-			if (id == 0x3) return "Axe";
-			if (id == 0x4) return "Mace";
-			if (id == 0x5) return "Spear";
-			if (id == 0x6) return "Dagger";
-			if (id == 0x7) return "Staff";
-			if (id == 0x8) return "Bow";
-			if (id == 0x9) return "Crossbow";
-			if (id == 0xA) return "Thrown";
-			if (id == 0xB) return "Two Handed Combat";
-
-			return "Unknown mastery id: " + id;
-		}
-
-		/// <summary>
-		/// This will return an armor attribute set name based on its id.
-		/// For example, 27 returns "Acid Proof Set".
-		/// If the set is unknown the following is returned: "Unknown set id: " + id
-		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
-		public static string GetAttributeSetNameById(int id)
-		{
-			// This list was taken from Virindi Tank Loot Editor
-			// 01-04
-			if (id == 05) return "Noble Relic Set";
-			if (id == 06) return "Ancient Relic Set";
-			if (id == 07) return "Relic Alduressa Set";
-			if (id == 08) return "Shou-jen Set";
-			if (id == 09) return "Empyrean Rings Set";
-			if (id == 10) return "Arm, Mind, Heart Set";
-			if (id == 11) return "Coat of the Perfect Light Set";
-			if (id == 12) return "Leggings of Perfect Light Set";
-			if (id == 13) return "Soldier's Set";
-			if (id == 14) return "Adept's Set";
-			if (id == 15) return "Archer's Set";
-			if (id == 16) return "Defender's Set";
-			if (id == 17) return "Tinker's Set";
-			if (id == 18) return "Crafter's Set";
-			if (id == 19) return "Hearty Set";
-			if (id == 20) return "Dexterous Set";
-			if (id == 21) return "Wise Set";
-			if (id == 22) return "Swift Set";
-			if (id == 23) return "Hardenend Set";
-			if (id == 24) return "Reinforced Set";
-			if (id == 25) return "Interlocking Set";
-			if (id == 26) return "Flame Proof Set";
-			if (id == 27) return "Acid Proof Set";
-			if (id == 28) return "Cold Proof Set";
-			if (id == 29) return "Lightning Proof Set";
-			if (id == 30) return "Dedication Set";
-			if (id == 31) return "Gladiatorial Clothing Set";
-			if (id == 32) return "Protective Clothing Set";
-			// 33-34
-			if (id == 35) return "Sigil of Defense";
-			if (id == 36) return "Sigil of Destruction";
-			if (id == 37) return "Sigil of Fury";
-			if (id == 38) return "Sigil of Growth";
-			if (id == 39) return "Sigil of Vigor";
-			// 40-48
-			if (id == 49) return "Alchemy Set";
-			if (id == 50) return "Arcane Lore Set";
-			if (id == 51) return "Armor Tinkering Set";
-			if (id == 52) return "Assess Person Set";
-			if (id == 53) return "Axe Set";
-			if (id == 54) return "Bow Set";
-			if (id == 55) return "Cooking Set";
-			if (id == 56) return "Creature Enchantment Set";
-			if (id == 57) return "Crossbow Set";
-			if (id == 58) return "Dagger Set";
-			if (id == 59) return "Deception Set";
-			if (id == 60) return "Fletching Set";
-			if (id == 61) return "Healing Set";
-			if (id == 62) return "Item Enchantment Set";
-			if (id == 63) return "Item Tinkering Set";
-			if (id == 64) return "Leadership Set";
-			if (id == 65) return "Life Magic Set";
-			if (id == 66) return "Loyalty Set";
-			if (id == 67) return "Mace Set";
-			if (id == 68) return "Magic Defense Set";
-			if (id == 69) return "Magic Item Tinkering Set";
-			if (id == 70) return "Mana Conversion Set";
-			if (id == 71) return "Melee Defense Set";
-			if (id == 72) return "Missile Defense Set";
-			if (id == 73) return "Salvaging Set";
-			if (id == 74) return "Spear Set";
-			if (id == 75) return "Staff Set";
-			if (id == 76) return "Sword Set";
-			if (id == 77) return "Thrown Weapons Set";
-			if (id == 78) return "Two Handed Combat Set";
-			if (id == 79) return "Unarmed Combat Set";
-			if (id == 80) return "Void Magic Set";
-			if (id == 81) return "War Magic Set";
-			if (id == 82) return "Weapon Tinkering Set";
-			if (id == 83) return "Assess Creature  Set";
-
-			return "Unknown set id: " + id;
-		}
-
-		/// <summary>
-		/// This will return a material name based on its id.
-		/// For example, 27 returns "Acid Proof Set".
-		/// If the set is unknown the following is returned: "Unknown set id: " + id
-		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
-		public static string GetMaterialNameById(int id)
-		{
-			if (id == 1) return "Ceramic";
-			if (id == 2) return "Porcelain";
-			// 3
-			if (id == 4) return "Linen";
-			if (id == 5) return "Satin";
-			if (id == 6) return "Silk";
-			if (id == 7) return "Velvet";
-			if (id == 8) return "Wool";
-			// 9
-
-			if (id == 10) return "Agate";
-			if (id == 11) return "Amber";
-			if (id == 12) return "Amethyst";
-			if (id == 13) return "Aquamarine";
-			if (id == 14) return "Azurite";
-			if (id == 15) return "Black Garnet";
-			if (id == 16) return "Black Opal";
-			if (id == 17) return "Bloodstone";
-			if (id == 18) return "Carnelian";
-			if (id == 19) return "Citrine";
-
-			if (id == 20) return "Diamond";
-			if (id == 21) return "Emerald";
-			if (id == 22) return "Fire Opal";
-			if (id == 23) return "Green Garnet";
-			if (id == 24) return "Green Jade";
-			if (id == 25) return "Hematite";
-			if (id == 26) return "Imperial Topaz";
-			if (id == 27) return "Jet";
-			if (id == 28) return "Lapis Lazuli";
-			if (id == 29) return "Lavender Jade";
-
-			if (id == 30) return "Malachite";
-			if (id == 31) return "Moonstone";
-			if (id == 32) return "Onyx";
-			if (id == 33) return "Opal";
-			if (id == 34) return "Peridot";
-			if (id == 35) return "Red Garnet";
-			if (id == 36) return "Red Jade";
-			if (id == 37) return "Rose Quartz";
-			if (id == 38) return "Ruby";
-			if (id == 39) return "Sapphire";
-
-			if (id == 40) return "Smokey Quartz";
-			if (id == 41) return "Sunstone";
-			if (id == 42) return "Tiger Eye";
-			if (id == 43) return "Tourmaline";
-			if (id == 44) return "Turquoise";
-			if (id == 45) return "White Jade";
-			if (id == 46) return "White Quartz";
-			if (id == 47) return "White Sapphire";
-			if (id == 48) return "Yellow Garnet";
-			if (id == 49) return "Yellow Topaz";
-			
-			if (id == 50) return "Zircon";
-			if (id == 51) return "Ivory";
-			if (id == 52) return "Leather";
-			if (id == 53) return "Armoredillo Hide";
-			if (id == 54) return "Gromnie Hide";
-			if (id == 55) return "Reed Shark Hide";
-			// 56
-			if (id == 57) return "Brass";
-			if (id == 58) return "Bronze";
-			if (id == 59) return "Copper";
-
-			if (id == 60) return "Gold";
-			if (id == 61) return "Iron";
-			if (id == 62) return "Pyreal";
-			if (id == 63) return "Silver";
-			if (id == 64) return "Steel";
-			// 65
-			if (id == 66) return "Alabaster";
-			if (id == 67) return "Granite";
-			if (id == 68) return "Marble";
-			if (id == 69) return "Obsidian";
-
-			if (id == 70) return "Sandstone";
-			if (id == 71) return "Serpentine";
-			if (id == 73) return "Ebony";
-			if (id == 74) return "Mahogany";
-			if (id == 75) return "Oak";
-			if (id == 76) return "Pine";
-			if (id == 77) return "Teak";
-
-			return "Unknown material id: " + id;
 		}
 
 		// http://www.regular-expressions.info/reference.html
@@ -485,6 +219,47 @@ namespace MagTools
 			}
 
 			return source;
+		}
+
+		public static void ExportSpells(string targetFileName)
+		{
+			using (StreamWriter writer = new StreamWriter(targetFileName, true))
+			{
+				writer.WriteLine("Id,Name,Description,Difficulty,Duration,Family,Flags,Generation,IconId,IsDebuff,IsFastWindup,IsFellowship,IsIrresistible,IsOffensive,IsUntargetted,Mana,School,SortKey,Speed,TargetEffect,TargetMask,Type,Unknown1,Unknown2,Unknown3,Unknown4,Unknown5,Unknown6,Unknown7,Unknown8,Unknown9,Unknown10");
+
+				FileService service = CoreManager.Current.Filter<FileService>();
+
+				for (int i = 0 ; i < service.SpellTable.Length ; i++)
+				{
+					Spell spell = service.SpellTable[i];
+
+					string flags = "";
+					flags += ((spell.Flags & 0x80000) == 0x80000) ? "1" : "0";
+					flags += ((spell.Flags & 0x40000) == 0x40000) ? "1" : "0";
+					flags += ((spell.Flags & 0x20000) == 0x20000) ? "1" : "0";
+					flags += ((spell.Flags & 0x10000) == 0x10000) ? "1" : "0";
+					flags += ((spell.Flags & 0x8000) == 0x8000) ? "1" : "0";
+					flags += ((spell.Flags & 0x4000) == 0x4000) ? "1" : "0";
+					flags += ((spell.Flags & 0x2000) == 0x2000) ? "1" : "0";
+					flags += ((spell.Flags & 0x1000) == 0x1000) ? "1" : "0";
+					flags += ((spell.Flags & 0x800) == 0x800) ? "1" : "0";
+					flags += ((spell.Flags & 0x400) == 0x400) ? "1" : "0";
+					flags += ((spell.Flags & 0x200) == 0x200) ? "1" : "0";
+					flags += ((spell.Flags & 0x100) == 0x100) ? "1" : "0";
+					flags += ((spell.Flags & 0x80) == 0x80) ? "1" : "0";
+					flags += ((spell.Flags & 0x40) == 0x40) ? "1" : "0";
+					flags += ((spell.Flags & 0x20) == 0x20) ? "1" : "0";
+					flags += ((spell.Flags & 0x10) == 0x10) ? "1" : "0";
+					flags += ((spell.Flags & 0x8) == 0x8) ? "1" : "0";
+					flags += ((spell.Flags & 0x4) == 0x4) ? "1" : "0";
+					flags += ((spell.Flags & 0x2) == 0x2) ? "1" : "0";
+					flags += ((spell.Flags & 0x1) == 0x1) ? "1" : "0";
+
+					writer.WriteLine(spell.Id + "," + spell.Name.Replace(",", ".") + "," + spell.Description.Replace(",", ".") + "," + spell.Difficulty + "," + spell.Duration + "," + spell.Family + "," + flags + "," + spell.Generation + "," + spell.IconId + "," + spell.IsDebuff + "," + spell.IsFastWindup + "," + spell.IsFellowship + "," + spell.IsIrresistible + "," + spell.IsOffensive + "," + spell.IsUntargetted + "," + spell.Mana + "," + spell.School + "," + spell.SortKey + "," + spell.Speed + "," + spell.TargetEffect + "," + spell.TargetMask + "," + spell.Type + "," + spell.Unknown1 + "," + spell.Unknown2 + "," + spell.Unknown3 + "," + spell.Unknown4 + "," + spell.Unknown5 + "," + spell.Unknown6 + "," + spell.Unknown7 + "," + spell.Unknown8 + "," + spell.Unknown9 + "," + spell.Unknown10);
+				}
+
+				writer.Close();
+			}
 		}
 	}
 }

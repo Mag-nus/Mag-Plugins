@@ -296,6 +296,8 @@ namespace MagTools
 		{
 			try
 			{
+				//Util.ExportSpells(PluginPersonalFolder.FullName + @"\Spells.csv");
+
 				CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
 
 				try
