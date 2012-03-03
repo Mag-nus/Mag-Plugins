@@ -11,7 +11,7 @@ namespace MagTools.ItemInfo
 	/// Instantiate this object with the item you want info for.
 	/// ToString() this object for the info.
 	/// </summary>
-	class ItemInfo
+	public class ItemInfo
 	{
 		private readonly WorldObject wo;
 
@@ -25,18 +25,31 @@ namespace MagTools.ItemInfo
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
 			if (wo.Values(LongValueKey.Material) > 0)
-				sb.Append(Util.GetMaterialNameById(wo.Values(LongValueKey.Material)) + " ");
+			{
+				if (Constants.GetMaterialInfo().ContainsKey(wo.Values(LongValueKey.Material)))
+					sb.Append(Constants.GetMaterialInfo()[wo.Values(LongValueKey.Material)] + " ");
+				else
+					sb.Append("unknown material " + wo.Values(LongValueKey.Material) + " ");
+			}
 
 			sb.Append(wo.Name);
 
 			if (wo.Values((LongValueKey)353) > 0)
-				sb.Append(" (" + Util.GetMasteryNameById(wo.Values((LongValueKey)353)) + ")");
+			{
+				if (Constants.GetMasteryInfo().ContainsKey(wo.Values((LongValueKey)353)))
+					sb.Append(" (" + Constants.GetMasteryInfo()[wo.Values((LongValueKey)353)] + ")");
+				else
+					sb.Append(" (Unknown mastery " + wo.Values((LongValueKey)353) + ")");
+			}
 
 			int set = wo.Values((LongValueKey)265, 0);
 			if (set != 0)
 			{
 				sb.Append(", ");
-				sb.Append(Util.GetAttributeSetNameById(set));
+				if (Constants.GetAttributeSetInfo().ContainsKey(set))
+					sb.Append(Constants.GetAttributeSetInfo()[set]);
+				else
+					sb.Append("Unknown set " + set);
 			}
 
 			if (wo.Values(LongValueKey.ArmorLevel) > 0)
@@ -94,100 +107,40 @@ namespace MagTools.ItemInfo
 
 			if (Settings.SettingsManager.ItemInfoOnIdent.ShowBuffedValues.Value && (wo.ObjectClass == ObjectClass.MeleeWeapon || wo.ObjectClass == ObjectClass.MissileWeapon || wo.ObjectClass == ObjectClass.WandStaffOrb))
 			{
-				int maxDamage = wo.Values(LongValueKey.MaxDamage);
-				int elementalDmgBonus = wo.Values(LongValueKey.ElementalDmgBonus, 0);
-				double damageBonus = wo.Values(DoubleValueKey.DamageBonus, 1);
-				double elementalDamageVersusMonsters = wo.Values(DoubleValueKey.ElementalDamageVersusMonsters, 1);
-				double attackBonus = wo.Values(DoubleValueKey.AttackBonus, 1);
-				double meleeDefenseBonus = wo.Values(DoubleValueKey.MeleeDefenseBonus, 1);
-				double manaCBonus = wo.Values(DoubleValueKey.ManaCBonus);
+				sb.Append(", (");
 
-				for (int i = 0 ; i < wo.Values(LongValueKey.SpellCount) ; i++)
-				{
-					int spellId = wo.Spell(i);
-
-					// LongValueKey.MaxDamage
-					if (spellId == 4395) maxDamage += 2; // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
-					if (spellId == 2598 && !IsActiveSpell(2598)) maxDamage += 2; // Minor Blood Thirst
-					if (spellId == 2586 && !IsActiveSpell(2586)) maxDamage += 4; // Major Blood Thirst
-					if (spellId == 4661 && !IsActiveSpell(4661)) maxDamage += 7; // Epic Blood Thirst
-
-					// DoubleValueKey.ElementalDamageVersusMonsters
-					if (spellId == 4414) elementalDamageVersusMonsters += .01; // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
-					if (spellId == 3251 && !IsActiveSpell(3251)) elementalDamageVersusMonsters += .01; // Minor Spirit Thirst
-					if (spellId == 3250 && !IsActiveSpell(3250)) elementalDamageVersusMonsters += .03; // Major Spirit Thirst
-					if (spellId == 4670 && !IsActiveSpell(4670)) elementalDamageVersusMonsters += .04; // Epic Spirit Thirst
-
-					// DoubleValueKey.AttackBonus
-					if (spellId == 2603 && !IsActiveSpell(2603)) attackBonus += .03; // Minor Heart Thirst
-					if (spellId == 2591 && !IsActiveSpell(2591)) attackBonus += .05; // Major Heart Thirst
-					if (spellId == 4666 && !IsActiveSpell(4666)) attackBonus += .07; // Epic Heart Thirst
-
-					// DoubleValueKey.MeleeDefenseBonus
-					if (spellId == 2600 && !IsActiveSpell(2600)) meleeDefenseBonus += .03; // Minor Defender
-					if (spellId == 2588 && !IsActiveSpell(2588)) meleeDefenseBonus += .05; // Major Defender
-					if (spellId == 4663 && !IsActiveSpell(4663)) meleeDefenseBonus += .07; // Epic Defender
-
-					// DoubleValueKey.ManaCBonus
-					if (spellId == 3201 && !IsActiveSpell(3201)) manaCBonus *= 1.05; // Feeble Hermetic Link
-					if (spellId == 3199 && !IsActiveSpell(3199)) manaCBonus *= 1.10; // Minor Hermetic Link
-					if (spellId == 3202 && !IsActiveSpell(3202)) manaCBonus *= 1.15; // Moderate Hermetic Link
-					if (spellId == 3200 && !IsActiveSpell(3200)) manaCBonus *= 1.20; // Major Hermetic Link
-				}
-
-				// LongValueKey.MaxDamage
-				if (IsActiveSpell(1616)) maxDamage -= 20; // Blood Drinker VI
-				if (IsActiveSpell(2096)) maxDamage -= 22; // Infected Caress
-				if (IsActiveSpell(5183)) maxDamage -= 22; // Incantation of Blood Drinker
-				if (IsActiveSpell(4395)) maxDamage -= 22; // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
-
-				// DoubleValueKey.ElementalDamageVersusMonsters:
-				if (IsActiveSpell(3258)) elementalDamageVersusMonsters -= .06; // Spirit Drinker VI
-				if (IsActiveSpell(3259)) elementalDamageVersusMonsters -= .07; // Infected Spirit Caress
-				if (IsActiveSpell(5182)) elementalDamageVersusMonsters -= .07; // Incantation of Spirit Drinker
-				if (IsActiveSpell(4414)) elementalDamageVersusMonsters -= .08; // Incantation of Spirit Drinker
-
-				// DoubleValueKey.AttackBonus
-				if (IsActiveSpell(1592)) attackBonus -= .15; // Heart Seeker VI
-				if (IsActiveSpell(2106)) attackBonus -= .17; // Elysa's Sight
-				if (IsActiveSpell(4405)) attackBonus -= .20; // Incantation of Heart Seeker
-
-				// DoubleValueKey.MeleeDefenseBonus
-				if (IsActiveSpell(1605)) meleeDefenseBonus -= .15; // Defender VI
-				if (IsActiveSpell(2101)) meleeDefenseBonus -= .17; // Cragstone's Will
-				if (IsActiveSpell(4400)) meleeDefenseBonus -= .17; // Incantation of Defender
-
-				// DoubleValueKey.ManaCBonus
-				if (IsActiveSpell(1480)) manaCBonus /= 1.60; // Hermetic Link VI
-				if (IsActiveSpell(2117)) manaCBonus /= 1.70; // Mystic's Blessing
-				if (IsActiveSpell(4418)) manaCBonus /= 1.80; // Incantation of Hermetic Link
-
+				// (Damage)
 				if (wo.ObjectClass == ObjectClass.MeleeWeapon)
-				{
-					double variance = wo.Values(DoubleValueKey.Variance, 0.0);
-					double minDamage = maxDamage - (variance * maxDamage);
-
-					sb.Append(", (" + ((minDamage + maxDamage) / 2).ToString("N2") + "/" + ((attackBonus - 1) * 100).ToString("N1") + "/" + ((meleeDefenseBonus - 1) * 100).ToString("N1") + ")");
-				}
+					sb.Append(CalcedBuffedTinkedDamage.ToString("N1") + "/" + GetBuffedLogValueKey(LongValueKey.MaxDamage));
 
 				if (wo.ObjectClass == ObjectClass.MissileWeapon)
-				{
-					sb.Append(", (" + (maxDamage + (((damageBonus - 1) * 100) / 3) + elementalDmgBonus).ToString("N2") + "/" + ((meleeDefenseBonus - 1) * 100).ToString("N1") + ")");
-				}
+					sb.Append(BuffedMissileDamage.ToString("N1"));
 
-				if (wo.ObjectClass == ObjectClass.WandStaffOrb && (elementalDamageVersusMonsters != 1 || meleeDefenseBonus != 1 || manaCBonus != 0))
-				{
-					sb.Append(", (" + ((elementalDamageVersusMonsters - 1) * 100).ToString("N1") + "/" + ((meleeDefenseBonus - 1) * 100).ToString("N1") + "/" + (manaCBonus * 100).ToString("N1") + ")");
-				}
+				if (wo.ObjectClass == ObjectClass.WandStaffOrb)
+					sb.Append(((GetBuffedDoubleValueKey(DoubleValueKey.ElementalDamageVersusMonsters) - 1) * 100));
+
+				// (AttackBonus/MeleeDefenseBonus/ManaCBonus)
+				sb.Append(" ");
+
+				if (wo.Values(DoubleValueKey.AttackBonus, 1) != 1)
+					sb.Append(Math.Round(((GetBuffedDoubleValueKey(DoubleValueKey.AttackBonus) - 1) * 100)).ToString("N1") + "/");
+
+				if (wo.Values(DoubleValueKey.MeleeDefenseBonus, 1) != 1)
+					sb.Append(Math.Round(((GetBuffedDoubleValueKey(DoubleValueKey.MeleeDefenseBonus) - 1) * 100)).ToString("N1"));
+
+				if (wo.Values(DoubleValueKey.ManaCBonus) != 0)
+					sb.Append("/" + Math.Round(GetBuffedDoubleValueKey(DoubleValueKey.ManaCBonus) * 100));
+
+				sb.Append(")");
 			}
 
-			if (wo.Values(LongValueKey.SpellCount) > 0)
+			if (wo.SpellCount > 0)
 			{
 				FileService service = CoreManager.Current.Filter<FileService>();
 
 				List<int> itemActiveSpells = new List<int>();
 
-				for (int i = 0 ; i < wo.Values(LongValueKey.SpellCount) ; i++)
+				for (int i = 0 ; i < wo.SpellCount ; i++)
 					itemActiveSpells.Add(wo.Spell(i));
 
 				itemActiveSpells.Sort();
@@ -297,14 +250,22 @@ namespace MagTools.ItemInfo
 				if (wo.Values(LongValueKey.WieldReqType) == 7 && wo.Values(LongValueKey.WieldReqAttribute) == 1)
 					sb.Append(", Wield Lvl " + wo.Values(LongValueKey.WieldReqValue));
 				else
-					sb.Append(", " + Util.GetSkillNameById(wo.Values(LongValueKey.WieldReqAttribute)) + " " + wo.Values(LongValueKey.WieldReqValue) + " to Wield");
+				{
+					if (Constants.GetSkillInfo().ContainsKey(wo.Values(LongValueKey.WieldReqAttribute)))
+						sb.Append(", " + Constants.GetSkillInfo()[wo.Values(LongValueKey.WieldReqAttribute)] + " " + wo.Values(LongValueKey.WieldReqValue) + " to Wield");
+					else
+						sb.Append(", Unknown skill: " +wo.Values(LongValueKey.WieldReqAttribute) + " " + wo.Values(LongValueKey.WieldReqValue) + " to Wield");
+				}
 			}
 
 			// Melee Defense 300 to Activate
 			// If the activation is lower than the wield requirement, don't show it.
 			if (wo.Values(LongValueKey.SkillLevelReq) > 0 && (wo.Values(LongValueKey.WieldReqAttribute) != wo.Values(LongValueKey.ActivationReqSkillId) || wo.Values(LongValueKey.WieldReqValue) < wo.Values(LongValueKey.SkillLevelReq)))
 			{
-				sb.Append(", " + Util.GetSkillNameById(wo.Values(LongValueKey.ActivationReqSkillId)) + " " + wo.Values(LongValueKey.SkillLevelReq) + " to Activate");
+				if (Constants.GetSkillInfo().ContainsKey(wo.Values(LongValueKey.ActivationReqSkillId)))
+					sb.Append(", " + Constants.GetSkillInfo()[wo.Values(LongValueKey.ActivationReqSkillId)] + " " + wo.Values(LongValueKey.SkillLevelReq) + " to Activate");
+				else
+					sb.Append(", Unknown skill: " + wo.Values(LongValueKey.ActivationReqSkillId) + " " + wo.Values(LongValueKey.SkillLevelReq) + " to Activate");
 			}
 
 			if (wo.Values(LongValueKey.LoreRequirement) > 0)
@@ -345,15 +306,130 @@ namespace MagTools.ItemInfo
 			return sb.ToString();
 		}
 
-		bool IsActiveSpell(int activeSpellId)
+		public double BuffedAverageDamage
 		{
+			get
+			{
+				double variance = wo.Values(DoubleValueKey.Variance, 0.0);
+				int maxDamage = GetBuffedLogValueKey(LongValueKey.MaxDamage);
+				double minDamage = maxDamage - (variance * maxDamage);
+
+				return (minDamage + maxDamage) / 2;
+			}
+		}
+
+		public double CalcedBuffedTinkedDamage
+		{
+			get
+			{
+				double variance = wo.Values(DoubleValueKey.Variance, 0.0);
+				int maxDamage = GetBuffedLogValueKey(LongValueKey.MaxDamage);
+
+				int numberOfTinksLeft = Math.Max(10 - wo.Values(LongValueKey.NumberTimesTinkered), 0);
+
+				if (wo.Values(LongValueKey.Imbued) == 0)
+					numberOfTinksLeft--; // Factor in an imbue tink
+
+				// If this is not a loot generated item, it can't be tinked
+				if (wo.Values(LongValueKey.Material) == 0)
+					numberOfTinksLeft = 0;
+
+				for (int i = 1 ; i <= numberOfTinksLeft ; i++)
+				{
+					double ironTinkDoT = CalculateDamageOverTime(maxDamage + 22 + 1, variance);
+					double graniteTinkDoT = CalculateDamageOverTime(maxDamage + 22, variance * .8);
+
+					if (ironTinkDoT >= graniteTinkDoT)
+						maxDamage++;
+					else
+						variance *= .8;
+				}
+
+				return CalculateDamageOverTime(maxDamage + 22, variance);
+			}
+		}
+
+		/// <summary>
+		/// maxDamage * ((1 - critChance) * (2 - variance) / 2 + (critChance * critMultiplier));
+		/// </summary>
+		/// <param name="maxDamage"></param>
+		/// <param name="variance"></param>
+		/// <param name="critChance"></param>
+		/// <param name="critMultiplier"></param>
+		/// <returns></returns>
+		public static double CalculateDamageOverTime(int maxDamage, double variance, double critChance = .1, double critMultiplier = 2)
+		{
+			return maxDamage * ((1 - critChance) * (2 - variance) / 2 + (critChance * critMultiplier));
+		}
+
+		public double BuffedMissileDamage
+		{
+			get
+			{
+				return GetBuffedLogValueKey(LongValueKey.MaxDamage) + (((GetBuffedDoubleValueKey(DoubleValueKey.DamageBonus) - 1) * 100) / 3) + GetBuffedLogValueKey(LongValueKey.ElementalDmgBonus);
+			}
+		}
+
+		public int GetBuffedLogValueKey(LongValueKey key, int defaultValue = 0)
+		{
+			if (!wo.Exists(key))
+				return defaultValue;
+
+			int value = wo.Values(key, defaultValue);
+
 			for (int i = 0 ; i < wo.ActiveSpellCount ; i++)
 			{
-				if (wo.ActiveSpell(i) == activeSpellId)
-					return true;
+				int spellId = wo.ActiveSpell(i);
+
+				if (Constants.LongValueKeySpellEffects.ContainsKey(spellId) && Constants.LongValueKeySpellEffects[spellId].Key == key)
+					value -= (int)Constants.LongValueKeySpellEffects[spellId].Change;
 			}
 
-			return false;
+			for (int i = 0 ; i < wo.SpellCount ; i++)
+			{
+				int spellId = wo.Spell(i);
+
+				if (Constants.LongValueKeySpellEffects.ContainsKey(spellId) && Constants.LongValueKeySpellEffects[spellId].Key == key && Constants.LongValueKeySpellEffects[spellId].Bonus != 0)
+					value += (int)Constants.LongValueKeySpellEffects[spellId].Bonus;
+			}
+
+			return value;
+		}
+
+		public double GetBuffedDoubleValueKey(DoubleValueKey key, double defaultValue = 0)
+		{
+			if (!wo.Exists(key))
+				return defaultValue;
+
+			double value = wo.Values(key, defaultValue);
+
+			for (int i = 0 ; i < wo.ActiveSpellCount ; i++)
+			{
+				int spellId = wo.ActiveSpell(i);
+
+				if (Constants.DoubleValueKeySpellEffects.ContainsKey(spellId) && Constants.DoubleValueKeySpellEffects[spellId].Key == key)
+				{
+					if ((int)Constants.DoubleValueKeySpellEffects[spellId].Change == 1)
+						value /= Constants.DoubleValueKeySpellEffects[spellId].Change;
+					else
+						value -= Constants.DoubleValueKeySpellEffects[spellId].Change;
+				}
+			}
+
+			for (int i = 0 ; i < wo.SpellCount ; i++)
+			{
+				int spellId = wo.Spell(i);
+
+				if (Constants.DoubleValueKeySpellEffects.ContainsKey(spellId) && Constants.DoubleValueKeySpellEffects[spellId].Key == key && Constants.DoubleValueKeySpellEffects[spellId].Bonus != 0)
+				{
+					if ((int)Constants.DoubleValueKeySpellEffects[spellId].Change == 1)
+						value *= Constants.DoubleValueKeySpellEffects[spellId].Bonus;
+					else
+						value += Constants.DoubleValueKeySpellEffects[spellId].Bonus;
+				}
+			}
+
+			return value;
 		}
 	}
 }

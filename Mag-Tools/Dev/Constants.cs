@@ -177,7 +177,7 @@ namespace MagTools
 				{ 73, "Salvaging Set" },
 				{ 74, "Spear Set" },
 				{ 75, "Staff Set" },
-				{ 76, "Sword Set" },
+				{ 76, "Heavy Weapons Set" },
 				{ 77, "Thrown Weapons Set" },
 				{ 78, "Two Handed Combat Set" },
 				{ 79, "Unarmed Combat Set" },
@@ -285,87 +285,18 @@ namespace MagTools
 
 			return materialInfo;
 		}
-		/*
-		public struct SpellEffect
-		{
-			public readonly int SpellId;
-			public readonly double Effect;
 
-			public SpellEffect(int spellId, double effect)
-			{
-				SpellId = spellId;
-				Effect = effect;
-			}
-		}
-
-		public static readonly List<KeyValuePair<LongValueKey, SpellEffect>> LongValueKeySpellEffects = new List<KeyValuePair<LongValueKey, SpellEffect>>()
-		{
-			{ LongValueKey.MaxDamage, new SpellEffect(1616, 20)}, // Blood Drinker VI
-			{ LongValueKey.MaxDamage, new SpellEffect(2096, 22)}, // Infected Caress
-			{ LongValueKey.MaxDamage, new SpellEffect(5183, 22)}, // Incantation of Blood Drinker
-			{ LongValueKey.MaxDamage, new SpellEffect(4395, 24)}, // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
-
-			{ LongValueKey.MaxDamage, new SpellEffect(2598, 2)}, // Minor Blood Thirst
-			{ LongValueKey.MaxDamage, new SpellEffect(2586, 4)}, // Major Blood Thirst
-			{ LongValueKey.MaxDamage, new SpellEffect(4661, 7)}, // Epic Blood Thirst
-
-			{ LongValueKey.MaxDamage, new SpellEffect(3688, 50)}, // Prodigal Blood Drinker
-		};
-
-		public static readonly Dictionary<DoubleValueKey, SpellEffect> DoubleValueKeySpellEffects = new Dictionary<DoubleValueKey, SpellEffect>()
-		{
-			{ DoubleValueKey.ElementalDamageVersusMonsters, new SpellEffect(3258, .06)}, // Spirit Drinker VI
-			{ DoubleValueKey.ElementalDamageVersusMonsters, new SpellEffect(3259, .07)}, // Infected Spirit Caress
-			{ DoubleValueKey.ElementalDamageVersusMonsters, new SpellEffect(5182, .07)}, // Incantation of Spirit Drinker
-			{ DoubleValueKey.ElementalDamageVersusMonsters, new SpellEffect(4414, .08)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
-
-			{ DoubleValueKey.ElementalDamageVersusMonsters, new SpellEffect(3251, .01)}, // Minor Spirit Thirst
-			{ DoubleValueKey.ElementalDamageVersusMonsters, new SpellEffect(3250, .03)}, // Major Spirit Thirst
-			{ DoubleValueKey.ElementalDamageVersusMonsters, new SpellEffect(4670, .04)}, // Epic Spirit Thirst
-
-			{ DoubleValueKey.ElementalDamageVersusMonsters, new SpellEffect(3735, .15)}, // Prodigal Spirit Drinker
-
-
-			{ DoubleValueKey.AttackBonus, new SpellEffect(1592, .15)}, // Heart Seeker VI
-			{ DoubleValueKey.AttackBonus, new SpellEffect(2106, .17)}, // Elysa's Sight
-			{ DoubleValueKey.AttackBonus, new SpellEffect(4405, .20)}, // Incantation of Heart Seeker
-
-			{ DoubleValueKey.AttackBonus, new SpellEffect(2603, .03)}, // Minor Heart Thirst
-			{ DoubleValueKey.AttackBonus, new SpellEffect(2591, .05)}, // Major Heart Thirst
-			{ DoubleValueKey.AttackBonus, new SpellEffect(4666, .07)}, // Epic Heart Thirst
-
-
-			{ DoubleValueKey.MeleeDefenseBonus, new SpellEffect(1605, .15)}, // Defender VI
-			{ DoubleValueKey.MeleeDefenseBonus, new SpellEffect(2101, .17)}, // Cragstone's Will
-			{ DoubleValueKey.MeleeDefenseBonus, new SpellEffect(4400, .17)}, // Incantation of Defender
-
-			{ DoubleValueKey.MeleeDefenseBonus, new SpellEffect(2600, .03)}, // Minor Defender
-			{ DoubleValueKey.MeleeDefenseBonus, new SpellEffect(3985, .04)}, // Mukkir Sense
-			{ DoubleValueKey.MeleeDefenseBonus, new SpellEffect(2588, .05)}, // Major Defender
-			{ DoubleValueKey.MeleeDefenseBonus, new SpellEffect(4663, .07)}, // Epic Defender
-
-			{ DoubleValueKey.MeleeDefenseBonus, new SpellEffect(3699, .25)}, // Prodigal Defender
-
-
-			{ DoubleValueKey.ManaCBonus, new SpellEffect(1480, 1.60)}, // Hermetic Link VI
-			{ DoubleValueKey.ManaCBonus, new SpellEffect(2117, 1.70)}, // Mystic's Blessing
-			{ DoubleValueKey.ManaCBonus, new SpellEffect(4418, 1.80)}, // Incantation of Hermetic Link
-
-			{ DoubleValueKey.ManaCBonus, new SpellEffect(3201, 1.05)}, // Feeble Hermetic Link
-			{ DoubleValueKey.ManaCBonus, new SpellEffect(3199, 1.10)}, // Minor Hermetic Link
-			{ DoubleValueKey.ManaCBonus, new SpellEffect(3202, 1.15)}, // Moderate Hermetic Link
-			{ DoubleValueKey.ManaCBonus, new SpellEffect(3200, 1.20)}, // Major Hermetic Link
-		};
-*/
 		public struct SpellInfo<T>
 		{
 			public readonly T Key;
 			public readonly double Change;
+			public readonly double Bonus;
 
-			public SpellInfo(T key, double change)
+			public SpellInfo(T key, double change, double bonus = 0)
 			{
 				Key = key;
 				Change = change;
+				Bonus = bonus;
 			}
 		}
 
@@ -374,11 +305,11 @@ namespace MagTools
 			{ 1616, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 20)}, // Blood Drinker VI
 			{ 2096, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 22)}, // Infected Caress
 			{ 5183, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 22)}, // Incantation of Blood Drinker
-			{ 4395, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 24)}, // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
+			{ 4395, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 24, 2)}, // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
 
-			{ 2598, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 2)}, // Minor Blood Thirst
-			{ 2586, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 4)}, // Major Blood Thirst
-			{ 4661, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 7)}, // Epic Blood Thirst
+			{ 2598, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 2, 2)}, // Minor Blood Thirst
+			{ 2586, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 4, 4)}, // Major Blood Thirst
+			{ 4661, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 7, 7)}, // Epic Blood Thirst
 
 			{ 3688, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 300)}, // Prodigal Blood Drinker
 		};
@@ -388,11 +319,11 @@ namespace MagTools
 			{ 3258, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .06)}, // Spirit Drinker VI
 			{ 3259, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07)}, // Infected Spirit Caress
 			{ 5182, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07)}, // Incantation of Spirit Drinker
-			{ 4414, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
+			{ 4414, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08, .01)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
 
-			{ 3251, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .01)}, // Minor Spirit Thirst
-			{ 3250, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .03)}, // Major Spirit Thirst
-			{ 4670, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .04)}, // Epic Spirit Thirst
+			{ 3251, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .01, .01)}, // Minor Spirit Thirst
+			{ 3250, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .03, .03)}, // Major Spirit Thirst
+			{ 4670, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .04, .04)}, // Epic Spirit Thirst
 
 			{ 3735, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .15)}, // Prodigal Spirit Drinker
 
@@ -401,19 +332,19 @@ namespace MagTools
 			{ 2106, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .17)}, // Elysa's Sight
 			{ 4405, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .20)}, // Incantation of Heart Seeker
 
-			{ 2603, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .03)}, // Minor Heart Thirst
-			{ 2591, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .05)}, // Major Heart Thirst
-			{ 4666, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .07)}, // Epic Heart Thirst
+			{ 2603, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .03, .03)}, // Minor Heart Thirst
+			{ 2591, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .05, .05)}, // Major Heart Thirst
+			{ 4666, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .07, .07)}, // Epic Heart Thirst
 
 
 			{ 1605, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .15)}, // Defender VI
 			{ 2101, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .17)}, // Cragstone's Will
 			{ 4400, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .17)}, // Incantation of Defender
 
-			{ 2600, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .03)}, // Minor Defender
-			{ 3985, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .04)}, // Mukkir Sense
-			{ 2588, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .05)}, // Major Defender
-			{ 4663, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .07)}, // Epic Defender
+			{ 2600, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .03, .03)}, // Minor Defender
+			{ 3985, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .04, .04)}, // Mukkir Sense
+			{ 2588, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .05, .05)}, // Major Defender
+			{ 4663, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .07, .07)}, // Epic Defender
 
 			{ 3699, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .25)}, // Prodigal Defender
 
@@ -422,10 +353,10 @@ namespace MagTools
 			{ 2117, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.70)}, // Mystic's Blessing
 			{ 4418, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.80)}, // Incantation of Hermetic Link
 
-			{ 3201, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.05)}, // Feeble Hermetic Link
-			{ 3199, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.10)}, // Minor Hermetic Link
-			{ 3202, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.15)}, // Moderate Hermetic Link
-			{ 3200, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.20)}, // Major Hermetic Link
+			{ 3201, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.05, 1.05)}, // Feeble Hermetic Link
+			{ 3199, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.10, 1.10)}, // Minor Hermetic Link
+			{ 3202, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.15, 1.15)}, // Moderate Hermetic Link
+			{ 3200, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.20, 1.20)}, // Major Hermetic Link
 		};
 	}
 }
