@@ -60,17 +60,25 @@ namespace MagTools.Macros
 
 				if (container.ObjectClass == ObjectClass.Corpse)
 				{
-					if (!Settings.SettingsManager.Looting.AutoLootCorpses.Value)
+					if (Settings.SettingsManager.Looting.AutoLootCorpses.Value)
+					{
+						Start();
 						return;
-				}
-				else
-				{
-					// Only loot chests and vaults, etc...
-					if (!Settings.SettingsManager.Looting.AutoLootChests.Value || (!container.Name.Contains("Chest") && !container.Name.Contains("Vault") && !container.Name.Contains("Reliquary")))
+					}
+
+					if (Settings.SettingsManager.Looting.AutoLootMyCorpses.Value && container.Name == "Corpse of " + CoreManager.Current.CharacterFilter.Name)
+					{
+						Start();
 						return;
+					}
 				}
 
-				Start();
+				// Only loot chests and vaults, etc...
+				if (Settings.SettingsManager.Looting.AutoLootChests.Value && (container.Name.Contains("Chest") || container.Name.Contains("Vault") || container.Name.Contains("Reliquary")))
+				{
+					Start();
+					return;
+				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -161,34 +169,41 @@ namespace MagTools.Macros
 			{
 				if (!uTank2.PluginCore.PC.FLootPluginQueryNeedsID(wo.Id))
 				{
-					uTank2.LootPlugins.LootAction result = uTank2.PluginCore.PC.FLootPluginClassifyImmediate(wo.Id);
-
-					if (result.IsNoLoot || (!result.IsKeep && !result.IsKeepUpTo))
-						continue;
-
-					if (blackLitedItems.Contains(wo.Name))
-						continue;
-
-					// Check the keep #
-					if (result.IsKeepUpTo)
+					// If this is an item on our corpse, loot it
+					if (Settings.SettingsManager.Looting.AutoLootMyCorpses.Value && CoreManager.Current.WorldFilter[CoreManager.Current.Actions.OpenedContainer].Name == "Corpse of " + CoreManager.Current.CharacterFilter.Name)
 					{
-						int totalInInventory = 0;
+					}
+					else
+					{
+						uTank2.LootPlugins.LootAction result = uTank2.PluginCore.PC.FLootPluginClassifyImmediate(wo.Id);
 
-						foreach (WorldObject inventoryItem in CoreManager.Current.WorldFilter.GetInventory())
-						{
-							uTank2.LootPlugins.LootAction inventoryItemResult = uTank2.PluginCore.PC.FLootPluginClassifyImmediate(inventoryItem.Id);
-
-							if (inventoryItemResult.IsKeepUpTo && result.RuleName == inventoryItemResult.RuleName && result.Data1 == inventoryItemResult.Data1 && wo.Name == inventoryItem.Name)
-							{
-								if (inventoryItem.Values(LongValueKey.StackMax, 0) > 0)
-									totalInInventory += inventoryItem.Values(LongValueKey.StackCount, 1);
-								else
-									totalInInventory++;
-							}
-						}
-
-						if (totalInInventory >= result.Data1)
+						if (result.IsNoLoot || (!result.IsKeep && !result.IsKeepUpTo))
 							continue;
+
+						if (blackLitedItems.Contains(wo.Name))
+							continue;
+
+						// Check the keep #
+						if (result.IsKeepUpTo)
+						{
+							int totalInInventory = 0;
+
+							foreach (WorldObject inventoryItem in CoreManager.Current.WorldFilter.GetInventory())
+							{
+								uTank2.LootPlugins.LootAction inventoryItemResult = uTank2.PluginCore.PC.FLootPluginClassifyImmediate(inventoryItem.Id);
+
+								if (inventoryItemResult.IsKeepUpTo && result.RuleName == inventoryItemResult.RuleName && result.Data1 == inventoryItemResult.Data1 && wo.Name == inventoryItem.Name)
+								{
+									if (inventoryItem.Values(LongValueKey.StackMax, 0) > 0)
+										totalInInventory += inventoryItem.Values(LongValueKey.StackCount, 1);
+									else
+										totalInInventory++;
+								}
+							}
+
+							if (totalInInventory >= result.Data1)
+								continue;
+						}
 					}
 
 					if (currentWorkingId != wo.Id)

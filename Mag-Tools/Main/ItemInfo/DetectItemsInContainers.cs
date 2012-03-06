@@ -55,6 +55,15 @@ namespace MagTools.ItemInfo
 				if (!Settings.SettingsManager.ItemInfoOnIdent.Enabled.Value)
 					return;
 
+				WorldObject container = CoreManager.Current.WorldFilter[e.ItemGuid];
+
+				if (container == null)
+					return;
+
+				// Do not ident items housing chests
+				if (container.Name == "Storage")
+					return;
+
 				Start();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }

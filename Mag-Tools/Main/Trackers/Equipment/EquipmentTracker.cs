@@ -143,19 +143,7 @@ namespace MagTools.Trackers.Equipment
 			// Only watch items equipped by me
 			if (!ItemIsEquippedByMe(obj))
 				return false;
-			/*
-			// We don't load aetheria
-			if (obj.Name != null && obj.Name.Contains("Aetheria"))
-				return false;
 
-			// We don't load cloaks (EquipableSlots: 134217728)
-			if (obj.Values(LongValueKey.EquipableSlots) == 134217728)
-				return false;
-
-			// We don't show archer/missile ammo (arrows)
-			if (obj.Values(LongValueKey.EquippedSlots) == 8388608)
-				return false;
-			*/
 			return true;
 		}
 
