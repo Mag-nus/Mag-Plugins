@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mag-SuitBuilder", "Mag-SuitBuilder.csproj", "{A0884458-36A2-4CCF-9B1A-D0D33ADC8BED}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs29
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Mag-SuitBuilder.csproj
+		SccLocalPath1 = .
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A0884458-36A2-4CCF-9B1A-D0D33ADC8BED}.Debug|x86.ActiveCfg = Debug|x86
+		{A0884458-36A2-4CCF-9B1A-D0D33ADC8BED}.Debug|x86.Build.0 = Debug|x86
+		{A0884458-36A2-4CCF-9B1A-D0D33ADC8BED}.Release|x86.ActiveCfg = Release|x86
+		{A0884458-36A2-4CCF-9B1A-D0D33ADC8BED}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
