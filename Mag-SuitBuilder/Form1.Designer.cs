@@ -30,9 +30,6 @@
 		{
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this.txtEquipmentEntries = new System.Windows.Forms.TextBox();
-			this.label1 = new System.Windows.Forms.Label();
 			this.coveragePiece1 = new Mag_SuitBuilder.CoveragePiece();
 			this.coveragePiece16 = new Mag_SuitBuilder.CoveragePiece();
 			this.coveragePiece2 = new Mag_SuitBuilder.CoveragePiece();
@@ -50,6 +47,9 @@
 			this.coveragePiece8 = new Mag_SuitBuilder.CoveragePiece();
 			this.coveragePiece10 = new Mag_SuitBuilder.CoveragePiece();
 			this.coveragePiece9 = new Mag_SuitBuilder.CoveragePiece();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.txtEquipmentEntries = new System.Windows.Forms.TextBox();
+			this.label1 = new System.Windows.Forms.Label();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.tabPage2.SuspendLayout();
@@ -93,6 +93,210 @@
 			this.tabPage1.Text = "Slots";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
+			// coveragePiece1
+			// 
+			this.coveragePiece1.ArmorLevel = 0;
+			this.coveragePiece1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece1.CanHaveArmorLevel = false;
+			this.coveragePiece1.CanHaveArmorSet = false;
+			this.coveragePiece1.Location = new System.Drawing.Point(8, 8);
+			this.coveragePiece1.LockedSlot = false;
+			this.coveragePiece1.Name = "coveragePiece1";
+			this.coveragePiece1.Size = new System.Drawing.Size(150, 136);
+			this.coveragePiece1.TabIndex = 0;
+			// 
+			// coveragePiece16
+			// 
+			this.coveragePiece16.ArmorLevel = 0;
+			this.coveragePiece16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece16.CanHaveArmorLevel = true;
+			this.coveragePiece16.CanHaveArmorSet = false;
+			this.coveragePiece16.Location = new System.Drawing.Point(880, 440);
+			this.coveragePiece16.LockedSlot = false;
+			this.coveragePiece16.Name = "coveragePiece16";
+			this.coveragePiece16.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece16.TabIndex = 16;
+			// 
+			// coveragePiece2
+			// 
+			this.coveragePiece2.ArmorLevel = 0;
+			this.coveragePiece2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece2.CanHaveArmorLevel = false;
+			this.coveragePiece2.CanHaveArmorSet = false;
+			this.coveragePiece2.Location = new System.Drawing.Point(8, 152);
+			this.coveragePiece2.LockedSlot = false;
+			this.coveragePiece2.Name = "coveragePiece2";
+			this.coveragePiece2.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece2.TabIndex = 1;
+			// 
+			// coveragePiece17
+			// 
+			this.coveragePiece17.ArmorLevel = 0;
+			this.coveragePiece17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece17.CanHaveArmorLevel = true;
+			this.coveragePiece17.CanHaveArmorSet = false;
+			this.coveragePiece17.Location = new System.Drawing.Point(880, 296);
+			this.coveragePiece17.LockedSlot = false;
+			this.coveragePiece17.Name = "coveragePiece17";
+			this.coveragePiece17.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece17.TabIndex = 15;
+			// 
+			// coveragePiece3
+			// 
+			this.coveragePiece3.ArmorLevel = 0;
+			this.coveragePiece3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece3.CanHaveArmorLevel = false;
+			this.coveragePiece3.CanHaveArmorSet = false;
+			this.coveragePiece3.Location = new System.Drawing.Point(8, 296);
+			this.coveragePiece3.LockedSlot = false;
+			this.coveragePiece3.Name = "coveragePiece3";
+			this.coveragePiece3.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece3.TabIndex = 2;
+			// 
+			// coveragePiece14
+			// 
+			this.coveragePiece14.ArmorLevel = 0;
+			this.coveragePiece14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece14.CanHaveArmorLevel = false;
+			this.coveragePiece14.CanHaveArmorSet = false;
+			this.coveragePiece14.Location = new System.Drawing.Point(712, 440);
+			this.coveragePiece14.LockedSlot = false;
+			this.coveragePiece14.Name = "coveragePiece14";
+			this.coveragePiece14.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece14.TabIndex = 14;
+			// 
+			// coveragePiece4
+			// 
+			this.coveragePiece4.ArmorLevel = 0;
+			this.coveragePiece4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece4.CanHaveArmorLevel = false;
+			this.coveragePiece4.CanHaveArmorSet = false;
+			this.coveragePiece4.Location = new System.Drawing.Point(8, 440);
+			this.coveragePiece4.LockedSlot = false;
+			this.coveragePiece4.Name = "coveragePiece4";
+			this.coveragePiece4.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece4.TabIndex = 3;
+			// 
+			// coveragePiece15
+			// 
+			this.coveragePiece15.ArmorLevel = 0;
+			this.coveragePiece15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece15.CanHaveArmorLevel = false;
+			this.coveragePiece15.CanHaveArmorSet = false;
+			this.coveragePiece15.Location = new System.Drawing.Point(712, 296);
+			this.coveragePiece15.LockedSlot = false;
+			this.coveragePiece15.Name = "coveragePiece15";
+			this.coveragePiece15.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece15.TabIndex = 13;
+			// 
+			// coveragePiece5
+			// 
+			this.coveragePiece5.ArmorLevel = 0;
+			this.coveragePiece5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece5.CanHaveArmorLevel = true;
+			this.coveragePiece5.CanHaveArmorSet = true;
+			this.coveragePiece5.Location = new System.Drawing.Point(192, 152);
+			this.coveragePiece5.LockedSlot = false;
+			this.coveragePiece5.Name = "coveragePiece5";
+			this.coveragePiece5.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece5.TabIndex = 4;
+			// 
+			// coveragePiece13
+			// 
+			this.coveragePiece13.ArmorLevel = 0;
+			this.coveragePiece13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece13.CanHaveArmorLevel = true;
+			this.coveragePiece13.CanHaveArmorSet = true;
+			this.coveragePiece13.Location = new System.Drawing.Point(528, 584);
+			this.coveragePiece13.LockedSlot = false;
+			this.coveragePiece13.Name = "coveragePiece13";
+			this.coveragePiece13.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece13.TabIndex = 12;
+			// 
+			// coveragePiece6
+			// 
+			this.coveragePiece6.ArmorLevel = 0;
+			this.coveragePiece6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece6.CanHaveArmorLevel = true;
+			this.coveragePiece6.CanHaveArmorSet = true;
+			this.coveragePiece6.Location = new System.Drawing.Point(360, 152);
+			this.coveragePiece6.LockedSlot = false;
+			this.coveragePiece6.Name = "coveragePiece6";
+			this.coveragePiece6.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece6.TabIndex = 5;
+			// 
+			// coveragePiece12
+			// 
+			this.coveragePiece12.ArmorLevel = 0;
+			this.coveragePiece12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece12.CanHaveArmorLevel = true;
+			this.coveragePiece12.CanHaveArmorSet = true;
+			this.coveragePiece12.Location = new System.Drawing.Point(528, 440);
+			this.coveragePiece12.LockedSlot = false;
+			this.coveragePiece12.Name = "coveragePiece12";
+			this.coveragePiece12.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece12.TabIndex = 11;
+			// 
+			// coveragePiece7
+			// 
+			this.coveragePiece7.ArmorLevel = 0;
+			this.coveragePiece7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece7.CanHaveArmorLevel = true;
+			this.coveragePiece7.CanHaveArmorSet = true;
+			this.coveragePiece7.Location = new System.Drawing.Point(360, 8);
+			this.coveragePiece7.LockedSlot = false;
+			this.coveragePiece7.Name = "coveragePiece7";
+			this.coveragePiece7.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece7.TabIndex = 6;
+			// 
+			// coveragePiece11
+			// 
+			this.coveragePiece11.ArmorLevel = 0;
+			this.coveragePiece11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece11.CanHaveArmorLevel = true;
+			this.coveragePiece11.CanHaveArmorSet = true;
+			this.coveragePiece11.Location = new System.Drawing.Point(192, 440);
+			this.coveragePiece11.LockedSlot = false;
+			this.coveragePiece11.Name = "coveragePiece11";
+			this.coveragePiece11.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece11.TabIndex = 10;
+			// 
+			// coveragePiece8
+			// 
+			this.coveragePiece8.ArmorLevel = 0;
+			this.coveragePiece8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece8.CanHaveArmorLevel = true;
+			this.coveragePiece8.CanHaveArmorSet = true;
+			this.coveragePiece8.Location = new System.Drawing.Point(192, 296);
+			this.coveragePiece8.LockedSlot = false;
+			this.coveragePiece8.Name = "coveragePiece8";
+			this.coveragePiece8.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece8.TabIndex = 7;
+			// 
+			// coveragePiece10
+			// 
+			this.coveragePiece10.ArmorLevel = 0;
+			this.coveragePiece10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece10.CanHaveArmorLevel = true;
+			this.coveragePiece10.CanHaveArmorSet = true;
+			this.coveragePiece10.Location = new System.Drawing.Point(528, 296);
+			this.coveragePiece10.LockedSlot = false;
+			this.coveragePiece10.Name = "coveragePiece10";
+			this.coveragePiece10.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece10.TabIndex = 9;
+			// 
+			// coveragePiece9
+			// 
+			this.coveragePiece9.ArmorLevel = 0;
+			this.coveragePiece9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.coveragePiece9.CanHaveArmorLevel = true;
+			this.coveragePiece9.CanHaveArmorSet = true;
+			this.coveragePiece9.Location = new System.Drawing.Point(360, 296);
+			this.coveragePiece9.LockedSlot = false;
+			this.coveragePiece9.Name = "coveragePiece9";
+			this.coveragePiece9.Size = new System.Drawing.Size(155, 135);
+			this.coveragePiece9.TabIndex = 8;
+			// 
 			// tabPage2
 			// 
 			this.tabPage2.Controls.Add(this.txtEquipmentEntries);
@@ -121,193 +325,6 @@
 			this.label1.Size = new System.Drawing.Size(325, 13);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "Paste the Mag-Tools item info identification strings in the box below.";
-			// 
-			// coveragePiece1
-			// 
-			this.coveragePiece1.ArmorLevel = 0;
-			this.coveragePiece1.CanHaveArmorLevel = false;
-			this.coveragePiece1.CanHaveArmorSet = false;
-			this.coveragePiece1.Location = new System.Drawing.Point(8, 8);
-			this.coveragePiece1.LockedSlot = false;
-			this.coveragePiece1.Name = "coveragePiece1";
-			this.coveragePiece1.Size = new System.Drawing.Size(150, 136);
-			this.coveragePiece1.TabIndex = 0;
-			// 
-			// coveragePiece16
-			// 
-			this.coveragePiece16.ArmorLevel = 0;
-			this.coveragePiece16.CanHaveArmorLevel = true;
-			this.coveragePiece16.CanHaveArmorSet = false;
-			this.coveragePiece16.Location = new System.Drawing.Point(880, 432);
-			this.coveragePiece16.LockedSlot = false;
-			this.coveragePiece16.Name = "coveragePiece16";
-			this.coveragePiece16.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece16.TabIndex = 16;
-			// 
-			// coveragePiece2
-			// 
-			this.coveragePiece2.ArmorLevel = 0;
-			this.coveragePiece2.CanHaveArmorLevel = false;
-			this.coveragePiece2.CanHaveArmorSet = false;
-			this.coveragePiece2.Location = new System.Drawing.Point(8, 152);
-			this.coveragePiece2.LockedSlot = false;
-			this.coveragePiece2.Name = "coveragePiece2";
-			this.coveragePiece2.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece2.TabIndex = 1;
-			// 
-			// coveragePiece17
-			// 
-			this.coveragePiece17.ArmorLevel = 0;
-			this.coveragePiece17.CanHaveArmorLevel = true;
-			this.coveragePiece17.CanHaveArmorSet = false;
-			this.coveragePiece17.Location = new System.Drawing.Point(880, 288);
-			this.coveragePiece17.LockedSlot = false;
-			this.coveragePiece17.Name = "coveragePiece17";
-			this.coveragePiece17.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece17.TabIndex = 15;
-			// 
-			// coveragePiece3
-			// 
-			this.coveragePiece3.ArmorLevel = 0;
-			this.coveragePiece3.CanHaveArmorLevel = false;
-			this.coveragePiece3.CanHaveArmorSet = false;
-			this.coveragePiece3.Location = new System.Drawing.Point(8, 296);
-			this.coveragePiece3.LockedSlot = false;
-			this.coveragePiece3.Name = "coveragePiece3";
-			this.coveragePiece3.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece3.TabIndex = 2;
-			// 
-			// coveragePiece14
-			// 
-			this.coveragePiece14.ArmorLevel = 0;
-			this.coveragePiece14.CanHaveArmorLevel = false;
-			this.coveragePiece14.CanHaveArmorSet = false;
-			this.coveragePiece14.Location = new System.Drawing.Point(712, 440);
-			this.coveragePiece14.LockedSlot = false;
-			this.coveragePiece14.Name = "coveragePiece14";
-			this.coveragePiece14.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece14.TabIndex = 14;
-			// 
-			// coveragePiece4
-			// 
-			this.coveragePiece4.ArmorLevel = 0;
-			this.coveragePiece4.CanHaveArmorLevel = false;
-			this.coveragePiece4.CanHaveArmorSet = false;
-			this.coveragePiece4.Location = new System.Drawing.Point(8, 440);
-			this.coveragePiece4.LockedSlot = false;
-			this.coveragePiece4.Name = "coveragePiece4";
-			this.coveragePiece4.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece4.TabIndex = 3;
-			// 
-			// coveragePiece15
-			// 
-			this.coveragePiece15.ArmorLevel = 0;
-			this.coveragePiece15.CanHaveArmorLevel = false;
-			this.coveragePiece15.CanHaveArmorSet = false;
-			this.coveragePiece15.Location = new System.Drawing.Point(712, 296);
-			this.coveragePiece15.LockedSlot = false;
-			this.coveragePiece15.Name = "coveragePiece15";
-			this.coveragePiece15.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece15.TabIndex = 13;
-			// 
-			// coveragePiece5
-			// 
-			this.coveragePiece5.ArmorLevel = 0;
-			this.coveragePiece5.CanHaveArmorLevel = true;
-			this.coveragePiece5.CanHaveArmorSet = true;
-			this.coveragePiece5.Location = new System.Drawing.Point(192, 152);
-			this.coveragePiece5.LockedSlot = false;
-			this.coveragePiece5.Name = "coveragePiece5";
-			this.coveragePiece5.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece5.TabIndex = 4;
-			// 
-			// coveragePiece13
-			// 
-			this.coveragePiece13.ArmorLevel = 0;
-			this.coveragePiece13.CanHaveArmorLevel = true;
-			this.coveragePiece13.CanHaveArmorSet = true;
-			this.coveragePiece13.Location = new System.Drawing.Point(528, 584);
-			this.coveragePiece13.LockedSlot = false;
-			this.coveragePiece13.Name = "coveragePiece13";
-			this.coveragePiece13.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece13.TabIndex = 12;
-			// 
-			// coveragePiece6
-			// 
-			this.coveragePiece6.ArmorLevel = 0;
-			this.coveragePiece6.CanHaveArmorLevel = true;
-			this.coveragePiece6.CanHaveArmorSet = true;
-			this.coveragePiece6.Location = new System.Drawing.Point(360, 152);
-			this.coveragePiece6.LockedSlot = false;
-			this.coveragePiece6.Name = "coveragePiece6";
-			this.coveragePiece6.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece6.TabIndex = 5;
-			// 
-			// coveragePiece12
-			// 
-			this.coveragePiece12.ArmorLevel = 0;
-			this.coveragePiece12.CanHaveArmorLevel = true;
-			this.coveragePiece12.CanHaveArmorSet = true;
-			this.coveragePiece12.Location = new System.Drawing.Point(528, 440);
-			this.coveragePiece12.LockedSlot = false;
-			this.coveragePiece12.Name = "coveragePiece12";
-			this.coveragePiece12.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece12.TabIndex = 11;
-			// 
-			// coveragePiece7
-			// 
-			this.coveragePiece7.ArmorLevel = 0;
-			this.coveragePiece7.CanHaveArmorLevel = true;
-			this.coveragePiece7.CanHaveArmorSet = true;
-			this.coveragePiece7.Location = new System.Drawing.Point(360, 8);
-			this.coveragePiece7.LockedSlot = false;
-			this.coveragePiece7.Name = "coveragePiece7";
-			this.coveragePiece7.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece7.TabIndex = 6;
-			// 
-			// coveragePiece11
-			// 
-			this.coveragePiece11.ArmorLevel = 0;
-			this.coveragePiece11.CanHaveArmorLevel = true;
-			this.coveragePiece11.CanHaveArmorSet = true;
-			this.coveragePiece11.Location = new System.Drawing.Point(192, 440);
-			this.coveragePiece11.LockedSlot = false;
-			this.coveragePiece11.Name = "coveragePiece11";
-			this.coveragePiece11.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece11.TabIndex = 10;
-			// 
-			// coveragePiece8
-			// 
-			this.coveragePiece8.ArmorLevel = 0;
-			this.coveragePiece8.CanHaveArmorLevel = true;
-			this.coveragePiece8.CanHaveArmorSet = true;
-			this.coveragePiece8.Location = new System.Drawing.Point(192, 296);
-			this.coveragePiece8.LockedSlot = false;
-			this.coveragePiece8.Name = "coveragePiece8";
-			this.coveragePiece8.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece8.TabIndex = 7;
-			// 
-			// coveragePiece10
-			// 
-			this.coveragePiece10.ArmorLevel = 0;
-			this.coveragePiece10.CanHaveArmorLevel = true;
-			this.coveragePiece10.CanHaveArmorSet = true;
-			this.coveragePiece10.Location = new System.Drawing.Point(528, 296);
-			this.coveragePiece10.LockedSlot = false;
-			this.coveragePiece10.Name = "coveragePiece10";
-			this.coveragePiece10.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece10.TabIndex = 9;
-			// 
-			// coveragePiece9
-			// 
-			this.coveragePiece9.ArmorLevel = 0;
-			this.coveragePiece9.CanHaveArmorLevel = true;
-			this.coveragePiece9.CanHaveArmorSet = true;
-			this.coveragePiece9.Location = new System.Drawing.Point(360, 296);
-			this.coveragePiece9.LockedSlot = false;
-			this.coveragePiece9.Name = "coveragePiece9";
-			this.coveragePiece9.Size = new System.Drawing.Size(155, 135);
-			this.coveragePiece9.TabIndex = 8;
 			// 
 			// Form1
 			// 

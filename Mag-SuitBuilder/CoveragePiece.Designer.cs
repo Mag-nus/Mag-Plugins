@@ -54,7 +54,7 @@
 			this.cbSpell1.FormattingEnabled = true;
 			this.cbSpell1.Location = new System.Drawing.Point(0, 64);
 			this.cbSpell1.Name = "cbSpell1";
-			this.cbSpell1.Size = new System.Drawing.Size(154, 21);
+			this.cbSpell1.Size = new System.Drawing.Size(152, 21);
 			this.cbSpell1.TabIndex = 1;
 			// 
 			// cbSpell2
@@ -64,7 +64,7 @@
 			this.cbSpell2.FormattingEnabled = true;
 			this.cbSpell2.Location = new System.Drawing.Point(0, 88);
 			this.cbSpell2.Name = "cbSpell2";
-			this.cbSpell2.Size = new System.Drawing.Size(154, 21);
+			this.cbSpell2.Size = new System.Drawing.Size(152, 21);
 			this.cbSpell2.TabIndex = 2;
 			// 
 			// cbSpell3
@@ -74,7 +74,7 @@
 			this.cbSpell3.FormattingEnabled = true;
 			this.cbSpell3.Location = new System.Drawing.Point(0, 112);
 			this.cbSpell3.Name = "cbSpell3";
-			this.cbSpell3.Size = new System.Drawing.Size(154, 21);
+			this.cbSpell3.Size = new System.Drawing.Size(152, 21);
 			this.cbSpell3.TabIndex = 3;
 			// 
 			// txtArmorLevel
@@ -106,6 +106,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.Controls.Add(this.cbArmorSet);
 			this.Controls.Add(this.lblItemName);
 			this.Controls.Add(this.txtArmorLevel);
@@ -114,7 +115,7 @@
 			this.Controls.Add(this.cbSpell1);
 			this.Controls.Add(this.chkLocked);
 			this.Name = "CoveragePiece";
-			this.Size = new System.Drawing.Size(155, 135);
+			this.Size = new System.Drawing.Size(153, 133);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
