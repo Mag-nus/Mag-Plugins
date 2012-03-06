@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.ObjectModel;
+using System.Text;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
@@ -218,6 +219,8 @@ namespace MagTools
 					mainView.CombatTrackerExportCurrentStats.Hit += new EventHandler(CombatTrackerExportCurrentStats_Hit);
 					mainView.CombatTrackerClearPersistentStats.Hit += new EventHandler(CombatTrackerClearPersistentStats_Hit);
 
+					mainView.ClipboardInventoryInfo.Hit += new EventHandler(ClipboardInventoryInfo_Hit);
+					
 					System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
 					System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
 					mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
@@ -408,6 +411,76 @@ namespace MagTools
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void ClipboardInventoryInfo_Hit(object sender, EventArgs e)
+		{
+			try
+			{
+				CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Copying all inventory item info to clipboard...", 5);
+
+				bool waitingForIdData = false;
+
+				foreach (WorldObject obj in CoreManager.Current.WorldFilter.GetInventory())
+				{
+					if (ItemStillNeedsIdent(obj))
+					{
+						CoreManager.Current.Actions.RequestId(obj.Id);
+
+						waitingForIdData = true;
+					}
+				}
+
+				if (waitingForIdData)
+					CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+				else
+					ClipboardInventory();
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		private bool ItemStillNeedsIdent(WorldObject obj)
+		{
+			if ((obj.ObjectClass == ObjectClass.Armor || obj.ObjectClass == ObjectClass.Clothing || obj.ObjectClass == ObjectClass.MeleeWeapon || obj.ObjectClass == ObjectClass.MissileWeapon || obj.ObjectClass == ObjectClass.WandStaffOrb) && !obj.HasIdData)
+				return true;
+
+			return false;
+		}
+
+		void WorldFilter_ChangeObject(object sender, ChangeObjectEventArgs e)
+		{
+			try
+			{
+				if (e.Change != WorldChangeType.IdentReceived)
+					return;
+
+				foreach (WorldObject obj in CoreManager.Current.WorldFilter.GetInventory())
+				{
+					if (ItemStillNeedsIdent(obj))
+						return;
+				}
+
+				CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+
+				ClipboardInventory();
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		private void ClipboardInventory()
+		{
+			StringBuilder output = new StringBuilder();
+
+			foreach (WorldObject obj in CoreManager.Current.WorldFilter.GetInventory())
+			{
+				ItemInfo.ItemInfo info = new ItemInfo.ItemInfo(obj);
+
+				output.AppendLine(info.ToString());
+			}
+
+			System.Windows.Forms.Clipboard.SetText(output.ToString());
+
+			CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "All inventory item info has been copied to the clipboard.", 5);
 		}
 	}
 }

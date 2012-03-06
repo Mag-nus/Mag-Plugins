@@ -45,6 +45,9 @@ namespace MagTools.Views
 		HudButton ClientDelWindowPosition { get; set; }
 		HudStaticText ClientSetPosition { get; set; }
 
+		// Misc - Tools
+		public HudButton ClipboardInventoryInfo { get; private set; }
+
 		// Misc - About
 		public HudStaticText VersionLabel { get; private set; }
 
@@ -96,6 +99,9 @@ namespace MagTools.Views
 				ClientSetWindowPosition = view != null ? (HudButton)view["ClientSetWindowPosition"] : new HudButton();
 				ClientDelWindowPosition = view != null ? (HudButton)view["ClientDelWindowPosition"] : new HudButton();
 				ClientSetPosition = view != null ? (HudStaticText)view["ClientSetPosition"] : new HudStaticText();
+
+				// Misc - Tools
+				ClipboardInventoryInfo = view != null ? (HudButton)view["ClipboardInventoryInfo"] : new HudButton();
 
 				// Misc - About
 				VersionLabel = view != null ? (HudStaticText)view["VersionLabel"] : new HudStaticText();

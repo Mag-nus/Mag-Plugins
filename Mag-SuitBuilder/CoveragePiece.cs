@@ -9,7 +9,7 @@ namespace Mag_SuitBuilder
 			InitializeComponent();
 		}
 
-		public Constants.CoverageFlags SlotFlags { get; private set; }
+		public Constants.EquippableSlotFlags EquipableSlot { get; set; }
 
 		public bool LockedSlot
 		{
@@ -22,8 +22,6 @@ namespace Mag_SuitBuilder
 				chkLocked.Checked = value;
 			}
 		}
-
-		public Constants.CoverageFlags CoverageFlags { get; set; }
 
 		public bool CanHaveArmorLevel
 		{
@@ -67,5 +65,7 @@ namespace Mag_SuitBuilder
 				cbArmorSet.Visible = value;
 			}
 		}
+
+		public Constants.UnderwearCoverage UnderwearCoverage { get; set; }
 	}
 }

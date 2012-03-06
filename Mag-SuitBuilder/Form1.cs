@@ -8,5 +8,15 @@ namespace Mag_SuitBuilder
 		{
 			InitializeComponent();
 		}
+
+		private void calculatePossibilities_Click(object sender, System.EventArgs e)
+		{
+			if (txtEquipmentEntries.TextLength == 0)
+			{
+				MessageBox.Show("Enter some equipment in the equipment tab first.");
+
+				return;
+			}
+		}
 	}
 }

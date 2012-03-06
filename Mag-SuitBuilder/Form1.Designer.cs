@@ -30,6 +30,8 @@
 		{
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.calculatePossibilities = new System.Windows.Forms.Button();
+			this.listPossibilities = new System.Windows.Forms.ListView();
 			this.coveragePiece1 = new Mag_SuitBuilder.CoveragePiece();
 			this.coveragePiece16 = new Mag_SuitBuilder.CoveragePiece();
 			this.coveragePiece2 = new Mag_SuitBuilder.CoveragePiece();
@@ -68,6 +70,8 @@
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.calculatePossibilities);
+			this.tabPage1.Controls.Add(this.listPossibilities);
 			this.tabPage1.Controls.Add(this.coveragePiece1);
 			this.tabPage1.Controls.Add(this.coveragePiece16);
 			this.tabPage1.Controls.Add(this.coveragePiece2);
@@ -93,17 +97,37 @@
 			this.tabPage1.Text = "Slots";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
+			// calculatePossibilities
+			// 
+			this.calculatePossibilities.Location = new System.Drawing.Point(560, 16);
+			this.calculatePossibilities.Name = "calculatePossibilities";
+			this.calculatePossibilities.Size = new System.Drawing.Size(168, 23);
+			this.calculatePossibilities.TabIndex = 18;
+			this.calculatePossibilities.Text = "Calculate Possibilities";
+			this.calculatePossibilities.UseVisualStyleBackColor = true;
+			this.calculatePossibilities.Click += new System.EventHandler(this.calculatePossibilities_Click);
+			// 
+			// listPossibilities
+			// 
+			this.listPossibilities.Location = new System.Drawing.Point(560, 48);
+			this.listPossibilities.Name = "listPossibilities";
+			this.listPossibilities.Size = new System.Drawing.Size(216, 240);
+			this.listPossibilities.TabIndex = 17;
+			this.listPossibilities.UseCompatibleStateImageBehavior = false;
+			// 
 			// coveragePiece1
 			// 
 			this.coveragePiece1.ArmorLevel = 0;
 			this.coveragePiece1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece1.CanHaveArmorLevel = false;
 			this.coveragePiece1.CanHaveArmorSet = false;
+			this.coveragePiece1.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.Necklace;
 			this.coveragePiece1.Location = new System.Drawing.Point(8, 8);
 			this.coveragePiece1.LockedSlot = false;
 			this.coveragePiece1.Name = "coveragePiece1";
 			this.coveragePiece1.Size = new System.Drawing.Size(150, 136);
 			this.coveragePiece1.TabIndex = 0;
+			this.coveragePiece1.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece16
 			// 
@@ -111,11 +135,13 @@
 			this.coveragePiece16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece16.CanHaveArmorLevel = true;
 			this.coveragePiece16.CanHaveArmorSet = false;
+			this.coveragePiece16.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.Pants;
 			this.coveragePiece16.Location = new System.Drawing.Point(880, 440);
 			this.coveragePiece16.LockedSlot = false;
 			this.coveragePiece16.Name = "coveragePiece16";
 			this.coveragePiece16.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece16.TabIndex = 16;
+			this.coveragePiece16.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece2
 			// 
@@ -123,11 +149,13 @@
 			this.coveragePiece2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece2.CanHaveArmorLevel = false;
 			this.coveragePiece2.CanHaveArmorSet = false;
+			this.coveragePiece2.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.Trinket;
 			this.coveragePiece2.Location = new System.Drawing.Point(8, 152);
 			this.coveragePiece2.LockedSlot = false;
 			this.coveragePiece2.Name = "coveragePiece2";
 			this.coveragePiece2.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece2.TabIndex = 1;
+			this.coveragePiece2.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece17
 			// 
@@ -135,11 +163,13 @@
 			this.coveragePiece17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece17.CanHaveArmorLevel = true;
 			this.coveragePiece17.CanHaveArmorSet = false;
+			this.coveragePiece17.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.Shirt;
 			this.coveragePiece17.Location = new System.Drawing.Point(880, 296);
 			this.coveragePiece17.LockedSlot = false;
 			this.coveragePiece17.Name = "coveragePiece17";
 			this.coveragePiece17.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece17.TabIndex = 15;
+			this.coveragePiece17.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece3
 			// 
@@ -147,11 +177,13 @@
 			this.coveragePiece3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece3.CanHaveArmorLevel = false;
 			this.coveragePiece3.CanHaveArmorSet = false;
+			this.coveragePiece3.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.LeftBracelet;
 			this.coveragePiece3.Location = new System.Drawing.Point(8, 296);
 			this.coveragePiece3.LockedSlot = false;
 			this.coveragePiece3.Name = "coveragePiece3";
 			this.coveragePiece3.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece3.TabIndex = 2;
+			this.coveragePiece3.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece14
 			// 
@@ -159,11 +191,13 @@
 			this.coveragePiece14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece14.CanHaveArmorLevel = false;
 			this.coveragePiece14.CanHaveArmorSet = false;
+			this.coveragePiece14.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.RightRing;
 			this.coveragePiece14.Location = new System.Drawing.Point(712, 440);
 			this.coveragePiece14.LockedSlot = false;
 			this.coveragePiece14.Name = "coveragePiece14";
 			this.coveragePiece14.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece14.TabIndex = 14;
+			this.coveragePiece14.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece4
 			// 
@@ -171,11 +205,13 @@
 			this.coveragePiece4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece4.CanHaveArmorLevel = false;
 			this.coveragePiece4.CanHaveArmorSet = false;
+			this.coveragePiece4.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.LeftRing;
 			this.coveragePiece4.Location = new System.Drawing.Point(8, 440);
 			this.coveragePiece4.LockedSlot = false;
 			this.coveragePiece4.Name = "coveragePiece4";
 			this.coveragePiece4.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece4.TabIndex = 3;
+			this.coveragePiece4.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece15
 			// 
@@ -183,11 +219,13 @@
 			this.coveragePiece15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece15.CanHaveArmorLevel = false;
 			this.coveragePiece15.CanHaveArmorSet = false;
+			this.coveragePiece15.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.RightBracelet;
 			this.coveragePiece15.Location = new System.Drawing.Point(712, 296);
 			this.coveragePiece15.LockedSlot = false;
 			this.coveragePiece15.Name = "coveragePiece15";
 			this.coveragePiece15.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece15.TabIndex = 13;
+			this.coveragePiece15.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece5
 			// 
@@ -195,11 +233,13 @@
 			this.coveragePiece5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece5.CanHaveArmorLevel = true;
 			this.coveragePiece5.CanHaveArmorSet = true;
+			this.coveragePiece5.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.UpperArms;
 			this.coveragePiece5.Location = new System.Drawing.Point(192, 152);
 			this.coveragePiece5.LockedSlot = false;
 			this.coveragePiece5.Name = "coveragePiece5";
 			this.coveragePiece5.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece5.TabIndex = 4;
+			this.coveragePiece5.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece13
 			// 
@@ -207,11 +247,13 @@
 			this.coveragePiece13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece13.CanHaveArmorLevel = true;
 			this.coveragePiece13.CanHaveArmorSet = true;
+			this.coveragePiece13.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.Feet;
 			this.coveragePiece13.Location = new System.Drawing.Point(528, 584);
 			this.coveragePiece13.LockedSlot = false;
 			this.coveragePiece13.Name = "coveragePiece13";
 			this.coveragePiece13.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece13.TabIndex = 12;
+			this.coveragePiece13.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece6
 			// 
@@ -219,11 +261,13 @@
 			this.coveragePiece6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece6.CanHaveArmorLevel = true;
 			this.coveragePiece6.CanHaveArmorSet = true;
+			this.coveragePiece6.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.Chest;
 			this.coveragePiece6.Location = new System.Drawing.Point(360, 152);
 			this.coveragePiece6.LockedSlot = false;
 			this.coveragePiece6.Name = "coveragePiece6";
 			this.coveragePiece6.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece6.TabIndex = 5;
+			this.coveragePiece6.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece12
 			// 
@@ -231,11 +275,13 @@
 			this.coveragePiece12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece12.CanHaveArmorLevel = true;
 			this.coveragePiece12.CanHaveArmorSet = true;
+			this.coveragePiece12.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.LowerLegs;
 			this.coveragePiece12.Location = new System.Drawing.Point(528, 440);
 			this.coveragePiece12.LockedSlot = false;
 			this.coveragePiece12.Name = "coveragePiece12";
 			this.coveragePiece12.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece12.TabIndex = 11;
+			this.coveragePiece12.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece7
 			// 
@@ -243,11 +289,13 @@
 			this.coveragePiece7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece7.CanHaveArmorLevel = true;
 			this.coveragePiece7.CanHaveArmorSet = true;
+			this.coveragePiece7.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.Head;
 			this.coveragePiece7.Location = new System.Drawing.Point(360, 8);
 			this.coveragePiece7.LockedSlot = false;
 			this.coveragePiece7.Name = "coveragePiece7";
 			this.coveragePiece7.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece7.TabIndex = 6;
+			this.coveragePiece7.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece11
 			// 
@@ -255,11 +303,13 @@
 			this.coveragePiece11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece11.CanHaveArmorLevel = true;
 			this.coveragePiece11.CanHaveArmorSet = true;
+			this.coveragePiece11.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.Hands;
 			this.coveragePiece11.Location = new System.Drawing.Point(192, 440);
 			this.coveragePiece11.LockedSlot = false;
 			this.coveragePiece11.Name = "coveragePiece11";
 			this.coveragePiece11.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece11.TabIndex = 10;
+			this.coveragePiece11.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece8
 			// 
@@ -267,11 +317,13 @@
 			this.coveragePiece8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece8.CanHaveArmorLevel = true;
 			this.coveragePiece8.CanHaveArmorSet = true;
+			this.coveragePiece8.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.LowerArms;
 			this.coveragePiece8.Location = new System.Drawing.Point(192, 296);
 			this.coveragePiece8.LockedSlot = false;
 			this.coveragePiece8.Name = "coveragePiece8";
 			this.coveragePiece8.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece8.TabIndex = 7;
+			this.coveragePiece8.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece10
 			// 
@@ -279,11 +331,13 @@
 			this.coveragePiece10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece10.CanHaveArmorLevel = true;
 			this.coveragePiece10.CanHaveArmorSet = true;
+			this.coveragePiece10.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.UpperLegs;
 			this.coveragePiece10.Location = new System.Drawing.Point(528, 296);
 			this.coveragePiece10.LockedSlot = false;
 			this.coveragePiece10.Name = "coveragePiece10";
 			this.coveragePiece10.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece10.TabIndex = 9;
+			this.coveragePiece10.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece9
 			// 
@@ -291,11 +345,13 @@
 			this.coveragePiece9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.coveragePiece9.CanHaveArmorLevel = true;
 			this.coveragePiece9.CanHaveArmorSet = true;
+			this.coveragePiece9.EquipableSlot = Mag_SuitBuilder.Constants.EquippableSlotFlags.Abdomen;
 			this.coveragePiece9.Location = new System.Drawing.Point(360, 296);
 			this.coveragePiece9.LockedSlot = false;
 			this.coveragePiece9.Name = "coveragePiece9";
 			this.coveragePiece9.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece9.TabIndex = 8;
+			this.coveragePiece9.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// tabPage2
 			// 
@@ -366,6 +422,8 @@
 		private System.Windows.Forms.TabPage tabPage2;
 		private System.Windows.Forms.TextBox txtEquipmentEntries;
 		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Button calculatePossibilities;
+		private System.Windows.Forms.ListView listPossibilities;
 	}
 }
 
