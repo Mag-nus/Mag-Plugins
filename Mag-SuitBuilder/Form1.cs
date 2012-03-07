@@ -33,8 +33,8 @@ namespace Mag_SuitBuilder
 				if (piece.EquipableSlots == Constants.EquippableSlotFlags.None)
 					continue;
 
-				if (!piece.IsArmor)
-					continue;
+				//if (!piece.IsArmor)
+				//	continue;
 
 				equipmentPieces.Add(piece);
 			}
@@ -45,15 +45,14 @@ namespace Mag_SuitBuilder
 
 			if (equipmentPieces.Count > 0)
 			{
-				for (int i = 0 ; i < equipmentPieces.Count - 1 ; i++)
+				for (int i = 0 ; i < equipmentPieces.Count ; i++)
 				{
 					EquipmentGroup equipmentGroup = new EquipmentGroup();
-					equipmentGroup.Add(equipmentPieces[i]);
 					equipmentGroups.Add(equipmentGroup);
 
-					ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, equipmentGroup);
+					ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i, equipmentGroup);
 
-					progressBar1.Value = (int)(((i + 2) / (float)equipmentPieces.Count) * 100.0);
+					progressBar1.Value = (int)(((i + 1) / (float)equipmentPieces.Count) * 100.0);
 					progressBar1.Refresh();
 				}
 			}
@@ -68,8 +67,15 @@ namespace Mag_SuitBuilder
 
 			// Add the top 1,000 groups
 			Collection<EquipmentGroup> topEquipmentGroups = new Collection<EquipmentGroup>();
-			while (topEquipmentGroups.Count < 10000 || topEquipmentGroups.Count >= equipmentGroups.Count || highest == 0)
+
+			while (topEquipmentGroups.Count < 10000)
 			{
+				if (topEquipmentGroups.Count >= equipmentGroups.Count)
+					break;
+
+				if (highest == 0)
+					break;
+
 				for (int i = 0 ; i < equipmentGroups.Count ; i++)
 				{
 					if (equipmentGroups[i].TotalPotentialTinkedArmorLevel == highest)
@@ -108,9 +114,6 @@ namespace Mag_SuitBuilder
 				if (!workingGroup.CanOfferBeneficialSpell(equipmentPieces[i]))
 					continue;
 
-				EquipmentGroup newGroup = workingGroup.Clone();
-				equipmentGroups.Add(newGroup);
-
 				// If we're adding a multi-slot piece, we need to create a group branch for each possible slot of that piece
 				int setBits = 0;
 				int value = (int)equipmentPieces[i].EquipableSlots;
@@ -125,42 +128,69 @@ namespace Mag_SuitBuilder
 				{
 					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.Chest) != 0)
 					{
+						EquipmentGroup newGroup = workingGroup.Clone();
+						equipmentGroups.Add(newGroup);
+
 						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.Chest);
-						if (!newGroup.IsFull) ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
+						if (!newGroup.IsFull) 
+							ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
 					}
 
 					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.Abdomen) != 0)
 					{
+						EquipmentGroup newGroup = workingGroup.Clone();
+						equipmentGroups.Add(newGroup);
+
 						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.Abdomen);
-						if (!newGroup.IsFull) ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
+						if (!newGroup.IsFull) 
+							ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
 					}
 
 					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.UpperArms) != 0)
 					{
+						EquipmentGroup newGroup = workingGroup.Clone();
+						equipmentGroups.Add(newGroup);
+
 						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.UpperArms);
-						if (!newGroup.IsFull) ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
+						if (!newGroup.IsFull) 
+							ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
 					}
 
 					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.LowerArms) != 0)
 					{
+						EquipmentGroup newGroup = workingGroup.Clone();
+						equipmentGroups.Add(newGroup);
+
 						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.LowerArms);
-						if (!newGroup.IsFull) ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
+						if (!newGroup.IsFull) 
+							ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
 					}
 
 					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.UpperLegs) != 0)
 					{
+						EquipmentGroup newGroup = workingGroup.Clone();
+						equipmentGroups.Add(newGroup);
+
 						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.UpperLegs);
-						if (!newGroup.IsFull) ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
+						if (!newGroup.IsFull) 
+							ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
 					}
 
 					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.LowerLegs) != 0)
 					{
+						EquipmentGroup newGroup = workingGroup.Clone();
+						equipmentGroups.Add(newGroup);
+
 						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.LowerLegs);
-						if (!newGroup.IsFull) ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
+						if (!newGroup.IsFull) 
+							ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
 					}
 				}
 				else
 				{
+					EquipmentGroup newGroup = workingGroup.Clone();
+					equipmentGroups.Add(newGroup);
+
 					newGroup.Add(equipmentPieces[i]);
 
 					if (!newGroup.IsFull)

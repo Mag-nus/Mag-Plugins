@@ -112,15 +112,15 @@ namespace Mag_SuitBuilder
 		{
 			get
 			{
-				return EquipableSlots == Constants.EquippableSlotFlags.Head ||
-					EquipableSlots == Constants.EquippableSlotFlags.Chest || 
-					EquipableSlots == Constants.EquippableSlotFlags.UpperArms || 
-					EquipableSlots == Constants.EquippableSlotFlags.LowerArms || 
-					EquipableSlots == Constants.EquippableSlotFlags.Hands || 
-					EquipableSlots == Constants.EquippableSlotFlags.Abdomen || 
-					EquipableSlots == Constants.EquippableSlotFlags.UpperLegs || 
-					EquipableSlots == Constants.EquippableSlotFlags.LowerLegs || 
-					EquipableSlots == Constants.EquippableSlotFlags.Feet;
+				return (EquipableSlots & Constants.EquippableSlotFlags.Head) != 0 ||
+					(EquipableSlots & Constants.EquippableSlotFlags.Chest) != 0 || 
+					(EquipableSlots & Constants.EquippableSlotFlags.UpperArms) != 0 || 
+					(EquipableSlots & Constants.EquippableSlotFlags.LowerArms) != 0 || 
+					(EquipableSlots & Constants.EquippableSlotFlags.Hands) != 0 || 
+					(EquipableSlots & Constants.EquippableSlotFlags.Abdomen) != 0 || 
+					(EquipableSlots & Constants.EquippableSlotFlags.UpperLegs) != 0 || 
+					(EquipableSlots & Constants.EquippableSlotFlags.LowerLegs) != 0 || 
+					(EquipableSlots & Constants.EquippableSlotFlags.Feet) != 0;
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace Mag_SuitBuilder
 		{
 			get
 			{
-				return EquipableSlots == Constants.EquippableSlotFlags.Shirt || EquipableSlots == Constants.EquippableSlotFlags.Pants;
+				return (EquipableSlots & Constants.EquippableSlotFlags.Shirt) != 0 || (EquipableSlots & Constants.EquippableSlotFlags.Pants) != 0;
 			}
 		}
 
