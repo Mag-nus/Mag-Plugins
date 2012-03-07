@@ -67,9 +67,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ACClientChatSizeManager.cs" />
     <Compile Include="ChatFilter.cs" />
     <Compile Include="Client\WindowPosition.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="InventoryExporter.cs" />
     <Compile Include="IPluginCore.cs" />
     <Compile Include="ItemInfo\ILootRuleProcessor.cs" />
     <Compile Include="ItemInfo\ItemInfo.cs" />

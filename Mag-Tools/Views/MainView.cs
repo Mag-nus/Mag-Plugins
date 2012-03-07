@@ -46,6 +46,7 @@ namespace MagTools.Views
 		HudStaticText ClientSetPosition { get; set; }
 
 		// Misc - Tools
+		public HudButton ClipboardWornEquipment { get; private set; }
 		public HudButton ClipboardInventoryInfo { get; private set; }
 
 		// Misc - About
@@ -101,6 +102,7 @@ namespace MagTools.Views
 				ClientSetPosition = view != null ? (HudStaticText)view["ClientSetPosition"] : new HudStaticText();
 
 				// Misc - Tools
+				ClipboardWornEquipment = view != null ? (HudButton)view["ClipboardWornEquipment"] : new HudButton();
 				ClipboardInventoryInfo = view != null ? (HudButton)view["ClipboardInventoryInfo"] : new HudButton();
 
 				// Misc - About
@@ -174,6 +176,7 @@ namespace MagTools.Views
 				AddOption(OptionList, Settings.SettingsManager.Looting.AutoLootChests);
 				AddOption(OptionList, Settings.SettingsManager.Looting.AutoLootCorpses);
 				AddOption(OptionList, Settings.SettingsManager.Looting.AutoLootMyCorpses);
+				AddOption(OptionList, Settings.SettingsManager.Looting.LootSalvage);
 
 				AddOption(OptionList, Settings.SettingsManager.Misc.OpenMainPackOnLogin);
 				AddOption(OptionList, Settings.SettingsManager.Misc.MaximizeChatOnLogin);

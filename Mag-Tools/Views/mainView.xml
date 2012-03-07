@@ -92,7 +92,8 @@
 
           <page label="Tools">
             <control progid="DecalControls.FixedLayout" clipped="">
-              <control progid="DecalControls.PushButton" name="ClipboardInventoryInfo" left="10" top="10" width="140" height="20" text="Clipboard Inventory Info" />
+              <control progid="DecalControls.PushButton" name="ClipboardWornEquipment" left="10" top="10" width="140" height="20" text="Clipboard Worn Equipment" />
+              <control progid="DecalControls.PushButton" name="ClipboardInventoryInfo" left="10" top="40" width="140" height="20" text="Clipboard Inventory Info" />
             </control>
           </page>
           

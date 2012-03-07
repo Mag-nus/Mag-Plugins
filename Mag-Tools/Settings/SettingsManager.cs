@@ -76,6 +76,8 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> AutoLootCorpses = new Setting<bool>("Looting/AutoLootCorpses", "Auto Loot Corpses");
 
 			public static readonly Setting<bool> AutoLootMyCorpses = new Setting<bool>("Looting/AutoLootMyCorpse", "Auto Loot My Corpses");
+
+			public static readonly Setting<bool> LootSalvage = new Setting<bool>("Looting/LootSalvage", "Auto Loot Salvage");
 		}
 
 		public static class ItemInfoOnIdent

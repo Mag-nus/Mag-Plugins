@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Collections.ObjectModel;
-using System.Text;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
@@ -84,6 +83,7 @@ namespace MagTools
 
 		// General
 		ChatFilter chatFilter;
+		InventoryExporter inventoryExporter;
 
 		// Macros
 		Macros.OpenMainPackOnLogin openMainPackOnLogin;
@@ -138,6 +138,9 @@ namespace MagTools
 				CoreManager.Current.CharacterFilter.Login += new EventHandler<Decal.Adapter.Wrappers.LoginEventArgs>(CharacterFilter_Login);
 				CoreManager.Current.CharacterFilter.LoginComplete +=new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
+
+				// General
+				inventoryExporter = new InventoryExporter();
 
 				// Macros
 				openMainPackOnLogin = new Macros.OpenMainPackOnLogin();
@@ -219,6 +222,7 @@ namespace MagTools
 					mainView.CombatTrackerExportCurrentStats.Hit += new EventHandler(CombatTrackerExportCurrentStats_Hit);
 					mainView.CombatTrackerClearPersistentStats.Hit += new EventHandler(CombatTrackerClearPersistentStats_Hit);
 
+					mainView.ClipboardWornEquipment.Hit += new EventHandler(ClipboardWornEquipment_Hit);
 					mainView.ClipboardInventoryInfo.Hit += new EventHandler(ClipboardInventoryInfo_Hit);
 					
 					System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
@@ -299,8 +303,6 @@ namespace MagTools
 		{
 			try
 			{
-				//Util.ExportSpells(PluginPersonalFolder.FullName + @"\Spells.csv");
-
 				CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
 
 				try
@@ -352,6 +354,39 @@ namespace MagTools
 					}
 				}
 				catch (FileNotFoundException ex) { startupErrors.Add("One Touch Heal hot key failed to bind: " + ex.Message + ". Is Virindi Hotkey System running?"); }
+				catch (Exception ex) { Debug.LogException(ex); }
+
+				try
+				{
+						// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
+						VirindiHotkeySystem.VHotkeyInfo maximizeChat = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "Maximize Chat", "Maximizes Main Chat", 0, false, false, false);
+
+						VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(maximizeChat);
+
+						maximizeChat.Fired2 += (s, e2) =>
+						{
+							try
+							{
+								ACClientChatSizeManager.Maximize();
+							}
+							catch (Exception ex) { Debug.LogException(ex); }
+						};
+
+						// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
+						VirindiHotkeySystem.VHotkeyInfo minimizeChat = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "Minimize Chat", "Minimizes Main Chat", 0, false, false, false);
+
+						VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(minimizeChat);
+
+						minimizeChat.Fired2 += (s, e2) =>
+						{
+							try
+							{
+								ACClientChatSizeManager.Minimize();
+							}
+							catch (Exception ex) { Debug.LogException(ex); }
+						};
+				}
+				catch (FileNotFoundException ex) { startupErrors.Add("AC Chat minimize/maximize hot key failed to bind: " + ex.Message + ". Is Virindi Hotkey System running?"); }
 				catch (Exception ex) { Debug.LogException(ex); }
 
 				foreach (string startupError in startupErrors)
@@ -413,76 +448,22 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		void ClipboardWornEquipment_Hit(object sender, EventArgs e)
+		{
+			try
+			{
+				inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.WornEquipment);
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
 		void ClipboardInventoryInfo_Hit(object sender, EventArgs e)
 		{
 			try
 			{
-				CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Copying all inventory item info to clipboard...", 5);
-
-				bool waitingForIdData = false;
-
-				foreach (WorldObject obj in CoreManager.Current.WorldFilter.GetInventory())
-				{
-					if (ItemStillNeedsIdent(obj))
-					{
-						CoreManager.Current.Actions.RequestId(obj.Id);
-
-						waitingForIdData = true;
-					}
-				}
-
-				if (waitingForIdData)
-					CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
-				else
-					ClipboardInventory();
+				inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.Inventory);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		private bool ItemStillNeedsIdent(WorldObject obj)
-		{
-			if ((obj.ObjectClass == ObjectClass.Armor || obj.ObjectClass == ObjectClass.Clothing ||
-				obj.ObjectClass == ObjectClass.MeleeWeapon || obj.ObjectClass == ObjectClass.MissileWeapon || obj.ObjectClass == ObjectClass.WandStaffOrb ||
-				obj.ObjectClass == ObjectClass.Jewelry) && !obj.HasIdData)
-				return true;
-
-			return false;
-		}
-
-		void WorldFilter_ChangeObject(object sender, ChangeObjectEventArgs e)
-		{
-			try
-			{
-				if (e.Change != WorldChangeType.IdentReceived)
-					return;
-
-				foreach (WorldObject obj in CoreManager.Current.WorldFilter.GetInventory())
-				{
-					if (ItemStillNeedsIdent(obj))
-						return;
-				}
-
-				CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
-
-				ClipboardInventory();
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		private void ClipboardInventory()
-		{
-			StringBuilder output = new StringBuilder();
-
-			foreach (WorldObject obj in CoreManager.Current.WorldFilter.GetInventory())
-			{
-				ItemInfo.ItemInfo info = new ItemInfo.ItemInfo(obj);
-
-				output.AppendLine(info.ToString());
-			}
-
-			System.Windows.Forms.Clipboard.SetText(output.ToString());
-
-			CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "All inventory item info has been copied to the clipboard.", 5);
 		}
 	}
 }
