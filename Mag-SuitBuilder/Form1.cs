@@ -45,16 +45,16 @@ namespace Mag_SuitBuilder
 
 			if (equipmentPieces.Count > 0)
 			{
-				for (int i = 0 ; i < equipmentPieces.Count ; i++)
-				{
+				//for (int i = 0 ; i < equipmentPieces.Count ; i++)
+				//{
 					EquipmentGroup equipmentGroup = new EquipmentGroup();
 					equipmentGroups.Add(equipmentGroup);
 
-					ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i, equipmentGroup);
+					ProcessEquipmentPieces(equipmentGroups, equipmentPieces, 0, equipmentGroup);
 
-					progressBar1.Value = (int)(((i + 1) / (float)equipmentPieces.Count) * 100.0);
-					progressBar1.Refresh();
-				}
+					//progressBar1.Value = (int)(((i + 1) / (float)equipmentPieces.Count) * 100.0);
+					//progressBar1.Refresh();
+				//}
 			}
 
 			// Find the highest AL group
@@ -183,6 +183,46 @@ namespace Mag_SuitBuilder
 
 						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.LowerLegs);
 						if (!newGroup.IsFull) 
+							ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
+					}
+
+					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.LeftBracelet) != 0)
+					{
+						EquipmentGroup newGroup = workingGroup.Clone();
+						equipmentGroups.Add(newGroup);
+
+						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.LeftBracelet);
+						if (!newGroup.IsFull)
+							ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
+					}
+
+					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.RightBracelet) != 0)
+					{
+						EquipmentGroup newGroup = workingGroup.Clone();
+						equipmentGroups.Add(newGroup);
+
+						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.RightBracelet);
+						if (!newGroup.IsFull)
+							ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
+					}
+
+					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.LeftRing) != 0)
+					{
+						EquipmentGroup newGroup = workingGroup.Clone();
+						equipmentGroups.Add(newGroup);
+
+						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.LeftRing);
+						if (!newGroup.IsFull)
+							ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
+					}
+
+					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.RightRing) != 0)
+					{
+						EquipmentGroup newGroup = workingGroup.Clone();
+						equipmentGroups.Add(newGroup);
+
+						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.RightRing);
+						if (!newGroup.IsFull)
 							ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, newGroup);
 					}
 				}
