@@ -11,18 +11,6 @@ namespace Mag_SuitBuilder
 
 		public Constants.EquippableSlotFlags EquipableSlot { get; set; }
 
-		public bool LockedSlot
-		{
-			get
-			{
-				return chkLocked.Checked;
-			}
-			set
-			{
-				chkLocked.Checked = value;
-			}
-		}
-
 		public bool CanHaveArmorLevel
 		{
 			get
@@ -88,6 +76,7 @@ namespace Mag_SuitBuilder
 				txtSpell1.Text = null;
 				txtSpell2.Text = null;
 				txtSpell3.Text = null;
+				txtSpell4.Text = null;
 
 				return;
 			}
@@ -98,9 +87,15 @@ namespace Mag_SuitBuilder
 
 			txtArmorSet.Text = piece.ArmorSet;
 
+			txtSpell1.Text = null;
+			txtSpell2.Text = null;
+			txtSpell3.Text = null;
+			txtSpell4.Text = null;
+
 			if (piece.Spells.Count >= 1) txtSpell1.Text = piece.Spells[0].Name;
 			if (piece.Spells.Count >= 2) txtSpell2.Text = piece.Spells[1].Name;
 			if (piece.Spells.Count >= 3) txtSpell3.Text = piece.Spells[2].Name;
+			if (piece.Spells.Count >= 4) txtSpell4.Text = piece.Spells[3].Name;
 		}
 	}
 }

@@ -112,7 +112,7 @@ namespace Mag_SuitBuilder
 			}
 
 			foreach (EquipmentPiece equipmentPiece in equipmentPieces)
-				output += Environment.NewLine + equipmentPiece;
+				output += ", " + equipmentPiece;
 
 			return output;
 		}

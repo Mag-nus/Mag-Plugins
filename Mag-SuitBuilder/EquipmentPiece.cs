@@ -160,7 +160,7 @@ namespace Mag_SuitBuilder
 			string output = Name;
 
 			if (ArmorLevel > 0)
-				output += ", AL " + ArmorLevel;
+				output += " AL " + ArmorLevel;
 
 			foreach (Spell spell in Spells)
 				output += " " + spell;

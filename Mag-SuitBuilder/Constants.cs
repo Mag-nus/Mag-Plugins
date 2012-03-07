@@ -75,7 +75,7 @@ namespace Mag_SuitBuilder
 
 				if (Regex.Match(name, "Bracers").Success) return EquippableSlotFlags.LowerArms;
 				if (Regex.Match(name, "Vambraces").Success) return EquippableSlotFlags.LowerArms;
-				if (Regex.Match(name, "Kote").Success) return EquippableSlotFlags.UpperArms;
+				if (Regex.Match(name, "Kote").Success) return EquippableSlotFlags.LowerArms;
 
 				if (Regex.Match(name, "Gauntlets").Success) return EquippableSlotFlags.Hands;
 				if (Regex.Match(name, "Gloves").Success) return EquippableSlotFlags.Hands;
