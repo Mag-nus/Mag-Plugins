@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5677ED44-EBA2-4CDC-B106-8480051400A0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VTClassic</RootNamespace>
+    <AssemblyName>VTClassic</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;VTC_PLUGIN</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Decal.Adapter">
+      <HintPath>C:\Games\Decal 3.0 2.9.6.0\Decal.Adapter.dll</HintPath>
+    </Reference>
+    <Reference Include="Decal.Interop.Filters, Version=2.9.6.5, Culture=neutral, PublicKeyToken=481f17d392f1fb65, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>C:\Games\Decal 3.0 2.9.6.0\.NET 2.0 PIA\Decal.Interop.Filters.DLL</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="utank2-i, Version=0.3.1.69, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Games\VirindiPlugins\VirindiTank\utank2-i.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\VTClassic Shared\ColorXML.cs">
+      <Link>VTClassicShared\ColorXML.cs</Link>
+    </Compile>
+    <Compile Include="..\..\VTClassic Shared\ComboKeys.cs">
+      <Link>VTClassicShared\ComboKeys.cs</Link>
+    </Compile>
+    <Compile Include="..\..\VTClassic Shared\Constants.cs">
+      <Link>VTClassicShared\Constants.cs</Link>
+    </Compile>
+    <Compile Include="..\..\VTClassic Shared\CountedStreamWriter.cs">
+      <Link>VTClassicShared\CountedStreamWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\VTClassic Shared\FileVersioning.cs">
+      <Link>VTClassicShared\FileVersioning.cs</Link>
+    </Compile>
+    <Compile Include="..\..\VTClassic Shared\LootRules.cs">
+      <Link>VTClassicShared\LootRules.cs</Link>
+    </Compile>
+    <Compile Include="..\..\VTClassic Shared\UTLBlock_SalvageCombine.cs">
+      <Link>VTClassicShared\UTLBlock_SalvageCombine.cs</Link>
+    </Compile>
+    <Compile Include="..\..\VTClassic Shared\UTLFileExtraBlockManager.cs">
+      <Link>VTClassicShared\UTLFileExtraBlockManager.cs</Link>
+    </Compile>
+    <Compile Include="LootCore.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\VTClassic Shared\ColorSlots.Default.xml">
+      <Link>ColorSlots.Default.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

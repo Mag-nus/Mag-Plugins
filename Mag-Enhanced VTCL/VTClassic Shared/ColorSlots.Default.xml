@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VTClassicColorInfo>
+
+  <!-- Amuli Coat -->
+  <slotdef name="Amuli Coat (Chest)">
+    <entry value="0"/>
+  </slotdef>
+  <slotdef name="Amuli Coat (Collar/Shoulder)">
+    <entry value="1"/>
+    <entry value="2"/>
+  </slotdef>
+  <slotdef name="Amuli Coat (Arms/Trim)">
+    <entry value="3"/>
+    <entry value="4"/>
+    <entry value="5"/>
+    <entry value="6"/>
+    <entry value="7"/>
+  </slotdef>
+
+  <!-- Amuli Leggings -->
+  <slotdef name="Amuli Legs (Base)">
+    <entry value="0"/>
+    <entry value="1"/>
+  </slotdef>
+  <slotdef name="Amuli Legs (Trim)">
+    <entry value="2"/>
+    <entry value="3"/>
+  </slotdef>
+
+  <!-- Celdon -->
+  <slotdef name="Celdon (Base)">
+    <entry value="0"/>
+  </slotdef>
+  <slotdef name="Celdon (Veins)">
+    <entry value="1"/>
+    <entry value="2"/>
+  </slotdef>
+  
+  <slotdef name="Chiran Coat (Base/Arms)">
+    <entry value="0"/>
+	<entry value="1"/>
+  </slotdef>
+  <slotdef name="Chiran Coat (Stripes)">
+    <entry value="2"/>
+	<entry value="3"/>
+	<entry value="4"/>
+  </slotdef>
+  <slotdef name="Chiran Legs (Girth)">
+	<entry value="1"/>
+  </slotdef>
+  <slotdef name="Chiran Legs (Legs)">
+	<entry value="2"/>
+	<entry value="3"/>
+  </slotdef>
+  <slotdef name="Chiran Legs (Trim)">
+	<entry value="0"/>
+  </slotdef>
+  <slotdef name="Chiran Helm (Horns)">
+    <entry value="0"/>
+  </slotdef>
+  <slotdef name="Chiran Helm (Base)">
+    <entry value="1"/>
+  </slotdef>
+
+  <!--slotdef name="Diforsa Greaves">
+    <entry value="0"/>
+  </slotdef-->
+  <!--slotdef name="Diforsa Pauldrons">
+    <entry value="0"/>
+  </slotdef-->
+
+  <slotdef name="Haebrean BP (Chest) *">
+    <entry value="0"/>
+  </slotdef>
+  <slotdef name="Haebrean BP (Ornaments)">
+    <entry value="1"/>
+  </slotdef>  
+  <slotdef name="Haebrean BP (Trim)">
+    <entry value="2"/>
+  </slotdef>  
+  <slotdef name="Haebrean Girth (Base) *">
+    <entry value="0"/>
+  </slotdef>  
+  <slotdef name="Haebrean Girth (Belt/Scales)">
+    <entry value="1"/>
+	<entry value="2"/>
+  </slotdef>
+  <slotdef name="Haebrean Helm (Base)">
+    <entry value="0"/>
+  </slotdef>
+  <slotdef name="Haebrean Helm (Mask)">
+    <entry value="1"/>
+  </slotdef>
+  
+  <slotdef name="Haebrean Pauldrons (Base) *">
+    <entry value="0"/>
+  </slotdef>
+  <slotdef name="Haebrean Pauldrons (Ornaments)">
+    <entry value="1"/>
+  </slotdef>
+
+  <!-- Lorica -->
+  <slotdef name="Lorica BP (Veins)">
+    <entry value="0"/>
+    <entry value="1"/>
+  </slotdef>
+  <slotdef name="Lorica BP (Base)">
+    <entry value="2"/>
+    <entry value="3"/>
+  </slotdef>
+  <slotdef name="Lorica BP (Neck/Trim) *">
+	<entry value="4"/>
+  </slotdef>
+  <slotdef name="Lorica Legs (Base)">
+    <entry value="0"/>
+  </slotdef>
+  <slotdef name="Lorica Legs (Knees/Belt/Crotch) *">
+    <entry value="1"/>
+	<entry value="2"/>
+  </slotdef>
+  <slotdef name="Lorica Legs (Legs) *">
+    <entry value="3"/>
+  </slotdef>  
+  
+  <slotdef name="Nariyid BP (Circle/Lines)">
+    <entry value="0"/>
+	<entry value="1"/>
+  </slotdef>
+  <slotdef name="Nariyid BP (Base)">
+    <entry value="2"/>
+  </slotdef>
+  <slotdef name="Nariyid BP (Shoulders)">
+    <entry value="3"/>
+  </slotdef>
+  <slotdef name="Nariyid Girth (Base) *">
+    <entry value="0"/>
+  </slotdef>
+  <slotdef name="Nariyid Girth (Belt/Lines)">
+	<entry value="2"/>
+  </slotdef>
+  <slotdef name="Nariyid Girth (Ornaments)">
+    <entry value="3"/>
+  </slotdef>
+  <slotdef name="Nariyid Sleeves (Shoulders)">
+    <entry value="0"/>
+  </slotdef>
+  <slotdef name="Nariyid Sleeves (Upper Arm)">
+    <entry value="1"/>
+	<entry value="2"/>
+  </slotdef>
+  <slotdef name="Nariyid Sleeves (Lower Arm)">
+    <entry value="3"/>
+  </slotdef>
+
+  <slotdef name="Olthoi BP (Base)">
+    <entry value="0"/>
+  </slotdef>
+  <slotdef name="Olthoi BP (Veins)">
+    <entry value="1"/>
+  </slotdef>
+  
+  <slotdef name="Olthoi Alduressa Legs (Girth: Base)">
+    <entry value="0"/>
+	<entry value="1"/>
+	<entry value="2"/>
+  </slotdef>
+  <slotdef name="Olthoi Alduressa Legs (Girth: Lines)">
+    <entry value="3"/>
+  </slotdef>
+  <slotdef name="Olthoi Alduressa Legs (Legs: Lines)">
+    <entry value="4"/>
+	<entry value="5"/>
+  </slotdef>
+ 
+  <slotdef name="Olthoi Amuli Coat (Base) *">
+    <entry value="0"/>
+	<entry value="1"/>
+  </slotdef>   
+  <slotdef name="Olthoi Amuli Coat (Trim)">
+    <entry value="2"/>
+  </slotdef>  
+  <slotdef name="Olthoi Amuli Coat (Shoulders)">
+    <entry value="3"/>
+  </slotdef>
+  <slotdef name="Olthoi Amuli Legs (Trim)">
+    <entry value="6"/>
+    <entry value="7"/>
+    <entry value="8"/>
+  </slotdef>
+  
+  <slotdef name="Olthoi Koujia Kabuton (Base)">
+    <entry value="0"/>
+  </slotdef>
+  <slotdef name="Olthoi Koujia Kabuton (Horns)">
+    <entry value="1"/>
+  </slotdef>
+
+  <slotdef name="Olthoi Koujia Legs (Base)">
+    <entry value="0"/>
+	<entry value="1"/>
+	<entry value="2"/>
+  </slotdef>
+  <slotdef name="Olthoi Koujia Legs (Sides/Shins)">
+    <entry value="3"/>
+	<entry value="4"/>
+	<entry value="5"/>
+  </slotdef>
+
+  <slotdef name="Scalemail Cuirass (Base)">
+    <entry value="0"/>
+  </slotdef>
+  <slotdef name="Scalemail Cuirass (Bumps)">
+    <entry value="1"/>
+  </slotdef>
+  <slotdef name="Scalemail Cuirass (Belt)">
+    <entry value="2"/>
+  </slotdef>
+
+  <slotdef name="Tenassa Legs (Line at Side)">
+    <entry value="0"/>
+  </slotdef>
+  <slotdef name="Tenassa Legs (Base)">
+    <entry value="1"/>
+  </slotdef>
+  <slotdef name="Tenassa Legs (Hilight)">
+    <entry value="2"/>
+  </slotdef>
+  
+  <slotdef name="Tenassa BP (Shoulders)">
+    <entry value="0"/>
+  </slotdef>
+  <slotdef name="Tenassa BP (Base)">
+    <entry value="1"/>
+  </slotdef>
+
+  <slotdef name="Yoroi Cuirass (Base)">
+    <entry value="0"/>
+    <entry value="1"/>
+  </slotdef>
+  <slotdef name="Yoroi Cuirass (Belt)">
+    <entry value="2"/>
+  </slotdef>
+  
+  <slotdef name="Yoroi Girth (Base)">
+    <entry value="0"/>
+  </slotdef>
+  <slotdef name="Yoroi Girth (Belt)">
+    <entry value="1"/>
+  </slotdef>
+
+</VTClassicColorInfo>
