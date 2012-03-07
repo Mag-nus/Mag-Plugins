@@ -30,25 +30,27 @@
 		{
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.lblPossibleCombinations = new System.Windows.Forms.Label();
+			this.progressBar1 = new System.Windows.Forms.ProgressBar();
 			this.calculatePossibilities = new System.Windows.Forms.Button();
 			this.listPossibilities = new System.Windows.Forms.ListView();
-			this.coveragePiece1 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece16 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece2 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece17 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece3 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece14 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece4 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece15 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece5 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece13 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece6 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece12 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece7 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece11 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece8 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece10 = new Mag_SuitBuilder.CoveragePiece();
-			this.coveragePiece9 = new Mag_SuitBuilder.CoveragePiece();
+			this.coveragePiece1 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece16 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece2 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece17 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece3 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece14 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece4 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece15 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece5 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece13 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece6 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece12 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece7 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece11 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece8 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece10 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece9 = new Mag_SuitBuilder.EquipmentPieceControl();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
 			this.txtEquipmentEntries = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
@@ -70,6 +72,8 @@
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.lblPossibleCombinations);
+			this.tabPage1.Controls.Add(this.progressBar1);
 			this.tabPage1.Controls.Add(this.calculatePossibilities);
 			this.tabPage1.Controls.Add(this.listPossibilities);
 			this.tabPage1.Controls.Add(this.coveragePiece1);
@@ -97,6 +101,24 @@
 			this.tabPage1.Text = "Slots";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
+			// lblPossibleCombinations
+			// 
+			this.lblPossibleCombinations.AutoSize = true;
+			this.lblPossibleCombinations.Location = new System.Drawing.Point(736, 29);
+			this.lblPossibleCombinations.Name = "lblPossibleCombinations";
+			this.lblPossibleCombinations.Size = new System.Drawing.Size(115, 13);
+			this.lblPossibleCombinations.TabIndex = 20;
+			this.lblPossibleCombinations.Text = "Possible Combinations:";
+			// 
+			// progressBar1
+			// 
+			this.progressBar1.Location = new System.Drawing.Point(736, 8);
+			this.progressBar1.Name = "progressBar1";
+			this.progressBar1.Size = new System.Drawing.Size(296, 16);
+			this.progressBar1.Step = 1;
+			this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+			this.progressBar1.TabIndex = 19;
+			// 
 			// calculatePossibilities
 			// 
 			this.calculatePossibilities.Location = new System.Drawing.Point(560, 16);
@@ -111,7 +133,7 @@
 			// 
 			this.listPossibilities.Location = new System.Drawing.Point(560, 48);
 			this.listPossibilities.Name = "listPossibilities";
-			this.listPossibilities.Size = new System.Drawing.Size(216, 240);
+			this.listPossibilities.Size = new System.Drawing.Size(472, 240);
 			this.listPossibilities.TabIndex = 17;
 			this.listPossibilities.UseCompatibleStateImageBehavior = false;
 			// 
@@ -127,7 +149,6 @@
 			this.coveragePiece1.Name = "coveragePiece1";
 			this.coveragePiece1.Size = new System.Drawing.Size(150, 136);
 			this.coveragePiece1.TabIndex = 0;
-			this.coveragePiece1.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece16
 			// 
@@ -141,7 +162,6 @@
 			this.coveragePiece16.Name = "coveragePiece16";
 			this.coveragePiece16.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece16.TabIndex = 16;
-			this.coveragePiece16.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece2
 			// 
@@ -155,7 +175,6 @@
 			this.coveragePiece2.Name = "coveragePiece2";
 			this.coveragePiece2.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece2.TabIndex = 1;
-			this.coveragePiece2.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece17
 			// 
@@ -169,7 +188,6 @@
 			this.coveragePiece17.Name = "coveragePiece17";
 			this.coveragePiece17.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece17.TabIndex = 15;
-			this.coveragePiece17.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece3
 			// 
@@ -183,7 +201,6 @@
 			this.coveragePiece3.Name = "coveragePiece3";
 			this.coveragePiece3.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece3.TabIndex = 2;
-			this.coveragePiece3.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece14
 			// 
@@ -197,7 +214,6 @@
 			this.coveragePiece14.Name = "coveragePiece14";
 			this.coveragePiece14.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece14.TabIndex = 14;
-			this.coveragePiece14.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece4
 			// 
@@ -211,7 +227,6 @@
 			this.coveragePiece4.Name = "coveragePiece4";
 			this.coveragePiece4.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece4.TabIndex = 3;
-			this.coveragePiece4.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece15
 			// 
@@ -225,7 +240,6 @@
 			this.coveragePiece15.Name = "coveragePiece15";
 			this.coveragePiece15.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece15.TabIndex = 13;
-			this.coveragePiece15.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece5
 			// 
@@ -239,7 +253,6 @@
 			this.coveragePiece5.Name = "coveragePiece5";
 			this.coveragePiece5.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece5.TabIndex = 4;
-			this.coveragePiece5.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece13
 			// 
@@ -253,7 +266,6 @@
 			this.coveragePiece13.Name = "coveragePiece13";
 			this.coveragePiece13.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece13.TabIndex = 12;
-			this.coveragePiece13.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece6
 			// 
@@ -267,7 +279,6 @@
 			this.coveragePiece6.Name = "coveragePiece6";
 			this.coveragePiece6.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece6.TabIndex = 5;
-			this.coveragePiece6.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece12
 			// 
@@ -281,7 +292,6 @@
 			this.coveragePiece12.Name = "coveragePiece12";
 			this.coveragePiece12.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece12.TabIndex = 11;
-			this.coveragePiece12.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece7
 			// 
@@ -295,7 +305,6 @@
 			this.coveragePiece7.Name = "coveragePiece7";
 			this.coveragePiece7.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece7.TabIndex = 6;
-			this.coveragePiece7.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece11
 			// 
@@ -309,7 +318,6 @@
 			this.coveragePiece11.Name = "coveragePiece11";
 			this.coveragePiece11.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece11.TabIndex = 10;
-			this.coveragePiece11.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece8
 			// 
@@ -323,7 +331,6 @@
 			this.coveragePiece8.Name = "coveragePiece8";
 			this.coveragePiece8.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece8.TabIndex = 7;
-			this.coveragePiece8.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece10
 			// 
@@ -337,7 +344,6 @@
 			this.coveragePiece10.Name = "coveragePiece10";
 			this.coveragePiece10.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece10.TabIndex = 9;
-			this.coveragePiece10.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// coveragePiece9
 			// 
@@ -351,7 +357,6 @@
 			this.coveragePiece9.Name = "coveragePiece9";
 			this.coveragePiece9.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece9.TabIndex = 8;
-			this.coveragePiece9.UnderwearCoverage = Mag_SuitBuilder.Constants.UnderwearCoverage.None;
 			// 
 			// tabPage2
 			// 
@@ -392,6 +397,7 @@
 			this.Text = "Mag-Suit Builder";
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
+			this.tabPage1.PerformLayout();
 			this.tabPage2.ResumeLayout(false);
 			this.tabPage2.PerformLayout();
 			this.ResumeLayout(false);
@@ -400,23 +406,23 @@
 
 		#endregion
 
-		private CoveragePiece coveragePiece1;
-		private CoveragePiece coveragePiece2;
-		private CoveragePiece coveragePiece3;
-		private CoveragePiece coveragePiece4;
-		private CoveragePiece coveragePiece5;
-		private CoveragePiece coveragePiece6;
-		private CoveragePiece coveragePiece7;
-		private CoveragePiece coveragePiece8;
-		private CoveragePiece coveragePiece9;
-		private CoveragePiece coveragePiece10;
-		private CoveragePiece coveragePiece11;
-		private CoveragePiece coveragePiece12;
-		private CoveragePiece coveragePiece13;
-		private CoveragePiece coveragePiece14;
-		private CoveragePiece coveragePiece15;
-		private CoveragePiece coveragePiece16;
-		private CoveragePiece coveragePiece17;
+		private EquipmentPieceControl coveragePiece1;
+		private EquipmentPieceControl coveragePiece2;
+		private EquipmentPieceControl coveragePiece3;
+		private EquipmentPieceControl coveragePiece4;
+		private EquipmentPieceControl coveragePiece5;
+		private EquipmentPieceControl coveragePiece6;
+		private EquipmentPieceControl coveragePiece7;
+		private EquipmentPieceControl coveragePiece8;
+		private EquipmentPieceControl coveragePiece9;
+		private EquipmentPieceControl coveragePiece10;
+		private EquipmentPieceControl coveragePiece11;
+		private EquipmentPieceControl coveragePiece12;
+		private EquipmentPieceControl coveragePiece13;
+		private EquipmentPieceControl coveragePiece14;
+		private EquipmentPieceControl coveragePiece15;
+		private EquipmentPieceControl coveragePiece16;
+		private EquipmentPieceControl coveragePiece17;
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.TabPage tabPage2;
@@ -424,6 +430,8 @@
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button calculatePossibilities;
 		private System.Windows.Forms.ListView listPossibilities;
+		private System.Windows.Forms.ProgressBar progressBar1;
+		private System.Windows.Forms.Label lblPossibleCombinations;
 	}
 }
 

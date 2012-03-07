@@ -441,7 +441,9 @@ namespace MagTools
 
 		private bool ItemStillNeedsIdent(WorldObject obj)
 		{
-			if ((obj.ObjectClass == ObjectClass.Armor || obj.ObjectClass == ObjectClass.Clothing || obj.ObjectClass == ObjectClass.MeleeWeapon || obj.ObjectClass == ObjectClass.MissileWeapon || obj.ObjectClass == ObjectClass.WandStaffOrb) && !obj.HasIdData)
+			if ((obj.ObjectClass == ObjectClass.Armor || obj.ObjectClass == ObjectClass.Clothing ||
+				obj.ObjectClass == ObjectClass.MeleeWeapon || obj.ObjectClass == ObjectClass.MissileWeapon || obj.ObjectClass == ObjectClass.WandStaffOrb ||
+				obj.ObjectClass == ObjectClass.Jewelry) && !obj.HasIdData)
 				return true;
 
 			return false;
