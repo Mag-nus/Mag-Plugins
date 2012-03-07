@@ -35,56 +35,29 @@ namespace Mag_SuitBuilder
 					continue;
 
 				equipmentPieces.Add(piece);
-				/*
-				// Duplicate multi-slot pieces into single slot copies
-				if (piece.EquipableSlots == (Constants.EquippableSlotFlags.LeftBracelet | Constants.EquippableSlotFlags.RightBracelet))
-				{
-					piece.EquipableSlots = Constants.EquippableSlotFlags.LeftBracelet;
-
-					piece = new EquipmentPiece(line);
-					piece.EquipableSlots = Constants.EquippableSlotFlags.RightBracelet;
-					equipmentPieces.Add(piece);
-				}
-
-				if (piece.EquipableSlots == (Constants.EquippableSlotFlags.LeftRing | Constants.EquippableSlotFlags.RightRing))
-				{
-					piece.EquipableSlots = Constants.EquippableSlotFlags.LeftRing;
-
-					piece = new EquipmentPiece(line);
-					piece.EquipableSlots = Constants.EquippableSlotFlags.RightRing;
-					equipmentPieces.Add(piece);
-				}
-				*/
 			}
 
 			progressBar1.Value = 0;
 
 			Collection<EquipmentGroup> equipmentGroups = new Collection<EquipmentGroup>();
 
-			for (int i = 0 ; i < equipmentPieces.Count ; i++)
+			if (equipmentPieces.Count > 0)
 			{
-				EquipmentGroup equipmentGroup = new EquipmentGroup();
+				for (int i = 0 ; i < equipmentPieces.Count - 1 ; i++)
+				{
+					EquipmentGroup equipmentGroup = new EquipmentGroup();
+					equipmentGroup.Add(equipmentPieces[i]);
+					equipmentGroups.Add(equipmentGroup);
 
-				equipmentGroups.Add(equipmentGroup);
+					ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i + 1, equipmentGroup);
 
-				ProcessEquipmentPieces(equipmentGroups, equipmentPieces, i, equipmentGroup);
-
-				progressBar1.Value = (int)(((i + 1) / (float)equipmentPieces.Count) * 100.0);
-				progressBar1.Refresh();
+					progressBar1.Value = (int)(((i + 2) / (float)equipmentPieces.Count) * 100.0);
+					progressBar1.Refresh();
+				}
 			}
 
-			MessageBox.Show(equipmentGroups.Count.ToString());
-
-			/*
-			EquipmentGroup equipmentGroup = new EquipmentGroup();
-
-			foreach (EquipmentPiece equipmentPiece in equipmentPieces)
-			{
-				equipmentGroup.Add(equipmentPiece);
-			}
-
-			PopuldateFromEquipmentGroup(equipmentGroup);
-			*/
+			for (int i = 0 ; i < equipmentGroups.Count ; i++)
+				MessageBox.Show(equipmentGroups[i].ToString(), i + " of " + equipmentGroups.Count);
 		}
 
 		private void ProcessEquipmentPieces(Collection<EquipmentGroup> equipmentGroups, Collection<EquipmentPiece> equipmentPieces, int startIndex, EquipmentGroup workingGroup)
@@ -100,19 +73,12 @@ namespace Mag_SuitBuilder
 				EquipmentGroup originalGroup = workingGroup.Clone();
 				equipmentGroups.Add(originalGroup);
 
-				if ((equipmentGroups.Count % 100000) == 0)
-				{
-					lblPossibleCombinations.Text = "Possible Combinations: " + equipmentGroups.Count;
-					lblPossibleCombinations.Refresh();
-				}
-
 				workingGroup.Add(equipmentPieces[i]);
 
 				if (!workingGroup.IsFull)
 					ProcessEquipmentPieces(equipmentGroups, equipmentPieces, startIndex + 1, workingGroup);
 
-				if (originalGroup.Count > 0)
-					ProcessEquipmentPieces(equipmentGroups, equipmentPieces, startIndex + 1, originalGroup);
+				ProcessEquipmentPieces(equipmentGroups, equipmentPieces, startIndex + 1, originalGroup);
 			}
 		}
 

@@ -19,7 +19,10 @@ namespace Mag_SuitBuilder
 					if (String.IsNullOrEmpty(piece.ArmorSet))
 						continue;
 
-					sets[piece.ArmorSet]++;
+					if (!sets.ContainsKey(piece.ArmorSet))
+						sets.Add(piece.ArmorSet, 1);
+					else
+						sets[piece.ArmorSet]++;
 				}
 
 				return sets;
@@ -92,7 +95,7 @@ namespace Mag_SuitBuilder
 		{
 			foreach (Spell spell in spells)
 			{
-				if (spell.Level >= searchForEqualOrBetter.Level && spell.NameWithoutLevel == searchForEqualOrBetter.NameWithoutLevel)
+				if (spell.Level >= searchForEqualOrBetter.Level && spell.IsOfSameFamily(searchForEqualOrBetter))
 					return true;
 			}
 
@@ -107,6 +110,9 @@ namespace Mag_SuitBuilder
 			{
 				output += ", " + armorSet + ":" + ArmorSetPieces[armorSet];
 			}
+
+			foreach (EquipmentPiece equipmentPiece in equipmentPieces)
+				output += Environment.NewLine + equipmentPiece;
 
 			return output;
 		}
@@ -160,7 +166,7 @@ namespace Mag_SuitBuilder
 				{
 					foreach (Spell pieceSpell in piece.Spells)
 					{
-						if (pieceSpell.Level >= spell.Level && pieceSpell.NameWithoutLevel == spell.NameWithoutLevel)
+						if (pieceSpell.Level >= spell.Level && pieceSpell.IsOfSameFamily(spell))
 							betterOrSameFound = true;
 					}
 				}

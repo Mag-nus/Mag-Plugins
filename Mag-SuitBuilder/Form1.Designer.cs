@@ -30,7 +30,6 @@
 		{
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
-			this.lblPossibleCombinations = new System.Windows.Forms.Label();
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
 			this.calculatePossibilities = new System.Windows.Forms.Button();
 			this.listPossibilities = new System.Windows.Forms.ListView();
@@ -72,7 +71,6 @@
 			// 
 			// tabPage1
 			// 
-			this.tabPage1.Controls.Add(this.lblPossibleCombinations);
 			this.tabPage1.Controls.Add(this.progressBar1);
 			this.tabPage1.Controls.Add(this.calculatePossibilities);
 			this.tabPage1.Controls.Add(this.listPossibilities);
@@ -101,20 +99,11 @@
 			this.tabPage1.Text = "Slots";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
-			// lblPossibleCombinations
-			// 
-			this.lblPossibleCombinations.AutoSize = true;
-			this.lblPossibleCombinations.Location = new System.Drawing.Point(736, 29);
-			this.lblPossibleCombinations.Name = "lblPossibleCombinations";
-			this.lblPossibleCombinations.Size = new System.Drawing.Size(115, 13);
-			this.lblPossibleCombinations.TabIndex = 20;
-			this.lblPossibleCombinations.Text = "Possible Combinations:";
-			// 
 			// progressBar1
 			// 
-			this.progressBar1.Location = new System.Drawing.Point(736, 8);
+			this.progressBar1.Location = new System.Drawing.Point(736, 16);
 			this.progressBar1.Name = "progressBar1";
-			this.progressBar1.Size = new System.Drawing.Size(296, 16);
+			this.progressBar1.Size = new System.Drawing.Size(296, 24);
 			this.progressBar1.Step = 1;
 			this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
 			this.progressBar1.TabIndex = 19;
@@ -397,7 +386,6 @@
 			this.Text = "Mag-Suit Builder";
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
-			this.tabPage1.PerformLayout();
 			this.tabPage2.ResumeLayout(false);
 			this.tabPage2.PerformLayout();
 			this.ResumeLayout(false);
@@ -431,7 +419,6 @@
 		private System.Windows.Forms.Button calculatePossibilities;
 		private System.Windows.Forms.ListView listPossibilities;
 		private System.Windows.Forms.ProgressBar progressBar1;
-		private System.Windows.Forms.Label lblPossibleCombinations;
 	}
 }
 

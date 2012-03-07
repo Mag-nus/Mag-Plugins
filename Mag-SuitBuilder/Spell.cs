@@ -1,4 +1,5 @@
-﻿
+﻿using System.Collections.ObjectModel;
+
 namespace Mag_SuitBuilder
 {
 	public enum SpellLevel
@@ -13,32 +14,41 @@ namespace Mag_SuitBuilder
 	{
 		public readonly string Name;
 
+		public SpellLevel Level;
+
+		// This is a little hack for fast comparison of spell name without doing a string compare
+		private static Collection<string> NameWithoutLevels = new Collection<string>();
+		private int nameWithoutLevelIndex = -1;
+
 		public Spell(string name)
 		{
 			Name = name;
+
+			if (Name.Contains("Minor "))
+				Level = SpellLevel.Minor;
+			else if (Name.Contains("Major "))
+				Level = SpellLevel.Major;
+			else if (Name.Contains("Epic "))
+				Level = SpellLevel.Epic;
+			else
+				Level = SpellLevel.Unknown;
+
+			string nameWithoutLevel ;
+
+			if (Level == SpellLevel.Unknown)
+				nameWithoutLevel = Name;
+			else
+				nameWithoutLevel = Name.Substring(Name.IndexOf(' ') + 1, Name.Length - Name.IndexOf(' ') - 1);
+
+			if (!NameWithoutLevels.Contains(nameWithoutLevel))
+				NameWithoutLevels.Add(nameWithoutLevel);
+
+			nameWithoutLevelIndex = NameWithoutLevels.IndexOf(nameWithoutLevel);
 		}
 
-		public SpellLevel Level
+		public bool IsOfSameFamily(Spell compareSpell)
 		{
-			get
-			{
-				if (Name.Contains("Minor ")) return SpellLevel.Minor;
-				if (Name.Contains("Major ")) return SpellLevel.Major;
-				if (Name.Contains("Epic ")) return SpellLevel.Epic;
-
-				return SpellLevel.Unknown;
-			}
-		}
-
-		public string NameWithoutLevel
-		{
-			get
-			{
-				if (Level == SpellLevel.Unknown)
-					return Name;
-
-				return Name.Substring(Name.IndexOf(' ') + 1, Name.Length - Name.IndexOf(' ') - 1);
-			}
+			return nameWithoutLevelIndex == compareSpell.nameWithoutLevelIndex;
 		}
 
 		public override string ToString()

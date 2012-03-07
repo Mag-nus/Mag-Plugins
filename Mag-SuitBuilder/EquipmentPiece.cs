@@ -61,7 +61,7 @@ namespace Mag_SuitBuilder
 			// Add Impen to the armor level
 			foreach (Spell spell in Spells)
 			{
-				if (spell.NameWithoutLevel == "Impenetrability")
+				if (spell.Name.Contains("Impenetrability"))
 				{
 					if (spell.Level == SpellLevel.Minor) ArmorLevel += 20;
 					if (spell.Level == SpellLevel.Major) ArmorLevel += 40;
@@ -153,6 +153,19 @@ namespace Mag_SuitBuilder
 
 				return setBits;
 			}
+		}
+
+		public override string ToString()
+		{
+			string output = Name;
+
+			if (ArmorLevel > 0)
+				output += ", AL " + ArmorLevel;
+
+			foreach (Spell spell in Spells)
+				output += " " + spell;
+
+			return output;
 		}
 	}
 }
