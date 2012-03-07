@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "uTank2 Settings Editor", "uTank2 Settings Editor\uTank2 Settings Editor.csproj", "{2D2D68BC-C028-4D66-8FDD-8D47AF9F0A09}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs29
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = uTank2\u0020Settings\u0020Editor\\uTank2\u0020Settings\u0020Editor.csproj
+		SccProjectName1 = uTank2\u0020Settings\u0020Editor
+		SccLocalPath1 = uTank2\u0020Settings\u0020Editor
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D2D68BC-C028-4D66-8FDD-8D47AF9F0A09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D2D68BC-C028-4D66-8FDD-8D47AF9F0A09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D2D68BC-C028-4D66-8FDD-8D47AF9F0A09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D2D68BC-C028-4D66-8FDD-8D47AF9F0A09}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
