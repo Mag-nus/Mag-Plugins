@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.ObjectModel;
 using System.Text;
+
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
@@ -147,7 +148,7 @@ namespace Mag_LootLogger
 			{
 				using (StreamWriter writer = new StreamWriter(logFile.FullName, true))
 				{
-					writer.WriteLine("Id,Name,ObjectClass,EquipSkill,MasteryBonus,DamageType,Variance,MaxDamage,ElementalDmgBonus,DamageBonus,ElementalDamageVersusMonsters,AttackBonus,MeleeDefenseBonus,MagicDBonus,MissileDBonus,ManaCBonus,BuffedMaxDamage,BuffedElementalDmgBonus,BuffedDamageBonus,BuffedElementalDamageVersusMonsters,BuffedAttackBonus,BuffedMeleeDefenseBonus,BuffedManaCBonus,WieldReqValue,Work,Value,Burden");
+					writer.WriteLine("Timestamp,Container,Id,Name,ObjectClass,EquipSkill,MasteryBonus,DamageType,Variance,MaxDamage,ElementalDmgBonus,DamageBonus,ElementalDamageVersusMonsters,AttackBonus,MeleeDefenseBonus,MagicDBonus,MissileDBonus,ManaCBonus,BuffedMaxDamage,BuffedElementalDmgBonus,BuffedDamageBonus,BuffedElementalDamageVersusMonsters,BuffedAttackBonus,BuffedMeleeDefenseBonus,BuffedManaCBonus,WieldReqValue,Work,Value,Burden");
 
 					writer.Close();
 				}
@@ -157,8 +158,13 @@ namespace Mag_LootLogger
 			{
 				StringBuilder output = new StringBuilder();
 
+				output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+
+				string containerName = CoreManager.Current.WorldFilter[item.Container] != null ? CoreManager.Current.WorldFilter[item.Container].Name : null;
+				output.Append('"' + containerName + '"' + ",");
+
 				output.Append(item.Id + ",");
-				output.Append(item.Name + ",");
+				output.Append('"' + item.Name + '"' + ",");
 				output.Append(item.ObjectClass.ToString() + ",");
 
 				output.Append((item.Values(LongValueKey.EquipSkill) > 0 ? Util.GetSkillNameById(item.Values(LongValueKey.EquipSkill)) : String.Empty) + ",");
@@ -212,59 +218,32 @@ namespace Mag_LootLogger
 
 						// LongValueKey.MaxDamage
 						if (spellId == 4395) maxDamage += 2; // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
-						if (spellId == 2598 && !IsActiveSpell(2598, item)) maxDamage += 2; // Minor Blood Thirst
-						if (spellId == 2586 && !IsActiveSpell(2586, item)) maxDamage += 4; // Major Blood Thirst
-						if (spellId == 4661 && !IsActiveSpell(4661, item)) maxDamage += 7; // Epic Blood Thirst
+						if (spellId == 2598) maxDamage += 2; // Minor Blood Thirst
+						if (spellId == 2586) maxDamage += 4; // Major Blood Thirst
+						if (spellId == 4661) maxDamage += 7; // Epic Blood Thirst
 
 						// DoubleValueKey.ElementalDamageVersusMonsters
 						if (spellId == 4414) elementalDamageVersusMonsters += .01; // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
-						if (spellId == 3251 && !IsActiveSpell(3251, item)) elementalDamageVersusMonsters += .01; // Minor Spirit Thirst
-						if (spellId == 3250 && !IsActiveSpell(3250, item)) elementalDamageVersusMonsters += .03; // Major Spirit Thirst
-						if (spellId == 4670 && !IsActiveSpell(4670, item)) elementalDamageVersusMonsters += .04; // Epic Spirit Thirst
+						if (spellId == 3251) elementalDamageVersusMonsters += .01; // Minor Spirit Thirst
+						if (spellId == 3250) elementalDamageVersusMonsters += .03; // Major Spirit Thirst
+						if (spellId == 4670) elementalDamageVersusMonsters += .04; // Epic Spirit Thirst
 
 						// DoubleValueKey.AttackBonus
-						if (spellId == 2603 && !IsActiveSpell(2603, item)) attackBonus += .03; // Minor Heart Thirst
-						if (spellId == 2591 && !IsActiveSpell(2591, item)) attackBonus += .05; // Major Heart Thirst
-						if (spellId == 4666 && !IsActiveSpell(4666, item)) attackBonus += .07; // Epic Heart Thirst
+						if (spellId == 2603) attackBonus += .03; // Minor Heart Thirst
+						if (spellId == 2591) attackBonus += .05; // Major Heart Thirst
+						if (spellId == 4666) attackBonus += .07; // Epic Heart Thirst
 
 						// DoubleValueKey.MeleeDefenseBonus
-						if (spellId == 2600 && !IsActiveSpell(2600, item)) meleeDefenseBonus += .03; // Minor Defender
-						if (spellId == 2588 && !IsActiveSpell(2588, item)) meleeDefenseBonus += .05; // Major Defender
-						if (spellId == 4663 && !IsActiveSpell(4663, item)) meleeDefenseBonus += .07; // Epic Defender
+						if (spellId == 2600) meleeDefenseBonus += .03; // Minor Defender
+						if (spellId == 2588) meleeDefenseBonus += .05; // Major Defender
+						if (spellId == 4663) meleeDefenseBonus += .07; // Epic Defender
 
 						// DoubleValueKey.ManaCBonus
-						if (spellId == 3201 && !IsActiveSpell(3201, item)) manaCBonus *= 1.05; // Feeble Hermetic Link
-						if (spellId == 3199 && !IsActiveSpell(3199, item)) manaCBonus *= 1.10; // Minor Hermetic Link
-						if (spellId == 3202 && !IsActiveSpell(3202, item)) manaCBonus *= 1.15; // Moderate Hermetic Link
-						if (spellId == 3200 && !IsActiveSpell(3200, item)) manaCBonus *= 1.20; // Major Hermetic Link
+						if (spellId == 3201) manaCBonus *= 1.05; // Feeble Hermetic Link
+						if (spellId == 3199) manaCBonus *= 1.10; // Minor Hermetic Link
+						if (spellId == 3202) manaCBonus *= 1.15; // Moderate Hermetic Link
+						if (spellId == 3200) manaCBonus *= 1.20; // Major Hermetic Link
 					}
-
-					// LongValueKey.MaxDamage
-					if (IsActiveSpell(1616, item)) maxDamage -= 20; // Blood Drinker VI
-					if (IsActiveSpell(2096, item)) maxDamage -= 22; // Infected Caress
-					if (IsActiveSpell(5183, item)) maxDamage -= 22; // Incantation of Blood Drinker
-					if (IsActiveSpell(4395, item)) maxDamage -= 22; // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
-
-					// DoubleValueKey.ElementalDamageVersusMonsters:
-					if (IsActiveSpell(3258, item)) elementalDamageVersusMonsters -= .06; // Spirit Drinker VI
-					if (IsActiveSpell(3259, item)) elementalDamageVersusMonsters -= .07; // Infected Spirit Caress
-					if (IsActiveSpell(5182, item)) elementalDamageVersusMonsters -= .07; // Incantation of Spirit Drinker
-					if (IsActiveSpell(4414, item)) elementalDamageVersusMonsters -= .08; // Incantation of Spirit Drinker
-
-					// DoubleValueKey.AttackBonus
-					if (IsActiveSpell(1592, item)) attackBonus -= .15; // Heart Seeker VI
-					if (IsActiveSpell(2106, item)) attackBonus -= .17; // Elysa's Sight
-					if (IsActiveSpell(4405, item)) attackBonus -= .20; // Incantation of Heart Seeker
-
-					// DoubleValueKey.MeleeDefenseBonus
-					if (IsActiveSpell(1605, item)) meleeDefenseBonus -= .15; // Defender VI
-					if (IsActiveSpell(2101, item)) meleeDefenseBonus -= .17; // Cragstone's Will
-					if (IsActiveSpell(4400, item)) meleeDefenseBonus -= .17; // Incantation of Defender
-
-					// DoubleValueKey.ManaCBonus
-					if (IsActiveSpell(1480, item)) manaCBonus /= 1.60; // Hermetic Link VI
-					if (IsActiveSpell(2117, item)) manaCBonus /= 1.70; // Mystic's Blessing
-					if (IsActiveSpell(4418, item)) manaCBonus /= 1.80; // Incantation of Hermetic Link
 
 					output.Append((maxDamage > 0 ? maxDamage.ToString() : String.Empty) + ",");
 					output.Append((elementalDmgBonus != 0 ? elementalDmgBonus.ToString() : String.Empty) + ",");
@@ -285,17 +264,6 @@ namespace Mag_LootLogger
 
 				writer.Close();
 			}
-		}
-
-		bool IsActiveSpell(int activeSpellId, WorldObject item)
-		{
-			for (int i = 0 ; i < item.ActiveSpellCount ; i++)
-			{
-				if (item.ActiveSpell(i) == activeSpellId)
-					return true;
-			}
-
-			return false;
 		}
 	}
 }
