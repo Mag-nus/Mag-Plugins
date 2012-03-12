@@ -312,6 +312,11 @@ namespace MagTools
 			{ 4661, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 7, 7)}, // Epic Blood Thirst
 
 			{ 3688, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 300)}, // Prodigal Blood Drinker
+
+
+			{ 2604, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 20, 20)}, // Minor Impenetrability
+			{ 2592, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 40, 40)}, // Major Impenetrability
+			{ 4667, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 60, 60)}, // Epic Impenetrability
 		};
 
 		public static readonly Dictionary<int, SpellInfo<DoubleValueKey>> DoubleValueKeySpellEffects = new Dictionary<int, SpellInfo<DoubleValueKey>>()

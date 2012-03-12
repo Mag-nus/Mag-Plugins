@@ -1774,6 +1774,11 @@ namespace VTClassic
 			{ 4661, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 7, 7)}, // Epic Blood Thirst
 
 			{ 3688, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 300)}, // Prodigal Blood Drinker
+
+
+			{ 2604, new SpellInfo<IntValueKey>(IntValueKey.ArmorLevel, 20, 20)}, // Minor Impenetrability
+			{ 2592, new SpellInfo<IntValueKey>(IntValueKey.ArmorLevel, 40, 40)}, // Major Impenetrability
+			{ 4667, new SpellInfo<IntValueKey>(IntValueKey.ArmorLevel, 60, 60)}, // Epic Impenetrability
 		};
 
 		static readonly Dictionary<int, SpellInfo<DoubleValueKey>> DoubleValueKeySpellEffects = new Dictionary<int, SpellInfo<DoubleValueKey>>()
