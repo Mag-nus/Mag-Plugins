@@ -117,7 +117,9 @@ namespace VTClassic
         KeysHeld = 193,
         ElementalDmgBonus = 204,
         ArmorSetID = 265,
-		MasteryBonus = 353, // Mag-nus added for Feb, 2012 patch.
+		ItemMaxLevel = 319, // Mag-nus added 3/11/2012
+		CloakChanceType = 352, // Mag-nus added 3/11/2012
+		WeaponMasteryCategory = 353, // Mag-nus added for Feb, 2012 patch.
         Type = 218103808,
         Icon = 218103809,
         Container = 218103810,
@@ -483,6 +485,57 @@ namespace VTClassic
             r.Add("Relic Alduressa", i--);
             r.Add("Ancient Relic", i--);
             r.Add("Noble Relic", i--);
+
+			// Mag-nus added 3/11/2012
+            r.Add("(Aetheria) Sigil of Defense", 35);
+			r.Add("(Aetheria) Sigil of Destruction", 36);
+			r.Add("(Aetheria) Sigil of Fury", 37);
+			r.Add("(Aetheria) Sigil of Growth", 38);
+			r.Add("(Aetheria) Sigil of Vigor", 39);
+            r.Add("(Rare) Heroic Protector", 40);
+			r.Add("(Rare) Heroic Destroyer", 41);
+			// 42
+			// 43
+			// 44
+			// 45
+			// 46
+			// 47
+			// 48
+            r.Add("(Cloak) Alchemy", 49);
+			r.Add("(Cloak) Arcane Lore", 50);
+			r.Add("(Cloak) Armor Tinkering", 51);
+			r.Add("(Cloak) Assess Person", 52);
+			r.Add("(Cloak) Light Weapons", 53);
+			r.Add("(Cloak) Missile Weapons", 54);
+			r.Add("(Cloak) Cooking", 55);
+			r.Add("(Cloak) Creature Enchantment", 56);
+			//r.Add("(Cloak) Crossbow", 57);
+			r.Add("(Cloak) Finesse Weapons", 58);
+			r.Add("(Cloak) Deception", 59);
+			r.Add("(Cloak) Fletching", 60);
+			r.Add("(Cloak) Healing", 61);
+			r.Add("(Cloak) Item Enchantment", 62);
+			r.Add("(Cloak) Item Tinkering", 63);
+			r.Add("(Cloak) Leadership", 64);
+			r.Add("(Cloak) Life Magic", 65);
+			r.Add("(Cloak) Loyalty", 66);
+			//r.Add("(Cloak) Mace", 67);
+			r.Add("(Cloak) Magic Defense", 68);
+			r.Add("(Cloak) Magic Item Tinkering", 69);
+			r.Add("(Cloak) Mana Conversion", 70);
+			r.Add("(Cloak) Melee Defense", 71);
+			r.Add("(Cloak) Missile Defense", 72);
+			r.Add("(Cloak) Salvaging", 73);
+			//r.Add("(Cloak) Spear", 74);
+			//r.Add("(Cloak) Staff", 75);
+			r.Add("(Cloak) Heavy Weapons", 76);
+			//r.Add("(Cloak) Thrown Weapons", 77);
+			r.Add("(Cloak) Two Handed Combat", 78);
+			//r.Add("(Cloak) Unarmed Combat", 79);
+			r.Add("(Cloak) Void Magic", 80);
+			r.Add("(Cloak) War Magic", 81);
+			r.Add("(Cloak) Weapon Tinkering", 82);
+			r.Add("(Cloak) Assess Creature", 83);
 
             return r;
         }
