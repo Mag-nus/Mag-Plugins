@@ -1,65 +1,271 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace Mag_SuitBuilder
 {
 	class EquipmentGroup
 	{
-		private Collection<EquipmentPiece> equipmentPieces = new Collection<EquipmentPiece>();
+		public const int MaximumPieces = 17;
+		const int avgNumOfSpellsPerPiece = 3;
 
-		public Dictionary<string, int> ArmorSetPieces
+		public readonly IEquipmentPiece[] EquipmentPieces = new IEquipmentPiece[MaximumPieces];
+		private readonly int[] equipmentPieceSlots = new int[MaximumPieces];
+		public int EquipmentPieceCount;
+
+		private Constants.EquippableSlotFlags equippedSlots;
+
+		public readonly Spell[] Spells = new Spell[MaximumPieces * avgNumOfSpellsPerPiece];
+		public int SpellCount;
+
+		public bool CanAdd(IEquipmentPiece equipmentPiece, Constants.EquippableSlotFlags forceSlot = Constants.EquippableSlotFlags.Any)
 		{
-			get
+			if ((equippedSlots & (equipmentPiece.EquipableSlots & forceSlot)) != 0)
+				return false;
+
+			// Don't add more than 5 of any one armor set to a group
+			if (equipmentPiece.ArmorSet != null)
 			{
-				Dictionary<string, int> sets = new Dictionary<string, int>();
+				int similarArmorSetPiecesFound = 0;
 
-				foreach (EquipmentPiece piece in equipmentPieces)
+				for (int i = 0 ; i < EquipmentPieceCount ; i++)
 				{
-					if (String.IsNullOrEmpty(piece.ArmorSet))
-						continue;
-
-					if (!sets.ContainsKey(piece.ArmorSet))
-						sets.Add(piece.ArmorSet, 1);
-					else
-						sets[piece.ArmorSet]++;
+					if (equipmentPiece.ArmorSet == EquipmentPieces[i].ArmorSet)
+						similarArmorSetPiecesFound++;
 				}
 
-				return sets;
+				if (similarArmorSetPiecesFound >= 5)
+					return false;
+			}
+
+			return true;
+		}
+
+		public bool CanOfferBeneficialSpell(IEquipmentPiece equipmentPiece)
+		{
+			// Does the this item have a spell that the current group doesn't have?
+			foreach (Spell pieceSpell in equipmentPiece.Spells)
+			{
+				for (int j = 0 ; j <= this.SpellCount ; j++)
+				{
+					// Yes it does
+					if (j == this.SpellCount)
+						return true;
+
+					if (this.Spells[j].IsSameOrSurpasses(pieceSpell))
+						break;
+				}
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Make sure you call CanAdd before using this funciton to add a piece.
+		/// </summary>
+		/// <param name="equipmentPiece"></param>
+		/// <param name="forceSlot"></param>
+		/// <returns></returns>
+		public void Add(IEquipmentPiece equipmentPiece, Constants.EquippableSlotFlags forceSlot = Constants.EquippableSlotFlags.Any)
+		{
+			EquipmentPieces[EquipmentPieceCount] = equipmentPiece;
+			equipmentPieceSlots[EquipmentPieceCount] = (int)(equipmentPiece.EquipableSlots & forceSlot);
+			EquipmentPieceCount++;
+
+			equippedSlots |= (equipmentPiece.EquipableSlots & forceSlot);
+
+			foreach (Spell spell in equipmentPiece.Spells)
+			{
+				Spells[SpellCount] = spell;
+				SpellCount++;
 			}
 		}
 
+		public EquipmentGroup Clone()
+		{
+			EquipmentGroup equipmentGroup = new EquipmentGroup();
+
+			Array.Copy(EquipmentPieces, equipmentGroup.EquipmentPieces, EquipmentPieceCount);
+			Buffer.BlockCopy(equipmentPieceSlots, 0, equipmentGroup.equipmentPieceSlots, 0, EquipmentPieceCount * 4);
+			equipmentGroup.EquipmentPieceCount = EquipmentPieceCount;
+
+			equipmentGroup.equippedSlots = equippedSlots;
+
+			Array.Copy(Spells, equipmentGroup.Spells, SpellCount);
+			equipmentGroup.SpellCount = SpellCount;
+
+			return equipmentGroup;
+		}
+
+		private IEquipmentPiece GetPiece(Constants.EquippableSlotFlags slot)
+		{
+			for (int i = 0 ; i < EquipmentPieceCount ; i++)
+			{
+				if (((Constants.EquippableSlotFlags)equipmentPieceSlots[i] & slot) != 0)
+					return EquipmentPieces[i];
+			}
+
+			return null;
+		}
+
+		public IEquipmentPiece Necklace { get { return GetPiece(Constants.EquippableSlotFlags.Necklace); } }
+
+		public IEquipmentPiece Trinket { get { return GetPiece(Constants.EquippableSlotFlags.Trinket); } }
+
+		public IEquipmentPiece LeftBracelet { get { return GetPiece(Constants.EquippableSlotFlags.LeftBracelet); } }
+		public IEquipmentPiece RightBracelet { get { return GetPiece(Constants.EquippableSlotFlags.RightBracelet); } }
+
+		public IEquipmentPiece LeftRing { get { return GetPiece(Constants.EquippableSlotFlags.LeftRing); } }
+		public IEquipmentPiece RightRing { get { return GetPiece(Constants.EquippableSlotFlags.RightRing); } }
+
+		public IEquipmentPiece Head { get { return GetPiece(Constants.EquippableSlotFlags.Head); } }
+		public IEquipmentPiece Chest { get { return GetPiece(Constants.EquippableSlotFlags.Chest); } }
+		public IEquipmentPiece UpperArms { get { return GetPiece(Constants.EquippableSlotFlags.UpperArms); } }
+		public IEquipmentPiece LowerArms { get { return GetPiece(Constants.EquippableSlotFlags.LowerArms); } }
+		public IEquipmentPiece Hands { get { return GetPiece(Constants.EquippableSlotFlags.Hands); } }
+		public IEquipmentPiece Abdomen { get { return GetPiece(Constants.EquippableSlotFlags.Abdomen); } }
+		public IEquipmentPiece UpperLegs { get { return GetPiece(Constants.EquippableSlotFlags.UpperLegs); } }
+		public IEquipmentPiece LowerLegs { get { return GetPiece(Constants.EquippableSlotFlags.LowerLegs); } }
+		public IEquipmentPiece Feet { get { return GetPiece(Constants.EquippableSlotFlags.Feet); } }
+
+		public IEquipmentPiece Shirt { get { return GetPiece(Constants.EquippableSlotFlags.Shirt); } }
+		public IEquipmentPiece Pants { get { return GetPiece(Constants.EquippableSlotFlags.Pants); } }
+
+		int totalPotentialTinkedArmorLevel;
+		/// <summary>
+		/// Only call this after you have added all of your pieces. It retains its calc'd value once its called.
+		/// </summary>
 		public int TotalPotentialTinkedArmorLevel
 		{
 			get
 			{
-				int totalPotentialTinkedArmorLevel = 0;
-
-				foreach (EquipmentPiece piece in equipmentPieces)
+				if (totalPotentialTinkedArmorLevel == 0)
 				{
-					if (piece.IsUnderwear)
-						totalPotentialTinkedArmorLevel += piece.PotentialTinkedArmorLevel * piece.UnderwearCoverageSlots;
-					else
-						totalPotentialTinkedArmorLevel += piece.PotentialTinkedArmorLevel;
+					// todo hack fix
+					for (int i = 0 ; i < EquipmentPieceCount ; i++)
+						totalPotentialTinkedArmorLevel += EquipmentPieces[i].ArmorLevel;
 				}
 
 				return totalPotentialTinkedArmorLevel;
 			}
 		}
 
-		public Collection<Spell> Epics
+		private Dictionary<string, int> ArmorSetPieces
 		{
 			get
 			{
-				return GetSpellsOfLevel(SpellLevel.Epic);
+				Dictionary<string, int> sets = new Dictionary<string, int>();
+
+				for (int i = 0 ; i < EquipmentPieceCount ; i++)
+				{
+					if (String.IsNullOrEmpty(EquipmentPieces[i].ArmorSet))
+						continue;
+
+					if (!sets.ContainsKey(EquipmentPieces[i].ArmorSet))
+						sets.Add(EquipmentPieces[i].ArmorSet, 1);
+					else
+						sets[EquipmentPieces[i].ArmorSet]++;
+				}
+
+				return sets;
 			}
 		}
 
-		public Collection<Spell> Majors
+		/// <summary>
+		/// Only call this once, after you've finished adding all of your equipment pieces
+		/// </summary>
+		/// <param name="masterEquipmentPieceList"></param>
+		public void CalculateEquipmentPieceHash(IList<IEquipmentPiece> masterEquipmentPieceList)
+		{
+			for (int i = 0 ; i < EquipmentPieceCount ; i++)
+			{
+				EquipmentPieceHash += EquipmentPieces[i].GetHashCode();
+
+				int index = masterEquipmentPieceList.IndexOf(EquipmentPieces[i]);
+
+				if (index >= 0)
+				{
+					if (index <= 63)
+						bitGroup1 |= (ulong)1 << (index);
+					else if (index <= 127)
+						bitGroup2 |= (ulong)1 << (index - 64);
+					else if (index <= 191)
+						bitGroup3 |= (ulong)1 << (index - 128);
+					else if (index <= 255)
+						bitGroup4 |= (ulong)1 << (index - 192);
+					else
+						throw new NotImplementedException("More than 256 equipment pieces is not supported.");
+				}
+			}
+		}
+
+		/// <summary>
+		/// Only use this after you've added all your pieces and called CalculateEquipmentPieceHash()
+		/// </summary>
+		public int EquipmentPieceHash;
+
+		private ulong bitGroup1;
+		private ulong bitGroup2;
+		private ulong bitGroup3;
+		private ulong bitGroup4;
+
+		public bool IsEquipmentSubsetOfGroup(EquipmentGroup compareGroup)
+		{
+			return (bitGroup1 & compareGroup.bitGroup1) == bitGroup1 &&
+				(bitGroup2 & compareGroup.bitGroup2) == bitGroup2 &&
+				(bitGroup3 & compareGroup.bitGroup3) == bitGroup3 &&
+				(bitGroup4 & compareGroup.bitGroup4) == bitGroup4;
+
+			#region ' old method '
+			/*
+			// Does the this group have an item that the compare group doesn't have?
+			for (int i = 0 ; i < this.EquipmentPieceCount ; i++)
+			{
+				for (int j = 0 ; j <= compareGroup.EquipmentPieceCount ; j++)
+				{
+					// Yes it does
+					if (j == compareGroup.EquipmentPieceCount)
+						return false;
+
+					if (this.EquipmentPieces[i] == compareGroup.EquipmentPieces[j])
+						break;
+				}
+			}
+
+			return true;
+			*/
+			#endregion
+		}
+
+		private int NumberOfEpics
 		{
 			get
 			{
-				Collection<Spell> Majors = GetSpellsOfLevel(SpellLevel.Major);
+				int number = 0;
+
+				for (int i = 0 ; i < SpellCount ; i++)
+				{
+					if (Spells[i].IsEpic)
+						number++;
+				}
+
+				return number;
+			}
+		}
+
+		/*
+		private Collection<Spell> Epics
+		{
+			get
+			{
+				return GetSpellsOfLevel(false, true);
+			}
+		}
+
+		private Collection<Spell> Majors
+		{
+			get
+			{
+				Collection<Spell> Majors = GetSpellsOfLevel(true, false);
 
 				Collection<Spell> spells = new Collection<Spell>();
 
@@ -75,15 +281,15 @@ namespace Mag_SuitBuilder
 			}
 		}
 
-		private Collection<Spell> GetSpellsOfLevel(SpellLevel level)
+		private Collection<Spell> GetSpellsOfLevel(bool majors, bool epics)
 		{
 			Collection<Spell> spells = new Collection<Spell>();
 
-			foreach (EquipmentPiece piece in equipmentPieces)
+			foreach (IEquipmentPiece piece in equipmentPieces)
 			{
 				foreach (Spell spell in piece.Spells)
 				{
-					if (spell.Level == level)
+					if ((majors && spell.IsMajor) || (epics && spell.IsEpic))
 						spells.Add(spell);
 				}
 			}
@@ -95,182 +301,32 @@ namespace Mag_SuitBuilder
 		{
 			foreach (Spell spell in spells)
 			{
-				if (spell.Level >= searchForEqualOrBetter.Level && spell.IsOfSameFamily(searchForEqualOrBetter))
+				if (spell.IsSame(searchForEqualOrBetter) || spell.Surpasses(searchForEqualOrBetter))
 					return true;
 			}
 
 			return false;
 		}
+		*/
 
 		public override string ToString()
 		{
-			string output = "AL: " + TotalPotentialTinkedArmorLevel + ", Epics: " + Epics.Count + ", Majors: " + Majors.Count;
+			string output = "AL: " + TotalPotentialTinkedArmorLevel + ", Epics: " + NumberOfEpics; // +", Majors: " + Majors.Count;
 
 			foreach (string armorSet in ArmorSetPieces.Keys)
 			{
 				output += ", " + armorSet + ":" + ArmorSetPieces[armorSet];
 			}
 
-			foreach (EquipmentPiece equipmentPiece in equipmentPieces)
+			foreach (IEquipmentPiece equipmentPiece in EquipmentPieces)
+			{
+				if (equipmentPiece == null)
+					break;
+
 				output += ", " + equipmentPiece;
+			}
 
 			return output;
-		}
-
-		public bool IsFull
-		{
-			get
-			{
-				return Count >= 17;
-			}
-		}
-
-		public bool CanAdd(EquipmentPiece equipmentPiece, Constants.EquippableSlotFlags forceSlot = Constants.EquippableSlotFlags.Any)
-		{
-			if (IsFull)
-				return false;
-
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Necklace) != 0 && Necklace == null) return true;
-
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Trinket) != 0 && Trinket == null) return true;
-
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.LeftBracelet) != 0 && LeftBracelet == null) return true;
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.RightBracelet) != 0 && RightBracelet == null) return true;
-
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.LeftRing) != 0 && LeftRing == null) return true;
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.RightRing) != 0 && RightRing == null) return true;
-
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Head) != 0 && Head == null) return true;
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Chest) != 0 && Chest == null) return true;
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.UpperArms) != 0 && UpperArms == null) return true;
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.LowerArms) != 0 && LowerArms == null) return true;
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Hands) != 0 && Hands == null) return true;
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Abdomen) != 0 && Abdomen == null) return true;
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.UpperLegs) != 0 && UpperLegs == null) return true;
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.LowerLegs) != 0 && LowerLegs == null) return true;
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Feet) != 0 && Feet == null) return true;
-
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Shirt) != 0 && Shirt == null) return true;
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Pants) != 0 && Pants == null) return true;
-
-			return false;
-		}
-
-		public bool CanOfferBeneficialSpell(EquipmentPiece equipmentPiece)
-		{
-			foreach (Spell spell in equipmentPiece.Spells)
-			{
-				bool betterOrSameFound = false;
-
-				foreach (EquipmentPiece piece in equipmentPieces)
-				{
-					foreach (Spell pieceSpell in piece.Spells)
-					{
-						if (pieceSpell.Level >= spell.Level && pieceSpell.IsOfSameFamily(spell))
-							betterOrSameFound = true;
-					}
-				}
-
-				if (!betterOrSameFound)
-					return true;
-			}
-
-			return false;
-		}
-
-		public bool Add(EquipmentPiece equipmentPiece, Constants.EquippableSlotFlags forceSlot = Constants.EquippableSlotFlags.Any)
-		{
-			if (IsFull)
-				return false;
-
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Necklace) != 0 && Necklace == null) { equipmentPieces.Add(equipmentPiece); Necklace = equipmentPiece; return true; }
-
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Trinket) != 0 && Trinket == null) { equipmentPieces.Add(equipmentPiece); Trinket = equipmentPiece; return true; }
-
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.LeftBracelet) != 0 && LeftBracelet == null) { equipmentPieces.Add(equipmentPiece); LeftBracelet = equipmentPiece; return true; }
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.RightBracelet) != 0 && RightBracelet == null) { equipmentPieces.Add(equipmentPiece); RightBracelet = equipmentPiece; return true; }
-
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.LeftRing) != 0 && LeftRing == null) { equipmentPieces.Add(equipmentPiece); LeftRing = equipmentPiece; return true; }
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.RightRing) != 0 && RightRing == null) { equipmentPieces.Add(equipmentPiece); RightRing = equipmentPiece; return true; }
-
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Head) != 0 && Head == null) { equipmentPieces.Add(equipmentPiece); Head = equipmentPiece; return true; }
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Chest) != 0 && Chest == null) { equipmentPieces.Add(equipmentPiece); Chest = equipmentPiece; return true; }
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.UpperArms) != 0 && UpperArms == null) { equipmentPieces.Add(equipmentPiece); UpperArms = equipmentPiece; return true; }
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.LowerArms) != 0 && LowerArms == null) { equipmentPieces.Add(equipmentPiece); LowerArms = equipmentPiece; return true; }
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Hands) != 0 && Hands == null) { equipmentPieces.Add(equipmentPiece); Hands = equipmentPiece; return true; }
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Abdomen) != 0 && Abdomen == null) { equipmentPieces.Add(equipmentPiece); Abdomen = equipmentPiece; return true; }
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.UpperLegs) != 0 && UpperLegs == null) { equipmentPieces.Add(equipmentPiece); UpperLegs = equipmentPiece; return true; }
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.LowerLegs) != 0 && LowerLegs == null) { equipmentPieces.Add(equipmentPiece); LowerLegs = equipmentPiece; return true; }
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Feet) != 0 && Feet == null) { equipmentPieces.Add(equipmentPiece); Feet = equipmentPiece; return true; }
-
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Shirt) != 0 && Shirt == null) { equipmentPieces.Add(equipmentPiece); Shirt = equipmentPiece; return true; }
-			if (((equipmentPiece.EquipableSlots & forceSlot) & Constants.EquippableSlotFlags.Pants) != 0 && Pants == null) { equipmentPieces.Add(equipmentPiece); Pants = equipmentPiece; return true; }
-
-			return false;
-		}
-
-		public int Count
-		{
-			get
-			{
-				return equipmentPieces.Count;
-			}
-		}
-
-		public EquipmentPiece Necklace { get; private set; }
-
-		public EquipmentPiece Trinket { get; private set; }
-
-		public EquipmentPiece LeftBracelet { get; private set; }
-		public EquipmentPiece RightBracelet { get; private set; }
-
-		public EquipmentPiece LeftRing { get; private set; }
-		public EquipmentPiece RightRing { get; private set; }
-
-		public EquipmentPiece Head { get; private set; }
-		public EquipmentPiece Chest { get; private set; }
-		public EquipmentPiece UpperArms { get; private set; }
-		public EquipmentPiece LowerArms { get; private set; }
-		public EquipmentPiece Hands { get; private set; }
-		public EquipmentPiece Abdomen { get; private set; }
-		public EquipmentPiece UpperLegs { get; private set; }
-		public EquipmentPiece LowerLegs { get; private set; }
-		public EquipmentPiece Feet { get; private set; }
-
-		public EquipmentPiece Shirt { get; private set; }
-		public EquipmentPiece Pants { get; private set; }
-
-		public EquipmentGroup Clone()
-		{
-			EquipmentGroup equipmentGroup = new EquipmentGroup();
-
-			foreach (EquipmentPiece equipmentPiece in equipmentPieces)
-				equipmentGroup.equipmentPieces.Add(equipmentPiece);
-
-			equipmentGroup.Necklace = Necklace;
-
-			equipmentGroup.Trinket = Trinket;
-
-			equipmentGroup.LeftBracelet = LeftBracelet;
-			equipmentGroup.RightBracelet = RightBracelet;
-
-			equipmentGroup.LeftRing = LeftRing;
-			equipmentGroup.RightRing = RightRing;
-
-			equipmentGroup.Head = Head;
-			equipmentGroup.Chest = Chest;
-			equipmentGroup.UpperArms = UpperArms;
-			equipmentGroup.LowerArms = LowerArms;
-			equipmentGroup.Hands = Hands;
-			equipmentGroup.Abdomen = Abdomen;
-			equipmentGroup.UpperLegs = UpperLegs;
-			equipmentGroup.LowerLegs = LowerLegs;
-			equipmentGroup.Feet = Feet;
-
-			equipmentGroup.Shirt = Shirt;
-			equipmentGroup.Pants = Pants;
-
-			return equipmentGroup;
 		}
 	}
 }

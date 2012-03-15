@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
 namespace Mag_SuitBuilder
 {
-	class EquipmentPiece
+	class EquipmentPiece : IEquipmentPiece
 	{
 		// Copper Chainmail Leggings, AL 607, Tinks 10, Epic Invulnerability, Wield Lvl 150, Melee Defense 390 to Activate, Diff 262
 		// Gold Top, Tinks 2, Augmented Health III, Augmented Damage II, Major Storm Ward, Wield Lvl 150, Diff 410, Craft 9
@@ -20,6 +19,14 @@ namespace Mag_SuitBuilder
 				Name = sections[0].Trim();
 
 			EquipableSlots = Constants.GetEquippableSlots(Name);
+
+			int value = (int)EquipableSlots;
+			while (value != 0)
+			{
+				if ((value & 1) == 1)
+					NumberOfSlotsCovered++;
+				value >>= 1;
+			}
 
 			if (sections.Length >= 2 && sections[1].Contains(" Set"))
 				ArmorSet = sections[1];
@@ -52,20 +59,25 @@ namespace Mag_SuitBuilder
 				}
 			}
 
+			Collection<Spell> spells = new Collection<Spell>();
+
+			// This could use a better way to add spells
 			foreach (string section in sections)
 			{
 				if (section.Contains("Minor ") || section.Contains("Major ") || section.Contains("Epic "))
-					Spells.Add(new Spell(section));
+					spells.Add(new Spell(section));
 			}
 
+			Spells = new ReadOnlyCollection<Spell>(spells);
+
 			// Add Impen to the armor level
-			foreach (Spell spell in Spells)
+			foreach (Spell spell in spells)
 			{
 				if (spell.Name.Contains("Impenetrability"))
 				{
-					if (spell.Level == SpellLevel.Minor) ArmorLevel += 20;
-					if (spell.Level == SpellLevel.Major) ArmorLevel += 40;
-					if (spell.Level == SpellLevel.Epic) ArmorLevel += 60;
+					if (spell.IsMinor) ArmorLevel += 20;
+					if (spell.IsMajor) ArmorLevel += 40;
+					if (spell.IsEpic) ArmorLevel += 60;
 
 					break;
 				}
@@ -76,24 +88,43 @@ namespace Mag_SuitBuilder
 		{
 			EquipableSlots = equipableSlots;
 
+			int value = (int)EquipableSlots;
+			while (value != 0)
+			{
+				if ((value & 1) == 1)
+					NumberOfSlotsCovered++;
+				value >>= 1;
+			}
+
 			ArmorSet = armorSet;
+
+			Collection<Spell> spells = new Collection<Spell>();
 
 			foreach (string spellName in spellNames)
 			{
-				if (spellName.Contains("Minor ") || spellName.Contains("Major ") || spellName.Contains("Epic "))
-					Spells.Add(new Spell(spellName));
+				spells.Add(new Spell(spellName));
 			}
+
+			Spells = new ReadOnlyCollection<Spell>(spells);
 		}
 
-		public readonly string Name;
 
-		public readonly Constants.EquippableSlotFlags EquipableSlots;
+		public string Name { get; private set; }
 
-		public readonly string ArmorSet;
+		public Constants.EquippableSlotFlags EquipableSlots { get; private set; }
 
-		public readonly int ArmorLevel;
+		public int NumberOfSlotsCovered { get; private set; }
 
-		public int PotentialTinkedArmorLevel
+		public string ArmorSet { get; private set; }
+
+		public int ArmorLevel { get; private set; }
+
+		public int Tinks { get; private set; }
+
+		public ReadOnlyCollection<Spell> Spells { get; private set; }
+
+		/*
+		private int PotentialTinkedArmorLevel
 		{
 			get
 			{
@@ -104,11 +135,7 @@ namespace Mag_SuitBuilder
 			}
 		}
 
-		private readonly int Tinks;
-
-		public readonly Collection<Spell> Spells = new Collection<Spell>();
-
-		public bool IsArmor
+		private bool IsArmor
 		{
 			get
 			{
@@ -124,7 +151,7 @@ namespace Mag_SuitBuilder
 			}
 		}
 
-		public bool IsUnderwear
+		private bool IsUnderwear
 		{
 			get
 			{
@@ -132,7 +159,7 @@ namespace Mag_SuitBuilder
 			}
 		}
 
-		public int UnderwearCoverageSlots
+		private int UnderwearCoverageSlots
 		{
 			get
 			{
@@ -154,7 +181,7 @@ namespace Mag_SuitBuilder
 				return setBits;
 			}
 		}
-
+		*/
 		public override string ToString()
 		{
 			string output = Name;

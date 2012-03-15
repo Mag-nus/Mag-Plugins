@@ -116,11 +116,11 @@ namespace Mag_SuitBuilder
 
 				// Four and more slots
 				//if (Regex.Match(name, "Hauberk").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.Abdomen | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
-				if (Regex.Match(name, "Hauberk").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
+				if (Regex.Match(name, "Hauberk").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms; // Can't reduce to abdomen
 				//if (Regex.Match(name, "Jerkin").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.Abdomen | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
-				if (Regex.Match(name, "Jerkin").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
+				if (Regex.Match(name, "Jerkin").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms; // Can't reduce to abdomen
 				//if (Regex.Match(name, "Leather Coat").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.Abdomen | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
-				if (Regex.Match(name, "Leather Coat").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
+				if (Regex.Match(name, "Leather Coat").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms; // Can't reduce to abdomen
 
 				// Necklace
 				if (Regex.Match(name, "Amulet").Success) return EquippableSlotFlags.Necklace;
