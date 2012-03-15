@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Mag_SuitBuilder
@@ -152,11 +153,15 @@ namespace Mag_SuitBuilder
 						equipmentPieces.RemoveAt(i);
 				}
 
-				// We should mult-thread this call
-				ProcessEquipmentPieces(0, equipmentGroup);
+				//if (Environment.ProcessorCount <= 1)
+					ProcessEquipmentPieces(0, equipmentGroup);
+				//else
+				{
+					// Multithread it
+				}
 			}
 
-			MessageBox.Show(equipmentGroups.Count + " " + (DateTime.Now - startTime) + " " + Environment.ProcessorCount);
+			//MessageBox.Show(equipmentGroups.Count + " " + (DateTime.Now - startTime));
 
 			// Sort the equipment groups based on armor level
 			equipmentGroups.Sort((a, b) => b.TotalPotentialTinkedArmorLevel.CompareTo(a.TotalPotentialTinkedArmorLevel));
@@ -252,9 +257,12 @@ namespace Mag_SuitBuilder
 			#endregion
 		}
 
-		private void ProcessEquipmentPieces(int startIndex, EquipmentGroup workingGroup)
+		private void ProcessEquipmentPieces(int startIndex, EquipmentGroup workingGroup, int endIndex = -1)
 		{
-			for (int i = startIndex ; i <= equipmentPieces.Count ; i++)
+			if (endIndex == -1)
+				endIndex = equipmentPieces.Count;
+
+			for (int i = startIndex ; i <= endIndex ; i++)
 			{
 				if (i == equipmentPieces.Count || workingGroup.EquipmentPieceCount >= EquipmentGroup.MaximumPieces)
 				{
