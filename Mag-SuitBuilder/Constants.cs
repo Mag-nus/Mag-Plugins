@@ -166,6 +166,7 @@ namespace Mag_SuitBuilder
 			if (Regex.Match(name, "Leather Jerkin").Success) return false;
 			if (Regex.Match(name, "Leather Vest").Success) return false;
 			if (Regex.Match(name, "Chainmail Shirt").Success) return false;
+			if (Regex.Match(name, "Leather Shirt").Success) return false;
 			if (Regex.Match(name, "Leather Pants").Success) return false;
 
 			if (GetUnderwearCoverage(name) != UnderwearCoverage.None)
