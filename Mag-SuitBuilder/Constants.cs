@@ -163,11 +163,17 @@ namespace Mag_SuitBuilder
 			if (String.IsNullOrEmpty(name))
 				return false;
 
-			if (Regex.Match(name, "Leather Jerkin").Success) return false;
-			if (Regex.Match(name, "Leather Vest").Success) return false;
-			if (Regex.Match(name, "Chainmail Shirt").Success) return false;
-			if (Regex.Match(name, "Leather Shirt").Success) return false;
-			if (Regex.Match(name, "Leather Pants").Success) return false;
+			// Old Method
+			//if (Regex.Match(name, "Leather Jerkin").Success) return false;
+			//if (Regex.Match(name, "Leather Vest").Success) return false;
+			//if (Regex.Match(name, "Chainmail Shirt").Success) return false;
+			//if (Regex.Match(name, "Leather Shirt").Success) return false;
+			//if (Regex.Match(name, "Leather Pants").Success) return false;
+
+			// New Method
+			if (Regex.Match(name, "Leather").Success) return false;
+			if (Regex.Match(name, "Chainmail").Success) return false;
+			if (Regex.Match(name, "Hide").Success) return false;
 
 			if (GetUnderwearCoverage(name) != UnderwearCoverage.None)
 				return true;

@@ -450,6 +450,9 @@ namespace Mag_SuitBuilder
 					{
 						for (int spell = 0 ; spell < equipmentGroup.SpellCount ; spell++)
 						{
+							if (dataGridView1[col, row].Value.ToString() == "Armor" && !equipmentGroup.Spells[spell].Name.EndsWith("Armor"))
+								continue;
+
 							if (equipmentGroup.Spells[spell].Name.Contains(dataGridView1[col, row].Value.ToString()))
 							{
 								if (equipmentGroup.Spells[spell].IsEpic) dataGridView1[col, row].Style.BackColor = Color.LightGreen;
@@ -463,6 +466,9 @@ namespace Mag_SuitBuilder
 					{
 						for (int spell = 0 ; spell < equipmentGroup.SpellCount ; spell++)
 						{
+							if (dataGridView1[col, row].Value.ToString() == "Armor" && !equipmentGroup.Spells[spell].Name.EndsWith("Armor"))
+								continue;
+
 							if (equipmentGroup.Spells[spell].Name.Contains(dataGridView1[col, row].Value.ToString()))
 							{
 								if (equipmentGroup.Spells[spell].IsMajor) dataGridView1[col, row].Style.BackColor = Color.Pink;
@@ -476,6 +482,9 @@ namespace Mag_SuitBuilder
 					{
 						for (int spell = 0 ; spell < equipmentGroup.SpellCount ; spell++)
 						{
+							if (dataGridView1[col, row].Value.ToString() == "Armor" && !equipmentGroup.Spells[spell].Name.EndsWith("Armor"))
+								continue;
+
 							if (equipmentGroup.Spells[spell].Name.Contains(dataGridView1[col, row].Value.ToString()))
 							{
 								if (equipmentGroup.Spells[spell].IsMinor) dataGridView1[col, row].Style.BackColor = Color.LightBlue;
