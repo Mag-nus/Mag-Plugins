@@ -455,9 +455,11 @@ namespace Mag_SuitBuilder
 
 							if (equipmentGroup.Spells[spell].Name.Contains(dataGridView1[col, row].Value.ToString()))
 							{
-								if (equipmentGroup.Spells[spell].IsEpic) dataGridView1[col, row].Style.BackColor = Color.LightGreen;
-
-								break;
+								if (equipmentGroup.Spells[spell].IsEpic)
+								{
+									dataGridView1[col, row].Style.BackColor = Color.LightGreen;
+									break;
+								}
 							}
 						}
 					}
@@ -471,9 +473,11 @@ namespace Mag_SuitBuilder
 
 							if (equipmentGroup.Spells[spell].Name.Contains(dataGridView1[col, row].Value.ToString()))
 							{
-								if (equipmentGroup.Spells[spell].IsMajor) dataGridView1[col, row].Style.BackColor = Color.Pink;
-
-								break;
+								if (equipmentGroup.Spells[spell].IsMajor)
+								{
+									dataGridView1[col, row].Style.BackColor = Color.Pink;
+									break;
+								}
 							}
 						}
 					}
@@ -487,9 +491,11 @@ namespace Mag_SuitBuilder
 
 							if (equipmentGroup.Spells[spell].Name.Contains(dataGridView1[col, row].Value.ToString()))
 							{
-								if (equipmentGroup.Spells[spell].IsMinor) dataGridView1[col, row].Style.BackColor = Color.LightBlue;
-
-								break;
+								if (equipmentGroup.Spells[spell].IsMinor)
+								{
+									dataGridView1[col, row].Style.BackColor = Color.LightBlue;
+									break;
+								}
 							}
 						}
 					}
