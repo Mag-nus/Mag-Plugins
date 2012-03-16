@@ -33,8 +33,8 @@ namespace Mag_SuitBuilder
 			dataGridView1[1, 6].Value = "Storm Ward";
 
 			dataGridView1[2, 0].Value = "Life Magic";
-			dataGridView1[2, 1].Value = "Creature Magic";
-			dataGridView1[2, 2].Value = "Item Magic";
+			dataGridView1[2, 1].Value = "Creature Ench";
+			dataGridView1[2, 2].Value = "Item Ench";
 			dataGridView1[2, 3].Value = "War Magic";
 			dataGridView1[2, 4].Value = "Void Magic";
 			dataGridView1[2, 5].Value = "Mana C";
