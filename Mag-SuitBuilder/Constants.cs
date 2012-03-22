@@ -99,28 +99,31 @@ namespace Mag_SuitBuilder
 				if (Regex.Match(name, "Sleeves").Success) return EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
 
 				//if (Regex.Match(name, "Cuirass").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.Abdomen;
-				if (Regex.Match(name, "Cuirass").Success) return EquippableSlotFlags.Chest;
+				if (Regex.Match(name, "Cuirass").Success) return EquippableSlotFlags.Chest; // Can only reduce to chest
 
 				if (Regex.Match(name, "Leggings").Success) return EquippableSlotFlags.UpperLegs | EquippableSlotFlags.LowerLegs;
 
 				// Three Slot
-				if (Regex.Match(name, "Alduressa Coat").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
-				if (Regex.Match(name, "Amuli Coat").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
-				if (Regex.Match(name, "Chiran Coat").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
+				//if (Regex.Match(name, "Alduressa Coat").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
+				if (Regex.Match(name, "Alduressa Coat").Success) return EquippableSlotFlags.Chest; // Can only reduce to chest
+				//if (Regex.Match(name, "Amuli Coat").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
+				if (Regex.Match(name, "Amuli Coat").Success) return EquippableSlotFlags.Chest; // Can only reduce to chest
+				//if (Regex.Match(name, "Chiran Coat").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
+				if (Regex.Match(name, "Chiran Coat").Success) return EquippableSlotFlags.Chest; // Can only reduce to chest
 
 				//if (Regex.Match(name, "Shirt").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.Abdomen | EquippableSlotFlags.UpperArms;
-				if (Regex.Match(name, "Shirt").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms;
+				if (Regex.Match(name, "Shirt").Success) return EquippableSlotFlags.Chest; // Can only reduce to chest
 
 				if (Regex.Match(name, "Pants").Success) return EquippableSlotFlags.Abdomen | EquippableSlotFlags.UpperLegs | EquippableSlotFlags.LowerLegs;
 				if (Regex.Match(name, "Leggings").Success) return EquippableSlotFlags.Abdomen | EquippableSlotFlags.UpperLegs | EquippableSlotFlags.LowerLegs;
 
 				// Four and more slots
 				//if (Regex.Match(name, "Hauberk").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.Abdomen | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
-				if (Regex.Match(name, "Hauberk").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms; // Can't reduce to abdomen
+				if (Regex.Match(name, "Hauberk").Success) return EquippableSlotFlags.Chest; // Can only reduce to chest
 				//if (Regex.Match(name, "Jerkin").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.Abdomen | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
-				if (Regex.Match(name, "Jerkin").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms; // Can't reduce to abdomen
+				if (Regex.Match(name, "Jerkin").Success) return EquippableSlotFlags.Chest; //Can only reduce to chest
 				//if (Regex.Match(name, "Leather Coat").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.Abdomen | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
-				if (Regex.Match(name, "Leather Coat").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms; // Can't reduce to abdomen
+				if (Regex.Match(name, "Leather Coat").Success) return EquippableSlotFlags.Chest; // Can only reduce to chest
 
 				// Necklace
 				if (Regex.Match(name, "Amulet").Success) return EquippableSlotFlags.Necklace;
