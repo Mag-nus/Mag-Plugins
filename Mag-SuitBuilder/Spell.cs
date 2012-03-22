@@ -20,6 +20,10 @@ namespace Mag_SuitBuilder
 		private static Collection<string> NameWithoutLevels = new Collection<string>();
 		private int nameWithoutLevelIndex = -1;
 
+		public readonly bool IsEpic;
+		public readonly bool IsMajor;
+		public readonly bool IsMinor;
+
 		public Spell(string name)
 		{
 			Name = name;
@@ -44,6 +48,10 @@ namespace Mag_SuitBuilder
 				NameWithoutLevels.Add(nameWithoutLevel);
 
 			nameWithoutLevelIndex = NameWithoutLevels.IndexOf(nameWithoutLevel);
+
+			IsEpic = level == SpellLevel.Epic;
+			IsMajor = level == SpellLevel.Major;
+			IsMinor = level == SpellLevel.Minor;
 		}
 
 		public bool IsSame(Spell compareSpell)
@@ -66,10 +74,6 @@ namespace Mag_SuitBuilder
 
 			return level >= compareSpell.level && nameWithoutLevelIndex == compareSpell.nameWithoutLevelIndex;
 		}
-
-		public bool IsMinor { get { return level == SpellLevel.Minor; } }
-		public bool IsMajor { get { return level == SpellLevel.Major; } }
-		public bool IsEpic { get { return level == SpellLevel.Epic; } }
 
 		public override string ToString()
 		{

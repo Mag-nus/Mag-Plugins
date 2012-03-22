@@ -85,6 +85,9 @@ namespace Mag_SuitBuilder
 				return;
 			}
 
+			tabControl1.Enabled = false;
+			progressBar1.Value = 1;
+
 			equipmentPieces = new List<IEquipmentPiece>();
 
 			// Parse the equipment pieces from the text input
@@ -112,7 +115,7 @@ namespace Mag_SuitBuilder
 						EquipmentGroup jGroup = new EquipmentGroup();
 						jGroup.Add(equipmentPieces[j]);
 
-						if (!iGroup.CanOfferBeneficialSpell(equipmentPieces[j]) && !jGroup.CanOfferBeneficialSpell(equipmentPieces[i]))
+						if (!iGroup.CanOfferBeneficialSpell(equipmentPieces[j], chkIgnoreMajors.Checked, chkIgnoreMinors.Checked) && !jGroup.CanOfferBeneficialSpell(equipmentPieces[i], chkIgnoreMajors.Checked, chkIgnoreMinors.Checked))
 						{
 							// Drop the one with the lowest armor level
 							if (equipmentPieces[i].ArmorLevel < equipmentPieces[j].ArmorLevel)
@@ -149,15 +152,88 @@ namespace Mag_SuitBuilder
 				// Now that we've loaded our locked pieces, remove pieces we can't add from our equipment pieces list
 				for (int i = 0 ; i < equipmentPieces.Count ; i++)
 				{
-					if (!equipmentGroup.CanAdd(equipmentPieces[i]) || !equipmentGroup.CanOfferBeneficialSpell(equipmentPieces[i]))
+					if (!equipmentGroup.CanAdd(equipmentPieces[i]) || !equipmentGroup.CanOfferBeneficialSpell(equipmentPieces[i], chkIgnoreMajors.Checked, chkIgnoreMinors.Checked))
 						equipmentPieces.RemoveAt(i);
 				}
 
-				//if (Environment.ProcessorCount <= 1)
-					ProcessEquipmentPieces(0, equipmentGroup);
-				//else
+				int endIndex = equipmentPieces.Count - 1;
+
+				// Sort the list putting all armor first
+				equipmentPieces.Sort((a, b) =>
 				{
-					// Multithread it
+					if (a.ArmorLevel > 0 && b.ArmorLevel == 0)
+						return -1;
+
+					if (a.ArmorLevel == 0 && b.ArmorLevel > 0)
+						return 1;
+
+					return 0;
+				});
+
+				// Set our end index to the last piece of armor we have.
+				// We build our suits based around armor combos first, and then compliment them with jewelry/clothing
+				// We only do this if we have less than the max amount of wearable pieces
+				if (equipmentPieces.Count > EquipmentGroup.MaximumPieces)
+				{
+					for (int i = 0 ; i < equipmentPieces.Count ; i++)
+					{
+						if (equipmentPieces[i].ArmorLevel == 0)
+						{
+							endIndex = i - 1;
+							break;
+						}
+					}
+				}
+
+				// Are we are building a suit based around a primary set?
+				if (!String.IsNullOrEmpty(txtPrimaryArmorSet.Text))
+				{
+					// If we are building a suit based around a primary set, put all the set pieces first
+					equipmentPieces.Sort((a, b) =>
+					{
+						if (a.ArmorSet == txtPrimaryArmorSet.Text && b.ArmorSet != txtPrimaryArmorSet.Text)
+							return -1;
+
+						if (a.ArmorSet != txtPrimaryArmorSet.Text && b.ArmorSet == txtPrimaryArmorSet.Text)
+							return 1;
+
+						return 0;
+					});
+
+					for (int i = 0 ; i < equipmentPieces.Count ; i++)
+					{
+						if (equipmentPieces[i].ArmorSet != txtPrimaryArmorSet.Text)
+						{
+							endIndex = i - 1;
+							break;
+						}
+					}
+				}
+
+				if (Environment.ProcessorCount <= 1)
+					ProcessEquipmentPieces(0, endIndex, equipmentGroup);
+				else
+				{
+					ProcessEquipmentPieces(0, endIndex, equipmentGroup);
+
+					/* this is shit
+					ProcessEquipmentPieces(0, 0, equipmentGroup.Clone());
+
+					Thread[] threads = new Thread[endIndex];
+
+					for (int i = 1 ; i <= endIndex ; i++)
+					{
+						int i1 = i;
+						threads[i - 1] = new Thread(delegate() { ProcessEquipmentPieces(i1, i1, equipmentGroup.Clone()); });
+						threads[i - 1].Start();
+					}
+
+					for (int i = 1 ; i <= endIndex ; i++)
+					{
+						//while (threads[i - 1].IsAlive)
+						//	Thread.Sleep(1);
+					}
+					*/
 				}
 			}
 
@@ -255,16 +331,18 @@ namespace Mag_SuitBuilder
 				MessageBox.Show(equipmentGroups[i].ToString(), i + " of " + equipmentGroups.Count);
 			*/
 			#endregion
+
+			progressBar1.Value = 100;
+			tabControl1.Enabled = true;
 		}
 
-		private void ProcessEquipmentPieces(int startIndex, EquipmentGroup workingGroup, int endIndex = -1)
-		{
-			if (endIndex == -1)
-				endIndex = equipmentPieces.Count;
+		object lockObject = new object();
 
-			for (int i = startIndex ; i <= endIndex ; i++)
+		private void ProcessEquipmentPieces(int startIndex, int endIndex, EquipmentGroup workingGroup)
+		{
+			for (int i = startIndex ; i <= endIndex + 1 ; i++)
 			{
-				if (i == equipmentPieces.Count || workingGroup.EquipmentPieceCount >= EquipmentGroup.MaximumPieces)
+				if (i == endIndex + 1 || workingGroup.EquipmentPieceCount >= EquipmentGroup.MaximumPieces || i == equipmentPieces.Count)
 				{
 					workingGroup.CalculateEquipmentPieceHash(equipmentPieces);
 
@@ -272,7 +350,17 @@ namespace Mag_SuitBuilder
 					for (int j = 0 ; j < equipmentGroups.Count ; j++)
 					{
 						if (equipmentGroups[j].EquipmentPieceCount < workingGroup.EquipmentPieceCount)
+						{
+							/*
+							// This is only effective if we're multithreading the process loop
+							if (equipmentGroups[j].IsEquipmentSubsetOfGroup(workingGroup))
+							{
+								equipmentGroups[j] = workingGroup;
+								return;
+							}
+							*/
 							continue;
+						}
 
 						// Do both groups have the same items?
 						if (equipmentGroups[j].EquipmentPieceCount == workingGroup.EquipmentPieceCount)
@@ -292,7 +380,7 @@ namespace Mag_SuitBuilder
 					return;
 				}
 
-				if (!workingGroup.CanOfferBeneficialSpell(equipmentPieces[i]))
+				if (!workingGroup.CanOfferBeneficialSpell(equipmentPieces[i], chkIgnoreMajors.Checked, chkIgnoreMinors.Checked))
 					continue;
 
 				// If we're adding a multi-slot piece, we need to create a group branch for each possible slot of that piece
@@ -303,7 +391,7 @@ namespace Mag_SuitBuilder
 						EquipmentGroup newGroup = workingGroup.Clone();
 
 						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.Chest);
-						ProcessEquipmentPieces(i + 1, newGroup);
+						ProcessEquipmentPieces(i + 1, equipmentPieces.Count - 1, newGroup);
 					}
 
 					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.Abdomen) != 0 && workingGroup.CanAdd(equipmentPieces[i], Constants.EquippableSlotFlags.Abdomen))
@@ -311,7 +399,7 @@ namespace Mag_SuitBuilder
 						EquipmentGroup newGroup = workingGroup.Clone();
 
 						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.Abdomen);
-						ProcessEquipmentPieces(i + 1, newGroup);
+						ProcessEquipmentPieces(i + 1, equipmentPieces.Count - 1, newGroup);
 					}
 
 					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.UpperArms) != 0 && workingGroup.CanAdd(equipmentPieces[i], Constants.EquippableSlotFlags.UpperArms))
@@ -319,7 +407,7 @@ namespace Mag_SuitBuilder
 						EquipmentGroup newGroup = workingGroup.Clone();
 
 						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.UpperArms);
-						ProcessEquipmentPieces(i + 1, newGroup);
+						ProcessEquipmentPieces(i + 1, equipmentPieces.Count - 1, newGroup);
 					}
 
 					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.LowerArms) != 0 && workingGroup.CanAdd(equipmentPieces[i], Constants.EquippableSlotFlags.LowerArms))
@@ -327,7 +415,9 @@ namespace Mag_SuitBuilder
 						EquipmentGroup newGroup = workingGroup.Clone();
 
 						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.LowerArms);
-						ProcessEquipmentPieces(i + 1, newGroup);
+						ProcessEquipmentPieces(i + 1, equipmentPieces.Count - 1, newGroup);
+
+						continue;
 					}
 
 					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.UpperLegs) != 0 && workingGroup.CanAdd(equipmentPieces[i], Constants.EquippableSlotFlags.UpperLegs))
@@ -335,7 +425,7 @@ namespace Mag_SuitBuilder
 						EquipmentGroup newGroup = workingGroup.Clone();
 
 						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.UpperLegs);
-						ProcessEquipmentPieces(i + 1, newGroup);
+						ProcessEquipmentPieces(i + 1, equipmentPieces.Count - 1, newGroup);
 					}
 
 					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.LowerLegs) != 0 && workingGroup.CanAdd(equipmentPieces[i], Constants.EquippableSlotFlags.LowerLegs))
@@ -343,7 +433,9 @@ namespace Mag_SuitBuilder
 						EquipmentGroup newGroup = workingGroup.Clone();
 
 						newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.LowerLegs);
-						ProcessEquipmentPieces(i + 1, newGroup);
+						ProcessEquipmentPieces(i + 1, equipmentPieces.Count - 1, newGroup);
+
+						continue;
 					}
 
 					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.LeftBracelet) != 0 || (equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.RightBracelet) != 0)
@@ -353,15 +445,17 @@ namespace Mag_SuitBuilder
 							EquipmentGroup newGroup = workingGroup.Clone();
 
 							newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.LeftBracelet);
-							ProcessEquipmentPieces(i + 1, newGroup);
+							ProcessEquipmentPieces(i + 1, equipmentPieces.Count - 1, newGroup);
 						}
 						else if (workingGroup.CanAdd(equipmentPieces[i], Constants.EquippableSlotFlags.RightBracelet))
 						{
 							EquipmentGroup newGroup = workingGroup.Clone();
 
 							newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.RightBracelet);
-							ProcessEquipmentPieces(i + 1, newGroup);
+							ProcessEquipmentPieces(i + 1, equipmentPieces.Count - 1, newGroup);
 						}
+
+						continue;
 					}
 
 					if ((equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.LeftRing) != 0 || (equipmentPieces[i].EquipableSlots & Constants.EquippableSlotFlags.RightRing) != 0)
@@ -371,15 +465,17 @@ namespace Mag_SuitBuilder
 							EquipmentGroup newGroup = workingGroup.Clone();
 
 							newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.LeftRing);
-							ProcessEquipmentPieces(i + 1, newGroup);
+							ProcessEquipmentPieces(i + 1, equipmentPieces.Count - 1, newGroup);
 						}
 						else if (workingGroup.CanAdd(equipmentPieces[i], Constants.EquippableSlotFlags.RightRing))
 						{
 							EquipmentGroup newGroup = workingGroup.Clone();
 
 							newGroup.Add(equipmentPieces[i], Constants.EquippableSlotFlags.RightRing);
-							ProcessEquipmentPieces(i + 1, newGroup);
+							ProcessEquipmentPieces(i + 1, equipmentPieces.Count - 1, newGroup);
 						}
+
+						continue;
 					}
 				}
 				else if (workingGroup.CanAdd(equipmentPieces[i]))
@@ -387,7 +483,7 @@ namespace Mag_SuitBuilder
 					EquipmentGroup newGroup = workingGroup.Clone();
 
 					newGroup.Add(equipmentPieces[i]);
-					ProcessEquipmentPieces(i + 1, newGroup);
+					ProcessEquipmentPieces(i + 1, equipmentPieces.Count - 1, newGroup);
 				}
 			}
 		}

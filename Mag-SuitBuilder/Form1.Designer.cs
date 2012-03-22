@@ -31,6 +31,8 @@
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.chkIgnoreMinors = new System.Windows.Forms.CheckBox();
+			this.chkIgnoreMajors = new System.Windows.Forms.CheckBox();
 			this.dataGridView1 = new System.Windows.Forms.DataGridView();
 			this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -42,6 +44,9 @@
 			this.listBox1 = new System.Windows.Forms.ListBox();
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
 			this.calculatePossibilities = new System.Windows.Forms.Button();
+			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.txtEquipmentEntries = new System.Windows.Forms.TextBox();
+			this.label1 = new System.Windows.Forms.Label();
 			this.coveragePiece1 = new Mag_SuitBuilder.EquipmentPieceControl();
 			this.coveragePiece16 = new Mag_SuitBuilder.EquipmentPieceControl();
 			this.coveragePiece2 = new Mag_SuitBuilder.EquipmentPieceControl();
@@ -59,9 +64,8 @@
 			this.coveragePiece8 = new Mag_SuitBuilder.EquipmentPieceControl();
 			this.coveragePiece10 = new Mag_SuitBuilder.EquipmentPieceControl();
 			this.coveragePiece9 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this.txtEquipmentEntries = new System.Windows.Forms.TextBox();
-			this.label1 = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
+			this.txtPrimaryArmorSet = new System.Windows.Forms.TextBox();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -81,6 +85,10 @@
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.txtPrimaryArmorSet);
+			this.tabPage1.Controls.Add(this.label2);
+			this.tabPage1.Controls.Add(this.chkIgnoreMinors);
+			this.tabPage1.Controls.Add(this.chkIgnoreMajors);
 			this.tabPage1.Controls.Add(this.dataGridView1);
 			this.tabPage1.Controls.Add(this.listBox1);
 			this.tabPage1.Controls.Add(this.progressBar1);
@@ -109,6 +117,30 @@
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Slots";
 			this.tabPage1.UseVisualStyleBackColor = true;
+			// 
+			// chkIgnoreMinors
+			// 
+			this.chkIgnoreMinors.AutoSize = true;
+			this.chkIgnoreMinors.Checked = true;
+			this.chkIgnoreMinors.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkIgnoreMinors.Location = new System.Drawing.Point(256, 8);
+			this.chkIgnoreMinors.Name = "chkIgnoreMinors";
+			this.chkIgnoreMinors.Size = new System.Drawing.Size(90, 17);
+			this.chkIgnoreMinors.TabIndex = 23;
+			this.chkIgnoreMinors.Text = "Ignore Minors";
+			this.chkIgnoreMinors.UseVisualStyleBackColor = true;
+			// 
+			// chkIgnoreMajors
+			// 
+			this.chkIgnoreMajors.AutoSize = true;
+			this.chkIgnoreMajors.Checked = true;
+			this.chkIgnoreMajors.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkIgnoreMajors.Location = new System.Drawing.Point(168, 8);
+			this.chkIgnoreMajors.Name = "chkIgnoreMajors";
+			this.chkIgnoreMajors.Size = new System.Drawing.Size(90, 17);
+			this.chkIgnoreMajors.TabIndex = 18;
+			this.chkIgnoreMajors.Text = "Ignore Majors";
+			this.chkIgnoreMajors.UseVisualStyleBackColor = true;
 			// 
 			// dataGridView1
 			// 
@@ -227,6 +259,39 @@
 			this.calculatePossibilities.Text = "Calculate Possibilities";
 			this.calculatePossibilities.UseVisualStyleBackColor = true;
 			this.calculatePossibilities.Click += new System.EventHandler(this.calculatePossibilities_Click);
+			// 
+			// tabPage2
+			// 
+			this.tabPage2.Controls.Add(this.txtEquipmentEntries);
+			this.tabPage2.Controls.Add(this.label1);
+			this.tabPage2.Location = new System.Drawing.Point(4, 22);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage2.Size = new System.Drawing.Size(1042, 724);
+			this.tabPage2.TabIndex = 1;
+			this.tabPage2.Text = "Equipment Text Entries";
+			this.tabPage2.UseVisualStyleBackColor = true;
+			// 
+			// txtEquipmentEntries
+			// 
+			this.txtEquipmentEntries.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.txtEquipmentEntries.Location = new System.Drawing.Point(8, 32);
+			this.txtEquipmentEntries.Multiline = true;
+			this.txtEquipmentEntries.Name = "txtEquipmentEntries";
+			this.txtEquipmentEntries.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.txtEquipmentEntries.Size = new System.Drawing.Size(1024, 688);
+			this.txtEquipmentEntries.TabIndex = 1;
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(8, 8);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(325, 13);
+			this.label1.TabIndex = 0;
+			this.label1.Text = "Paste the Mag-Tools item info identification strings in the box below.";
 			// 
 			// coveragePiece1
 			// 
@@ -449,38 +514,22 @@
 			this.coveragePiece9.Size = new System.Drawing.Size(155, 135);
 			this.coveragePiece9.TabIndex = 8;
 			// 
-			// tabPage2
+			// label2
 			// 
-			this.tabPage2.Controls.Add(this.txtEquipmentEntries);
-			this.tabPage2.Controls.Add(this.label1);
-			this.tabPage2.Location = new System.Drawing.Point(4, 22);
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(1042, 724);
-			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "Equipment Text Entries";
-			this.tabPage2.UseVisualStyleBackColor = true;
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(168, 32);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(161, 52);
+			this.label2.TabIndex = 24;
+			this.label2.Text = "Primary Armor Set:\r\nEnter the name exactly as it\r\nappears in the equipment list.\r" +
+    "\nCase sensitive. Apostrophes too.";
 			// 
-			// txtEquipmentEntries
+			// txtPrimaryArmorSet
 			// 
-			this.txtEquipmentEntries.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.txtEquipmentEntries.Location = new System.Drawing.Point(8, 32);
-			this.txtEquipmentEntries.Multiline = true;
-			this.txtEquipmentEntries.Name = "txtEquipmentEntries";
-			this.txtEquipmentEntries.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txtEquipmentEntries.Size = new System.Drawing.Size(1024, 688);
-			this.txtEquipmentEntries.TabIndex = 1;
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(8, 8);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(325, 13);
-			this.label1.TabIndex = 0;
-			this.label1.Text = "Paste the Mag-Tools item info identification strings in the box below.";
+			this.txtPrimaryArmorSet.Location = new System.Drawing.Point(168, 88);
+			this.txtPrimaryArmorSet.Name = "txtPrimaryArmorSet";
+			this.txtPrimaryArmorSet.Size = new System.Drawing.Size(184, 20);
+			this.txtPrimaryArmorSet.TabIndex = 25;
 			// 
 			// Form1
 			// 
@@ -492,6 +541,7 @@
 			this.Text = "Mag-Suit Builder";
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
+			this.tabPage1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.tabPage2.ResumeLayout(false);
 			this.tabPage2.PerformLayout();
@@ -534,6 +584,10 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
+		private System.Windows.Forms.CheckBox chkIgnoreMinors;
+		private System.Windows.Forms.CheckBox chkIgnoreMajors;
+		private System.Windows.Forms.TextBox txtPrimaryArmorSet;
+		private System.Windows.Forms.Label label2;
 	}
 }
 

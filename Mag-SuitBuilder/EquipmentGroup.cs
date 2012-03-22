@@ -40,11 +40,17 @@ namespace Mag_SuitBuilder
 			return true;
 		}
 
-		public bool CanOfferBeneficialSpell(IEquipmentPiece equipmentPiece)
+		public bool CanOfferBeneficialSpell(IEquipmentPiece equipmentPiece, bool ignoreMajors, bool ignoreMinors)
 		{
 			// Does the this item have a spell that the current group doesn't have?
 			foreach (Spell pieceSpell in equipmentPiece.Spells)
 			{
+				if (ignoreMajors && pieceSpell.IsMajor)
+					continue;
+
+				if (ignoreMinors && pieceSpell.IsMinor)
+					continue;
+
 				for (int j = 0 ; j <= this.SpellCount ; j++)
 				{
 					// Yes it does
