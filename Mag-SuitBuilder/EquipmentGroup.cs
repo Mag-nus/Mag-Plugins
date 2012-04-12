@@ -12,7 +12,10 @@ namespace Mag_SuitBuilder
 		private readonly int[] equipmentPieceSlots = new int[MaximumPieces];
 		public int EquipmentPieceCount;
 
-		private Constants.EquippableSlotFlags equippedSlots;
+		public Constants.EquippableSlotFlags equippedSlots;
+
+		public readonly Dictionary<string, int> ArmorSetPieces = new Dictionary<string, int>(4);
+		public bool HasFullPrimaryAmrorSet;
 
 		public readonly Spell[] Spells = new Spell[MaximumPieces * avgNumOfSpellsPerPiece];
 		public int SpellCount;
@@ -23,17 +26,9 @@ namespace Mag_SuitBuilder
 				return false;
 
 			// Don't add more than 5 of any one armor set to a group
-			if (equipmentPiece.ArmorSet != null)
+			if (equipmentPiece.ArmorSet != null && ArmorSetPieces.ContainsKey(equipmentPiece.ArmorSet))
 			{
-				int similarArmorSetPiecesFound = 0;
-
-				for (int i = 0 ; i < EquipmentPieceCount ; i++)
-				{
-					if (equipmentPiece.ArmorSet == EquipmentPieces[i].ArmorSet)
-						similarArmorSetPiecesFound++;
-				}
-
-				if (similarArmorSetPiecesFound >= 5)
+				if (ArmorSetPieces[equipmentPiece.ArmorSet] >= 5)
 					return false;
 			}
 
@@ -79,6 +74,19 @@ namespace Mag_SuitBuilder
 
 			equippedSlots |= (equipmentPiece.EquipableSlots & forceSlot);
 
+			if (equipmentPiece.ArmorSet != null)
+			{
+				if (!ArmorSetPieces.ContainsKey(equipmentPiece.ArmorSet))
+					ArmorSetPieces.Add(equipmentPiece.ArmorSet, 1);
+				else
+				{
+					ArmorSetPieces[equipmentPiece.ArmorSet]++;
+
+					if (ArmorSetPieces[equipmentPiece.ArmorSet] >= 5)
+						HasFullPrimaryAmrorSet = true;
+				}
+			}
+
 			foreach (Spell spell in equipmentPiece.Spells)
 			{
 				Spells[SpellCount] = spell;
@@ -95,6 +103,10 @@ namespace Mag_SuitBuilder
 			equipmentGroup.EquipmentPieceCount = EquipmentPieceCount;
 
 			equipmentGroup.equippedSlots = equippedSlots;
+
+			foreach (KeyValuePair<string, int> entry in ArmorSetPieces)
+				equipmentGroup.ArmorSetPieces.Add(entry.Key, entry.Value);
+			equipmentGroup.HasFullPrimaryAmrorSet = HasFullPrimaryAmrorSet;
 
 			Array.Copy(Spells, equipmentGroup.Spells, SpellCount);
 			equipmentGroup.SpellCount = SpellCount;
@@ -152,27 +164,6 @@ namespace Mag_SuitBuilder
 				}
 
 				return totalPotentialTinkedArmorLevel;
-			}
-		}
-
-		private Dictionary<string, int> ArmorSetPieces
-		{
-			get
-			{
-				Dictionary<string, int> sets = new Dictionary<string, int>();
-
-				for (int i = 0 ; i < EquipmentPieceCount ; i++)
-				{
-					if (String.IsNullOrEmpty(EquipmentPieces[i].ArmorSet))
-						continue;
-
-					if (!sets.ContainsKey(EquipmentPieces[i].ArmorSet))
-						sets.Add(EquipmentPieces[i].ArmorSet, 1);
-					else
-						sets[EquipmentPieces[i].ArmorSet]++;
-				}
-
-				return sets;
 			}
 		}
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -8,6 +9,9 @@ namespace Mag_SuitBuilder
 {
 	public partial class Form1 : Form
 	{
+		[DllImport("user32.dll")]
+		static extern bool FlashWindow(IntPtr hwnd, bool bInvert);
+
 		public Form1()
 		{
 			InitializeComponent();
@@ -208,6 +212,9 @@ namespace Mag_SuitBuilder
 							break;
 						}
 					}
+
+					// Need at least 5 pieces to build a suit based around a primary set
+					endIndex -= 4; // (Inclusive)
 				}
 
 				if (Environment.ProcessorCount <= 1)
@@ -334,9 +341,9 @@ namespace Mag_SuitBuilder
 
 			progressBar1.Value = 100;
 			tabControl1.Enabled = true;
-		}
 
-		object lockObject = new object();
+			FlashWindow(this.Handle, true);
+		}
 
 		private void ProcessEquipmentPieces(int startIndex, int endIndex, EquipmentGroup workingGroup)
 		{
@@ -375,9 +382,25 @@ namespace Mag_SuitBuilder
 							return;
 					}
 
+					// If we want full armor suits, make sure we have all the body armor slots covered.
+					if (chkOnlyBuildFullSuits.Checked)
+					{
+						if ((workingGroup.equippedSlots & Constants.EquippableSlotFlags.AllBodyArmor) != Constants.EquippableSlotFlags.AllBodyArmor &&
+							(workingGroup.equippedSlots & Constants.EquippableSlotFlags.AllBodyArmor) != 0)
+							return;
+					}
+
 					equipmentGroups.Add(workingGroup);
 
 					return;
+				}
+
+				// If we're building a suit around an armor set, and we don't have 5 pieces of that armor set..
+				// and we've already gotten to other pieces in our equipment list, don't bother continuing..
+				if (!workingGroup.HasFullPrimaryAmrorSet && !String.IsNullOrEmpty(txtPrimaryArmorSet.Text))
+				{
+					if (txtPrimaryArmorSet.Text != equipmentPieces[i].ArmorSet)
+						return;
 				}
 
 				if (!workingGroup.CanOfferBeneficialSpell(equipmentPieces[i], chkIgnoreMajors.Checked, chkIgnoreMinors.Checked))

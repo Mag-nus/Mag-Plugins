@@ -26,6 +26,8 @@ namespace Mag_SuitBuilder
 			UpperLegs		= 0x00002000,
 			LowerLegs		= 0x00004000,
 
+			AllBodyArmor	= 0x00007F21,
+
 			Necklace		= 0x00008000,
 			RightBracelet	= 0x00010000,
 			LeftBracelet	= 0x00020000,
