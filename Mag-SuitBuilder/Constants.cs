@@ -103,7 +103,7 @@ namespace Mag_SuitBuilder
 				//if (Regex.Match(name, "Cuirass").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.Abdomen;
 				if (Regex.Match(name, "Cuirass").Success) return EquippableSlotFlags.Chest; // Can only reduce to chest
 
-				if (Regex.Match(name, "Leggings").Success) return EquippableSlotFlags.UpperLegs | EquippableSlotFlags.LowerLegs;
+				if (Regex.Match(name, "Leggings").Success && Regex.Match(name, "Celdon|Chainmail|Diforsa|Leather|Nariyid|Olthoi Celdon|Platemail|Scalemail|Studded Leather|Yoroi").Success) return EquippableSlotFlags.UpperLegs | EquippableSlotFlags.LowerLegs;
 
 				// Three Slot
 				//if (Regex.Match(name, "Alduressa Coat").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
@@ -117,7 +117,7 @@ namespace Mag_SuitBuilder
 				if (Regex.Match(name, "Shirt").Success) return EquippableSlotFlags.Chest; // Can only reduce to chest
 
 				if (Regex.Match(name, "Pants").Success) return EquippableSlotFlags.Abdomen | EquippableSlotFlags.UpperLegs | EquippableSlotFlags.LowerLegs;
-				if (Regex.Match(name, "Leggings").Success) return EquippableSlotFlags.Abdomen | EquippableSlotFlags.UpperLegs | EquippableSlotFlags.LowerLegs;
+				if (Regex.Match(name, "Leggings").Success && Regex.Match(name, "Alduressa|Amuli|Chiran|Koujia|Lorica|Olthoi Alduressa|Olthoi Amuli|Olthoi Koujia|Tenassa").Success) return EquippableSlotFlags.Abdomen | EquippableSlotFlags.UpperLegs | EquippableSlotFlags.LowerLegs;
 
 				// Four and more slots
 				//if (Regex.Match(name, "Hauberk").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.Abdomen | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
