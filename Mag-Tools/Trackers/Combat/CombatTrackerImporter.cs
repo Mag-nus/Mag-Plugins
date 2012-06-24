@@ -25,6 +25,27 @@ namespace MagTools.Trackers.Combat
 
 			XmlDocument xmlDocument = new XmlDocument();
 
+			// Sometimes the following is thrown if Import() is called from Login(). Moving it to LoginComplete() seems to fix the issue.
+			/*
+			============================================================================
+			6/24/2012 11:13:23 AM
+			System.IO.IOException: The operation completed successfully.
+			
+			at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+			   at System.IO.FileStream.ReadCore(Byte[] buffer, Int32 offset, Int32 count)
+			   at System.IO.FileStream.Read(Byte[] array, Int32 offset, Int32 count)
+			   at System.Xml.XmlTextReaderImpl.InitStreamInput(Uri baseUri, String baseUriStr, Stream stream, Byte[] bytes, Int32 byteCount, Encoding encoding)
+			   at System.Xml.XmlTextReaderImpl.InitStreamInput(Uri baseUri, String baseUriStr, Stream stream, Encoding encoding)
+			   at System.Xml.XmlTextReaderImpl.OpenUrl()
+			   at System.Xml.XmlTextReaderImpl.Read()
+			   at System.Xml.XmlLoader.Load(XmlDocument doc, XmlReader reader, Boolean preserveWhitespace)
+			   at System.Xml.XmlDocument.Load(XmlReader reader)
+			   at System.Xml.XmlDocument.Load(String filename)
+			   at MagTools.Trackers.Combat.CombatTrackerImporter.Import(List`1 combatInfos, List`1 aetheriaInfos, List`1 cloakInfos)
+			   at MagTools.Trackers.Combat.CombatTracker.ImportStats(String xmlFileName)
+			   at MagTools.PluginCore.CharacterFilter_Login(Object sender, LoginEventArgs e)
+			============================================================================
+			*/
 			xmlDocument.Load(fileName);
 
 			XmlNode parentNode = xmlDocument.SelectSingleNode("CombatTracker");

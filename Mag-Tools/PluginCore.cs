@@ -135,7 +135,6 @@ namespace MagTools
 				Host = base.Host;
 
 				CoreManager.Current.PluginInitComplete += new EventHandler<EventArgs>(Current_PluginInitComplete);
-				CoreManager.Current.CharacterFilter.Login += new EventHandler<Decal.Adapter.Wrappers.LoginEventArgs>(CharacterFilter_Login);
 				CoreManager.Current.CharacterFilter.LoginComplete +=new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 
@@ -243,7 +242,6 @@ namespace MagTools
 			try
 			{
 				CoreManager.Current.PluginInitComplete -= new EventHandler<EventArgs>(Current_PluginInitComplete);
-				CoreManager.Current.CharacterFilter.Login -= new EventHandler<Decal.Adapter.Wrappers.LoginEventArgs>(CharacterFilter_Login);
 				CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 
@@ -289,21 +287,16 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void CharacterFilter_Login(object sender, Decal.Adapter.Wrappers.LoginEventArgs e)
-		{
-			try
-			{
-				if (Settings.SettingsManager.CombatTracker.Persistent.Value)
-					combatTrackerPersistent.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
 		void CharacterFilter_LoginComplete(object sender, EventArgs e)
 		{
 			try
 			{
-				CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
+				try
+				{
+					if (Settings.SettingsManager.CombatTracker.Persistent.Value)
+						combatTrackerPersistent.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
+				}
+				catch (Exception ex) { Debug.LogException(ex); }
 
 				try
 				{
@@ -395,6 +388,8 @@ namespace MagTools
 				}
 
 				startupErrors.Clear();
+
+				CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
