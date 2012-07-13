@@ -97,6 +97,8 @@ namespace Mag_SuitBuilder
 				if (Regex.Match(name, "Shoes").Success) return EquippableSlotFlags.Feet;
 				if (Regex.Match(name, "Boots").Success) return EquippableSlotFlags.Feet;
 
+				if (Regex.Match(name, "Empowered Robe of the Perfect Light").Success) return EquippableSlotFlags.Chest;
+
 				// Two Slot
 				if (Regex.Match(name, "Sleeves").Success) return EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
 
