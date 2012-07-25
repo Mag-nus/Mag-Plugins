@@ -259,6 +259,8 @@ namespace MagTools.Settings
 
 			public static readonly Setting<bool> NPKFails = new Setting<bool>("Filters/NPKFails", "NPK Fails");
 
+			public static readonly Setting<bool> DirtyFighting = new Setting<bool>("Filters/DirtyFighting", "Dirty Fighting");
+
 			public static readonly Setting<bool> MonsterDeaths = new Setting<bool>("Filters/MonsterDeaths", "Monster Deaths");
 
 

@@ -107,6 +107,16 @@ namespace MagTools
 						e.Eat = true;
 				}
 
+				if (e.Eat == false && Settings.SettingsManager.Filters.DirtyFighting.Value)
+				{
+					// Dirty Fighting! [player] delivers a Traumatic Assault to [mob]!
+					// Dirty Fighting! [player] delivers a Bleeding Assault to [mob]!
+					// Dirty Fighting! [player] delivers a Unbalancing Assault to [mob]!
+					// Dirty Fighting! [player] delivers a Blinding Assault to [mob]!
+					if (!isChat && e.Text.StartsWith("Dirty Fighting! ") && e.Text.Contains(" delivers a "))
+						e.Eat = true;
+				}
+
 				if (e.Eat == false && Settings.SettingsManager.Filters.MonsterDeaths.Value)
 				{
 					if (Trackers.Combat.Standard.CombatMessages.IsKilledByMeMessage(e.Text))

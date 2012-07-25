@@ -188,6 +188,7 @@ namespace MagTools.Views
 				AddOption(FiltersList, Settings.SettingsManager.Filters.AttackResists);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.DefenseResists);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.NPKFails);
+				AddOption(FiltersList, Settings.SettingsManager.Filters.DirtyFighting);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.MonsterDeaths);
 
 				AddOption(FiltersList, Settings.SettingsManager.Filters.SpellCastingMine);
