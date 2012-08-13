@@ -76,8 +76,6 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> AutoLootCorpses = new Setting<bool>("Looting/AutoLootCorpses", "Auto Loot Corpses");
 
 			public static readonly Setting<bool> AutoLootMyCorpses = new Setting<bool>("Looting/AutoLootMyCorpse", "Auto Loot My Corpses");
-
-			public static readonly Setting<bool> LootSalvage = new Setting<bool>("Looting/LootSalvage", "Auto Loot Salvage");
 		}
 
 		public static class ItemInfoOnIdent
@@ -258,8 +256,6 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> DefenseResists = new Setting<bool>("Filters/DefenseResists", "Defense Resists");
 
 			public static readonly Setting<bool> NPKFails = new Setting<bool>("Filters/NPKFails", "NPK Fails");
-
-			public static readonly Setting<bool> DirtyFighting = new Setting<bool>("Filters/DirtyFighting", "Dirty Fighting");
 
 			public static readonly Setting<bool> MonsterDeaths = new Setting<bool>("Filters/MonsterDeaths", "Monster Deaths");
 

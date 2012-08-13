@@ -90,13 +90,6 @@
             </control>
           </page>
 
-          <page label="Tools">
-            <control progid="DecalControls.FixedLayout" clipped="">
-              <control progid="DecalControls.PushButton" name="ClipboardWornEquipment" left="10" top="10" width="140" height="20" text="Clipboard Worn Equipment" />
-              <control progid="DecalControls.PushButton" name="ClipboardInventoryInfo" left="10" top="40" width="140" height="20" text="Clipboard Inventory Info" />
-            </control>
-          </page>
-          
           <page label="About">
             <control progid="DecalControls.FixedLayout" clipped="">
               <control progid="DecalControls.StaticText" name="ThanksLabel" left="5" top="315" width="310" height="60" text="Parts of this plugin came from the ideas of Squire and ManaMinder plugins. Squire was created by Flynn: http://www.flynn1179.net/ac/"/>

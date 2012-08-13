@@ -83,7 +83,6 @@ namespace MagTools
 
 		// General
 		ChatFilter chatFilter;
-		InventoryExporter inventoryExporter;
 
 		// Macros
 		Macros.OpenMainPackOnLogin openMainPackOnLogin;
@@ -135,11 +134,9 @@ namespace MagTools
 				Host = base.Host;
 
 				CoreManager.Current.PluginInitComplete += new EventHandler<EventArgs>(Current_PluginInitComplete);
+				CoreManager.Current.CharacterFilter.Login += new EventHandler<Decal.Adapter.Wrappers.LoginEventArgs>(CharacterFilter_Login);
 				CoreManager.Current.CharacterFilter.LoginComplete +=new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
-
-				// General
-				inventoryExporter = new InventoryExporter();
 
 				// Macros
 				openMainPackOnLogin = new Macros.OpenMainPackOnLogin();
@@ -221,9 +218,6 @@ namespace MagTools
 					mainView.CombatTrackerExportCurrentStats.Hit += new EventHandler(CombatTrackerExportCurrentStats_Hit);
 					mainView.CombatTrackerClearPersistentStats.Hit += new EventHandler(CombatTrackerClearPersistentStats_Hit);
 
-					mainView.ClipboardWornEquipment.Hit += new EventHandler(ClipboardWornEquipment_Hit);
-					mainView.ClipboardInventoryInfo.Hit += new EventHandler(ClipboardInventoryInfo_Hit);
-					
 					System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
 					System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
 					mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
@@ -242,6 +236,7 @@ namespace MagTools
 			try
 			{
 				CoreManager.Current.PluginInitComplete -= new EventHandler<EventArgs>(Current_PluginInitComplete);
+				CoreManager.Current.CharacterFilter.Login -= new EventHandler<Decal.Adapter.Wrappers.LoginEventArgs>(CharacterFilter_Login);
 				CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 
@@ -287,16 +282,23 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		void CharacterFilter_Login(object sender, Decal.Adapter.Wrappers.LoginEventArgs e)
+		{
+			try
+			{
+				if (Settings.SettingsManager.CombatTracker.Persistent.Value)
+					combatTrackerPersistent.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
 		void CharacterFilter_LoginComplete(object sender, EventArgs e)
 		{
 			try
 			{
-				try
-				{
-					if (Settings.SettingsManager.CombatTracker.Persistent.Value)
-						combatTrackerPersistent.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
-				}
-				catch (Exception ex) { Debug.LogException(ex); }
+				//Util.ExportSpells(PluginPersonalFolder.FullName + @"\Spells.csv");
+
+				CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
 
 				try
 				{
@@ -349,47 +351,12 @@ namespace MagTools
 				catch (FileNotFoundException ex) { startupErrors.Add("One Touch Heal hot key failed to bind: " + ex.Message + ". Is Virindi Hotkey System running?"); }
 				catch (Exception ex) { Debug.LogException(ex); }
 
-				try
-				{
-						// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
-						VirindiHotkeySystem.VHotkeyInfo maximizeChat = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "Maximize Chat", "Maximizes Main Chat", 0, false, false, false);
-
-						VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(maximizeChat);
-
-						maximizeChat.Fired2 += (s, e2) =>
-						{
-							try
-							{
-								ACClientChatSizeManager.Maximize();
-							}
-							catch (Exception ex) { Debug.LogException(ex); }
-						};
-
-						// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
-						VirindiHotkeySystem.VHotkeyInfo minimizeChat = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "Minimize Chat", "Minimizes Main Chat", 0, false, false, false);
-
-						VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(minimizeChat);
-
-						minimizeChat.Fired2 += (s, e2) =>
-						{
-							try
-							{
-								ACClientChatSizeManager.Minimize();
-							}
-							catch (Exception ex) { Debug.LogException(ex); }
-						};
-				}
-				catch (FileNotFoundException ex) { startupErrors.Add("AC Chat minimize/maximize hot key failed to bind: " + ex.Message + ". Is Virindi Hotkey System running?"); }
-				catch (Exception ex) { Debug.LogException(ex); }
-
 				foreach (string startupError in startupErrors)
 				{
 					CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: Startup Error: " + startupError, 5);
 				}
 
 				startupErrors.Clear();
-
-				CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -439,24 +406,6 @@ namespace MagTools
 
 					CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "File deleted: " + fileInfo.FullName, 5);
 				}
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		void ClipboardWornEquipment_Hit(object sender, EventArgs e)
-		{
-			try
-			{
-				inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.WornEquipment);
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		void ClipboardInventoryInfo_Hit(object sender, EventArgs e)
-		{
-			try
-			{
-				inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.Inventory);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}

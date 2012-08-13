@@ -117,7 +117,7 @@ namespace MagTools.ItemInfo
 					sb.Append(BuffedMissileDamage.ToString("N1"));
 
 				if (wo.ObjectClass == ObjectClass.WandStaffOrb)
-					sb.Append(((GetBuffedDoubleValueKey(DoubleValueKey.ElementalDamageVersusMonsters) - 1) * 100).ToString("N1"));
+					sb.Append(((GetBuffedDoubleValueKey(DoubleValueKey.ElementalDamageVersusMonsters) - 1) * 100));
 
 				// (AttackBonus/MeleeDefenseBonus/ManaCBonus)
 				sb.Append(" ");

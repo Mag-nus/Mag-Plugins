@@ -3,68 +3,74 @@ using System.Runtime.InteropServices;
 
 using Decal.Adapter;
 
-namespace MagTools
+namespace MagTools.Macros
 {
-	static class ACClientChatSizeManager
+	class MaximizeChatOnLogin
 	{
-		public enum ChatState
+		public MaximizeChatOnLogin()
 		{
-			Unknown,
-			Minimized,
-			Maximized,
+			try
+			{
+				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete);
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		public static ChatState CurrentState = ChatState.Unknown;
+		private bool disposed;
+
+		public void Dispose()
+		{
+			Dispose(true);
+
+			// Use SupressFinalize in case a subclass
+			// of this type implements a finalizer.
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			// If you need thread safety, use a lock around these 
+			// operations, as well as in your methods that use the resource.
+			if (!disposed)
+			{
+				if (disposing)
+				{
+					CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
+				}
+
+				// Indicate that the instance has been disposed.
+				disposed = true;
+			}
+		}
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto)]
 		static extern bool PostMessage(IntPtr hhwnd, uint msg, IntPtr wparam, UIntPtr lparam);
 
-		public static bool Minimize(bool force = false)
+		void CharacterFilter_LoginComplete(object sender, EventArgs e)
 		{
-			if (CurrentState == ChatState.Minimized && !force)
-				return false;
+			try
+			{
+				if (!Settings.SettingsManager.Misc.MaximizeChatOnLogin.Value)
+					return;
 
-			// 1680, 1050 AC client size
-			// 1686, 1078 Actual window size
-			// 1362, 698 click point
+				// 1680, 1050 AC client size
+				// 1686, 1078 Actual window size
+				// 1362, 958 click point
 
-			// 0200 WM_MOUSEMOVE
-			PostMessage(CoreManager.Current.Decal.Hwnd, 0x0200, (IntPtr)0x00000000, (UIntPtr)(((ACClientHeight - 352) * 0x10000) + (ACClientWidth - 318)));
-			// 0201 WM_LBUTTONDOWN
-			PostMessage(CoreManager.Current.Decal.Hwnd, 0x0201, (IntPtr)0x00000001, (UIntPtr)(((ACClientHeight - 352) * 0x10000) + (ACClientWidth - 318)));
-			// 0202 WM_LBUTTONUP
-			PostMessage(CoreManager.Current.Decal.Hwnd, 0x0202, (IntPtr)0x00000000, (UIntPtr)(((ACClientHeight - 352) * 0x10000) + (ACClientWidth - 318)));
+				// 800, 600 AC client size
+				// 806, 628 Actual window size
+				// 482, 508 click point
 
-			CurrentState = ChatState.Minimized;
+				// The click point is 92 pixels from the bottom and 318 pixels from the right
 
-			return true;
-		}
-
-		public static bool Maximize(bool force = false)
-		{
-			if (CurrentState == ChatState.Maximized && !force)
-				return false;
-
-			// 1680, 1050 AC client size
-			// 1686, 1078 Actual window size
-			// 1362, 958 click point
-
-			// 800, 600 AC client size
-			// 806, 628 Actual window size
-			// 482, 508 click point
-
-			// The click point is 92 pixels from the bottom and 318 pixels from the right
-
-			// 0200 WM_MOUSEMOVE
-			PostMessage(CoreManager.Current.Decal.Hwnd, 0x0200, (IntPtr)0x00000000, (UIntPtr)(((ACClientHeight - 92) * 0x10000) + (ACClientWidth - 318)));
-			// 0201 WM_LBUTTONDOWN
-			PostMessage(CoreManager.Current.Decal.Hwnd, 0x0201, (IntPtr)0x00000001, (UIntPtr)(((ACClientHeight - 92) * 0x10000) + (ACClientWidth - 318)));
-			// 0202 WM_LBUTTONUP
-			PostMessage(CoreManager.Current.Decal.Hwnd, 0x0202, (IntPtr)0x00000000, (UIntPtr)(((ACClientHeight - 92) * 0x10000) + (ACClientWidth - 318)));
-
-			CurrentState = ChatState.Maximized;
-
-			return true;
+				// 0200 WM_MOUSEMOVE
+				PostMessage(CoreManager.Current.Decal.Hwnd, 0x0200, (IntPtr)0x00000000, (UIntPtr)(((ACClientHeight - 92) * 0x10000) + (ACClientWidth - 318)));
+				// 0201 WM_LBUTTONDOWN
+				PostMessage(CoreManager.Current.Decal.Hwnd, 0x0201, (IntPtr)0x00000001, (UIntPtr)(((ACClientHeight - 92) * 0x10000) + (ACClientWidth - 318)));
+				// 0202 WM_LBUTTONUP
+				PostMessage(CoreManager.Current.Decal.Hwnd, 0x0202, (IntPtr)0x00000000, (UIntPtr)(((ACClientHeight - 92) * 0x10000) + (ACClientWidth - 318)));
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		internal struct RECT

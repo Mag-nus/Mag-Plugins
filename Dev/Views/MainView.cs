@@ -45,10 +45,6 @@ namespace MagTools.Views
 		HudButton ClientDelWindowPosition { get; set; }
 		HudStaticText ClientSetPosition { get; set; }
 
-		// Misc - Tools
-		public HudButton ClipboardWornEquipment { get; private set; }
-		public HudButton ClipboardInventoryInfo { get; private set; }
-
 		// Misc - About
 		public HudStaticText VersionLabel { get; private set; }
 
@@ -100,10 +96,6 @@ namespace MagTools.Views
 				ClientSetWindowPosition = view != null ? (HudButton)view["ClientSetWindowPosition"] : new HudButton();
 				ClientDelWindowPosition = view != null ? (HudButton)view["ClientDelWindowPosition"] : new HudButton();
 				ClientSetPosition = view != null ? (HudStaticText)view["ClientSetPosition"] : new HudStaticText();
-
-				// Misc - Tools
-				ClipboardWornEquipment = view != null ? (HudButton)view["ClipboardWornEquipment"] : new HudButton();
-				ClipboardInventoryInfo = view != null ? (HudButton)view["ClipboardInventoryInfo"] : new HudButton();
 
 				// Misc - About
 				VersionLabel = view != null ? (HudStaticText)view["VersionLabel"] : new HudStaticText();
@@ -176,7 +168,6 @@ namespace MagTools.Views
 				AddOption(OptionList, Settings.SettingsManager.Looting.AutoLootChests);
 				AddOption(OptionList, Settings.SettingsManager.Looting.AutoLootCorpses);
 				AddOption(OptionList, Settings.SettingsManager.Looting.AutoLootMyCorpses);
-				AddOption(OptionList, Settings.SettingsManager.Looting.LootSalvage);
 
 				AddOption(OptionList, Settings.SettingsManager.Misc.OpenMainPackOnLogin);
 				AddOption(OptionList, Settings.SettingsManager.Misc.MaximizeChatOnLogin);
@@ -188,7 +179,6 @@ namespace MagTools.Views
 				AddOption(FiltersList, Settings.SettingsManager.Filters.AttackResists);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.DefenseResists);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.NPKFails);
-				AddOption(FiltersList, Settings.SettingsManager.Filters.DirtyFighting);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.MonsterDeaths);
 
 				AddOption(FiltersList, Settings.SettingsManager.Filters.SpellCastingMine);

@@ -154,12 +154,12 @@ namespace MagTools
 				{ 50, "Arcane Lore Set" },
 				{ 51, "Armor Tinkering Set" },
 				{ 52, "Assess Person Set" },
-				{ 53, "Light Weapons Set" },
-				{ 54, "Missile Weapons Set" },
+				{ 53, "Axe Set" },
+				{ 54, "Bow Set" },
 				{ 55, "Cooking Set" },
 				{ 56, "Creature Enchantment Set" },
-				//{ 57, "Crossbow Set" },
-				{ 58, "Finesse Set" },
+				{ 57, "Crossbow Set" },
+				{ 58, "Dagger Set" },
 				{ 59, "Deception Set" },
 				{ 60, "Fletching Set" },
 				{ 61, "Healing Set" },
@@ -168,19 +168,19 @@ namespace MagTools
 				{ 64, "Leadership Set" },
 				{ 65, "Life Magic Set" },
 				{ 66, "Loyalty Set" },
-				//{ 67, "Mace Set" },
+				{ 67, "Mace Set" },
 				{ 68, "Magic Defense Set" },
 				{ 69, "Magic Item Tinkering Set" },
 				{ 70, "Mana Conversion Set" },
 				{ 71, "Melee Defense Set" },
 				{ 72, "Missile Defense Set" },
 				{ 73, "Salvaging Set" },
-				//{ 74, "Spear Set" },
-				//{ 75, "Staff Set" },
+				{ 74, "Spear Set" },
+				{ 75, "Staff Set" },
 				{ 76, "Heavy Weapons Set" },
-				//{ 77, "Thrown Weapons Set" },
+				{ 77, "Thrown Weapons Set" },
 				{ 78, "Two Handed Combat Set" },
-				//{ 79, "Unarmed Combat Set" },
+				{ 79, "Unarmed Combat Set" },
 				{ 80, "Void Magic Set" },
 				{ 81, "War Magic Set" },
 				{ 82, "Weapon Tinkering Set" },
@@ -312,11 +312,6 @@ namespace MagTools
 			{ 4661, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 7, 7)}, // Epic Blood Thirst
 
 			{ 3688, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 300)}, // Prodigal Blood Drinker
-
-
-			{ 2604, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 20, 20)}, // Minor Impenetrability
-			{ 2592, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 40, 40)}, // Major Impenetrability
-			{ 4667, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 60, 60)}, // Epic Impenetrability
 		};
 
 		public static readonly Dictionary<int, SpellInfo<DoubleValueKey>> DoubleValueKeySpellEffects = new Dictionary<int, SpellInfo<DoubleValueKey>>()

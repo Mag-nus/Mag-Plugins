@@ -177,16 +177,8 @@ namespace MagTools.Macros
 					{
 						uTank2.LootPlugins.LootAction result = uTank2.PluginCore.PC.FLootPluginClassifyImmediate(wo.Id);
 
-						if (result.IsNoLoot)
+						if (result.IsNoLoot || (!result.IsKeep && !result.IsKeepUpTo))
 							continue;
-
-						if (result.IsSalvage)
-						{
-							if (!Settings.SettingsManager.Looting.LootSalvage.Value)
-								continue;
-						}
-						else if (!result.IsKeep && !result.IsKeepUpTo)
-								continue;
 
 						if (blackLitedItems.Contains(wo.Name))
 							continue;
