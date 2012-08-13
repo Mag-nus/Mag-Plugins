@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<view icon="8712" title="Mag-Tools" width="320" height="450">
+  <control progid="DecalControls.Notebook">
+
+    <page label="Mana Tracker">
+      <control progid="DecalControls.FixedLayout" clipped="">
+        <control progid="DecalControls.List" name="ManaList" left="1" top="1" width="318" height="380">
+          <column progid="DecalControls.IconColumn" name="ManaItemIcon" fixedwidth="16" />
+          <column progid="DecalControls.TextColumn" name="ManaItemName" fixedwidth="125" />
+          <column progid="DecalControls.IconColumn" name="ManaItemActive" fixedwidth="16" />
+          <column progid="DecalControls.TextColumn" name="ManaItemMana" fixedwidth="72" />
+          <column progid="DecalControls.TextColumn" name="ManaItemTime" fixedwidth="44" />
+          <column progid="DecalControls.TextColumn" name="ManaItemID" />
+          <column progid="DecalControls.TextColumn" name="ManaItemSort" />
+        </control>
+        
+        <control progid="DecalControls.StaticText" name="ManaTotal" left="5" top="385" width="120" height="18" text="" />
+        <control progid="DecalControls.CheckBox" name="ManaRecharge" left="125" top="386" width="63" height="18" text="Recharge" />
+        <control progid="DecalControls.StaticText" name="UnretainedTotal" left="200" top="385" width="160" height="18" text="" />
+      </control>
+    </page>
+
+    <page label="Combat Tracker">
+      <control progid="DecalControls.FixedLayout" clipped="">
+        <control progid="DecalControls.Notebook" left="0" top="0" width="320" height="409">
+
+          <page label="Current Session Stats">
+            <control progid="DecalControls.FixedLayout" clipped="">
+              <control progid="DecalControls.List" name="CombatTrackerMonsterListCurrent" left="1" top="1" width="318" height="186" />
+              <control progid="DecalControls.List" name="CombatTrackerDamageListCurrent" left="1" top="188" width="318" height="205" />
+            </control>
+          </page>
+
+          <page label="Persistent Stats">
+            <control progid="DecalControls.FixedLayout" clipped="">
+              <control progid="DecalControls.List" name="CombatTrackerMonsterListPersistent" left="1" top="1" width="318" height="186" />
+              <control progid="DecalControls.List" name="CombatTrackerDamageListPersistent" left="1" top="188" width="318" height="205" />
+            </control>
+          </page>
+          
+          <page label="Options">
+            <control progid="DecalControls.FixedLayout" clipped="">
+              <control progid="DecalControls.PushButton" name="CombatTrackerClearCurrentStats" left="10" top="10" width="120" height="20" text="Clear Current Stats" />
+              <control progid="DecalControls.PushButton" name="CombatTrackerExportCurrentStats" left="10" top="40" width="120" height="20" text="Export Current Stats" />
+              
+              <control progid="DecalControls.PushButton" name="CombatTrackerClearPersistentStats" left="150" top="10" width="120" height="20" text="Clear Persistent Stats" />
+
+              <control progid="DecalControls.CheckBox" name="CombatTrackerExportOnLogOff" left="10" top="80" width="185" height="18" text="Export Current Stats On LogOff" />
+              <control progid="DecalControls.CheckBox" name="CombatTrackerPersistent" left="10" top="100" width="140" height="18" text="Keep Persistent Stats" />
+              <control progid="DecalControls.CheckBox" name="CombatTrackerSortAlphabetically" left="10" top="140" width="140" height="18" text="Sort Alphabetically" />
+            </control>
+          </page>
+
+        </control>
+
+      </control>
+    </page>
+    
+    <page label="Misc">
+      <control progid="DecalControls.FixedLayout" clipped="">
+        <control progid="DecalControls.Notebook" left="0" top="0" width="320" height="409">
+
+          <page label="Options">
+            <control progid="DecalControls.FixedLayout" clipped="">
+              <control progid="DecalControls.List" name="OptionList" left="1" top="1" width="218" height="305">
+                <column progid="DecalControls.CheckColumn" name="Enabled" />
+                <column progid="DecalControls.TextColumn" name="Option" />
+              </control>
+            </control>
+          </page>
+
+          <page label="Filters">
+            <control progid="DecalControls.FixedLayout" clipped="">
+              <control progid="DecalControls.List" name="FiltersList" left="1" top="1" width="218" height="305">
+                <column progid="DecalControls.CheckColumn" name="Enabled" />
+                <column progid="DecalControls.TextColumn" name="Option" />
+              </control>
+            </control>
+          </page>
+
+          <page label="Client">
+            <control progid="DecalControls.FixedLayout" clipped="">
+              <control progid="DecalControls.CheckBox" name="ClientRemoveFrame" left="10" top="10" width="145" height="18" text="Remove Window Frame" />
+              <control progid="DecalControls.StaticText" name="ClientRemoveFrameLabel" left="10" top="30" width="310" height="60" text="This will remove the AC Client Windows Frame (Border) from the client when you log into the server. You will not be able to drag/move the client window with the frame removed."/>
+              
+              <control progid="DecalControls.PushButton" name="ClientSetWindowPosition" left="10" top="120" width="130" height="20" text="Set Window Position" />
+              <control progid="DecalControls.PushButton" name="ClientDelWindowPosition" left="160" top="120" width="130" height="20" text="Del Window Position" />
+              <control progid="DecalControls.StaticText" name="ClientSetPosition" left="10" top="145" width="300" height="18" text="Current Set Position: "/>
+              <control progid="DecalControls.StaticText" name="ClientSetPositionLabel" left="10" top="165" width="310" height="60" text="This sets the startup position for this account/server pair. The client window will be moved do these desktop coords on login."/>
+            </control>
+          </page>
+
+          <page label="Tools">
+            <control progid="DecalControls.FixedLayout" clipped="">
+              <control progid="DecalControls.PushButton" name="ClipboardWornEquipment" left="10" top="10" width="140" height="20" text="Clipboard Worn Equipment" />
+              <control progid="DecalControls.PushButton" name="ClipboardInventoryInfo" left="10" top="40" width="140" height="20" text="Clipboard Inventory Info" />
+            </control>
+          </page>
+          
+          <page label="About">
+            <control progid="DecalControls.FixedLayout" clipped="">
+              <control progid="DecalControls.StaticText" name="ThanksLabel" left="5" top="315" width="310" height="60" text="Parts of this plugin came from the ideas of Squire and ManaMinder plugins. Squire was created by Flynn: http://www.flynn1179.net/ac/"/>
+              <control progid="DecalControls.StaticText" name="Website" left="5" top="370" width="310" height="60" text="http://magtools.codeplex.com/"/>
+              <control progid="DecalControls.StaticText" name="VersionLabel" left="215" top="370" width="200" height="18" text="Version "/>
+            </control>
+          </page>
+
+        </control>
+      </control>    
+    </page>
+    
+  </control>
+</view>
