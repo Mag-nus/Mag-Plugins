@@ -11,7 +11,9 @@ namespace Mag_SuitBuilder
 	{
 		[DllImport("user32.dll")]
 		static extern bool FlashWindow(IntPtr hwnd, bool bInvert);
-
+        Font Strikeout = new Font(DataGrid.DefaultFont, FontStyle.Strikeout);
+        Font Regular = new Font(DataGrid.DefaultFont, FontStyle.Regular);
+        System.Collections.Generic.Dictionary<String, bool> enabled = new Dictionary<string,bool>();
 		public Form1()
 		{
 			InitializeComponent();
@@ -19,61 +21,78 @@ namespace Mag_SuitBuilder
 			Text = "Mag-SuitBuilder " + Application.ProductVersion;
 
 			dataGridView1.Rows.Add(7);
+            dataGridView1.DefaultCellStyle.Font = Regular;
 
-			dataGridView1[0, 0].Value = "Strength";
-			dataGridView1[0, 1].Value = "Endurance";
-			dataGridView1[0, 2].Value = "Coordination";
-			dataGridView1[0, 3].Value = "Quickness";
-			dataGridView1[0, 4].Value = "Focus";
-			dataGridView1[0, 5].Value = "Willpower";
+            dataGridView1[0, 0].Value = "Strength"; dataGridView1[0, 0].Tag = "Strength";
+            dataGridView1[0, 1].Value = "Endurance"; dataGridView1[0, 1].Tag = "Endurance";
+            dataGridView1[0, 2].Value = "Coordination"; dataGridView1[0, 2].Tag = "Coordination";
+            dataGridView1[0, 3].Value = "Quickness"; dataGridView1[0, 3].Tag = "Quickness";
+            dataGridView1[0, 4].Value = "Focus"; dataGridView1[0, 4].Tag = "Focus";
+            dataGridView1[0, 5].Value = "Willpower"; dataGridView1[0, 5].Tag = "Willpower";
 			dataGridView1[0, 6].Selected = true;
 
-			dataGridView1[1, 0].Value = "Slashing Ward";
-			dataGridView1[1, 1].Value = "Piercing Ward";
-			dataGridView1[1, 2].Value = "Bludgeoning Ward";
-			dataGridView1[1, 3].Value = "Flame Ward";
-			dataGridView1[1, 4].Value = "Frost Ward";
-			dataGridView1[1, 5].Value = "Acid Ward";
-			dataGridView1[1, 6].Value = "Storm Ward";
+            dataGridView1[1, 0].Value = "Slashing Ward"; dataGridView1[1, 0].Tag = "Slashing Ward";
+            dataGridView1[1, 1].Value = "Piercing Ward"; dataGridView1[1, 1].Tag = "Piercing Ward";
+            dataGridView1[1, 2].Value = "Bludgeoning Ward"; dataGridView1[1, 2].Tag = "Bludgeoning Ward";
+            dataGridView1[1, 3].Value = "Flame Ward"; dataGridView1[1, 3].Tag = "Flame Ward";
+            dataGridView1[1, 4].Value = "Frost Ward"; dataGridView1[1, 4].Tag = "Frost Ward";
+            dataGridView1[1, 5].Value = "Acid Ward"; dataGridView1[1, 5].Tag = "Acid Ward";
+            dataGridView1[1, 6].Value = "Storm Ward"; dataGridView1[1, 6].Tag = "Storm Ward";
 
-			dataGridView1[2, 0].Value = "Life Magic";
-			dataGridView1[2, 1].Value = "Creature Ench";
-			dataGridView1[2, 2].Value = "Item Ench";
-			dataGridView1[2, 3].Value = "War Magic";
-			dataGridView1[2, 4].Value = "Void Magic";
-			dataGridView1[2, 5].Value = "Mana C";
-			dataGridView1[2, 6].Value = "Arcane";
+            dataGridView1[2, 0].Value = "Life Magic"; dataGridView1[2, 0].Tag = "Life Magic Aptitude";
+            dataGridView1[2, 1].Value = "Creature Ench"; dataGridView1[2, 1].Tag = "Creature Enchantment Aptitude";
+            dataGridView1[2, 2].Value = "Item Ench"; dataGridView1[2, 2].Tag = "Item Enchantment Aptitude";
+            dataGridView1[2, 3].Value = "War Magic"; dataGridView1[2, 3].Tag = "War Magic Aptitude";
+            dataGridView1[2, 4].Value = "Void Magic"; dataGridView1[2, 4].Tag = "Void Magic Aptitude";
+            dataGridView1[2, 5].Value = "Mana C"; dataGridView1[2, 5].Tag = "Mana Conversion Prowess";
+            dataGridView1[2, 6].Value = "Arcane"; dataGridView1[2, 6].Tag = "Arcane Prowess";
 
-			dataGridView1[3, 0].Value = "Missile";
-			dataGridView1[3, 1].Value = "Heavy";
-			dataGridView1[3, 2].Value = "Light";
-			dataGridView1[3, 3].Value = "Finesse";
-			dataGridView1[3, 4].Value = "Healing";
-			dataGridView1[3, 5].Value = "Shield";
+            dataGridView1[3, 0].Value = "Missile"; dataGridView1[3, 0].Tag = "Missile Weapon Aptitude";
+            dataGridView1[3, 1].Value = "Heavy"; dataGridView1[3, 1].Tag = "Heavy Weapon Aptitude";
+            dataGridView1[3, 2].Value = "Light"; dataGridView1[3, 2].Tag = "Light Weapon Aptitude";
+            dataGridView1[3, 3].Value = "Finesse"; dataGridView1[3, 3].Tag = "Finesse Weapon Aptitude";
+            dataGridView1[3, 4].Value = "Healing"; dataGridView1[3, 4].Tag = "Healing Prowess";
+            dataGridView1[3, 5].Value = "Shield"; dataGridView1[3, 5].Tag = "Shield Mastery";
 
-			dataGridView1[4, 0].Value = "Two Hand";
-			dataGridView1[4, 1].Value = "Dual Wield";
-			dataGridView1[4, 2].Value = "Dirty Fighting";
-			dataGridView1[4, 3].Value = "Recklessness";
-			dataGridView1[4, 4].Value = "Sneak Attack";
+            dataGridView1[4, 0].Value = "Two Hand"; dataGridView1[4, 0].Tag = "Two Handed Combat Aptitude";
+            dataGridView1[4, 1].Value = "Dual Wield"; dataGridView1[4, 1].Tag = "Dual Wield Aptitude";
+            dataGridView1[4, 2].Value = "Dirty Fighting"; dataGridView1[4, 2].Tag = "Dirty Fighting Aptitude";
+            dataGridView1[4, 3].Value = "Recklessness"; dataGridView1[4, 3].Tag = "Recklessness";
+            dataGridView1[4, 4].Value = "Sneak Attack"; dataGridView1[4, 4].Tag = "Sneak Attack";
 			//
 			//
 
-			dataGridView1[5, 0].Value = "Invulnerability";
-			dataGridView1[5, 1].Value = "Magic Resistance";
-			dataGridView1[5, 2].Value = "Impregnability";
-			dataGridView1[5, 3].Value = "Armor";
-			dataGridView1[5, 4].Value = "Deception";
-			dataGridView1[5, 5].Value = "Person";
-			dataGridView1[5, 6].Value = "Monster";
+            dataGridView1[5, 0].Value = "Invulnerability"; dataGridView1[5, 0].Tag = "Invulnerability";
+            dataGridView1[5, 1].Value = "Magic Resistance"; dataGridView1[5, 1].Tag = "Magic Resistance";
+            dataGridView1[5, 2].Value = "Impregnability"; dataGridView1[5, 2].Tag = "Impregnability";
+            dataGridView1[5, 3].Value = "Armor"; dataGridView1[5, 3].Tag = "Armor";
+            dataGridView1[5, 4].Value = "Deception"; dataGridView1[5, 4].Tag = "Deception Prowess";
+            dataGridView1[5, 5].Value = "Person"; dataGridView1[5, 5].Tag = "Person Attunement";
+            dataGridView1[5, 6].Value = "Monster"; dataGridView1[5, 6].Tag = "Monster Attunement";
 
-			dataGridView1[6, 0].Value = "Item Tinker";
-			dataGridView1[6, 1].Value = "Armor Tinker";
-			dataGridView1[6, 2].Value = "Weapon Tinker";
-			dataGridView1[6, 3].Value = "Magic Item";
-			dataGridView1[6, 4].Value = "Cooking";
-			dataGridView1[6, 5].Value = "Alchemy";
-			dataGridView1[6, 6].Value = "Fletching";
+            dataGridView1[6, 0].Value = "Item Tinker"; dataGridView1[6, 0].Tag = "Item Tinkering Expertise";
+            dataGridView1[6, 1].Value = "Armor Tinker"; dataGridView1[6, 1].Tag = "Armor Tinkering Expertise";
+            dataGridView1[6, 2].Value = "Weapon Tinker"; dataGridView1[6, 2].Tag = "Weapon Tinkering Expertise";
+            dataGridView1[6, 3].Value = "Magic Item"; dataGridView1[6, 3].Tag = "Magic Item Tinkering Expertise";
+            dataGridView1[6, 4].Value = "Cooking"; dataGridView1[6, 4].Tag = "Cooking Prowess";
+            dataGridView1[6, 5].Value = "Alchemy"; dataGridView1[6, 5].Tag = "Alchemical Prowess";
+            dataGridView1[6, 6].Value = "Fletching"; dataGridView1[6, 6].Tag = "Fletching Prowess";
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                foreach (DataGridViewTextBoxCell cell in row.Cells)
+                {
+                    if (dataGridView1[cell.ColumnIndex, cell.RowIndex].Tag != null)
+                    {
+                        enabled[(string)dataGridView1[cell.ColumnIndex, cell.RowIndex].Tag] = true;
+                    }
+                }
+            }
+            
+            //prevent crashes, exceptions
+            enabled["Sprint"] = false;
+            enabled["Jumping Prowess"] = false;
+            enabled["Salvaging Aptitude"] = false;
 		}
 
 		private List<IEquipmentPiece> equipmentPieces;
@@ -97,7 +116,7 @@ namespace Mag_SuitBuilder
 			// Parse the equipment pieces from the text input
 			foreach (string line in txtEquipmentEntries.Lines)
 			{
-				EquipmentPiece piece = new EquipmentPiece(line);
+				EquipmentPiece piece = new EquipmentPiece(line, enabled);
 
 				if (piece.EquipableSlots == Constants.EquippableSlotFlags.None)
 					continue;
@@ -623,5 +642,27 @@ namespace Mag_SuitBuilder
 
 			dataGridView1.Refresh();
 		}
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (enabled[(string)dataGridView1[e.ColumnIndex, e.RowIndex].Tag] != false)
+                {
+                    enabled[(string)dataGridView1[e.ColumnIndex, e.RowIndex].Tag] = false;
+                    dataGridView1[e.ColumnIndex, e.RowIndex].Style.Font = Strikeout;
+                }
+                else
+                {
+                    enabled[(string)dataGridView1[e.ColumnIndex, e.RowIndex].Tag] = true;
+                    dataGridView1[e.ColumnIndex, e.RowIndex].Style.Font = Regular;
+                }
+            }
+            catch (Exception ex)
+            {
+                enabled[(string)dataGridView1[e.ColumnIndex, e.RowIndex].Tag] = false;
+                dataGridView1[e.ColumnIndex, e.RowIndex].Style.Font = Strikeout;
+            }
+        }
 	}
 }

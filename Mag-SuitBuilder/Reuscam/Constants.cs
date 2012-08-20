@@ -69,6 +69,7 @@ namespace Mag_SuitBuilder
 				if (Regex.Match(name, "Coronet").Success) return EquippableSlotFlags.Head;
 				if (Regex.Match(name, "Crown").Success) return EquippableSlotFlags.Head;
 				if (Regex.Match(name, "Diadem").Success) return EquippableSlotFlags.Head;
+                if (Regex.Match(name, "Heaume").Success) return EquippableSlotFlags.Head;
 
 				if (Regex.Match(name, "Breastplate").Success) return EquippableSlotFlags.Chest;
 				if (Regex.Match(name, "Vest").Success) return EquippableSlotFlags.Chest;

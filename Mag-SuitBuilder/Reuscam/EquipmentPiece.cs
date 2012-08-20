@@ -7,9 +7,10 @@ namespace Mag_SuitBuilder
 		// Copper Chainmail Leggings, AL 607, Tinks 10, Epic Invulnerability, Wield Lvl 150, Melee Defense 390 to Activate, Diff 262
 		// Gold Top, Tinks 2, Augmented Health III, Augmented Damage II, Major Storm Ward, Wield Lvl 150, Diff 410, Craft 9
 		// Iron Amuli Coat, Defender's Set, AL 618, Tinks 10, Epic Strength, Wield Lvl 180, Melee Defense 300 to Activate, Diff 160
-
-		public EquipmentPiece(string itemInfo)
+        
+		public EquipmentPiece(string itemInfo, System.Collections.Generic.Dictionary<string, bool> enabled) //todo:: turn this into a map, second param
 		{
+
 			string[] sections = itemInfo.Split(',');
 
 			for (int i = 0 ; i < sections.Length ; i++)
@@ -64,8 +65,26 @@ namespace Mag_SuitBuilder
 			// This could use a better way to add spells
 			foreach (string section in sections)
 			{
-				if (section.Contains("Minor ") || section.Contains("Major ") || section.Contains("Epic "))
-					spells.Add(new Spell(section));
+                if (section.Contains("Minor ") || section.Contains("Major ") || section.Contains("Epic "))
+                {
+                    //Want to filter out the item if its strikeout on the grid.  probably a better way to do this too besides referencing the control, 
+                    //optimize lookup later, make it go now!
+                    //todo:: optimize 
+                    //stolen from spell.cs.  need to parse out the spell name, prior to creating a spell, to ignore it if needed.
+                    string nameWithoutLevel = section.Substring(section.IndexOf(' ') + 1, section.Length - section.IndexOf(' ') - 1);
+                    try
+                    {                                           
+                        if (enabled[nameWithoutLevel] != false)
+                        {
+                            spells.Add(new Spell(section));
+                        } 
+                    }
+                    catch (System.Exception ex){ 
+                        /*(carry on mr parser! */
+                        System.Diagnostics.Debug.WriteLine("Not found:" + nameWithoutLevel);
+                        
+                    }
+                }
 			}
 
 			Spells = new ReadOnlyCollection<Spell>(spells);
