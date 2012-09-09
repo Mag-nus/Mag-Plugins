@@ -69,6 +69,7 @@ namespace MagTools.ItemInfo
 				if ((wo.Values(LongValueKey.Imbued) & 256) == 256) sb.Append(" LightRend");
 				if ((wo.Values(LongValueKey.Imbued) & 512) == 512) sb.Append(" FireRend");
 				if ((wo.Values(LongValueKey.Imbued) & 1024) == 1024) sb.Append(" MeleeImbue");
+				if ((wo.Values(LongValueKey.Imbued) & 4096) == 4096) sb.Append(" MagicImbue");
 				if ((wo.Values(LongValueKey.Imbued) & 8192) == 8192) sb.Append(" Hematited");
 				if ((wo.Values(LongValueKey.Imbued) & 536870912) == 536870912) sb.Append(" MagicAbsorb");
 			}
