@@ -35,7 +35,6 @@
 			this.txtSpell3 = new System.Windows.Forms.TextBox();
 			this.txtArmorSet = new System.Windows.Forms.TextBox();
 			this.txtSpell4 = new System.Windows.Forms.TextBox();
-			this.chkLocked = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// txtArmorLevel
@@ -49,7 +48,7 @@
 			// lblItemName
 			// 
 			this.lblItemName.AutoSize = true;
-			this.lblItemName.Location = new System.Drawing.Point(16, 0);
+			this.lblItemName.Location = new System.Drawing.Point(2, 0);
 			this.lblItemName.Name = "lblItemName";
 			this.lblItemName.Size = new System.Drawing.Size(58, 13);
 			this.lblItemName.TabIndex = 6;
@@ -61,6 +60,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtSpell1.Location = new System.Drawing.Point(0, 39);
 			this.txtSpell1.Name = "txtSpell1";
+			this.txtSpell1.ReadOnly = true;
 			this.txtSpell1.Size = new System.Drawing.Size(152, 20);
 			this.txtSpell1.TabIndex = 8;
 			// 
@@ -70,6 +70,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtSpell2.Location = new System.Drawing.Point(0, 63);
 			this.txtSpell2.Name = "txtSpell2";
+			this.txtSpell2.ReadOnly = true;
 			this.txtSpell2.Size = new System.Drawing.Size(152, 20);
 			this.txtSpell2.TabIndex = 9;
 			// 
@@ -79,6 +80,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtSpell3.Location = new System.Drawing.Point(0, 87);
 			this.txtSpell3.Name = "txtSpell3";
+			this.txtSpell3.ReadOnly = true;
 			this.txtSpell3.Size = new System.Drawing.Size(152, 20);
 			this.txtSpell3.TabIndex = 10;
 			// 
@@ -88,6 +90,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtArmorSet.Location = new System.Drawing.Point(40, 16);
 			this.txtArmorSet.Name = "txtArmorSet";
+			this.txtArmorSet.ReadOnly = true;
 			this.txtArmorSet.Size = new System.Drawing.Size(112, 20);
 			this.txtArmorSet.TabIndex = 11;
 			// 
@@ -97,24 +100,15 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtSpell4.Location = new System.Drawing.Point(0, 111);
 			this.txtSpell4.Name = "txtSpell4";
+			this.txtSpell4.ReadOnly = true;
 			this.txtSpell4.Size = new System.Drawing.Size(152, 20);
 			this.txtSpell4.TabIndex = 12;
-			// 
-			// chkLocked
-			// 
-			this.chkLocked.AutoSize = true;
-			this.chkLocked.Location = new System.Drawing.Point(0, 0);
-			this.chkLocked.Name = "chkLocked";
-			this.chkLocked.Size = new System.Drawing.Size(15, 14);
-			this.chkLocked.TabIndex = 13;
-			this.chkLocked.UseVisualStyleBackColor = true;
 			// 
 			// EquipmentPieceControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.Controls.Add(this.chkLocked);
 			this.Controls.Add(this.txtSpell4);
 			this.Controls.Add(this.txtArmorSet);
 			this.Controls.Add(this.txtSpell3);
@@ -138,6 +132,5 @@
 		private System.Windows.Forms.TextBox txtSpell3;
 		private System.Windows.Forms.TextBox txtArmorSet;
 		private System.Windows.Forms.TextBox txtSpell4;
-		private System.Windows.Forms.CheckBox chkLocked;
 	}
 }

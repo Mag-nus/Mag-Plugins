@@ -25,21 +25,23 @@ namespace Mag_SuitBuilder
 			LowerArms		= 0x00001000,
 			UpperLegs		= 0x00002000,
 			LowerLegs		= 0x00004000,
-
+				
 			AllBodyArmor	= 0x00007F21,
 
 			Necklace		= 0x00008000,
 			RightBracelet	= 0x00010000,
 			LeftBracelet	= 0x00020000,
+			Bracelet		= 0x00030000,
 			RightRing		= 0x00040000,
 			LeftRing		= 0x00080000,
+			Ring			= 0x000C0000,
 
 			Trinket			= 0x04000000,
 
 			Shirt			= 0x20000000,
 			Pants			= 0x40000000,
 
-			Any				= 0x7FFFFFFF,
+			All				= 0x7FFFFFFF,
 		}
 
 		public static EquippableSlotFlags GetEquippableSlots(string name)
@@ -53,12 +55,12 @@ namespace Mag_SuitBuilder
 			{
 				// Single Slot
 				if (Regex.Match(name, "Helm").Success) return EquippableSlotFlags.Head;
-				if (Regex.Match(name, "Coif ").Success) return EquippableSlotFlags.Head;
+				if (Regex.Match(name, "Coif").Success) return EquippableSlotFlags.Head;
 				if (Regex.Match(name, "Basinet").Success) return EquippableSlotFlags.Head;
 				if (Regex.Match(name, "Cowl").Success) return EquippableSlotFlags.Head;
 				if (Regex.Match(name, "Kabuton").Success) return EquippableSlotFlags.Head;
-				if (Regex.Match(name, "Bandana ").Success) return EquippableSlotFlags.Head;
-				if (Regex.Match(name, "Beret ").Success) return EquippableSlotFlags.Head;
+				if (Regex.Match(name, "Bandana").Success) return EquippableSlotFlags.Head;
+				if (Regex.Match(name, "Beret").Success) return EquippableSlotFlags.Head;
 				if (Regex.Match(name, "Cap").Success) return EquippableSlotFlags.Head;
 				if (Regex.Match(name, "Fez").Success) return EquippableSlotFlags.Head;
 				if (Regex.Match(name, "Kasa").Success) return EquippableSlotFlags.Head;
@@ -70,6 +72,8 @@ namespace Mag_SuitBuilder
 				if (Regex.Match(name, "Crown").Success) return EquippableSlotFlags.Head;
 				if (Regex.Match(name, "Diadem").Success) return EquippableSlotFlags.Head;
                 if (Regex.Match(name, "Heaume").Success) return EquippableSlotFlags.Head;
+				if (Regex.Match(name, "Hood").Success) return EquippableSlotFlags.Head;
+				if (Regex.Match(name, "Qafiya").Success) return EquippableSlotFlags.Head;
 
 				if (Regex.Match(name, "Breastplate").Success) return EquippableSlotFlags.Chest;
 				if (Regex.Match(name, "Vest").Success) return EquippableSlotFlags.Chest;
@@ -99,6 +103,7 @@ namespace Mag_SuitBuilder
 				if (Regex.Match(name, "Boots").Success) return EquippableSlotFlags.Feet;
 
 				if (Regex.Match(name, "Empowered Robe of the Perfect Light").Success) return EquippableSlotFlags.Chest;
+				if (Regex.Match(name, "Over-robe").Success) return EquippableSlotFlags.Chest;
 
 				// Two Slot
 				if (Regex.Match(name, "Sleeves").Success) return EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
@@ -147,10 +152,10 @@ namespace Mag_SuitBuilder
 				if (Regex.Match(name, "Top$").Success) return EquippableSlotFlags.Trinket;
 
 				// Bracelet
-				if (Regex.Match(name, "Bracelet").Success) return EquippableSlotFlags.LeftBracelet | EquippableSlotFlags.RightBracelet;
+				if (Regex.Match(name, "Bracelet").Success) return EquippableSlotFlags.Bracelet;
 
 				// Ring
-				if (Regex.Match(name, "Ring").Success) return EquippableSlotFlags.LeftRing | EquippableSlotFlags.RightRing;
+				if (Regex.Match(name, "Ring").Success) return EquippableSlotFlags.Ring;
 			}
 			else
 			{
@@ -194,13 +199,15 @@ namespace Mag_SuitBuilder
 		{
 			None = 0,
 
-			Chest = 0x00000008,
-			UpperArms = 0x00000020,
-			LowerArms = 0x00000040,
+			Chest		= 0x00000008,
+			UpperArms	= 0x00000020,
+			LowerArms	= 0x00000040,
+			FullShirt	= 0x00000068,
 
-			UpperLegs = 0x00000100,
-			LowerLegs = 0x00000200,
-			Abdomen = 0x00000800,
+			UpperLegs	= 0x00000100,
+			LowerLegs	= 0x00000200,
+			Abdomen		= 0x00000800,
+			FullPants	= 0x00000B00,
 		}
 
 		public static UnderwearCoverage GetUnderwearCoverage(string name)
@@ -216,13 +223,13 @@ namespace Mag_SuitBuilder
 			if (Regex.Match(name, "Tunic").Success) return UnderwearCoverage.Chest | UnderwearCoverage.UpperArms;
 			if (Regex.Match(name, "Smock").Success) return UnderwearCoverage.Chest | UnderwearCoverage.UpperArms;
 
-			if (Regex.Match(name, "Shirt").Success) return UnderwearCoverage.Chest | UnderwearCoverage.UpperArms | UnderwearCoverage.LowerArms;
+			if (Regex.Match(name, "Shirt").Success) return UnderwearCoverage.FullShirt;
 
 			// Pants
 			if (Regex.Match(name, "Breeches").Success) return UnderwearCoverage.Abdomen | UnderwearCoverage.UpperLegs;
 
-			if (Regex.Match(name, "Pant").Success) return UnderwearCoverage.Abdomen | UnderwearCoverage.UpperLegs | UnderwearCoverage.LowerLegs;
-			if (Regex.Match(name, "Trousers").Success) return UnderwearCoverage.Abdomen | UnderwearCoverage.UpperLegs | UnderwearCoverage.LowerLegs;
+			if (Regex.Match(name, "Pant").Success) return UnderwearCoverage.FullPants;
+			if (Regex.Match(name, "Trousers").Success) return UnderwearCoverage.FullPants;
 
 			return UnderwearCoverage.None;
 		}
