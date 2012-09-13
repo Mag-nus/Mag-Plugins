@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using Mag_SuitBuilder.Equipment;
 using Mag_SuitBuilder.Spells;
 
 namespace Mag_SuitBuilder.Search
@@ -19,9 +20,9 @@ namespace Mag_SuitBuilder.Search
 
 		public ICollection<Spell> CantripsToLookFor { get; set; }
 
-		public string PrimaryArmorSet { get; set; }
+		public ArmorSet PrimaryArmorSet { get; set; }
 
-		public string SecondaryArmorSet { get; set; }
+		public ArmorSet SecondaryArmorSet { get; set; }
 
 		public bool OnlyAddPiecesWithArmor { get; set; }
 	}

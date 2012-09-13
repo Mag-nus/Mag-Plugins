@@ -8,6 +8,8 @@ namespace Mag_SuitBuilder.Equipment
 	{
 		private EquipmentPiece()
 		{
+			ArmorSet = ArmorSet.NoArmorSet;
+
 			Spells = new List<Spell>();
 		}
 
@@ -30,7 +32,7 @@ namespace Mag_SuitBuilder.Equipment
 			foreach (string section in sections)
 			{
 				if (section.Contains(" Set"))
-					ArmorSet = section;
+					ArmorSet = ArmorSet.GetArmorSet(section);
 			}
 
 			// Find the AL
@@ -58,7 +60,7 @@ namespace Mag_SuitBuilder.Equipment
 			// Find out if the piece has been imbued
 			foreach (string section in sections)
 			{
-				if (section.Equals("CS") || section.Equals("CB") || section.Equals("AR") || section.EndsWith("Rend") || section.EndsWith("Imbue") || section.Equals("Hematited") || section.EndsWith("Absorb"))
+				if (section == "CS" || section == "CB" || section == "AR" || section.EndsWith("Rend") || section.EndsWith("Imbue") || section == "Hematited" || section.EndsWith("Absorb"))
 					Imbued = true;
 			}
 
@@ -148,7 +150,7 @@ namespace Mag_SuitBuilder.Equipment
 		/// </summary>
 		public int BodyPartsCovered { get; private set; }
 
-		public string ArmorSet { get; set; }
+		public ArmorSet ArmorSet { get; set; }
 
 		/// <summary>
 		/// This is the actual armor level of the piece as it was described

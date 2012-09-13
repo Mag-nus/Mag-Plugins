@@ -60,12 +60,12 @@ namespace Mag_SuitBuilder
 			cboPrimaryArmorSet.Items.Clear();
 			cboSecondaryArmorSet.Items.Clear();
 
-			cboPrimaryArmorSet.Items.Add("No Armor Set");
-			cboSecondaryArmorSet.Items.Add("No Armor Set");
+			cboPrimaryArmorSet.Items.Add(ArmorSet.NoArmorSet);
+			cboSecondaryArmorSet.Items.Add(ArmorSet.NoArmorSet);
 
 			foreach (EquipmentPiece piece in equipmentGroup)
 			{
-				if (String.IsNullOrEmpty(piece.ArmorSet) || (piece.EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) == 0)
+				if (piece.ArmorSet == null || piece.ArmorSet == ArmorSet.NoArmorSet || (piece.EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) == 0)
 					continue;
 
 				if (!cboPrimaryArmorSet.Items.Contains(piece.ArmorSet))
@@ -75,8 +75,8 @@ namespace Mag_SuitBuilder
 				}
 			}
 
-			cboPrimaryArmorSet.Items.Add("Any Armor Set");
-			cboSecondaryArmorSet.Items.Add("Any Armor Set");
+			cboPrimaryArmorSet.Items.Add(ArmorSet.AnyArmorSet);
+			cboSecondaryArmorSet.Items.Add(ArmorSet.AnyArmorSet);
 
 			cboPrimaryArmorSet.SelectedIndex = cboPrimaryArmorSet.Items.Count - 1;
 			cboSecondaryArmorSet.SelectedIndex = cboSecondaryArmorSet.Items.Count - 1;
@@ -132,8 +132,8 @@ namespace Mag_SuitBuilder
 			SuitSearcherConfiguration config = new SuitSearcherConfiguration();
 			config.MinimumArmorLevelPerPiece = int.Parse(txtMinimumBaseArmorLevel.Text);
 			config.CantripsToLookFor = cntrlCantripFilters;
-			config.PrimaryArmorSet = cboPrimaryArmorSet.Text;
-			config.SecondaryArmorSet = cboSecondaryArmorSet.Text;
+			config.PrimaryArmorSet = cboPrimaryArmorSet.SelectedItem as ArmorSet;
+			config.SecondaryArmorSet = cboSecondaryArmorSet.SelectedItem as ArmorSet;
 			config.OnlyAddPiecesWithArmor = true;
 
 			suitBuilder = new SuitSearcher(config, equipmentGroup);

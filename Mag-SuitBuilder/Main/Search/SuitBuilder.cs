@@ -11,6 +11,9 @@ namespace Mag_SuitBuilder.Search
 		{
 			for (int i = 0; i < cache.Length; i++)
 				cache[i] = new PieceSlotCache();
+
+			foreach (ArmorSet set in ArmorSet.GetAllArmorSets())
+				armorSetCount.Add(set, 0);
 		}
 
 		private class PieceSlotCache
@@ -29,6 +32,10 @@ namespace Mag_SuitBuilder.Search
 		readonly Spell[] spells = new Spell[17 * 5];
 		int nextOpenSpellIndex;
 
+		readonly Dictionary<ArmorSet, int> armorSetCount = new Dictionary<ArmorSet, int>();
+
+		//public int TotalBaseArmorLevel { get; private set; }
+
 		public void Push(EquipmentPiece item, Constants.EquippableSlotFlags slot)
 		{
 			cache[nextOpenCacheIndex].Piece = item;
@@ -44,6 +51,10 @@ namespace Mag_SuitBuilder.Search
 			}
 
 			nextOpenCacheIndex++;
+
+			armorSetCount[item.ArmorSet]++;
+
+			//TotalBaseArmorLevel += (item.BaseArmorLevel * item.BodyPartsCovered);
 		}
 
 		public void Pop()
@@ -51,6 +62,10 @@ namespace Mag_SuitBuilder.Search
 			occupiedSlots ^= cache[nextOpenCacheIndex - 1].Slot;
 
 			nextOpenSpellIndex -= cache[nextOpenCacheIndex - 1].SpellCount;
+
+			armorSetCount[cache[nextOpenCacheIndex - 1].Piece.ArmorSet]--;
+
+			//TotalBaseArmorLevel -= cache[nextOpenCacheIndex - 1].Piece.BaseArmorLevel * cache[nextOpenCacheIndex - 1].Piece.BodyPartsCovered;
 
 			nextOpenCacheIndex--;
 		}
@@ -60,7 +75,24 @@ namespace Mag_SuitBuilder.Search
 			return ((occupiedSlots & slot) == 0);
 		}
 
-		public bool CanOfferBeneficialSpell(EquipmentPiece item)
+		public bool HasRoomForArmorSet(ArmorSet primarySetToBuild, ArmorSet secondarySetToBuild, ArmorSet setPieceToAdd)
+		{
+			if (primarySetToBuild == ArmorSet.AnyArmorSet || secondarySetToBuild == ArmorSet.AnyArmorSet)
+				return true;
+
+			if (primarySetToBuild != setPieceToAdd && secondarySetToBuild != setPieceToAdd)
+				return false;
+
+			if (primarySetToBuild == setPieceToAdd && armorSetCount[setPieceToAdd] >= 5)
+				return false;
+
+			if (secondarySetToBuild == setPieceToAdd && armorSetCount[setPieceToAdd] >= 4)
+				return false;
+
+			return true;
+		}
+
+		public bool CanGetBeneficialSpellFrom(EquipmentPiece item)
 		{
 			foreach (Spell itemSpell in item.Spells)
 			//for (int i = 0 ; i < item.Spells.Count ; i++) // This is actually slower

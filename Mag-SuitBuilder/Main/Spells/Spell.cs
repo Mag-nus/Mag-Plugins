@@ -68,7 +68,7 @@ namespace Mag_SuitBuilder.Spells
 
 			foreach (string[] line in SpellTable)
 			{
-				if (line[nameIndex].Equals(Name))
+				if (line[nameIndex] == Name)
 				{
 					Family = int.Parse(line[familyIndex]);
 					break;
@@ -83,7 +83,7 @@ namespace Mag_SuitBuilder.Spells
 
 				foreach (string[] line in SpellTable)
 				{
-					if (line[nameIndex].Equals(Name))
+					if (line[nameIndex] == Name)
 					{
 						int difficulty = int.Parse(line[difficultyIndex]);
 						int duration = int.Parse(line[durationIndex]);
@@ -174,21 +174,14 @@ namespace Mag_SuitBuilder.Spells
 			return Name;
 		}
 
-		static readonly Collection<Spell> Spells = new Collection<Spell>();
+		private static readonly Dictionary<string, Spell> Spells = new Dictionary<string, Spell>();
 
 		public static Spell GetSpell(string text)
 		{
-			foreach (Spell spell in Spells)
-			{
-				if (spell.Name.Equals(text))
-					return spell;
-			}
+			if (!Spells.ContainsKey(text))
+				Spells.Add(text, new Spell(text));
 
-			Spell newSpell = new Spell(text);
-
-			Spells.Add(newSpell);
-
-			return newSpell;
+			return Spells[text];
 		}
 
 		public static Spell GetSpell(int id)
@@ -198,7 +191,7 @@ namespace Mag_SuitBuilder.Spells
 
 			foreach (string[] line in SpellTable)
 			{
-				if (line[idIndex].Equals(id.ToString()))
+				if (line[idIndex] == id.ToString())
 					return GetSpell(line[nameIndex]);
 			}
 
@@ -211,7 +204,7 @@ namespace Mag_SuitBuilder.Spells
 
 			foreach (string[] line in SpellTable)
 			{
-				if (line[nameIndex].Equals(text))
+				if (line[nameIndex] == text)
 					return true;
 			}
 

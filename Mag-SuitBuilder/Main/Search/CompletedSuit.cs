@@ -49,11 +49,11 @@ namespace Mag_SuitBuilder.Search
 					totalMajors++;
 			}
 
-			Dictionary<string, int> setPieces = new Dictionary<string, int>();
+			Dictionary<ArmorSet, int> setPieces = new Dictionary<ArmorSet, int>();
 
 			foreach (EquipmentPiece piece in Values)
 			{
-				if (!String.IsNullOrEmpty(piece.ArmorSet))
+				if (piece.ArmorSet != ArmorSet.NoArmorSet)
 				{
 					if (setPieces.ContainsKey(piece.ArmorSet))
 						setPieces[piece.ArmorSet]++;
@@ -64,7 +64,7 @@ namespace Mag_SuitBuilder.Search
 
 			string sets = null;
 
-			foreach (KeyValuePair<string, int> kvp in setPieces)
+			foreach (KeyValuePair<ArmorSet, int> kvp in setPieces)
 			{
 				if (sets != null)
 					sets += ", ";

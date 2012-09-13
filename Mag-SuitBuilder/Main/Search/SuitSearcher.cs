@@ -49,7 +49,7 @@ namespace Mag_SuitBuilder.Search
 			// Remove pieces we can't add to our base suit, or pieces that can provide no beneficial spell
 			for (int i = equipment.Count - 1; i >= 0; i--)
 			{
-				if (!baseSuit.SlotIsOpen(equipment[i].EquipableSlots) || !baseSuit.CanOfferBeneficialSpell(equipment[i]))
+				if (!baseSuit.SlotIsOpen(equipment[i].EquipableSlots) || !baseSuit.CanGetBeneficialSpellFrom(equipment[i]))
 					equipment.RemoveAt(i);
 			}
 
@@ -101,14 +101,14 @@ namespace Mag_SuitBuilder.Search
 			}
 
 			// If we're don't want to use any set pieces, remove them
-			if (config.PrimaryArmorSet.Equals("No Armor Set") && config.SecondaryArmorSet.Equals("No Armor Set") &&
-			    (item.EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) != 0 && !String.IsNullOrEmpty(item.ArmorSet))
+			if (config.PrimaryArmorSet == ArmorSet.NoArmorSet && config.SecondaryArmorSet == ArmorSet.NoArmorSet &&
+			    (item.EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) != 0 && item.ArmorSet != ArmorSet.NoArmorSet)
 				return false;
 			// If we're building a two set armor suit, and we don't want any blanks or fillers, remove any pieces of armor of other sets
-			if (!config.PrimaryArmorSet.Equals("No Armor Set") && !config.SecondaryArmorSet.Equals("No Armor Set") &&
-			    !config.PrimaryArmorSet.Equals("Any Armor Set") && !config.SecondaryArmorSet.Equals("Any Armor Set") &&
+			if (config.PrimaryArmorSet != ArmorSet.NoArmorSet && config.SecondaryArmorSet != ArmorSet.NoArmorSet &&
+				config.PrimaryArmorSet != ArmorSet.AnyArmorSet && config.SecondaryArmorSet != ArmorSet.AnyArmorSet &&
 			    (item.EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) != 0 &&
-			    !item.ArmorSet.Equals(config.PrimaryArmorSet) && !item.ArmorSet.Equals(config.SecondaryArmorSet))
+			    item.ArmorSet != config.PrimaryArmorSet && item.ArmorSet != config.SecondaryArmorSet)
 				return false;
 
 			// Check to see if we only want pieces with armor
@@ -164,6 +164,7 @@ namespace Mag_SuitBuilder.Search
 
 		int totalArmorBucketsWithItems;
 		int highestArmorCountSuitBuilt;
+		//Dictionary<int, List<int>> highestArmorSuitsBuilt;
 
 		void StartSearch()
 		{
@@ -221,6 +222,9 @@ namespace Mag_SuitBuilder.Search
 
 			// Reset our variables
 			highestArmorCountSuitBuilt = 0;
+			//highestArmorSuitsBuilt = new Dictionary<int, List<int>>();
+			//for (int i = 1 ; i <= 9 ; i++)
+			//	highestArmorSuitsBuilt.Add(i, new List<int>(100));
 
 			new Thread(() =>
 			{
@@ -231,7 +235,7 @@ namespace Mag_SuitBuilder.Search
 
 				DateTime endTime = DateTime.Now;
 
-				System.Windows.Forms.MessageBox.Show((endTime - starTime).TotalSeconds.ToString());
+				//System.Windows.Forms.MessageBox.Show((endTime - starTime).TotalSeconds.ToString());
 
 				// If we're not running, the search was stopped before it could complete
 				if (!Running)
@@ -258,8 +262,8 @@ namespace Mag_SuitBuilder.Search
 				// We should keep track of the highest AL suits we built for every number of armor count suits built, and only push out ones that compare
 				// todo hack fix
 
-				//if (SuitCreated != null)
-				//	SuitCreated(baseSuit.GetCopyOfCompletedSuit());
+				if (SuitCreated != null)
+					SuitCreated(baseSuit.GetCopyOfCompletedSuit());
 
 				return;
 			}
@@ -271,7 +275,7 @@ namespace Mag_SuitBuilder.Search
 			//for (int i = 0; i < buckets[index].Count ; i++)
 			foreach (EquipmentPiece piece in buckets[index]) // Using foreach: 10.85s, for: 11s
 			{
-				if (baseSuit.SlotIsOpen(buckets[index].Slot) && baseSuit.CanOfferBeneficialSpell(piece))
+				if (baseSuit.SlotIsOpen(buckets[index].Slot) && baseSuit.HasRoomForArmorSet(config.PrimaryArmorSet, config.SecondaryArmorSet, piece.ArmorSet) && baseSuit.CanGetBeneficialSpellFrom(piece))
 				{
 					baseSuit.Push(piece, buckets[index].Slot);
 

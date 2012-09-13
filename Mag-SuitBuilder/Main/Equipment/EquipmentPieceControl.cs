@@ -41,7 +41,7 @@ namespace Mag_SuitBuilder.Equipment
 			else
 				txtArmorLevel.Text = piece.BaseArmorLevel.ToString();
 
-			txtArmorSet.Text = piece.ArmorSet;
+			txtArmorSet.Text = piece.ArmorSet.ToString();
 
 			txtSpell1.Text = (piece.Spells.Count >= 1) ? piece.Spells[0].Name : null;
 			txtSpell2.Text = (piece.Spells.Count >= 2) ? piece.Spells[1].Name : null;

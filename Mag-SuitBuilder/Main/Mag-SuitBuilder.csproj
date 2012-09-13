@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Equipment\ArmorSet.cs" />
     <Compile Include="Search\CompletedSuit.cs" />
     <Compile Include="Spells\CantripSelectorControl.cs">
       <SubType>UserControl</SubType>
