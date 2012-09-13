@@ -26,20 +26,22 @@ namespace Mag_SuitBuilder
 			UpperLegs		= 0x00002000,
 			LowerLegs		= 0x00004000,
 				
-			AllBodyArmor	= 0x00007F21,
-
 			Necklace		= 0x00008000,
 			RightBracelet	= 0x00010000,
 			LeftBracelet	= 0x00020000,
-			Bracelet		= 0x00030000,
 			RightRing		= 0x00040000,
 			LeftRing		= 0x00080000,
-			Ring			= 0x000C0000,
 
 			Trinket			= 0x04000000,
 
 			Shirt			= 0x20000000,
 			Pants			= 0x40000000,
+
+			// Combos
+			AllBodyArmor	= 0x00007F21,
+			Bracelet		= 0x00030000,
+			Ring			= 0x000C0000,
+			CanHaveArmor	= 0x60007F21,
 
 			All				= 0x7FFFFFFF,
 		}

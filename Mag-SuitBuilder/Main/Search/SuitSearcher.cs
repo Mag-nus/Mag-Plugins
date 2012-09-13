@@ -164,7 +164,7 @@ namespace Mag_SuitBuilder.Search
 
 		int totalArmorBucketsWithItems;
 		int highestArmorCountSuitBuilt;
-		//Dictionary<int, List<int>> highestArmorSuitsBuilt;
+		Dictionary<int, List<int>> highestArmorSuitsBuilt;
 
 		void StartSearch()
 		{
@@ -173,6 +173,7 @@ namespace Mag_SuitBuilder.Search
 
 			BucketSorter sorter = new BucketSorter();
 
+			// All these slots can have armor
 			if (baseSuit.SlotIsOpen(Constants.EquippableSlotFlags.Head))		sorter.Add(new Bucket(Constants.EquippableSlotFlags.Head));
 			if (baseSuit.SlotIsOpen(Constants.EquippableSlotFlags.Hands))		sorter.Add(new Bucket(Constants.EquippableSlotFlags.Hands));
 			if (baseSuit.SlotIsOpen(Constants.EquippableSlotFlags.Feet))		sorter.Add(new Bucket(Constants.EquippableSlotFlags.Feet));
@@ -183,6 +184,10 @@ namespace Mag_SuitBuilder.Search
 			if (baseSuit.SlotIsOpen(Constants.EquippableSlotFlags.UpperLegs))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.UpperLegs));
 			if (baseSuit.SlotIsOpen(Constants.EquippableSlotFlags.LowerLegs))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.LowerLegs));
 
+			if (baseSuit.SlotIsOpen(Constants.EquippableSlotFlags.Shirt)) sorter.Add(new Bucket(Constants.EquippableSlotFlags.Shirt));
+			if (baseSuit.SlotIsOpen(Constants.EquippableSlotFlags.Pants)) sorter.Add(new Bucket(Constants.EquippableSlotFlags.Pants));
+
+			// All these slots have no armor
 			if (baseSuit.SlotIsOpen(Constants.EquippableSlotFlags.Necklace))		sorter.Add(new Bucket(Constants.EquippableSlotFlags.Necklace));
 			if (baseSuit.SlotIsOpen(Constants.EquippableSlotFlags.RightBracelet))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.RightBracelet));
 			if (baseSuit.SlotIsOpen(Constants.EquippableSlotFlags.LeftBracelet))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.LeftBracelet));
@@ -191,9 +196,6 @@ namespace Mag_SuitBuilder.Search
 
 			if (baseSuit.SlotIsOpen(Constants.EquippableSlotFlags.Trinket))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.Trinket));
 			
-			if (baseSuit.SlotIsOpen(Constants.EquippableSlotFlags.Shirt))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.Shirt));
-			if (baseSuit.SlotIsOpen(Constants.EquippableSlotFlags.Pants))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.Pants));
-
 			// Put all of our inventory into its appropriate bucket
 			foreach (EquipmentPiece piece in equipment)
 				sorter.PutItemInBuckets(piece);
@@ -222,9 +224,9 @@ namespace Mag_SuitBuilder.Search
 
 			// Reset our variables
 			highestArmorCountSuitBuilt = 0;
-			//highestArmorSuitsBuilt = new Dictionary<int, List<int>>();
-			//for (int i = 1 ; i <= 9 ; i++)
-			//	highestArmorSuitsBuilt.Add(i, new List<int>(100));
+			highestArmorSuitsBuilt = new Dictionary<int, List<int>>();
+			for (int i = 1 ; i <= 9 ; i++)
+				highestArmorSuitsBuilt.Add(i, new List<int>(10));
 
 			new Thread(() =>
 			{
@@ -259,8 +261,28 @@ namespace Mag_SuitBuilder.Search
 				if (totalArmorBucketsWithItems > 0 && index > 0 && buckets[index - 1].IsBodyArmor && baseSuit.Count > highestArmorCountSuitBuilt)
 					highestArmorCountSuitBuilt = baseSuit.Count;
 
-				// We should keep track of the highest AL suits we built for every number of armor count suits built, and only push out ones that compare
-				// todo hack fix
+				// We should keep track of the highest AL suits we built for every number of armor count suits built, and only push out ones that fall within our top X
+				List<int> list = highestArmorSuitsBuilt[baseSuit.Count];
+				if (list.Count < list.Capacity)
+				{
+					if (!list.Contains(baseSuit.TotalBaseArmorLevel))
+					{
+						list.Add(baseSuit.TotalBaseArmorLevel);
+
+						if (list.Count == list.Capacity)
+							list.Sort();
+					}
+				}
+				else
+				{
+					if (list[list.Count - 1] > baseSuit.TotalBaseArmorLevel)
+						return;
+					if (list[list.Count - 1] < baseSuit.TotalBaseArmorLevel && !list.Contains(baseSuit.TotalBaseArmorLevel))
+					{
+						list[list.Count - 1] = baseSuit.TotalBaseArmorLevel;
+						list.Sort();
+					}
+				}
 
 				if (SuitCreated != null)
 					SuitCreated(baseSuit.GetCopyOfCompletedSuit());

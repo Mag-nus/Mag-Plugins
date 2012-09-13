@@ -34,7 +34,7 @@ namespace Mag_SuitBuilder.Search
 
 		readonly Dictionary<ArmorSet, int> armorSetCount = new Dictionary<ArmorSet, int>();
 
-		//public int TotalBaseArmorLevel { get; private set; }
+		public int TotalBaseArmorLevel { get; private set; }
 
 		public void Push(EquipmentPiece item, Constants.EquippableSlotFlags slot)
 		{
@@ -54,7 +54,7 @@ namespace Mag_SuitBuilder.Search
 
 			armorSetCount[item.ArmorSet]++;
 
-			//TotalBaseArmorLevel += (item.BaseArmorLevel * item.BodyPartsCovered);
+			TotalBaseArmorLevel += (item.BaseArmorLevel * item.BodyPartsCovered);
 		}
 
 		public void Pop()
@@ -65,7 +65,7 @@ namespace Mag_SuitBuilder.Search
 
 			armorSetCount[cache[nextOpenCacheIndex - 1].Piece.ArmorSet]--;
 
-			//TotalBaseArmorLevel -= cache[nextOpenCacheIndex - 1].Piece.BaseArmorLevel * cache[nextOpenCacheIndex - 1].Piece.BodyPartsCovered;
+			TotalBaseArmorLevel -= cache[nextOpenCacheIndex - 1].Piece.BaseArmorLevel * cache[nextOpenCacheIndex - 1].Piece.BodyPartsCovered;
 
 			nextOpenCacheIndex--;
 		}
@@ -94,6 +94,9 @@ namespace Mag_SuitBuilder.Search
 
 		public bool CanGetBeneficialSpellFrom(EquipmentPiece item)
 		{
+			// This whole approach needs to be optimized.
+			// This is the biggest time waster in the entire search process.
+
 			foreach (Spell itemSpell in item.Spells)
 			//for (int i = 0 ; i < item.Spells.Count ; i++) // This is actually slower
 			{

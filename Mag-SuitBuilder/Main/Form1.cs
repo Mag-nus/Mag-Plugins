@@ -149,7 +149,10 @@ namespace Mag_SuitBuilder
 		void suitBuilder_SuitCreated(Dictionary<Constants.EquippableSlotFlags, EquipmentPiece> obj)
 		{
 			// This is just a hack for now for testing
-			BeginInvoke((MethodInvoker)(() => listBox1.Items.Add(obj)));
+			BeginInvoke((MethodInvoker)(() =>
+			{
+				listBox1.Items.Add(obj);
+			}));
 		}
 
 		[DllImport("user32.dll")]
