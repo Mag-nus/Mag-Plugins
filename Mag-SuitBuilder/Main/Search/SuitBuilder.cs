@@ -65,7 +65,7 @@ namespace Mag_SuitBuilder.Search
 			foreach (Spell itemSpell in item.Spells)
 			//for (int i = 0 ; i < item.Spells.Count ; i++) // This is actually slower
 			{
-				for (int j = 0; j < nextOpenSpellIndex; j++)
+				for (int j = 0; j < nextOpenSpellIndex; j++) // For here is faster than foreach
 				{
 					if (spells[j].IsSameOrSurpasses(itemSpell))
 						goto end;

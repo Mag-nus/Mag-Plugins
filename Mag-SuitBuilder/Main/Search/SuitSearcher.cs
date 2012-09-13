@@ -231,7 +231,7 @@ namespace Mag_SuitBuilder.Search
 
 				DateTime endTime = DateTime.Now;
 
-				//System.Windows.Forms.MessageBox.Show((endTime - starTime).TotalSeconds.ToString());
+				System.Windows.Forms.MessageBox.Show((endTime - starTime).TotalSeconds.ToString());
 
 				// If we're not running, the search was stopped before it could complete
 				if (!Running)
@@ -252,14 +252,14 @@ namespace Mag_SuitBuilder.Search
 			// Are we at the end of the line?
 			if (buckets.Count <= index)
 			{
-				if (totalArmorBucketsWithItems > 0 && index > 0 && (buckets[index - 1].Slot & Constants.EquippableSlotFlags.AllBodyArmor) != 0 && baseSuit.Count > highestArmorCountSuitBuilt)
+				if (totalArmorBucketsWithItems > 0 && index > 0 && buckets[index - 1].IsBodyArmor && baseSuit.Count > highestArmorCountSuitBuilt)
 					highestArmorCountSuitBuilt = baseSuit.Count;
 
 				// We should keep track of the highest AL suits we built for every number of armor count suits built, and only push out ones that compare
 				// todo hack fix
 
-				if (SuitCreated != null)
-					SuitCreated(baseSuit.GetCopyOfCompletedSuit());
+				//if (SuitCreated != null)
+				//	SuitCreated(baseSuit.GetCopyOfCompletedSuit());
 
 				return;
 			}
@@ -268,11 +268,12 @@ namespace Mag_SuitBuilder.Search
 			if (baseSuit.Count + 1 <= highestArmorCountSuitBuilt - (totalArmorBucketsWithItems - index))
 				return;
 
-			for (int i = 0; i < buckets[index].Count ; i++)
+			//for (int i = 0; i < buckets[index].Count ; i++)
+			foreach (EquipmentPiece piece in buckets[index]) // Using foreach: 10.85s, for: 11s
 			{
-				if (baseSuit.SlotIsOpen(buckets[index].Slot) && baseSuit.CanOfferBeneficialSpell(buckets[index][i]))
+				if (baseSuit.SlotIsOpen(buckets[index].Slot) && baseSuit.CanOfferBeneficialSpell(piece))
 				{
-					baseSuit.Push(buckets[index][i], buckets[index].Slot);
+					baseSuit.Push(piece, buckets[index].Slot);
 
 					if (buckets[index].IsBodyArmor && baseSuit.Count > highestArmorCountSuitBuilt)
 						highestArmorCountSuitBuilt = baseSuit.Count;
