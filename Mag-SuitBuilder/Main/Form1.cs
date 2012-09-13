@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -115,6 +116,9 @@ namespace Mag_SuitBuilder
 		{
 			btnCalculatePossibilities.Enabled = false;
 
+			listBox1.Items.Clear();
+			PopulateFromEquipmentGroup(null);
+
 			if (suitBuilder != null)
 			{
 				suitBuilder.SuitCreated -= new Action<SuitBuilder>(suitBuilder_SuitCreated);
@@ -177,28 +181,20 @@ namespace Mag_SuitBuilder
 
 		private void PopulateFromEquipmentGroup(SuitBuilder suit)
 		{
+			if (suit == null)
+				return;
+
+			Dictionary<Constants.EquippableSlotFlags, EquipmentPiece> suitEquipment = suit.GetEquipment();
+
 			foreach (Control cntrl in tabPage1.Controls)
 			{
 				if (cntrl is EquipmentPieceControl)
 				{
 					EquipmentPieceControl coveragePiece = (cntrl as EquipmentPieceControl);
 
-					bool found = false;
-
-					if (suit != null)
-					{
-						foreach (EquipmentPiece piece in suit)
-						{
-							if (coveragePiece.EquipableSlots == piece.EquipableSlots)
-							{
-								coveragePiece.SetEquipmentPiece(piece);
-								found = true;
-								break;
-							}
-						}
-					}
-
-					if (!found)
+					if (suitEquipment.ContainsKey(coveragePiece.EquipableSlots))
+						coveragePiece.SetEquipmentPiece(suitEquipment[coveragePiece.EquipableSlots]);
+					else
 						coveragePiece.SetEquipmentPiece(null);
 
 					cntrl.Refresh();
@@ -207,13 +203,10 @@ namespace Mag_SuitBuilder
 
 			cntrlSuitCantrips.Clear();
 
-			if (suit != null)
+			foreach (EquipmentPiece piece in suitEquipment.Values)
 			{
-				foreach (EquipmentPiece piece in suit)
-				{
-					foreach (Spell spell in piece.Spells)
-						cntrlSuitCantrips.Add(spell);
-				}
+				foreach (Spell spell in piece.Spells)
+					cntrlSuitCantrips.Add(spell);
 			}
 		}
 	}

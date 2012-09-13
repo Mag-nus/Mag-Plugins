@@ -37,7 +37,7 @@ namespace Mag_SuitBuilder
 			{
 				if (equipment[i].Locked)
 				{
-					baseSuit.Add(equipment[i]);
+					baseSuit.Push(equipment[i], equipment[i].EquipableSlots);
 					equipment.RemoveAt(i);
 				}
 			}
@@ -45,7 +45,7 @@ namespace Mag_SuitBuilder
 			// Remove pieces we can't add to our base suit, or pieces that can provide no beneficial spell
 			for (int i = equipment.Count - 1; i >= 0; i--)
 			{
-				if (!baseSuit.CanAdd(equipment[i]) || !baseSuit.CanOfferBeneficialSpell(equipment[i]))
+				if (!baseSuit.SlotIsOpen(equipment[i].EquipableSlots) || !baseSuit.CanOfferBeneficialSpell(equipment[i]))
 					equipment.RemoveAt(i);
 			}
 
@@ -136,11 +136,11 @@ namespace Mag_SuitBuilder
 
 		class Bucket : List<EquipmentPiece>
 		{
-			public readonly Constants.EquippableSlotFlags slot;
+			public readonly Constants.EquippableSlotFlags Slot;
 
 			public Bucket(Constants.EquippableSlotFlags slot)
 			{
-				this.slot = slot;
+				Slot = slot;
 			}
 		}
 
@@ -150,7 +150,7 @@ namespace Mag_SuitBuilder
 			{
 				foreach (Bucket bucket in this)
 				{
-					if ((piece.EquipableSlots & bucket.slot) == bucket.slot)
+					if ((piece.EquipableSlots & bucket.Slot) == bucket.Slot)
 						bucket.Add(piece);
 				}
 			}
@@ -158,7 +158,8 @@ namespace Mag_SuitBuilder
 
 		void StartSearch()
 		{
-			SuitCreated(baseSuit);
+			if (SuitCreated != null)
+				SuitCreated(baseSuit.Clone());
 
 			BucketSorter sorter = new BucketSorter();
 
@@ -187,115 +188,44 @@ namespace Mag_SuitBuilder
 			foreach (EquipmentPiece piece in equipment)
 				sorter.PutItemInBuckets(piece);
 
+			DateTime starTime = DateTime.Now;
+
 			// Do the actual search here
-			SearchThroughBuckets(sorter, 0, baseSuit);
+			SearchThroughBuckets(sorter, 0);
+
+			DateTime endTime = DateTime.Now;
+
+			System.Windows.Forms.MessageBox.Show((endTime - starTime).TotalSeconds.ToString());
 
 			// If we're not running, the search was stopped before it could complete
 			if (!Running)
 				return;
-
+			
 			Stop();
 
 			if (SearchCompleted != null)
 				SearchCompleted();
 		}
 
-		void SearchThroughBuckets(List<Bucket> buckets, int index, SuitBuilder workingSuit)
+		void SearchThroughBuckets(List<Bucket> buckets, int index)
 		{
-			foreach (EquipmentPiece piece in buckets[index])
+			for (int i = 0; i < buckets[index].Count ; i++)
 			{
-				if (workingSuit.CanAdd(piece, buckets[index].slot))
+				if (baseSuit.SlotIsOpen(buckets[index].Slot) && baseSuit.CanOfferBeneficialSpell(buckets[index][i]))
 				{
-					workingSuit.Add(piece);
+					baseSuit.Push(buckets[index][i], buckets[index].Slot);
 
 					if (buckets.Count > index + 1)
-						SearchThroughBuckets(buckets, index + 1, workingSuit);
+						SearchThroughBuckets(buckets, index + 1);
+
+					baseSuit.Pop();
 				}
 			}
 
 			if (buckets.Count > index + 1)
-				SearchThroughBuckets(buckets, index + 1, workingSuit);
-			else
-				SuitCreated(workingSuit);
+				SearchThroughBuckets(buckets, index + 1);
+			else if (SuitCreated != null)
+				SuitCreated(baseSuit.Clone());
 		}
-
-		
-
-		/*
-		// http://www.dzone.com/snippets/depth-first-search-c
-		class BinaryTreeNode
-		{
-			public BinaryTreeNode Left { get; set; }
-
-			public BinaryTreeNode Right { get; set; }
-
-			public int Data { get; set; }
-		}
-
-		class DepthFirstSearch
-		{
-			private Stack<BinaryTreeNode> _searchStack;
-			private BinaryTreeNode _root;
-
-			public DepthFirstSearch(BinaryTreeNode rootNode)
-			{
-				_root = rootNode;
-				_searchStack = new Stack<BinaryTreeNode>();
-			}
-
-			public bool Search(int data)
-			{
-				BinaryTreeNode _current;
-				_searchStack.Push(_root);
-
-				while (_searchStack.Count != 0)
-				{
-					_current = _searchStack.Pop();
-
-					if (_current.Data == data)
-						return true;
-
-					_searchStack.Push(_current.Right);
-					_searchStack.Push(_current.Left);
-				}
-
-				return false;
-			}
-		}
-		*/
-		/*
-		// http://blog.andreloker.de/post/2009/03/10/Algorithms-recursive-and-iterative-depth-first-search.aspx
-		private void DFSRecursive(Node node)
-		{
-			DoSomethingWithNode(node);
-
-			foreach (Transition t in node.Transitions)
-			{
-				node destNode = t.Destination;
-
-				DFSRecursive(destNode);
-			}
-		}
-
-		private void Traverse(Node node)
-		{
-			EnterNode(node);
-
-			var t = node.FirstTransition;
-
-			while (t != null)
-			{
-				var destNode = TakeTransition(t);
-
-				Traverse(destNode);
-
-				UndoTransition(t);
-
-				t = t.NextSibling;
-			}
-
-			ExitNode(node);
-		}
-		*/
 	}
 }
