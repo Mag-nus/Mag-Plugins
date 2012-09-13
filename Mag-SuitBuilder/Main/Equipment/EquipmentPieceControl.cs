@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Mag_SuitBuilder
+namespace Mag_SuitBuilder.Equipment
 {
 	partial class EquipmentPieceControl : UserControl
 	{

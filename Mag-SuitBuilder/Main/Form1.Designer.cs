@@ -1,4 +1,7 @@
-﻿namespace Mag_SuitBuilder
+﻿using Mag_SuitBuilder.Equipment;
+using Mag_SuitBuilder.Spells;
+
+namespace Mag_SuitBuilder
 {
 	partial class Form1
 	{
@@ -53,29 +56,29 @@
 			this.label3 = new System.Windows.Forms.Label();
 			this.txtMinimumBaseArmorLevel = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
-			this.cntrlCantripFilters = new Mag_SuitBuilder.CantripSelectorControl();
+			this.cntrlCantripFilters = new CantripSelectorControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
-			this.cntrlSuitCantrips = new Mag_SuitBuilder.CantripSelectorControl();
+			this.cntrlSuitCantrips = new CantripSelectorControl();
 			this.btnStopCalculating = new System.Windows.Forms.Button();
 			this.listBox1 = new System.Windows.Forms.ListBox();
 			this.btnCalculatePossibilities = new System.Windows.Forms.Button();
-			this.coveragePiece1 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece16 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece2 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece17 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece3 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece14 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece4 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece15 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece5 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece13 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece6 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece12 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece7 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece11 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece8 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece10 = new Mag_SuitBuilder.EquipmentPieceControl();
-			this.coveragePiece9 = new Mag_SuitBuilder.EquipmentPieceControl();
+			this.coveragePiece1 = new EquipmentPieceControl();
+			this.coveragePiece16 = new EquipmentPieceControl();
+			this.coveragePiece2 = new EquipmentPieceControl();
+			this.coveragePiece17 = new EquipmentPieceControl();
+			this.coveragePiece3 = new EquipmentPieceControl();
+			this.coveragePiece14 = new EquipmentPieceControl();
+			this.coveragePiece4 = new EquipmentPieceControl();
+			this.coveragePiece15 = new EquipmentPieceControl();
+			this.coveragePiece5 = new EquipmentPieceControl();
+			this.coveragePiece13 = new EquipmentPieceControl();
+			this.coveragePiece6 = new EquipmentPieceControl();
+			this.coveragePiece12 = new EquipmentPieceControl();
+			this.coveragePiece7 = new EquipmentPieceControl();
+			this.coveragePiece11 = new EquipmentPieceControl();
+			this.coveragePiece8 = new EquipmentPieceControl();
+			this.coveragePiece10 = new EquipmentPieceControl();
+			this.coveragePiece9 = new EquipmentPieceControl();
 			this.tabControl1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.equipmentGrid)).BeginInit();

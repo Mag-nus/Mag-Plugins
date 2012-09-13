@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Mag_SuitBuilder
+using Mag_SuitBuilder.Spells;
+
+namespace Mag_SuitBuilder.Search
 {
 	class SuitSearcherConfiguration
 	{

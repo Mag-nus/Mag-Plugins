@@ -1,4 +1,4 @@
-﻿namespace Mag_SuitBuilder
+﻿namespace Mag_SuitBuilder.Spells
 {
 	partial class CantripSelectorControl
 	{

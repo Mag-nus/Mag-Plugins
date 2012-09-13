@@ -6,6 +6,10 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
+using Mag_SuitBuilder.Equipment;
+using Mag_SuitBuilder.Search;
+using Mag_SuitBuilder.Spells;
+
 namespace Mag_SuitBuilder
 {
 	public partial class Form1 : Form
@@ -121,7 +125,7 @@ namespace Mag_SuitBuilder
 
 			if (suitBuilder != null)
 			{
-				suitBuilder.SuitCreated -= new Action<SuitBuilder>(suitBuilder_SuitCreated);
+				suitBuilder.SuitCreated -= new Action<Dictionary<Constants.EquippableSlotFlags, EquipmentPiece>>(suitBuilder_SuitCreated);
 				suitBuilder.SearchCompleted -= new Action(suitBuilder_SearchCompleted);
 			}
 
@@ -134,7 +138,7 @@ namespace Mag_SuitBuilder
 
 			suitBuilder = new SuitSearcher(config, equipmentGroup);
 
-			suitBuilder.SuitCreated += new Action<SuitBuilder>(suitBuilder_SuitCreated);
+			suitBuilder.SuitCreated += new Action<Dictionary<Constants.EquippableSlotFlags, EquipmentPiece>>(suitBuilder_SuitCreated);
 			suitBuilder.SearchCompleted += new Action(suitBuilder_SearchCompleted);
 
 			suitBuilder.Start();
@@ -142,7 +146,7 @@ namespace Mag_SuitBuilder
 			btnStopCalculating.Enabled = true;
 		}
 
-		void suitBuilder_SuitCreated(SuitBuilder obj)
+		void suitBuilder_SuitCreated(Dictionary<Constants.EquippableSlotFlags, EquipmentPiece> obj)
 		{
 			// This is just a hack for now for testing
 			BeginInvoke((MethodInvoker)(() => listBox1.Items.Add(obj)));
@@ -154,13 +158,11 @@ namespace Mag_SuitBuilder
 		void suitBuilder_SearchCompleted()
 		{
 			BeginInvoke((MethodInvoker)(() =>
-				                            {
-					                            btnStopCalculating.Enabled = false;
-					                            btnCalculatePossibilities.Enabled = true;
-				                            }
-			                           ));
-
-			FlashWindow(this.Handle, true);
+			{
+				btnStopCalculating.Enabled = false;
+				btnCalculatePossibilities.Enabled = true;
+				FlashWindow(this.Handle, true);
+			}));
 		}
 
 		private void btnStopCalculating_Click(object sender, EventArgs e)
@@ -174,17 +176,15 @@ namespace Mag_SuitBuilder
 
 		private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			SuitBuilder suit = ((ListBox)sender).SelectedItem as SuitBuilder;
+			Dictionary<Constants.EquippableSlotFlags, EquipmentPiece> suit = ((ListBox)sender).SelectedItem as Dictionary<Constants.EquippableSlotFlags, EquipmentPiece>;
 
 			PopulateFromEquipmentGroup(suit);
 		}
 
-		private void PopulateFromEquipmentGroup(SuitBuilder suit)
+		private void PopulateFromEquipmentGroup(Dictionary<Constants.EquippableSlotFlags, EquipmentPiece> suit)
 		{
 			if (suit == null)
 				return;
-
-			Dictionary<Constants.EquippableSlotFlags, EquipmentPiece> suitEquipment = suit.GetEquipment();
 
 			foreach (Control cntrl in tabPage1.Controls)
 			{
@@ -192,8 +192,8 @@ namespace Mag_SuitBuilder
 				{
 					EquipmentPieceControl coveragePiece = (cntrl as EquipmentPieceControl);
 
-					if (suitEquipment.ContainsKey(coveragePiece.EquipableSlots))
-						coveragePiece.SetEquipmentPiece(suitEquipment[coveragePiece.EquipableSlots]);
+					if (suit.ContainsKey(coveragePiece.EquipableSlots))
+						coveragePiece.SetEquipmentPiece(suit[coveragePiece.EquipableSlots]);
 					else
 						coveragePiece.SetEquipmentPiece(null);
 
@@ -203,7 +203,7 @@ namespace Mag_SuitBuilder
 
 			cntrlSuitCantrips.Clear();
 
-			foreach (EquipmentPiece piece in suitEquipment.Values)
+			foreach (EquipmentPiece piece in suit.Values)
 			{
 				foreach (Spell spell in piece.Spells)
 					cntrlSuitCantrips.Add(spell);

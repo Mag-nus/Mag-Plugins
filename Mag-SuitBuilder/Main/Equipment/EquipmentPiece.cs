@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Mag_SuitBuilder
+using Mag_SuitBuilder.Spells;
+
+namespace Mag_SuitBuilder.Equipment
 {
 	class EquipmentPiece
 	{

@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Reflection;
 
-namespace Mag_SuitBuilder
+namespace Mag_SuitBuilder.Spells
 {
 	/// <summary>
 	/// Use GetSpell() to intialize a Spell object
@@ -16,7 +16,7 @@ namespace Mag_SuitBuilder
 
 		static Spell()
 		{
-			using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Mag_SuitBuilder.Spells.csv"))
+			using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Mag_SuitBuilder.Spells.Spells.csv"))
 			using (StreamReader reader = new StreamReader(stream))
 			{
 				SpellTableHeader = new List<string>(reader.ReadLine().Split(','));

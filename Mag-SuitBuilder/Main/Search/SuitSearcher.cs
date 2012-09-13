@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
-namespace Mag_SuitBuilder
+using Mag_SuitBuilder.Equipment;
+using Mag_SuitBuilder.Spells;
+
+namespace Mag_SuitBuilder.Search
 {
 	internal class SuitSearcher
 	{
 		private readonly SuitSearcherConfiguration config;
 		private readonly EquipmentGroup equipment;
 
-		public event Action<SuitBuilder> SuitCreated;
+		public event Action<Dictionary<Constants.EquippableSlotFlags, EquipmentPiece>> SuitCreated;
 		public event Action SearchCompleted;
 
 		private readonly SuitBuilder baseSuit = new SuitBuilder();
@@ -134,17 +138,19 @@ namespace Mag_SuitBuilder
 			Running = false;
 		}
 
-		class Bucket : List<EquipmentPiece>
+		private class Bucket : List<EquipmentPiece>
 		{
 			public readonly Constants.EquippableSlotFlags Slot;
+			public readonly bool IsBodyArmor;
 
 			public Bucket(Constants.EquippableSlotFlags slot)
 			{
 				Slot = slot;
+				IsBodyArmor = (slot & Constants.EquippableSlotFlags.AllBodyArmor) != 0;
 			}
 		}
 
-		class BucketSorter : List<Bucket>
+		private class BucketSorter : List<Bucket>
 		{
 			public void PutItemInBuckets(EquipmentPiece piece)
 			{
@@ -156,10 +162,13 @@ namespace Mag_SuitBuilder
 			}
 		}
 
+		int totalArmorBucketsWithItems;
+		int highestArmorCountSuitBuilt;
+
 		void StartSearch()
 		{
 			if (SuitCreated != null)
-				SuitCreated(baseSuit.Clone());
+				SuitCreated(baseSuit.GetCopyOfCompletedSuit());
 
 			BucketSorter sorter = new BucketSorter();
 
@@ -188,44 +197,93 @@ namespace Mag_SuitBuilder
 			foreach (EquipmentPiece piece in equipment)
 				sorter.PutItemInBuckets(piece);
 
-			DateTime starTime = DateTime.Now;
+			// Remove any empty buckets
+			for (int i = sorter.Count - 1; i >= 0; i--)
+			{
+				if (sorter[i].Count == 0)
+					sorter.RemoveAt(i);
+			}
 
-			// Do the actual search here
-			SearchThroughBuckets(sorter, 0);
+			// We should sort the buckets based on number of items, least amount first, with all armor buckets first
+			sorter.Sort((a, b) =>
+			{
+				if ((a.Slot & Constants.EquippableSlotFlags.AllBodyArmor) != 0 && (b.Slot & Constants.EquippableSlotFlags.AllBodyArmor) == 0) return -1;
+				if ((a.Slot & Constants.EquippableSlotFlags.AllBodyArmor) == 0 && (b.Slot & Constants.EquippableSlotFlags.AllBodyArmor) != 0) return 1;
+				return a.Count.CompareTo(b.Count);
+			});
 
-			DateTime endTime = DateTime.Now;
+			// Calculate the total number of armor buckets we have with pieces in them.
+			foreach (Bucket bucket in sorter)
+			{
+				if ((bucket.Slot & Constants.EquippableSlotFlags.AllBodyArmor) != 0 && bucket.Count > 0)
+					totalArmorBucketsWithItems++;
+			}
 
-			System.Windows.Forms.MessageBox.Show((endTime - starTime).TotalSeconds.ToString());
+			// Reset our variables
+			highestArmorCountSuitBuilt = 0;
 
-			// If we're not running, the search was stopped before it could complete
-			if (!Running)
-				return;
-			
-			Stop();
+			new Thread(() =>
+			{
+				DateTime starTime = DateTime.Now;
 
-			if (SearchCompleted != null)
-				SearchCompleted();
+				// Do the actual search here
+				SearchThroughBuckets(sorter, 0);
+
+				DateTime endTime = DateTime.Now;
+
+				//System.Windows.Forms.MessageBox.Show((endTime - starTime).TotalSeconds.ToString());
+
+				// If we're not running, the search was stopped before it could complete
+				if (!Running)
+					return;
+
+				Stop();
+
+				if (SearchCompleted != null)
+					SearchCompleted();
+			}).Start();
 		}
 
 		void SearchThroughBuckets(List<Bucket> buckets, int index)
 		{
+			if (!Running)
+				return;
+
+			// Are we at the end of the line?
+			if (buckets.Count <= index)
+			{
+				if (totalArmorBucketsWithItems > 0 && index > 0 && (buckets[index - 1].Slot & Constants.EquippableSlotFlags.AllBodyArmor) != 0 && baseSuit.Count > highestArmorCountSuitBuilt)
+					highestArmorCountSuitBuilt = baseSuit.Count;
+
+				// We should keep track of the highest AL suits we built for every number of armor count suits built, and only push out ones that compare
+				// todo hack fix
+
+				if (SuitCreated != null)
+					SuitCreated(baseSuit.GetCopyOfCompletedSuit());
+
+				return;
+			}
+
+			// Only continue to build any suits with a minimum potential of no less than 1 armor pieces less than our largest built suit so far
+			if (baseSuit.Count + 1 <= highestArmorCountSuitBuilt - (totalArmorBucketsWithItems - index))
+				return;
+
 			for (int i = 0; i < buckets[index].Count ; i++)
 			{
 				if (baseSuit.SlotIsOpen(buckets[index].Slot) && baseSuit.CanOfferBeneficialSpell(buckets[index][i]))
 				{
 					baseSuit.Push(buckets[index][i], buckets[index].Slot);
 
-					if (buckets.Count > index + 1)
-						SearchThroughBuckets(buckets, index + 1);
+					if (buckets[index].IsBodyArmor && baseSuit.Count > highestArmorCountSuitBuilt)
+						highestArmorCountSuitBuilt = baseSuit.Count;
+
+					SearchThroughBuckets(buckets, index + 1);
 
 					baseSuit.Pop();
 				}
 			}
 
-			if (buckets.Count > index + 1)
-				SearchThroughBuckets(buckets, index + 1);
-			else if (SuitCreated != null)
-				SuitCreated(baseSuit.Clone());
+			SearchThroughBuckets(buckets, index + 1);
 		}
 	}
 }

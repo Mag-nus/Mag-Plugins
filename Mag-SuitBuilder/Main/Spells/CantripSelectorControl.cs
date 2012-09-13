@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Mag_SuitBuilder
+namespace Mag_SuitBuilder.Spells
 {
 	public partial class CantripSelectorControl : UserControl, ICollection<Spell>
 	{

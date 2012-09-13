@@ -45,21 +45,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="CantripSelectorControl.cs">
+    <Compile Include="Search\CompletedSuit.cs" />
+    <Compile Include="Spells\CantripSelectorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CantripSelectorControl.Designer.cs">
+    <Compile Include="Spells\CantripSelectorControl.Designer.cs">
       <DependentUpon>CantripSelectorControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SuitBuilder.cs" />
-    <Compile Include="EquipmentPieceControl.cs">
+    <Compile Include="Search\SuitBuilder.cs" />
+    <Compile Include="Equipment\EquipmentPieceControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="EquipmentPieceControl.Designer.cs">
+    <Compile Include="Equipment\EquipmentPieceControl.Designer.cs">
       <DependentUpon>EquipmentPieceControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="EquipmentGroup.cs" />
-    <Compile Include="EquipmentPiece.cs" />
+    <Compile Include="Equipment\EquipmentGroup.cs" />
+    <Compile Include="Equipment\EquipmentPiece.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -69,24 +70,24 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SortableBindingList.cs" />
-    <Compile Include="Spell.cs" />
-    <Compile Include="SuitSearcher.cs" />
-    <Compile Include="SuitSearcherConfiguration.cs" />
+    <Compile Include="Spells\Spell.cs" />
+    <Compile Include="Search\SuitSearcher.cs" />
+    <Compile Include="Search\SuitSearcherConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="EquipmentPieceControl.resx">
+    <EmbeddedResource Include="Equipment\EquipmentPieceControl.resx">
       <DependentUpon>EquipmentPieceControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CantripSelectorControl.resx">
+    <EmbeddedResource Include="Spells\CantripSelectorControl.resx">
       <DependentUpon>CantripSelectorControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <EmbeddedResource Include="Spells.csv" />
+    <EmbeddedResource Include="Spells\Spells.csv" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

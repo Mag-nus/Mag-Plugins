@@ -1,5 +1,7 @@
 ﻿
-namespace Mag_SuitBuilder
+using Mag_SuitBuilder.Spells;
+
+namespace Mag_SuitBuilder.Equipment
 {
 	class EquipmentGroup : SortableBindingList<EquipmentPiece>
 	{
