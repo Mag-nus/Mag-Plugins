@@ -144,13 +144,22 @@ namespace Mag_SuitBuilder
 			suitBuilder.Start();
 
 			btnStopCalculating.Enabled = true;
+			progressBar1.Style = ProgressBarStyle.Marquee;
 		}
 
 		void suitBuilder_SuitCreated(Dictionary<Constants.EquippableSlotFlags, EquipmentPiece> obj)
 		{
-			// This is just a hack for now for testing
 			BeginInvoke((MethodInvoker)(() =>
 			{
+				for (int i = 0 ;i < listBox1.Items.Count ; i++)
+				{
+					if (obj.ToString().CompareTo(listBox1.Items[i].ToString()) == 1)
+					{
+						listBox1.Items.Insert(i, obj);
+						return;
+					}
+				}
+
 				listBox1.Items.Add(obj);
 			}));
 		}
@@ -162,6 +171,7 @@ namespace Mag_SuitBuilder
 		{
 			BeginInvoke((MethodInvoker)(() =>
 			{
+				progressBar1.Style = ProgressBarStyle.Blocks;
 				btnStopCalculating.Enabled = false;
 				btnCalculatePossibilities.Enabled = true;
 				FlashWindow(this.Handle, true);
@@ -170,6 +180,7 @@ namespace Mag_SuitBuilder
 
 		private void btnStopCalculating_Click(object sender, EventArgs e)
 		{
+			progressBar1.Style = ProgressBarStyle.Blocks;
 			btnStopCalculating.Enabled = false;
 
 			suitBuilder.Stop();

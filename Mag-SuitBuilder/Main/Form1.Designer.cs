@@ -56,29 +56,30 @@ namespace Mag_SuitBuilder
 			this.label3 = new System.Windows.Forms.Label();
 			this.txtMinimumBaseArmorLevel = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
-			this.cntrlCantripFilters = new CantripSelectorControl();
+			this.cntrlCantripFilters = new Mag_SuitBuilder.Spells.CantripSelectorControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
-			this.cntrlSuitCantrips = new CantripSelectorControl();
+			this.progressBar1 = new System.Windows.Forms.ProgressBar();
+			this.cntrlSuitCantrips = new Mag_SuitBuilder.Spells.CantripSelectorControl();
 			this.btnStopCalculating = new System.Windows.Forms.Button();
 			this.listBox1 = new System.Windows.Forms.ListBox();
 			this.btnCalculatePossibilities = new System.Windows.Forms.Button();
-			this.coveragePiece1 = new EquipmentPieceControl();
-			this.coveragePiece16 = new EquipmentPieceControl();
-			this.coveragePiece2 = new EquipmentPieceControl();
-			this.coveragePiece17 = new EquipmentPieceControl();
-			this.coveragePiece3 = new EquipmentPieceControl();
-			this.coveragePiece14 = new EquipmentPieceControl();
-			this.coveragePiece4 = new EquipmentPieceControl();
-			this.coveragePiece15 = new EquipmentPieceControl();
-			this.coveragePiece5 = new EquipmentPieceControl();
-			this.coveragePiece13 = new EquipmentPieceControl();
-			this.coveragePiece6 = new EquipmentPieceControl();
-			this.coveragePiece12 = new EquipmentPieceControl();
-			this.coveragePiece7 = new EquipmentPieceControl();
-			this.coveragePiece11 = new EquipmentPieceControl();
-			this.coveragePiece8 = new EquipmentPieceControl();
-			this.coveragePiece10 = new EquipmentPieceControl();
-			this.coveragePiece9 = new EquipmentPieceControl();
+			this.coveragePiece1 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece16 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece2 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece17 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece3 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece14 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece4 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece15 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece5 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece13 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece6 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece12 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece7 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece11 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece8 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece10 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.coveragePiece9 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.tabControl1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.equipmentGrid)).BeginInit();
@@ -346,6 +347,7 @@ namespace Mag_SuitBuilder
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.progressBar1);
 			this.tabPage1.Controls.Add(this.cntrlSuitCantrips);
 			this.tabPage1.Controls.Add(this.btnStopCalculating);
 			this.tabPage1.Controls.Add(this.listBox1);
@@ -375,6 +377,13 @@ namespace Mag_SuitBuilder
 			this.tabPage1.Text = "Step 3. Generate Suits";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
+			// progressBar1
+			// 
+			this.progressBar1.Location = new System.Drawing.Point(775, 8);
+			this.progressBar1.Name = "progressBar1";
+			this.progressBar1.Size = new System.Drawing.Size(181, 23);
+			this.progressBar1.TabIndex = 34;
+			// 
 			// cntrlSuitCantrips
 			// 
 			this.cntrlSuitCantrips.Enabled = false;
@@ -386,9 +395,9 @@ namespace Mag_SuitBuilder
 			// btnStopCalculating
 			// 
 			this.btnStopCalculating.Enabled = false;
-			this.btnStopCalculating.Location = new System.Drawing.Point(659, 8);
+			this.btnStopCalculating.Location = new System.Drawing.Point(630, 8);
 			this.btnStopCalculating.Name = "btnStopCalculating";
-			this.btnStopCalculating.Size = new System.Drawing.Size(168, 23);
+			this.btnStopCalculating.Size = new System.Drawing.Size(139, 23);
 			this.btnStopCalculating.TabIndex = 22;
 			this.btnStopCalculating.Text = "Stop Calculating";
 			this.btnStopCalculating.UseVisualStyleBackColor = true;
@@ -406,7 +415,7 @@ namespace Mag_SuitBuilder
 			// 
 			this.btnCalculatePossibilities.Location = new System.Drawing.Point(485, 8);
 			this.btnCalculatePossibilities.Name = "btnCalculatePossibilities";
-			this.btnCalculatePossibilities.Size = new System.Drawing.Size(168, 23);
+			this.btnCalculatePossibilities.Size = new System.Drawing.Size(139, 23);
 			this.btnCalculatePossibilities.TabIndex = 18;
 			this.btnCalculatePossibilities.Text = "Calculate Possibilities";
 			this.btnCalculatePossibilities.UseVisualStyleBackColor = true;
@@ -632,6 +641,7 @@ namespace Mag_SuitBuilder
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.Label label6;
 		private CantripSelectorControl cntrlSuitCantrips;
+		private System.Windows.Forms.ProgressBar progressBar1;
 	}
 }
 

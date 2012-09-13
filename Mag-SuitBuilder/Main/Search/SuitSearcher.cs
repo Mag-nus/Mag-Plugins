@@ -225,7 +225,7 @@ namespace Mag_SuitBuilder.Search
 			// Reset our variables
 			highestArmorCountSuitBuilt = 0;
 			highestArmorSuitsBuilt = new Dictionary<int, List<int>>();
-			for (int i = 1 ; i <= 9 ; i++)
+			for (int i = 1; i <= sorter.Count; i++)
 				highestArmorSuitsBuilt.Add(i, new List<int>(10));
 
 			new Thread(() =>
@@ -277,6 +277,7 @@ namespace Mag_SuitBuilder.Search
 				{
 					if (list[list.Count - 1] > baseSuit.TotalBaseArmorLevel)
 						return;
+
 					if (list[list.Count - 1] < baseSuit.TotalBaseArmorLevel && !list.Contains(baseSuit.TotalBaseArmorLevel))
 					{
 						list[list.Count - 1] = baseSuit.TotalBaseArmorLevel;
