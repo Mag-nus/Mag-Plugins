@@ -42,6 +42,7 @@ namespace Mag_SuitBuilder
 			Bracelet		= 0x00030000,
 			Ring			= 0x000C0000,
 			CanHaveArmor	= 0x60007F21,
+			Underwear		= 0x60000000,
 
 			All				= 0x7FFFFFFF,
 		}

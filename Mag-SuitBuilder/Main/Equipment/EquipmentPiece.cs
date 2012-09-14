@@ -127,26 +127,27 @@ namespace Mag_SuitBuilder.Equipment
 
 				// Determine how many protectable body slots this piece covers
 				BodyPartsCovered = 0;
-				int slotsCovered = (int)EquipableSlots;
 
-				if (Constants.IsUnderwear(Name))
-					slotsCovered = (int)Constants.GetUnderwearCoverage(Name);
-
-				while (slotsCovered != 0)
+				if ((EquipableSlots & Constants.EquippableSlotFlags.CanHaveArmor) != 0)
 				{
-					if ((slotsCovered & 1) == 1)
-						BodyPartsCovered++;
-					slotsCovered >>= 1;
-				}
+					int slotsCovered = (int)EquipableSlots;
 
-				// If this is jewelry, it doesn't cover any body parts.
-				if (EquipableSlots >= Constants.EquippableSlotFlags.Necklace && EquipableSlots <= Constants.EquippableSlotFlags.Trinket)
-					BodyPartsCovered = 0;
+					if (Constants.IsUnderwear(Name))
+						slotsCovered = (int)Constants.GetUnderwearCoverage(Name);
+
+					while (slotsCovered != 0)
+					{
+						if ((slotsCovered & 1) == 1)
+							BodyPartsCovered++;
+						slotsCovered >>= 1;
+					}
+				}
 			}
 		}
 
 		/// <summary>
-		/// This represents the number of protectable (by armor) body slots
+		/// This represents the number of protectable (by armor) body slots.
+		/// Armor pieces return the number of slots they fill. Underwear returns the number of body parts they cover.
 		/// </summary>
 		public int BodyPartsCovered { get; private set; }
 

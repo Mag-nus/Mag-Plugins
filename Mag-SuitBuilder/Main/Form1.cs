@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 
 using Mag_SuitBuilder.Equipment;
@@ -14,7 +14,7 @@ namespace Mag_SuitBuilder
 {
 	public partial class Form1 : Form
 	{
-		EquipmentGroup equipmentGroup = new EquipmentGroup();
+		readonly EquipmentGroup equipmentGroup = new EquipmentGroup();
 
 		public Form1()
 		{
@@ -93,7 +93,8 @@ namespace Mag_SuitBuilder
 				"Check the first checkbox (Locked) for pieces you want your suit built around." + Environment.NewLine + Environment.NewLine +
 				"Rows in dark gray are equipment pieces that will be removed from the search as they are surpassed by another item." + Environment.NewLine + Environment.NewLine +
 				"Method 1 loads all Charname.Inventory.xml files from MyDocuments\\Decal Plugins\\Mag-Tools\\ServerName(s) from all servers" + Environment.NewLine + Environment.NewLine +
-				"Method 2 loads information from the windows clipboard (cntrl+c cntrl+v) that you may have generated using Mag-Tools->Misc->Tools->Clipboard Inventory Info.");
+				"Method 2 loads information from the windows clipboard (cntrl+c cntrl+v) that you may have generated using Mag-Tools->Misc->Tools->Clipboard Inventory Info." + Environment.NewLine + Environment.NewLine +
+				"If items are showing up in your results that you do not want, simply select the row and hit the delete key to remove them from new searches.");
 		}
 
 		private void equipmentGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -114,7 +115,7 @@ namespace Mag_SuitBuilder
 			cntrlCantripFilters.LoadDefaults(buttonText);
 		}
 
-		SuitSearcher suitBuilder;
+		ArmorSearcher armorSearcher;
 
 		private void btnCalculatePossibilities_Click(object sender, System.EventArgs e)
 		{
@@ -123,37 +124,61 @@ namespace Mag_SuitBuilder
 			listBox1.Items.Clear();
 			PopulateFromEquipmentGroup(null);
 
-			if (suitBuilder != null)
+			if (armorSearcher != null)
 			{
-				suitBuilder.SuitCreated -= new Action<Dictionary<Constants.EquippableSlotFlags, EquipmentPiece>>(suitBuilder_SuitCreated);
-				suitBuilder.SearchCompleted -= new Action(suitBuilder_SearchCompleted);
+				armorSearcher.SuitCreated -= new Action<CompletedSuit>(suitBuilder_SuitCreated);
+				armorSearcher.SearchCompleted -= new Action(suitBuilder_SearchCompleted);
 			}
 
-			SuitSearcherConfiguration config = new SuitSearcherConfiguration();
+			SearcherConfiguration config = new SearcherConfiguration();
 			config.MinimumArmorLevelPerPiece = int.Parse(txtMinimumBaseArmorLevel.Text);
 			config.CantripsToLookFor = cntrlCantripFilters;
 			config.PrimaryArmorSet = cboPrimaryArmorSet.SelectedItem as ArmorSet;
 			config.SecondaryArmorSet = cboSecondaryArmorSet.SelectedItem as ArmorSet;
 			config.OnlyAddPiecesWithArmor = true;
 
-			suitBuilder = new SuitSearcher(config, equipmentGroup);
+			// Build our base suit from locked in pieces
+			/* todo hack fix
+			for (int i = Equipment.Count - 1; i >= 0; i--)
+			{
+				if (Equipment[i].Locked)
+				{
+					SuitBuilder.Push(Equipment[i], Equipment[i].EquipableSlots);
+					Equipment.RemoveAt(i);
+				}
+			}
+			*/
 
-			suitBuilder.SuitCreated += new Action<Dictionary<Constants.EquippableSlotFlags, EquipmentPiece>>(suitBuilder_SuitCreated);
-			suitBuilder.SearchCompleted += new Action(suitBuilder_SearchCompleted);
+			armorSearcher = new ArmorSearcher(config, equipmentGroup);
 
-			suitBuilder.Start();
+			armorSearcher.SuitCreated += new Action<CompletedSuit>(suitBuilder_SuitCreated);
+			armorSearcher.SearchCompleted += new Action(suitBuilder_SearchCompleted);
+
+			new Thread(() =>
+			{
+				DateTime starTime = DateTime.Now;
+
+				// Do the actual search here
+				armorSearcher.Start();
+
+				DateTime endTime = DateTime.Now;
+
+				//MessageBox.Show((endTime - starTime).TotalSeconds.ToString());
+			}).Start();
 
 			btnStopCalculating.Enabled = true;
 			progressBar1.Style = ProgressBarStyle.Marquee;
 		}
 
-		void suitBuilder_SuitCreated(Dictionary<Constants.EquippableSlotFlags, EquipmentPiece> obj)
+		void suitBuilder_SuitCreated(CompletedSuit obj)
 		{
 			BeginInvoke((MethodInvoker)(() =>
 			{
-				for (int i = 0 ;i < listBox1.Items.Count ; i++)
+				for (int i = 0 ; i < listBox1.Items.Count ; i++)
 				{
-					if (obj.ToString().CompareTo(listBox1.Items[i].ToString()) == 1)
+					CompletedSuit suit = listBox1.Items[i] as CompletedSuit;
+
+					if (suit != null && (suit.Count < obj.Count || (suit.Count == obj.Count && suit.TotalBaseArmorLevel < obj.TotalBaseArmorLevel)))
 					{
 						listBox1.Items.Insert(i, obj);
 						return;
@@ -183,19 +208,19 @@ namespace Mag_SuitBuilder
 			progressBar1.Style = ProgressBarStyle.Blocks;
 			btnStopCalculating.Enabled = false;
 
-			suitBuilder.Stop();
+			armorSearcher.Stop();
 
 			btnCalculatePossibilities.Enabled = true;
 		}
 
 		private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			Dictionary<Constants.EquippableSlotFlags, EquipmentPiece> suit = ((ListBox)sender).SelectedItem as Dictionary<Constants.EquippableSlotFlags, EquipmentPiece>;
+			CompletedSuit suit = ((ListBox)sender).SelectedItem as CompletedSuit;
 
 			PopulateFromEquipmentGroup(suit);
 		}
 
-		private void PopulateFromEquipmentGroup(Dictionary<Constants.EquippableSlotFlags, EquipmentPiece> suit)
+		private void PopulateFromEquipmentGroup(CompletedSuit suit)
 		{
 			if (suit == null)
 				return;
@@ -206,22 +231,25 @@ namespace Mag_SuitBuilder
 				{
 					EquipmentPieceControl coveragePiece = (cntrl as EquipmentPieceControl);
 
+					coveragePiece.SetEquipmentPiece(suit[coveragePiece.EquipableSlots]);
+					/*
 					if (suit.ContainsKey(coveragePiece.EquipableSlots))
 						coveragePiece.SetEquipmentPiece(suit[coveragePiece.EquipableSlots]);
 					else
 						coveragePiece.SetEquipmentPiece(null);
-
+					*/
 					cntrl.Refresh();
 				}
 			}
 
 			cntrlSuitCantrips.Clear();
 
-			foreach (EquipmentPiece piece in suit.Values)
+			foreach (Spell spell in suit.EffectiveSpells)
 			{
-				foreach (Spell spell in piece.Spells)
-					cntrlSuitCantrips.Add(spell);
+				cntrlSuitCantrips.Add(spell);
 			}
+
+			cntrlSuitCantrips.Refresh();
 		}
 	}
 }
