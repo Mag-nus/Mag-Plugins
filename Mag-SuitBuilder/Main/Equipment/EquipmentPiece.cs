@@ -130,17 +130,10 @@ namespace Mag_SuitBuilder.Equipment
 
 				if ((EquipableSlots & Constants.EquippableSlotFlags.CanHaveArmor) != 0)
 				{
-					int slotsCovered = (int)EquipableSlots;
-
 					if (Constants.IsUnderwear(Name))
-						slotsCovered = (int)Constants.GetUnderwearCoverage(Name);
-
-					while (slotsCovered != 0)
-					{
-						if ((slotsCovered & 1) == 1)
-							BodyPartsCovered++;
-						slotsCovered >>= 1;
-					}
+						BodyPartsCovered = Constants.GetUnderwearCoverage(Name).GetTotalBitsSet();
+					else
+						BodyPartsCovered = EquipableSlots.GetTotalBitsSet();
 				}
 			}
 		}

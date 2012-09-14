@@ -75,7 +75,8 @@ namespace Mag_SuitBuilder.Search
 			completedSuits = new List<CompletedSuit>();
 
 			// Do the actual search here
-			SearchThroughBuckets(sorter, 0);
+			if (sorter.Count > 0)
+				SearchThroughBuckets(sorter, 0);
 
 			// If we're not running, the search was stopped before it could complete
 			if (!Running)

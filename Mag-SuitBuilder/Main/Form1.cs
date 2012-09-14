@@ -26,6 +26,12 @@ namespace Mag_SuitBuilder
 			equipmentGrid.DataSource = equipmentGroup;
 		}
 
+		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			if (btnStopCalculating.Enabled)
+				btnStopCalculating.PerformClick();
+		}
+
 		private void btnLoadFromDB_Click(object sender, EventArgs e)
 		{
 			MessageBox.Show("Not implemented.");
@@ -121,7 +127,7 @@ namespace Mag_SuitBuilder
 		{
 			btnCalculatePossibilities.Enabled = false;
 
-			listBox1.Items.Clear();
+			treeView1.Nodes.Clear();
 			PopulateFromEquipmentGroup(null);
 
 			if (armorSearcher != null)
@@ -138,55 +144,100 @@ namespace Mag_SuitBuilder
 			config.OnlyAddPiecesWithArmor = true;
 
 			// Build our base suit from locked in pieces
-			/* todo hack fix
-			for (int i = Equipment.Count - 1; i >= 0; i--)
+			CompletedSuit baseSuit = new CompletedSuit();
+
+			// Add pieces in order of slots covered, starting with the fewest
+			for (int slotCount = 1; slotCount <= 5; slotCount++)
 			{
-				if (Equipment[i].Locked)
+				for (int i = 0; i < equipmentGroup.Count; i++)
 				{
-					SuitBuilder.Push(Equipment[i], Equipment[i].EquipableSlots);
-					Equipment.RemoveAt(i);
+					if (equipmentGroup[i].Locked && equipmentGroup[i].EquipableSlots.GetTotalBitsSet() == slotCount)
+					{
+						if (slotCount == 1 || equipmentGroup[i].EquipableSlots.IsBodyArmor())
+							// For body armor, we add it to whatever slots its marked as filling. We don't assume reduction.
+							baseSuit.AddItem(equipmentGroup[i].EquipableSlots, equipmentGroup[i]);
+						else
+						{
+							// This is broken for suits with multiple bracelets, rings, etc..
+							// Iterate through the set slots and see if they are available
+							baseSuit.AddItem(equipmentGroup[i].EquipableSlots, equipmentGroup[i]);
+						}
+					}
 				}
 			}
-			*/
 
-			armorSearcher = new ArmorSearcher(config, equipmentGroup);
+			armorSearcher = new ArmorSearcher(config, equipmentGroup, baseSuit);
 
 			armorSearcher.SuitCreated += new Action<CompletedSuit>(suitBuilder_SuitCreated);
 			armorSearcher.SearchCompleted += new Action(suitBuilder_SearchCompleted);
 
 			new Thread(() =>
 			{
-				DateTime starTime = DateTime.Now;
+				DateTime startTime = DateTime.Now;
 
 				// Do the actual search here
 				armorSearcher.Start();
 
 				DateTime endTime = DateTime.Now;
 
-				//MessageBox.Show((endTime - starTime).TotalSeconds.ToString());
+				//MessageBox.Show((endTime - startTime).TotalSeconds.ToString());
 			}).Start();
 
 			btnStopCalculating.Enabled = true;
 			progressBar1.Style = ProgressBarStyle.Marquee;
 		}
 
+		private class CompletedSuitTreeNode : TreeNode
+		{
+			public readonly CompletedSuit Suit;
+
+			public CompletedSuitTreeNode(CompletedSuit suit)
+			{
+				Suit = suit;
+				Text = suit.ToString();
+			}
+		}
+
 		void suitBuilder_SuitCreated(CompletedSuit obj)
 		{
 			BeginInvoke((MethodInvoker)(() =>
 			{
-				for (int i = 0 ; i < listBox1.Items.Count ; i++)
-				{
-					CompletedSuit suit = listBox1.Items[i] as CompletedSuit;
+				CompletedSuitTreeNode newNode = new CompletedSuitTreeNode(obj);
 
-					if (suit != null && (suit.Count < obj.Count || (suit.Count == obj.Count && suit.TotalBaseArmorLevel < obj.TotalBaseArmorLevel)))
+				TreeNodeCollection nodes = FindDeepestNode(treeView1.Nodes, obj);
+
+				for (int i = 0 ; i <= nodes.Count ; i++)
+				{
+					if (i == nodes.Count)
 					{
-						listBox1.Items.Insert(i, obj);
-						return;
+						nodes.Add(newNode);
+						break;
+					}
+
+					CompletedSuitTreeNode nodeAsSuit = (nodes[i] as CompletedSuitTreeNode);
+
+					if (nodeAsSuit != null && (nodeAsSuit.Suit.Count < obj.Count || (nodeAsSuit.Suit.Count == obj.Count && nodeAsSuit.Suit.TotalBaseArmorLevel < obj.TotalBaseArmorLevel)))
+					{
+						nodes.Insert(i, newNode);
+						break;
 					}
 				}
 
-				listBox1.Items.Add(obj);
+				treeView1.ExpandAll();
 			}));
+		}
+
+		TreeNodeCollection FindDeepestNode(TreeNodeCollection nodes, CompletedSuit suit)
+		{
+			foreach (TreeNode node in nodes)
+			{
+				CompletedSuitTreeNode nodeAsSuit = (node as CompletedSuitTreeNode);
+
+				if (nodeAsSuit != null && suit.IsProperSubsetOf(nodeAsSuit.Suit))
+					return FindDeepestNode(node.Nodes, suit);
+			}
+
+			return nodes;
 		}
 
 		[DllImport("user32.dll")]
@@ -213,11 +264,12 @@ namespace Mag_SuitBuilder
 			btnCalculatePossibilities.Enabled = true;
 		}
 
-		private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+		private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			CompletedSuit suit = ((ListBox)sender).SelectedItem as CompletedSuit;
+			CompletedSuitTreeNode node = (e.Node as CompletedSuitTreeNode);
 
-			PopulateFromEquipmentGroup(suit);
+			if (node != null)
+				PopulateFromEquipmentGroup(node.Suit);
 		}
 
 		private void PopulateFromEquipmentGroup(CompletedSuit suit)
@@ -232,12 +284,7 @@ namespace Mag_SuitBuilder
 					EquipmentPieceControl coveragePiece = (cntrl as EquipmentPieceControl);
 
 					coveragePiece.SetEquipmentPiece(suit[coveragePiece.EquipableSlots]);
-					/*
-					if (suit.ContainsKey(coveragePiece.EquipableSlots))
-						coveragePiece.SetEquipmentPiece(suit[coveragePiece.EquipableSlots]);
-					else
-						coveragePiece.SetEquipmentPiece(null);
-					*/
+
 					cntrl.Refresh();
 				}
 			}
@@ -245,9 +292,7 @@ namespace Mag_SuitBuilder
 			cntrlSuitCantrips.Clear();
 
 			foreach (Spell spell in suit.EffectiveSpells)
-			{
 				cntrlSuitCantrips.Add(spell);
-			}
 
 			cntrlSuitCantrips.Refresh();
 		}

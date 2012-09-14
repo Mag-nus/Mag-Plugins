@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using Mag_SuitBuilder.Equipment;
 
 namespace Mag_SuitBuilder.Search
 {
 	/// <summary>
-	/// The accessorizer takes equipment (underwear, jewelry) and applies them to a base suit pushing out the top permutations.
+	/// The class takes equipment (underwear, jewelry) and applies them to a base suit pushing out the top permutations.
 	/// </summary>
-	class Accessorizer : Searcher
+	class AccessorySearcher : Searcher
 	{
-		public Accessorizer(SearcherConfiguration config, IEnumerable<EquipmentPiece> accessories, CompletedSuit startingSuit = null) : base(config, accessories, startingSuit)
+		public AccessorySearcher(SearcherConfiguration config, IEnumerable<EquipmentPiece> accessories, CompletedSuit startingSuit = null) : base(config, accessories, startingSuit)
 		{
-
+			// Sort the list with the highest amount of epics
+			// todo hack fix, do this against effective spells based on config, not original spells
+			//Equipment.Sort((a, b) => b.BaseArmorLevel.CompareTo(a.BaseArmorLevel));
 		}
 
 		//int totalArmorBucketsWithItems;
@@ -66,7 +67,8 @@ namespace Mag_SuitBuilder.Search
 			completedSuits = new List<CompletedSuit>();
 
 			// Do the actual search here
-			SearchThroughBuckets(sorter, 0);
+			if (sorter.Count > 0)
+				SearchThroughBuckets(sorter, 0);
 
 			// If we're not running, the search was stopped before it could complete
 			if (!Running)

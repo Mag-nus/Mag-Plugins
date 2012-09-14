@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Equipment\ArmorSet.cs" />
-    <Compile Include="Search\Accessorizer.cs" />
+    <Compile Include="Search\AccessorySearcher.cs" />
     <Compile Include="Search\Bucket.cs" />
     <Compile Include="Search\BucketSorter.cs" />
     <Compile Include="Search\CompletedSuit.cs" />

@@ -39,13 +39,14 @@ namespace Mag_SuitBuilder.Search
 
 		readonly Dictionary<ArmorSet, int> armorSetCounts = new Dictionary<ArmorSet, int>();
 
+		/// <exception cref="ArgumentException">Trying to add an item that covers a slot already filled.</exception>
 		public void AddItem(Constants.EquippableSlotFlags slots, EquipmentPiece item)
 		{
 			// Make sure we don't overlap a slot
 			foreach (var o in this)
 			{
 				if ((o.Key & slots) != 0)
-					throw new ArgumentException("Do not add items that overlap an existing items covered slots.", "slots");
+					throw new ArgumentException("Do not add items that overlap an existing items covered slot(s).", "slots");
 			}
 
 			items.Add(slots, item);
@@ -93,6 +94,16 @@ namespace Mag_SuitBuilder.Search
 
 				return null;
 			}
+		}
+
+		public bool IsProperSubsetOf(CompletedSuit other)
+		{
+			return piecesHashSet.IsProperSubsetOf(other.piecesHashSet);
+		}
+
+		public bool IsProperSupersetOf(CompletedSuit other)
+		{
+			return piecesHashSet.IsProperSupersetOf(other.piecesHashSet);
 		}
 
 		public bool IsSubsetOf(CompletedSuit other)

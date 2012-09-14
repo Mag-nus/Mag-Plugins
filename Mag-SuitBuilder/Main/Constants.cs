@@ -237,4 +237,42 @@ namespace Mag_SuitBuilder
 			return UnderwearCoverage.None;
 		}
 	}
+
+	public static class EnumExtensions
+	{
+		public static int GetTotalBitsSet(this Constants.EquippableSlotFlags value)
+		{
+			int slotFlags = (int)value;
+			int bitsSet = 0;
+
+			while (slotFlags != 0)
+			{
+				if ((slotFlags & 1) == 1)
+					bitsSet++;
+				slotFlags >>= 1;
+			}
+
+			return bitsSet;
+		}
+
+		public static bool IsBodyArmor(this Constants.EquippableSlotFlags value)
+		{
+			return (value & Constants.EquippableSlotFlags.AllBodyArmor) != 0;
+		}
+
+		public static int GetTotalBitsSet(this Constants.UnderwearCoverage value)
+		{
+			int slotFlags = (int)value;
+			int bitsSet = 0;
+
+			while (slotFlags != 0)
+			{
+				if ((slotFlags & 1) == 1)
+					bitsSet++;
+				slotFlags >>= 1;
+			}
+
+			return bitsSet;
+		}
+	}
 }

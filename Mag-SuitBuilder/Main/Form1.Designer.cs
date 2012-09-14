@@ -58,10 +58,10 @@ namespace Mag_SuitBuilder
 			this.label1 = new System.Windows.Forms.Label();
 			this.cntrlCantripFilters = new Mag_SuitBuilder.Spells.CantripSelectorControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.treeView1 = new System.Windows.Forms.TreeView();
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
 			this.cntrlSuitCantrips = new Mag_SuitBuilder.Spells.CantripSelectorControl();
 			this.btnStopCalculating = new System.Windows.Forms.Button();
-			this.listBox1 = new System.Windows.Forms.ListBox();
 			this.btnCalculatePossibilities = new System.Windows.Forms.Button();
 			this.coveragePiece1 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece16 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
@@ -347,10 +347,10 @@ namespace Mag_SuitBuilder
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.treeView1);
 			this.tabPage1.Controls.Add(this.progressBar1);
 			this.tabPage1.Controls.Add(this.cntrlSuitCantrips);
 			this.tabPage1.Controls.Add(this.btnStopCalculating);
-			this.tabPage1.Controls.Add(this.listBox1);
 			this.tabPage1.Controls.Add(this.btnCalculatePossibilities);
 			this.tabPage1.Controls.Add(this.coveragePiece1);
 			this.tabPage1.Controls.Add(this.coveragePiece16);
@@ -377,6 +377,14 @@ namespace Mag_SuitBuilder
 			this.tabPage1.Text = "Step 3. Generate Suits";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
+			// treeView1
+			// 
+			this.treeView1.Location = new System.Drawing.Point(485, 37);
+			this.treeView1.Name = "treeView1";
+			this.treeView1.Size = new System.Drawing.Size(471, 243);
+			this.treeView1.TabIndex = 35;
+			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+			// 
 			// progressBar1
 			// 
 			this.progressBar1.Location = new System.Drawing.Point(775, 8);
@@ -402,14 +410,6 @@ namespace Mag_SuitBuilder
 			this.btnStopCalculating.Text = "Stop Calculating";
 			this.btnStopCalculating.UseVisualStyleBackColor = true;
 			this.btnStopCalculating.Click += new System.EventHandler(this.btnStopCalculating_Click);
-			// 
-			// listBox1
-			// 
-			this.listBox1.Location = new System.Drawing.Point(485, 42);
-			this.listBox1.Name = "listBox1";
-			this.listBox1.Size = new System.Drawing.Size(471, 238);
-			this.listBox1.TabIndex = 21;
-			this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
 			// 
 			// btnCalculatePossibilities
 			// 
@@ -580,9 +580,11 @@ namespace Mag_SuitBuilder
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(972, 741);
 			this.Controls.Add(this.tabControl1);
+			this.DoubleBuffered = true;
 			this.MinimumSize = new System.Drawing.Size(988, 779);
 			this.Name = "Form1";
 			this.Text = "Mag-Suit Builder";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage3.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.equipmentGrid)).EndInit();
@@ -616,7 +618,6 @@ namespace Mag_SuitBuilder
 		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.TabPage tabPage2;
 		private System.Windows.Forms.Button btnCalculatePossibilities;
-		private System.Windows.Forms.ListBox listBox1;
 		private System.Windows.Forms.TabPage tabPage3;
 		private System.Windows.Forms.DataGridView equipmentGrid;
 		private System.Windows.Forms.Button btnLoadFromClipboard;
@@ -642,6 +643,7 @@ namespace Mag_SuitBuilder
 		private System.Windows.Forms.Label label6;
 		private CantripSelectorControl cntrlSuitCantrips;
 		private System.Windows.Forms.ProgressBar progressBar1;
+		private System.Windows.Forms.TreeView treeView1;
 	}
 }
 
