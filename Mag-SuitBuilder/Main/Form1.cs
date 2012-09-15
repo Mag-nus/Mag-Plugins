@@ -159,21 +159,32 @@ namespace Mag_SuitBuilder
 				{
 					if (equipmentGroup[i].Locked && equipmentGroup[i].EquipableSlots.GetTotalBitsSet() == slotCount)
 					{
-						if (slotCount == 1 || equipmentGroup[i].EquipableSlots.IsBodyArmor())
-							// For body armor, we add it to whatever slots its marked as filling. We don't assume reduction.
-							baseSuit.AddItem(equipmentGroup[i].EquipableSlots, equipmentGroup[i]);
-						else
+						try
 						{
-							if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Bracelet && baseSuit[Constants.EquippableSlotFlags.LeftBracelet] == null)
-								baseSuit.AddItem(Constants.EquippableSlotFlags.LeftBracelet, equipmentGroup[i]);
-							else if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Bracelet && baseSuit[Constants.EquippableSlotFlags.RightBracelet] == null)
-								baseSuit.AddItem(Constants.EquippableSlotFlags.RightBracelet, equipmentGroup[i]);
-							else if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Ring && baseSuit[Constants.EquippableSlotFlags.LeftRing] == null)
-								baseSuit.AddItem(Constants.EquippableSlotFlags.LeftRing, equipmentGroup[i]);
-							else if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Ring && baseSuit[Constants.EquippableSlotFlags.RightRing] == null)
-								baseSuit.AddItem(Constants.EquippableSlotFlags.RightRing, equipmentGroup[i]);
-							else
+							if (slotCount == 1 || equipmentGroup[i].EquipableSlots.IsBodyArmor())
+								// For body armor, we add it to whatever slots its marked as filling. We don't assume reduction.
 								baseSuit.AddItem(equipmentGroup[i].EquipableSlots, equipmentGroup[i]);
+							else
+							{
+								if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Bracelet &&
+								    baseSuit[Constants.EquippableSlotFlags.LeftBracelet] == null)
+									baseSuit.AddItem(Constants.EquippableSlotFlags.LeftBracelet, equipmentGroup[i]);
+								else if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Bracelet &&
+								         baseSuit[Constants.EquippableSlotFlags.RightBracelet] == null)
+									baseSuit.AddItem(Constants.EquippableSlotFlags.RightBracelet, equipmentGroup[i]);
+								else if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Ring &&
+								         baseSuit[Constants.EquippableSlotFlags.LeftRing] == null)
+									baseSuit.AddItem(Constants.EquippableSlotFlags.LeftRing, equipmentGroup[i]);
+								else if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Ring &&
+								         baseSuit[Constants.EquippableSlotFlags.RightRing] == null)
+									baseSuit.AddItem(Constants.EquippableSlotFlags.RightRing, equipmentGroup[i]);
+								else
+									baseSuit.AddItem(equipmentGroup[i].EquipableSlots, equipmentGroup[i]);
+							}
+						}
+						catch (ArgumentException)
+						{
+							MessageBox.Show("Failed to add " + equipmentGroup[i].Name + " to base suit of armor.");
 						}
 					}
 				}
@@ -196,7 +207,7 @@ namespace Mag_SuitBuilder
 
 				DateTime endTime = DateTime.Now;
 
-				//MessageBox.Show((endTime - startTime).TotalSeconds.ToString());
+				MessageBox.Show((endTime - startTime).TotalSeconds.ToString());
 			}).Start();
 
 			btnStopCalculating.Enabled = true;
