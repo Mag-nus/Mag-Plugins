@@ -10,6 +10,12 @@ using Mag_SuitBuilder.Equipment;
 using Mag_SuitBuilder.Search;
 using Mag_SuitBuilder.Spells;
 
+// Bugs
+// Items with major/epic impen should not stack in searches. Impen should not count as a beneficial spell
+// Items are passing the canofferbeneficial spell for spells that aren't in our config
+// Spell compare is too slow, should be a hash compare
+// AccessorySearcher thread pool keeps going even after user clicks stop.
+
 namespace Mag_SuitBuilder
 {
 	public partial class Form1 : Form
@@ -158,9 +164,16 @@ namespace Mag_SuitBuilder
 							baseSuit.AddItem(equipmentGroup[i].EquipableSlots, equipmentGroup[i]);
 						else
 						{
-							// This is broken for suits with multiple bracelets, rings, etc..
-							// Iterate through the set slots and see if they are available
-							baseSuit.AddItem(equipmentGroup[i].EquipableSlots, equipmentGroup[i]);
+							if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Bracelet && baseSuit[Constants.EquippableSlotFlags.LeftBracelet] == null)
+								baseSuit.AddItem(Constants.EquippableSlotFlags.LeftBracelet, equipmentGroup[i]);
+							else if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Bracelet && baseSuit[Constants.EquippableSlotFlags.RightBracelet] == null)
+								baseSuit.AddItem(Constants.EquippableSlotFlags.RightBracelet, equipmentGroup[i]);
+							else if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Ring && baseSuit[Constants.EquippableSlotFlags.LeftRing] == null)
+								baseSuit.AddItem(Constants.EquippableSlotFlags.LeftRing, equipmentGroup[i]);
+							else if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Ring && baseSuit[Constants.EquippableSlotFlags.RightRing] == null)
+								baseSuit.AddItem(Constants.EquippableSlotFlags.RightRing, equipmentGroup[i]);
+							else
+								baseSuit.AddItem(equipmentGroup[i].EquipableSlots, equipmentGroup[i]);
 						}
 					}
 				}
@@ -205,12 +218,13 @@ namespace Mag_SuitBuilder
 		{
 			BeginInvoke((MethodInvoker)(() => AddCompletedSuitToTreeView(obj)));
 
-			new Thread(() =>
+			ThreadPool.QueueUserWorkItem(delegate
 			{
-				//AccessorySearcher accSearcher = new AccessorySearcher(new SearcherConfiguration(), equipmentGroup, obj);
-				//accSearcher.SuitCreated += new Action<CompletedSuit>(accSearcher_SuitCreated);
-				//accSearcher.Start();
-			}).Start();
+				AccessorySearcher accSearcher = new AccessorySearcher(new SearcherConfiguration(), equipmentGroup, obj);
+				accSearcher.SuitCreated += new Action<CompletedSuit>(accSearcher_SuitCreated);
+				accSearcher.Start();
+				accSearcher.SuitCreated -= new Action<CompletedSuit>(accSearcher_SuitCreated);
+			});
 		}
 
 		void accSearcher_SuitCreated(CompletedSuit obj)
@@ -243,7 +257,7 @@ namespace Mag_SuitBuilder
 						break;
 					}
 					
-					if ((nodeAsSuit.Suit.TotalBaseArmorLevel == suit.TotalBaseArmorLevel) && ((nodeAsSuit.Suit.TotalEpics < suit.TotalEpics) || (nodeAsSuit.Suit.TotalEpics == suit.TotalEpics && nodeAsSuit.Suit.TotalMajors < suit.TotalMajors)))
+					if ((nodeAsSuit.Suit.TotalBaseArmorLevel == suit.TotalBaseArmorLevel) && ((nodeAsSuit.Suit.TotalEffectiveEpics < suit.TotalEffectiveEpics) || (nodeAsSuit.Suit.TotalEffectiveEpics == suit.TotalEffectiveEpics && nodeAsSuit.Suit.TotalEffectiveMajors < suit.TotalEffectiveMajors)))
 					{
 						nodes.Insert(i, newNode);
 						break;
@@ -251,7 +265,7 @@ namespace Mag_SuitBuilder
 				}
 			}
 
-			treeView1.ExpandAll();	
+			//treeView1.ExpandAll();	
 		}
 
 		TreeNodeCollection FindDeepestNode(TreeNodeCollection nodes, CompletedSuit suit)

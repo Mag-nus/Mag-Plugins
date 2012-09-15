@@ -37,8 +37,8 @@ namespace Mag_SuitBuilder.Search
 		/// </summary>
 		public IEnumerable<Spell> EffectiveSpells { get { return effectiveSpells; } }
 
-		public int TotalEpics { get; private set; }
-		public int TotalMajors { get; private set; }
+		public int TotalEffectiveEpics { get; private set; }
+		public int TotalEffectiveMajors { get; private set; }
 
 		readonly Dictionary<ArmorSet, int> armorSetCounts = new Dictionary<ArmorSet, int>();
 
@@ -76,14 +76,14 @@ namespace Mag_SuitBuilder.Search
 				end:;
 			}
 
-			TotalEpics = 0;
-			TotalMajors = 0;
+			TotalEffectiveEpics = 0;
+			TotalEffectiveMajors = 0;
 			foreach (Spell spell in EffectiveSpells)
 			{
 				if (spell.CantripLevel >= Spell.CantripLevels.Epic)
-					TotalEpics++;
+					TotalEffectiveEpics++;
 				else if (spell.CantripLevel >= Spell.CantripLevels.Major)
-					TotalMajors++;
+					TotalEffectiveMajors++;
 			}
 
 			if (item.ArmorSet != ArmorSet.NoArmorSet)
@@ -152,7 +152,7 @@ namespace Mag_SuitBuilder.Search
 
 			}
 
-			return piecesHashSet.Count + ", AL: " + TotalBaseArmorLevel + ", Epics: " + TotalEpics + ", Majors: " + TotalMajors + ", " + sets;
+			return piecesHashSet.Count + ", AL: " + TotalBaseArmorLevel + ", Epics: " + TotalEffectiveEpics + ", Majors: " + TotalEffectiveMajors + ", " + sets;
 		}
 	}
 }

@@ -30,7 +30,7 @@ namespace Mag_SuitBuilder.Search
 
 		public bool ItemPassesRules(EquipmentPiece item)
 		{
-			if (MinimumArmorLevelPerPiece > 0 && item.BaseArmorLevel != 0 && MinimumArmorLevelPerPiece > item.BaseArmorLevel)
+			if (MinimumArmorLevelPerPiece > 0 && item.EquipableSlots.IsBodyArmor() && item.BaseArmorLevel != 0 && MinimumArmorLevelPerPiece > item.BaseArmorLevel)
 				return false;
 
 			if (CantripsToLookFor.Count > 0)

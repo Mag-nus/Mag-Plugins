@@ -13,30 +13,41 @@ namespace Mag_SuitBuilder.Search
 		{
 			// Sort the list with the highest amount of epics
 			// todo hack fix, do this against effective spells based on config, not original spells
-			//Equipment.Sort((a, b) => b.BaseArmorLevel.CompareTo(a.BaseArmorLevel));
+			// As a temp fix we just sort based on spell count
+			Equipment.Sort((a, b) =>
+			{
+				if (a.BaseArmorLevel > 0 && b.BaseArmorLevel > 0) return b.BaseArmorLevel.CompareTo(a.BaseArmorLevel);
+				if (a.BaseArmorLevel > 0 && b.BaseArmorLevel == 0) return -1;
+				if (a.BaseArmorLevel == 0 && b.BaseArmorLevel > 0) return 1;
+				return b.Spells.Count.CompareTo(a.Spells.Count); // this needs to be fixed
+			});
+
+			// Remove any pieces that have armor
+			for (int i = Equipment.Count - 1; i >= 0; i--)
+			{
+				if (Equipment[i].BaseArmorLevel > 0)
+					Equipment.RemoveAt(i);
+			}
 		}
 
-		//int totalArmorBucketsWithItems;
-		//int highestArmorCountSuitBuilt;
-		//Dictionary<int, List<int>> highestArmorSuitsBuilt;
+		int highestCountSuitBuilt;
+		Dictionary<int, List<int>> highestEpicuitsBuilt;
 		List<CompletedSuit> completedSuits;
 
 		protected override void StartSearch()
 		{
 			BucketSorter sorter = new BucketSorter();
 
-			// All these slots can have armor
+			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Trinket)) sorter.Add(new Bucket(Constants.EquippableSlotFlags.Trinket));
+
 			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Shirt)) sorter.Add(new Bucket(Constants.EquippableSlotFlags.Shirt));
 			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Pants)) sorter.Add(new Bucket(Constants.EquippableSlotFlags.Pants));
 
-			// All these slots have no armor
 			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Necklace))		sorter.Add(new Bucket(Constants.EquippableSlotFlags.Necklace));
 			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.RightBracelet))sorter.Add(new Bucket(Constants.EquippableSlotFlags.RightBracelet));
 			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.LeftBracelet))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.LeftBracelet));
 			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.RightRing))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.RightRing));
 			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.LeftRing))		sorter.Add(new Bucket(Constants.EquippableSlotFlags.LeftRing));
-
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Trinket))		sorter.Add(new Bucket(Constants.EquippableSlotFlags.Trinket));
 
 			// Put all of our inventory into its appropriate bucket
 			foreach (EquipmentPiece piece in Equipment)
@@ -49,19 +60,11 @@ namespace Mag_SuitBuilder.Search
 					sorter.RemoveAt(i);
 			}
 
-			// We should sort the buckets based on number of items, least amount first, with all armor buckets first
-			sorter.Sort((a, b) =>
-			{
-				if ((a.Slot & Constants.EquippableSlotFlags.AllBodyArmor) != 0 && (b.Slot & Constants.EquippableSlotFlags.AllBodyArmor) == 0) return -1;
-				if ((a.Slot & Constants.EquippableSlotFlags.AllBodyArmor) == 0 && (b.Slot & Constants.EquippableSlotFlags.AllBodyArmor) != 0) return 1;
-				return a.Count.CompareTo(b.Count);
-			});
-
 			// Reset our variables
-			//highestArmorCountSuitBuilt = 0;
-			//highestArmorSuitsBuilt = new Dictionary<int, List<int>>();
-			//for (int i = 1; i <= sorter.Count; i++)
-			//	highestArmorSuitsBuilt.Add(i, new List<int>(10));
+			highestCountSuitBuilt = 0;
+			highestEpicuitsBuilt = new Dictionary<int, List<int>>();
+			for (int i = 1; i <= 17; i++)
+				highestEpicuitsBuilt.Add(i, new List<int>(5));
 			completedSuits = new List<CompletedSuit>();
 
 			// Do the actual search here
@@ -82,9 +85,9 @@ namespace Mag_SuitBuilder.Search
 			if (!Running)
 				return;
 
-			// Only continue to build any suits with a minimum potential of no less than 1 armor pieces less than our largest built suit so far
-			//if (SuitBuilder.Count + 1 <= highestArmorCountSuitBuilt - (totalArmorBucketsWithItems - index))
-			//	return;
+			// Only continue to build any suits with a minimum potential of no less than 1 epics less than our largest built suit so far
+			if (SuitBuilder.Count + 1 < highestCountSuitBuilt - (highestCountSuitBuilt - index))
+				return;
 
 			// Are we at the end of the line?
 			if (buckets.Count <= index)
@@ -92,35 +95,28 @@ namespace Mag_SuitBuilder.Search
 				if (SuitBuilder.Count == 0)
 					return;
 
-				/*
-				if (totalArmorBucketsWithItems > 0 && index > 0 && buckets[index - 1].IsBodyArmor && SuitBuilder.Count > highestArmorCountSuitBuilt)
-					highestArmorCountSuitBuilt = SuitBuilder.Count;
+				if (SuitBuilder.Count > highestCountSuitBuilt)
+					highestCountSuitBuilt = SuitBuilder.TotalBodyArmorPieces;
 
-				// We should keep track of the highest AL suits we built for every number of armor count suits built, and only push out ones that fall within our top X
-				List<int> list = highestArmorSuitsBuilt[SuitBuilder.Count];
+				CompletedSuit newSuit = SuitBuilder.CreateCompletedSuit();
+
+				// We should keep track of the highest epic suits we built for every number of item count suits built, and only push out ones that fall within our top X
+				List<int> list = highestEpicuitsBuilt[SuitBuilder.Count];
 				if (list.Count < list.Capacity)
 				{
-					if (!list.Contains(SuitBuilder.TotalBaseArmorLevel))
-					{
-						list.Add(SuitBuilder.TotalBaseArmorLevel);
+					list.Add(newSuit.TotalEffectiveEpics);
 
-						if (list.Count == list.Capacity)
-							list.Sort();
-					}
+					if (list.Count == list.Capacity)
+						list.Sort();
 				}
 				else
 				{
-					if (list[list.Count - 1] > SuitBuilder.TotalBaseArmorLevel)
+					if (list[list.Count - 1] >= newSuit.TotalEffectiveEpics)
 						return;
 
-					if (list[list.Count - 1] < SuitBuilder.TotalBaseArmorLevel && !list.Contains(SuitBuilder.TotalBaseArmorLevel))
-					{
-						list[list.Count - 1] = SuitBuilder.TotalBaseArmorLevel;
-						list.Sort();
-					}
+					list[list.Count - 1] = newSuit.TotalEffectiveEpics;
+					list.Sort();
 				}
-				*/
-				CompletedSuit newSuit = SuitBuilder.CreateCompletedSuit();
 
 				// We should also keep track of all the suits we've built and make sure we don't push out a suit with the same exact pieces in swapped slots
 				foreach (CompletedSuit suit in completedSuits)

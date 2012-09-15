@@ -14,6 +14,13 @@ namespace Mag_SuitBuilder.Search
 		{
 			// Sort the list with the highest armor first
 			Equipment.Sort((a, b) => b.BaseArmorLevel.CompareTo(a.BaseArmorLevel));
+
+			// Remove any pieces that have no armor
+			for (int i = Equipment.Count - 1 ; i >= 0 ; i--)
+			{
+				if (Equipment[i].BaseArmorLevel == 0)
+					Equipment.RemoveAt(i);
+			}
 		}
 
 		int totalArmorBucketsWithItems;
@@ -69,8 +76,8 @@ namespace Mag_SuitBuilder.Search
 			// Reset our variables
 			highestArmorCountSuitBuilt = 0;
 			highestArmorSuitsBuilt = new Dictionary<int, List<int>>();
-			for (int i = 1; i <= sorter.Count; i++)
-				highestArmorSuitsBuilt.Add(i, new List<int>(10));
+			for (int i = 1; i <= 17; i++)
+				highestArmorSuitsBuilt.Add(i, new List<int>(5));
 			completedSuits = new List<CompletedSuit>();
 
 			// Do the actual search here
