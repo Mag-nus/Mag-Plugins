@@ -132,8 +132,8 @@ namespace Mag_SuitBuilder
 
 			if (armorSearcher != null)
 			{
-				armorSearcher.SuitCreated -= new Action<CompletedSuit>(suitBuilder_SuitCreated);
-				armorSearcher.SearchCompleted -= new Action(suitBuilder_SearchCompleted);
+				armorSearcher.SuitCreated -= new Action<CompletedSuit>(armorSearcher_SuitCreated);
+				armorSearcher.SearchCompleted -= new Action(armorSearcher_SearchCompleted);
 			}
 
 			SearcherConfiguration config = new SearcherConfiguration();
@@ -166,10 +166,13 @@ namespace Mag_SuitBuilder
 				}
 			}
 
+			if (baseSuit.Count > 0)
+				AddCompletedSuitToTreeView(baseSuit);
+
 			armorSearcher = new ArmorSearcher(config, equipmentGroup, baseSuit);
 
-			armorSearcher.SuitCreated += new Action<CompletedSuit>(suitBuilder_SuitCreated);
-			armorSearcher.SearchCompleted += new Action(suitBuilder_SearchCompleted);
+			armorSearcher.SuitCreated += new Action<CompletedSuit>(armorSearcher_SuitCreated);
+			armorSearcher.SearchCompleted += new Action(armorSearcher_SearchCompleted);
 
 			new Thread(() =>
 			{
@@ -198,33 +201,57 @@ namespace Mag_SuitBuilder
 			}
 		}
 
-		void suitBuilder_SuitCreated(CompletedSuit obj)
+		void armorSearcher_SuitCreated(CompletedSuit obj)
 		{
-			BeginInvoke((MethodInvoker)(() =>
+			BeginInvoke((MethodInvoker)(() => AddCompletedSuitToTreeView(obj)));
+
+			new Thread(() =>
 			{
-				CompletedSuitTreeNode newNode = new CompletedSuitTreeNode(obj);
+				//AccessorySearcher accSearcher = new AccessorySearcher(new SearcherConfiguration(), equipmentGroup, obj);
+				//accSearcher.SuitCreated += new Action<CompletedSuit>(accSearcher_SuitCreated);
+				//accSearcher.Start();
+			}).Start();
+		}
 
-				TreeNodeCollection nodes = FindDeepestNode(treeView1.Nodes, obj);
+		void accSearcher_SuitCreated(CompletedSuit obj)
+		{
+			BeginInvoke((MethodInvoker)(() => AddCompletedSuitToTreeView(obj)));
+		}
 
-				for (int i = 0 ; i <= nodes.Count ; i++)
+		void AddCompletedSuitToTreeView(CompletedSuit suit)
+		{
+			CompletedSuitTreeNode newNode = new CompletedSuitTreeNode(suit);
+
+			TreeNodeCollection nodes = FindDeepestNode(treeView1.Nodes, suit);
+
+			for (int i = 0; i <= nodes.Count; i++)
+			{
+				if (i == nodes.Count)
 				{
-					if (i == nodes.Count)
+					nodes.Add(newNode);
+					break;
+				}
+
+				CompletedSuitTreeNode nodeAsSuit = (nodes[i] as CompletedSuitTreeNode);
+
+				//if (nodeAsSuit != null && (nodeAsSuit.Suit.Count < suit.Count || (nodeAsSuit.Suit.Count == suit.Count && nodeAsSuit.Suit.TotalBaseArmorLevel < suit.TotalBaseArmorLevel)))
+				if (nodeAsSuit != null)
+				{
+					if (nodeAsSuit.Suit.TotalBaseArmorLevel < suit.TotalBaseArmorLevel)
 					{
-						nodes.Add(newNode);
+						nodes.Insert(i, newNode);
 						break;
 					}
-
-					CompletedSuitTreeNode nodeAsSuit = (nodes[i] as CompletedSuitTreeNode);
-
-					if (nodeAsSuit != null && (nodeAsSuit.Suit.Count < obj.Count || (nodeAsSuit.Suit.Count == obj.Count && nodeAsSuit.Suit.TotalBaseArmorLevel < obj.TotalBaseArmorLevel)))
+					
+					if ((nodeAsSuit.Suit.TotalBaseArmorLevel == suit.TotalBaseArmorLevel) && ((nodeAsSuit.Suit.TotalEpics < suit.TotalEpics) || (nodeAsSuit.Suit.TotalEpics == suit.TotalEpics && nodeAsSuit.Suit.TotalMajors < suit.TotalMajors)))
 					{
 						nodes.Insert(i, newNode);
 						break;
 					}
 				}
+			}
 
-				treeView1.ExpandAll();
-			}));
+			treeView1.ExpandAll();	
 		}
 
 		TreeNodeCollection FindDeepestNode(TreeNodeCollection nodes, CompletedSuit suit)
@@ -233,7 +260,7 @@ namespace Mag_SuitBuilder
 			{
 				CompletedSuitTreeNode nodeAsSuit = (node as CompletedSuitTreeNode);
 
-				if (nodeAsSuit != null && suit.IsProperSubsetOf(nodeAsSuit.Suit))
+				if (nodeAsSuit != null && suit.IsProperSupersetOf(nodeAsSuit.Suit))
 					return FindDeepestNode(node.Nodes, suit);
 			}
 
@@ -243,7 +270,7 @@ namespace Mag_SuitBuilder
 		[DllImport("user32.dll")]
 		static extern bool FlashWindow(IntPtr hwnd, bool bInvert);
 
-		void suitBuilder_SearchCompleted()
+		void armorSearcher_SearchCompleted()
 		{
 			BeginInvoke((MethodInvoker)(() =>
 			{

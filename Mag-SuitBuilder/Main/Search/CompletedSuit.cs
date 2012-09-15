@@ -37,6 +37,9 @@ namespace Mag_SuitBuilder.Search
 		/// </summary>
 		public IEnumerable<Spell> EffectiveSpells { get { return effectiveSpells; } }
 
+		public int TotalEpics { get; private set; }
+		public int TotalMajors { get; private set; }
+
 		readonly Dictionary<ArmorSet, int> armorSetCounts = new Dictionary<ArmorSet, int>();
 
 		/// <exception cref="ArgumentException">Trying to add an item that covers a slot already filled.</exception>
@@ -71,6 +74,16 @@ namespace Mag_SuitBuilder.Search
 				effectiveSpells.Add(itemSpell);
 
 				end:;
+			}
+
+			TotalEpics = 0;
+			TotalMajors = 0;
+			foreach (Spell spell in EffectiveSpells)
+			{
+				if (spell.CantripLevel >= Spell.CantripLevels.Epic)
+					TotalEpics++;
+				else if (spell.CantripLevel >= Spell.CantripLevels.Major)
+					TotalMajors++;
 			}
 
 			if (item.ArmorSet != ArmorSet.NoArmorSet)
@@ -128,17 +141,6 @@ namespace Mag_SuitBuilder.Search
 
 		public override string ToString()
 		{
-			int totalEpics = 0;
-			int totalMajors = 0;
-
-			foreach (Spell spell in EffectiveSpells)
-			{
-				if (spell.CantripLevel >= Spell.CantripLevels.Epic)
-					totalEpics++;
-				else if (spell.CantripLevel >= Spell.CantripLevels.Major)
-					totalMajors++;
-			}
-
 			string sets = null;
 
 			foreach (KeyValuePair<ArmorSet, int> kvp in armorSetCounts)
@@ -150,7 +152,7 @@ namespace Mag_SuitBuilder.Search
 
 			}
 
-			return piecesHashSet.Count + ", AL: " + TotalBaseArmorLevel + ", Epics: " + totalEpics + ", Majors: " + totalMajors + ", " + sets;
+			return piecesHashSet.Count + ", AL: " + TotalBaseArmorLevel + ", Epics: " + TotalEpics + ", Majors: " + TotalMajors + ", " + sets;
 		}
 	}
 }

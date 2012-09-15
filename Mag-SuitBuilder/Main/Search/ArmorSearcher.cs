@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using Mag_SuitBuilder.Equipment;
 
@@ -22,8 +23,6 @@ namespace Mag_SuitBuilder.Search
 
 		protected override void StartSearch()
 		{
-			OnSuitCreated(SuitBuilder.CreateCompletedSuit());
-
 			BucketSorter sorter = new BucketSorter();
 
 			// All these slots can have armor
@@ -54,8 +53,8 @@ namespace Mag_SuitBuilder.Search
 			// We should sort the buckets based on number of items, least amount first, with all armor buckets first
 			sorter.Sort((a, b) =>
 			{
-				if ((a.Slot & Constants.EquippableSlotFlags.AllBodyArmor) != 0 && (b.Slot & Constants.EquippableSlotFlags.AllBodyArmor) == 0) return -1;
-				if ((a.Slot & Constants.EquippableSlotFlags.AllBodyArmor) == 0 && (b.Slot & Constants.EquippableSlotFlags.AllBodyArmor) != 0) return 1;
+				if (a.Slot.IsBodyArmor() && !b.Slot.IsBodyArmor()) return -1;
+				if (!a.Slot.IsBodyArmor() && b.Slot.IsBodyArmor()) return 1;
 				return a.Count.CompareTo(b.Count);
 			});
 
@@ -63,7 +62,7 @@ namespace Mag_SuitBuilder.Search
 			totalArmorBucketsWithItems = 0;
 			foreach (Bucket bucket in sorter)
 			{
-				if ((bucket.Slot & Constants.EquippableSlotFlags.AllBodyArmor) != 0 && bucket.Count > 0)
+				if (bucket.Slot.IsBodyArmor())
 					totalArmorBucketsWithItems++;
 			}
 
@@ -92,11 +91,18 @@ namespace Mag_SuitBuilder.Search
 			if (!Running)
 				return;
 
+			// Only continue to build any suits with a minimum potential of no less than 1 armor pieces less than our largest built suit so far
+			if (SuitBuilder.Count + 1 < highestArmorCountSuitBuilt - (totalArmorBucketsWithItems - Math.Min(index, totalArmorBucketsWithItems)))
+				return;
+
 			// Are we at the end of the line?
 			if (buckets.Count <= index)
 			{
-				if (totalArmorBucketsWithItems > 0 && index > 0 && buckets[index - 1].IsBodyArmor && SuitBuilder.Count > highestArmorCountSuitBuilt)
-					highestArmorCountSuitBuilt = SuitBuilder.Count;
+				if (SuitBuilder.Count == 0)
+					return;
+
+				if (SuitBuilder.TotalBodyArmorPieces > highestArmorCountSuitBuilt)
+					highestArmorCountSuitBuilt = SuitBuilder.TotalBodyArmorPieces;
 
 				// We should keep track of the highest AL suits we built for every number of armor count suits built, and only push out ones that fall within our top X
 				List<int> list = highestArmorSuitsBuilt[SuitBuilder.Count];
@@ -137,19 +143,11 @@ namespace Mag_SuitBuilder.Search
 				return;
 			}
 
-			// Only continue to build any suits with a minimum potential of no less than 1 armor pieces less than our largest built suit so far
-			if (SuitBuilder.Count + 1 <= highestArmorCountSuitBuilt - (totalArmorBucketsWithItems - index))
-				return;
-
-			//for (int i = 0; i < buckets[index].Count ; i++)
-			foreach (EquipmentPiece piece in buckets[index]) // Using foreach: 10.85s, for: 11s
+			foreach (EquipmentPiece piece in buckets[index])
 			{
 				if (SuitBuilder.SlotIsOpen(buckets[index].Slot) && SuitBuilder.HasRoomForArmorSet(Config.PrimaryArmorSet, Config.SecondaryArmorSet, piece.ArmorSet) && SuitBuilder.CanGetBeneficialSpellFrom(piece))
 				{
 					SuitBuilder.Push(piece, buckets[index].Slot);
-
-					if (buckets[index].IsBodyArmor && SuitBuilder.Count > highestArmorCountSuitBuilt)
-						highestArmorCountSuitBuilt = SuitBuilder.Count;
 
 					SearchThroughBuckets(buckets, index + 1);
 

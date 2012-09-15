@@ -80,6 +80,7 @@ namespace Mag_SuitBuilder
 			this.coveragePiece8 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece10 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece9 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.button2 = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.equipmentGrid)).BeginInit();
@@ -172,6 +173,7 @@ namespace Mag_SuitBuilder
 			// 
 			// tabPage2
 			// 
+			this.tabPage2.Controls.Add(this.button2);
 			this.tabPage2.Controls.Add(this.button9);
 			this.tabPage2.Controls.Add(this.button7);
 			this.tabPage2.Controls.Add(this.button8);
@@ -574,6 +576,16 @@ namespace Mag_SuitBuilder
 			this.coveragePiece9.Size = new System.Drawing.Size(153, 133);
 			this.coveragePiece9.TabIndex = 8;
 			// 
+			// button2
+			// 
+			this.button2.Location = new System.Drawing.Point(721, 128);
+			this.button2.Name = "button2";
+			this.button2.Size = new System.Drawing.Size(97, 23);
+			this.button2.TabIndex = 53;
+			this.button2.Text = "Clear";
+			this.button2.UseVisualStyleBackColor = true;
+			this.button2.Click += new System.EventHandler(this.loadDefaultSpells_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -644,6 +656,7 @@ namespace Mag_SuitBuilder
 		private CantripSelectorControl cntrlSuitCantrips;
 		private System.Windows.Forms.ProgressBar progressBar1;
 		private System.Windows.Forms.TreeView treeView1;
+		private System.Windows.Forms.Button button2;
 	}
 }
 

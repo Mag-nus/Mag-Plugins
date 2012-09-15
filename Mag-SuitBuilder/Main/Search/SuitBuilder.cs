@@ -35,6 +35,8 @@ namespace Mag_SuitBuilder.Search
 
 		public int TotalBaseArmorLevel { get; private set; }
 
+		public int TotalBodyArmorPieces { get; private set; }
+
 		public void Push(EquipmentPiece item, Constants.EquippableSlotFlags slot)
 		{
 			cache[nextOpenCacheIndex].Piece = item;
@@ -53,13 +55,16 @@ namespace Mag_SuitBuilder.Search
 
 			armorSetCount[item.ArmorSet]++;
 
-			if ((item.EquipableSlots & Constants.EquippableSlotFlags.CanHaveArmor) != 0)
+			if (item.BaseArmorLevel > 0)
 			{
 				if ((item.EquipableSlots & Constants.EquippableSlotFlags.Underwear) != 0)
 					TotalBaseArmorLevel += (item.BaseArmorLevel * item.BodyPartsCovered);
 				else
-					TotalBaseArmorLevel += item.BaseArmorLevel;
+					TotalBaseArmorLevel += (item.BaseArmorLevel * slot.GetTotalBitsSet());
 			}
+
+			if (slot.IsBodyArmor())
+				TotalBodyArmorPieces++;
 		}
 
 		public void Pop()
@@ -70,13 +75,16 @@ namespace Mag_SuitBuilder.Search
 
 			armorSetCount[cache[nextOpenCacheIndex - 1].Piece.ArmorSet]--;
 
-			if ((cache[nextOpenCacheIndex - 1].Piece.EquipableSlots & Constants.EquippableSlotFlags.CanHaveArmor) != 0)
+			if (cache[nextOpenCacheIndex - 1].Piece.BaseArmorLevel > 0)
 			{
 				if ((cache[nextOpenCacheIndex - 1].Piece.EquipableSlots & Constants.EquippableSlotFlags.Underwear) != 0)
 					TotalBaseArmorLevel -= (cache[nextOpenCacheIndex - 1].Piece.BaseArmorLevel * cache[nextOpenCacheIndex - 1].Piece.BodyPartsCovered);
 				else
-					TotalBaseArmorLevel -= cache[nextOpenCacheIndex - 1].Piece.BaseArmorLevel;
+					TotalBaseArmorLevel -= (cache[nextOpenCacheIndex - 1].Piece.BaseArmorLevel * cache[nextOpenCacheIndex - 1].Slot.GetTotalBitsSet());
 			}
+
+			if (cache[nextOpenCacheIndex - 1].Slot.IsBodyArmor())
+				TotalBodyArmorPieces--;
 
 			nextOpenCacheIndex--;
 		}

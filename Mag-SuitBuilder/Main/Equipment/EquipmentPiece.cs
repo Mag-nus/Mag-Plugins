@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using Mag_SuitBuilder.Spells;
 
@@ -174,6 +175,13 @@ namespace Mag_SuitBuilder.Equipment
 
 		private void SetSpellAtIndex(int index, string text)
 		{
+			if (String.IsNullOrEmpty(text))
+			{
+				if (Spells.Count >= index)
+					Spells.RemoveAt(index);
+				return;
+			}
+
 			if (!Spell.IsAKnownSpell(text))
 				return;
 
