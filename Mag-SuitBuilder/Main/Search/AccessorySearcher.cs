@@ -12,7 +12,6 @@ namespace Mag_SuitBuilder.Search
 		public AccessorySearcher(SearcherConfiguration config, IEnumerable<EquipmentPiece> accessories, CompletedSuit startingSuit = null) : base(config, accessories, startingSuit)
 		{
 			// Sort the list with the highest amount of epics
-			// todo hack fix, do this against effective spells based on config, not original spells
 			// As a temp fix we just sort based on spell count
 			Equipment.Sort((a, b) =>
 			{

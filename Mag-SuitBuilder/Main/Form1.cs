@@ -282,8 +282,6 @@ namespace Mag_SuitBuilder
 					}
 				}
 			}
-
-			//treeView1.ExpandAll();	
 		}
 
 		TreeNodeCollection FindDeepestNode(TreeNodeCollection nodes, CompletedSuit suit)
@@ -354,6 +352,16 @@ namespace Mag_SuitBuilder
 				cntrlSuitCantrips.Add(spell);
 
 			cntrlSuitCantrips.Refresh();
+		}
+
+		private void cmdExpandAll_Click(object sender, EventArgs e)
+		{
+			treeView1.ExpandAll();
+		}
+
+		private void cmdCollapseAll_Click(object sender, EventArgs e)
+		{
+			treeView1.CollapseAll();
 		}
 	}
 }

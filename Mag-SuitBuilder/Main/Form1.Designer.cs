@@ -41,6 +41,7 @@ namespace Mag_SuitBuilder
 			this.btnLoadFromDB = new System.Windows.Forms.Button();
 			this.equipmentGrid = new System.Windows.Forms.DataGridView();
 			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.button2 = new System.Windows.Forms.Button();
 			this.button9 = new System.Windows.Forms.Button();
 			this.button7 = new System.Windows.Forms.Button();
 			this.button8 = new System.Windows.Forms.Button();
@@ -58,6 +59,8 @@ namespace Mag_SuitBuilder
 			this.label1 = new System.Windows.Forms.Label();
 			this.cntrlCantripFilters = new Mag_SuitBuilder.Spells.CantripSelectorControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.cmdCollapseAll = new System.Windows.Forms.Button();
+			this.cmdExpandAll = new System.Windows.Forms.Button();
 			this.treeView1 = new System.Windows.Forms.TreeView();
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
 			this.cntrlSuitCantrips = new Mag_SuitBuilder.Spells.CantripSelectorControl();
@@ -80,7 +83,6 @@ namespace Mag_SuitBuilder
 			this.coveragePiece8 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece10 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece9 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.button2 = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.equipmentGrid)).BeginInit();
@@ -97,7 +99,7 @@ namespace Mag_SuitBuilder
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(972, 741);
+			this.tabControl1.Size = new System.Drawing.Size(1449, 741);
 			this.tabControl1.TabIndex = 17;
 			// 
 			// tabPage3
@@ -110,7 +112,7 @@ namespace Mag_SuitBuilder
 			this.tabPage3.Location = new System.Drawing.Point(4, 22);
 			this.tabPage3.Name = "tabPage3";
 			this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage3.Size = new System.Drawing.Size(964, 715);
+			this.tabPage3.Size = new System.Drawing.Size(1441, 715);
 			this.tabPage3.TabIndex = 2;
 			this.tabPage3.Text = "Step 1. Add Inventory";
 			this.tabPage3.UseVisualStyleBackColor = true;
@@ -166,7 +168,7 @@ namespace Mag_SuitBuilder
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.equipmentGrid.Location = new System.Drawing.Point(3, 35);
 			this.equipmentGrid.Name = "equipmentGrid";
-			this.equipmentGrid.Size = new System.Drawing.Size(955, 677);
+			this.equipmentGrid.Size = new System.Drawing.Size(1433, 677);
 			this.equipmentGrid.TabIndex = 28;
 			this.equipmentGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.equipmentGrid_CellEndEdit);
 			this.equipmentGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.equipmentGrid_CellFormatting);
@@ -193,10 +195,20 @@ namespace Mag_SuitBuilder
 			this.tabPage2.Location = new System.Drawing.Point(4, 22);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(964, 715);
+			this.tabPage2.Size = new System.Drawing.Size(1441, 715);
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "Step 2. Setup Filters";
 			this.tabPage2.UseVisualStyleBackColor = true;
+			// 
+			// button2
+			// 
+			this.button2.Location = new System.Drawing.Point(721, 128);
+			this.button2.Name = "button2";
+			this.button2.Size = new System.Drawing.Size(97, 23);
+			this.button2.TabIndex = 53;
+			this.button2.Text = "Clear";
+			this.button2.UseVisualStyleBackColor = true;
+			this.button2.Click += new System.EventHandler(this.loadDefaultSpells_Click);
 			// 
 			// button9
 			// 
@@ -349,6 +361,8 @@ namespace Mag_SuitBuilder
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.cmdCollapseAll);
+			this.tabPage1.Controls.Add(this.cmdExpandAll);
 			this.tabPage1.Controls.Add(this.treeView1);
 			this.tabPage1.Controls.Add(this.progressBar1);
 			this.tabPage1.Controls.Add(this.cntrlSuitCantrips);
@@ -374,16 +388,39 @@ namespace Mag_SuitBuilder
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(964, 715);
+			this.tabPage1.Size = new System.Drawing.Size(1441, 715);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Step 3. Generate Suits";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
+			// cmdCollapseAll
+			// 
+			this.cmdCollapseAll.Location = new System.Drawing.Point(881, 147);
+			this.cmdCollapseAll.Name = "cmdCollapseAll";
+			this.cmdCollapseAll.Size = new System.Drawing.Size(75, 23);
+			this.cmdCollapseAll.TabIndex = 37;
+			this.cmdCollapseAll.Text = "Collapse All";
+			this.cmdCollapseAll.UseVisualStyleBackColor = true;
+			this.cmdCollapseAll.Click += new System.EventHandler(this.cmdCollapseAll_Click);
+			// 
+			// cmdExpandAll
+			// 
+			this.cmdExpandAll.Location = new System.Drawing.Point(881, 118);
+			this.cmdExpandAll.Name = "cmdExpandAll";
+			this.cmdExpandAll.Size = new System.Drawing.Size(75, 23);
+			this.cmdExpandAll.TabIndex = 36;
+			this.cmdExpandAll.Text = "Expand All";
+			this.cmdExpandAll.UseVisualStyleBackColor = true;
+			this.cmdExpandAll.Click += new System.EventHandler(this.cmdExpandAll_Click);
+			// 
 			// treeView1
 			// 
-			this.treeView1.Location = new System.Drawing.Point(485, 37);
+			this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.treeView1.Location = new System.Drawing.Point(962, 8);
 			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(471, 243);
+			this.treeView1.Size = new System.Drawing.Size(471, 701);
 			this.treeView1.TabIndex = 35;
 			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
 			// 
@@ -576,24 +613,14 @@ namespace Mag_SuitBuilder
 			this.coveragePiece9.Size = new System.Drawing.Size(153, 133);
 			this.coveragePiece9.TabIndex = 8;
 			// 
-			// button2
-			// 
-			this.button2.Location = new System.Drawing.Point(721, 128);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(97, 23);
-			this.button2.TabIndex = 53;
-			this.button2.Text = "Clear";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.loadDefaultSpells_Click);
-			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(972, 741);
+			this.ClientSize = new System.Drawing.Size(1449, 741);
 			this.Controls.Add(this.tabControl1);
 			this.DoubleBuffered = true;
-			this.MinimumSize = new System.Drawing.Size(988, 779);
+			this.MinimumSize = new System.Drawing.Size(1100, 779);
 			this.Name = "Form1";
 			this.Text = "Mag-Suit Builder";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -657,6 +684,8 @@ namespace Mag_SuitBuilder
 		private System.Windows.Forms.ProgressBar progressBar1;
 		private System.Windows.Forms.TreeView treeView1;
 		private System.Windows.Forms.Button button2;
+		private System.Windows.Forms.Button cmdCollapseAll;
+		private System.Windows.Forms.Button cmdExpandAll;
 	}
 }
 

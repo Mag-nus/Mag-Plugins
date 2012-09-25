@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 using Mag_SuitBuilder.Spells;
 
@@ -157,6 +158,7 @@ namespace Mag_SuitBuilder.Equipment
 		public bool Imbued { get; private set; }
 
 		private List<Spell> spells = new List<Spell>();
+		[Browsable(false)]
 		public IEnumerable<Spell> Spells { get { return spells; } }
 
 		/// <summary>

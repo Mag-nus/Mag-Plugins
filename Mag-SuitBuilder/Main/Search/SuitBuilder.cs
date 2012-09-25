@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using Mag_SuitBuilder.Equipment;
 using Mag_SuitBuilder.Spells;
@@ -136,6 +137,16 @@ namespace Mag_SuitBuilder.Search
 		public int Count
 		{
 			get { return nextOpenCacheIndex; }
+		}
+
+		public SuitBuilder Clone()
+		{
+			SuitBuilder newSuit = new SuitBuilder();
+
+			for (int i = 0; i < nextOpenCacheIndex; i++)
+				newSuit.Push(cache[i].Piece, cache[i].Slot);
+
+			return newSuit;
 		}
 
 		public CompletedSuit CreateCompletedSuit()

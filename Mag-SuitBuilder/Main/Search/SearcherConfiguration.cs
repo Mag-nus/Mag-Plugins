@@ -76,6 +76,10 @@ namespace Mag_SuitBuilder.Search
 
 		public bool SpellPassesRules(Spell spell)
 		{
+			// If this spell is not a cantrip, or its an impen, it dosn't pass the search rules.
+			if (spell.CantripLevel == Spell.CantripLevels.None || spell.IsOfSameFamilyAndGroup(Spell.GetSpell("Epic Impenetrability")))
+				return false;
+
 			if (CantripsToLookFor.Count == 0)
 				return true;
 

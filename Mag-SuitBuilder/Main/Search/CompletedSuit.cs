@@ -65,6 +65,10 @@ namespace Mag_SuitBuilder.Search
 
 			foreach (Spell itemSpell in item.Spells)
 			{
+				// Don't count impen as an effective spell
+				if (itemSpell.IsOfSameFamilyAndGroup(Spell.GetSpell("Epic Impenetrability")))
+					continue;
+
 				foreach (Spell suitSpell in effectiveSpells)
 				{
 					if (suitSpell.IsSameOrSurpasses(itemSpell))
