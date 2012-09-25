@@ -216,7 +216,7 @@ namespace Mag_SuitBuilder
 
 				DateTime endTime = DateTime.Now;
 
-				MessageBox.Show((endTime - startTime).TotalSeconds.ToString());
+				//MessageBox.Show((endTime - startTime).TotalSeconds.ToString());
 			}).Start();
 
 			btnStopCalculating.Enabled = true;
