@@ -19,7 +19,7 @@ namespace Mag_SuitBuilder.Search
 				if (a.BaseArmorLevel > 0 && b.BaseArmorLevel > 0) return b.BaseArmorLevel.CompareTo(a.BaseArmorLevel);
 				if (a.BaseArmorLevel > 0 && b.BaseArmorLevel == 0) return -1;
 				if (a.BaseArmorLevel == 0 && b.BaseArmorLevel > 0) return 1;
-				return b.Spells.Count.CompareTo(a.Spells.Count); // this needs to be fixed
+				return b.SpellsToUseInSearch.Count.CompareTo(a.SpellsToUseInSearch.Count); // this needs to be fixed
 			});
 
 			// Remove any pieces that have armor

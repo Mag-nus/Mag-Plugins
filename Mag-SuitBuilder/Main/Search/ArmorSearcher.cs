@@ -152,7 +152,7 @@ namespace Mag_SuitBuilder.Search
 
 			foreach (EquipmentPiece piece in buckets[index])
 			{
-				if (SuitBuilder.SlotIsOpen(buckets[index].Slot) && SuitBuilder.HasRoomForArmorSet(Config.PrimaryArmorSet, Config.SecondaryArmorSet, piece.ArmorSet) && SuitBuilder.CanGetBeneficialSpellFrom(piece))
+				if (SuitBuilder.SlotIsOpen(buckets[index].Slot) && (!piece.EquipableSlots.IsBodyArmor() ||  SuitBuilder.HasRoomForArmorSet(Config.PrimaryArmorSet, Config.SecondaryArmorSet, piece.ArmorSet)) && SuitBuilder.CanGetBeneficialSpellFrom(piece))
 				{
 					SuitBuilder.Push(piece, buckets[index].Slot);
 

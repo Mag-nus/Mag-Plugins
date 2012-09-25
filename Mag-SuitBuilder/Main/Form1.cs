@@ -30,6 +30,15 @@ namespace Mag_SuitBuilder
 	
 			typeof(DataGridView).InvokeMember("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null, equipmentGrid, new object[] { true });
 			equipmentGrid.DataSource = equipmentGroup;
+
+			cboPrimaryArmorSet.Items.Add(ArmorSet.NoArmorSet);
+			cboSecondaryArmorSet.Items.Add(ArmorSet.NoArmorSet);
+
+			cboPrimaryArmorSet.Items.Add(ArmorSet.AnyArmorSet);
+			cboSecondaryArmorSet.Items.Add(ArmorSet.AnyArmorSet);
+
+			cboPrimaryArmorSet.SelectedIndex = cboPrimaryArmorSet.Items.Count - 1;
+			cboSecondaryArmorSet.SelectedIndex = cboSecondaryArmorSet.Items.Count - 1;
 		}
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -69,12 +78,6 @@ namespace Mag_SuitBuilder
 
 			equipmentGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
 
-			cboPrimaryArmorSet.Items.Clear();
-			cboSecondaryArmorSet.Items.Clear();
-
-			cboPrimaryArmorSet.Items.Add(ArmorSet.NoArmorSet);
-			cboSecondaryArmorSet.Items.Add(ArmorSet.NoArmorSet);
-
 			foreach (EquipmentPiece piece in equipmentGroup)
 			{
 				if (piece.ArmorSet == null || piece.ArmorSet == ArmorSet.NoArmorSet || (piece.EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) == 0)
@@ -86,12 +89,6 @@ namespace Mag_SuitBuilder
 					cboSecondaryArmorSet.Items.Add(piece.ArmorSet);
 				}
 			}
-
-			cboPrimaryArmorSet.Items.Add(ArmorSet.AnyArmorSet);
-			cboSecondaryArmorSet.Items.Add(ArmorSet.AnyArmorSet);
-
-			cboPrimaryArmorSet.SelectedIndex = cboPrimaryArmorSet.Items.Count - 1;
-			cboSecondaryArmorSet.SelectedIndex = cboSecondaryArmorSet.Items.Count - 1;
 		}
 
 		private void btnClear_Click(object sender, EventArgs e)
@@ -148,6 +145,18 @@ namespace Mag_SuitBuilder
 			config.PrimaryArmorSet = cboPrimaryArmorSet.SelectedItem as ArmorSet;
 			config.SecondaryArmorSet = cboSecondaryArmorSet.SelectedItem as ArmorSet;
 			config.OnlyAddPiecesWithArmor = true;
+
+			// Go through our Equipment and remove/disable any extra spells that we're not looking for
+			foreach (EquipmentPiece piece in equipmentGroup)
+			{
+				piece.SpellsToUseInSearch.Clear();
+
+				foreach (Spell spell in piece.Spells)
+				{
+					if (config.SpellPassesRules(spell))
+						piece.SpellsToUseInSearch.Add(spell);
+				}
+			}
 
 			// Build our base suit from locked in pieces
 			CompletedSuit baseSuit = new CompletedSuit();

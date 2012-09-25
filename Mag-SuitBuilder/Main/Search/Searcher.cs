@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Mag_SuitBuilder.Equipment;
+using Mag_SuitBuilder.Spells;
 
 namespace Mag_SuitBuilder.Search
 {
@@ -13,6 +14,7 @@ namespace Mag_SuitBuilder.Search
 
 		protected Searcher(SearcherConfiguration config, IEnumerable<EquipmentPiece> equipment, CompletedSuit startingSuit = null)
 		{
+
 			Config = config;
 
 			foreach (EquipmentPiece piece in equipment)
@@ -45,9 +47,6 @@ namespace Mag_SuitBuilder.Search
 				if (!SuitBuilder.SlotIsOpen(Equipment[i].EquipableSlots) || !SuitBuilder.CanGetBeneficialSpellFrom(Equipment[i]))
 					Equipment.RemoveAt(i);
 			}
-
-			// Go through our Equipment and remove/disable any extra spells that we're not looking for
-			// todo hack fix
 		}
 				
 		public event Action<CompletedSuit> SuitCreated;

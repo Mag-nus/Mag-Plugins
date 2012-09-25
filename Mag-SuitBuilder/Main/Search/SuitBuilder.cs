@@ -41,13 +41,13 @@ namespace Mag_SuitBuilder.Search
 		{
 			cache[nextOpenCacheIndex].Piece = item;
 			cache[nextOpenCacheIndex].Slot = slot;
-			cache[nextOpenCacheIndex].SpellCount = item.Spells.Count;
+			cache[nextOpenCacheIndex].SpellCount = item.SpellsToUseInSearch.Count;
 
 			occupiedSlots |= slot;
 
-			for (int i = 0; i < item.Spells.Count; i++)
+			for (int i = 0; i < item.SpellsToUseInSearch.Count; i++)
 			{
-				spells[nextOpenSpellIndex] = item.Spells[i];
+				spells[nextOpenSpellIndex] = item.SpellsToUseInSearch[i];
 				nextOpenSpellIndex++;
 			}
 
@@ -116,7 +116,7 @@ namespace Mag_SuitBuilder.Search
 			// This whole approach needs to be optimized.
 			// This is the biggest time waster in the entire search process.
 
-			foreach (Spell itemSpell in item.Spells)
+			foreach (Spell itemSpell in item.SpellsToUseInSearch)
 			//for (int i = 0 ; i < item.Spells.Count ; i++) // This is actually slower
 			{
 				for (int j = 0; j < nextOpenSpellIndex; j++) // For here is faster than foreach

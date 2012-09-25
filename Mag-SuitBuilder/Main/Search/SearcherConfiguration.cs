@@ -73,5 +73,19 @@ namespace Mag_SuitBuilder.Search
 
 			return true;
 		}
+
+		public bool SpellPassesRules(Spell spell)
+		{
+			if (CantripsToLookFor.Count == 0)
+				return true;
+
+			foreach (Spell cantrip in CantripsToLookFor)
+			{
+				if (spell.IsSameOrSurpasses(cantrip))
+					return true;
+			}
+
+			return false;
+		}
 	}
 }

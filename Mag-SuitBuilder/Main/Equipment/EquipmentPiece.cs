@@ -11,7 +11,7 @@ namespace Mag_SuitBuilder.Equipment
 		{
 			ArmorSet = ArmorSet.NoArmorSet;
 
-			Spells = new List<Spell>();
+			SpellsToUseInSearch = new List<Spell>();
 		}
 
 		// Copper Chainmail Leggings, AL 607, Tinks 10, Epic Invulnerability, Wield Lvl 150, Melee Defense 390 to Activate, Diff 262
@@ -69,7 +69,7 @@ namespace Mag_SuitBuilder.Equipment
 			foreach (string section in sections)
 			{
 				if (Spell.IsAKnownSpell(section))
-					Spells.Add(Spell.GetSpell(section));
+					spells.Add(Spell.GetSpell(section));
 			}
 
 			// Determine our base armor level
@@ -156,39 +156,40 @@ namespace Mag_SuitBuilder.Equipment
 
 		public bool Imbued { get; private set; }
 
-		public List<Spell> Spells { get; private set; }
+		private List<Spell> spells = new List<Spell>();
+		public IEnumerable<Spell> Spells { get { return spells; } }
 
 		/// <summary>
 		/// This is the calculated base armor level of the piece, before tinks but including minor/major/epic Impen
 		/// </summary>
 		public int BaseArmorLevel { get; set; }
 
-		public string Spell1 { get { return Spells.Count > 0 && Spells[0] != null ? Spells[0].ToString() : null; } set { SetSpellAtIndex(0, value); } }
-		public string Spell2 { get { return Spells.Count > 1 && Spells[1] != null ? Spells[1].ToString() : null; } set { SetSpellAtIndex(1, value); } }
-		public string Spell3 { get { return Spells.Count > 2 && Spells[2] != null ? Spells[2].ToString() : null; } set { SetSpellAtIndex(2, value); } }
-		public string Spell4 { get { return Spells.Count > 3 && Spells[3] != null ? Spells[3].ToString() : null; } set { SetSpellAtIndex(3, value); } }
-		public string Spell5 { get { return Spells.Count > 4 && Spells[4] != null ? Spells[4].ToString() : null; } set { SetSpellAtIndex(4, value); } }
-		public string Spell6 { get { return Spells.Count > 5 && Spells[5] != null ? Spells[5].ToString() : null; } set { SetSpellAtIndex(5, value); } }
-		public string Spell7 { get { return Spells.Count > 6 && Spells[6] != null ? Spells[6].ToString() : null; } set { SetSpellAtIndex(6, value); } }
-		public string Spell8 { get { return Spells.Count > 7 && Spells[7] != null ? Spells[7].ToString() : null; } set { SetSpellAtIndex(7, value); } }
-		public string Spell9 { get { return Spells.Count > 8 && Spells[8] != null ? Spells[8].ToString() : null; } set { SetSpellAtIndex(8, value); } }
+		public string Spell1 { get { return spells.Count > 0 && spells[0] != null ? spells[0].ToString() : null; } set { SetSpellAtIndex(0, value); } }
+		public string Spell2 { get { return spells.Count > 1 && spells[1] != null ? spells[1].ToString() : null; } set { SetSpellAtIndex(1, value); } }
+		public string Spell3 { get { return spells.Count > 2 && spells[2] != null ? spells[2].ToString() : null; } set { SetSpellAtIndex(2, value); } }
+		public string Spell4 { get { return spells.Count > 3 && spells[3] != null ? spells[3].ToString() : null; } set { SetSpellAtIndex(3, value); } }
+		public string Spell5 { get { return spells.Count > 4 && spells[4] != null ? spells[4].ToString() : null; } set { SetSpellAtIndex(4, value); } }
+		public string Spell6 { get { return spells.Count > 5 && spells[5] != null ? spells[5].ToString() : null; } set { SetSpellAtIndex(5, value); } }
+		public string Spell7 { get { return spells.Count > 6 && spells[6] != null ? spells[6].ToString() : null; } set { SetSpellAtIndex(6, value); } }
+		public string Spell8 { get { return spells.Count > 7 && spells[7] != null ? spells[7].ToString() : null; } set { SetSpellAtIndex(7, value); } }
+		public string Spell9 { get { return spells.Count > 8 && spells[8] != null ? spells[8].ToString() : null; } set { SetSpellAtIndex(8, value); } }
 
 		private void SetSpellAtIndex(int index, string text)
 		{
 			if (String.IsNullOrEmpty(text))
 			{
-				if (Spells.Count >= index)
-					Spells.RemoveAt(index);
+				if (spells.Count >= index)
+					spells.RemoveAt(index);
 				return;
 			}
 
 			if (!Spell.IsAKnownSpell(text))
 				return;
 
-			if (Spells.Count > index)
-				Spells[index] = Spell.GetSpell(text);
+			if (spells.Count > index)
+				spells[index] = Spell.GetSpell(text);
 			else
-				Spells.Add(Spell.GetSpell(text));
+				spells.Add(Spell.GetSpell(text));
 		}
 
 		public override string ToString()
@@ -203,5 +204,11 @@ namespace Mag_SuitBuilder.Equipment
 
 			return output;
 		}
+
+		/// <summary>
+		/// This list should be initialized at the start of your search and should be referenced during the actual search.
+		/// This list should include only the spells on the item that match the minimum required spells in our search config.
+		/// </summary>
+		public List<Spell> SpellsToUseInSearch { get; private set; }
 	}
 }

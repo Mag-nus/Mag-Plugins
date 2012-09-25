@@ -43,10 +43,10 @@ namespace Mag_SuitBuilder.Equipment
 
 			txtArmorSet.Text = piece.ArmorSet.ToString();
 
-			txtSpell1.Text = (piece.Spells.Count >= 1) ? piece.Spells[0].Name : null;
-			txtSpell2.Text = (piece.Spells.Count >= 2) ? piece.Spells[1].Name : null;
-			txtSpell3.Text = (piece.Spells.Count >= 3) ? piece.Spells[2].Name : null;
-			txtSpell4.Text = (piece.Spells.Count >= 4) ? piece.Spells[3].Name : null;
+			txtSpell1.Text = piece.Spell1;
+			txtSpell2.Text = piece.Spell2;
+			txtSpell3.Text = piece.Spell3;
+			txtSpell4.Text = piece.Spell4;
 		}
 	}
 }
