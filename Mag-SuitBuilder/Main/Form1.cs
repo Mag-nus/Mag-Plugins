@@ -11,8 +11,6 @@ using Mag_SuitBuilder.Search;
 using Mag_SuitBuilder.Spells;
 
 // Bugs
-// Items with major/epic impen should not stack in searches. Impen should not count as a beneficial spell
-// Items are passing the canofferbeneficial spell for spells that aren't in our config
 // Spell compare is too slow, should be a hash compare
 // AccessorySearcher thread pool keeps going even after user clicks stop.
 
