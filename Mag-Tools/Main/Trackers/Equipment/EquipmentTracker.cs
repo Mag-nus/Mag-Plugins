@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
@@ -24,6 +25,7 @@ namespace MagTools.Trackers.Equipment
 			try
 			{
 				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete);
+				CoreManager.Current.WorldFilter.CreateObject += new EventHandler<CreateObjectEventArgs>(WorldFilter_CreateObject);
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 				CoreManager.Current.WorldFilter.ReleaseObject += new EventHandler<ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
 				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<LogoffEventArgs>(CharacterFilter_Logoff);
@@ -51,6 +53,7 @@ namespace MagTools.Trackers.Equipment
 				if (disposing)
 				{
 					CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
+					CoreManager.Current.WorldFilter.CreateObject -= new EventHandler<CreateObjectEventArgs>(WorldFilter_CreateObject);
 					CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 					CoreManager.Current.WorldFilter.ReleaseObject -= new EventHandler<ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
 					CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<LogoffEventArgs>(CharacterFilter_Logoff);
@@ -75,6 +78,16 @@ namespace MagTools.Trackers.Equipment
 					if (ShoudlWeWatchItem(obj))
 						AddItem(obj);
 				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void WorldFilter_CreateObject(object sender, CreateObjectEventArgs e)
+		{
+			try
+			{
+				if (ShoudlWeWatchItem(e.New))
+					AddItem(e.New);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
