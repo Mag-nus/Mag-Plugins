@@ -341,7 +341,7 @@ namespace MagTools.Macros
 					// Check to see that the target is even a pack.
 					WorldObject target = CoreManager.Current.WorldFilter[itemToProcess.TargetPackIds[packIndex]];
 
-					if (target == null || target.ObjectClass != ObjectClass.Container)
+					if (target == null || (target.ObjectClass != ObjectClass.Container && target.ObjectClass != ObjectClass.Player))
 						continue;
 
 					if (Util.GetFreePackSlots(itemToProcess.TargetPackIds[packIndex]) > 0)
