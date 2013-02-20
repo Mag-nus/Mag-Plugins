@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml;
 
@@ -59,18 +60,6 @@ namespace MagTools.Settings
 
 		public static class Looting
 		{
-			static Looting()
-			{
-				// In 1.0.8.7 we added corpse looting
-				if (Enabled.Value)
-				{
-					AutoLootChests.Value = true;
-					Enabled.Value = false;
-				}
-			}
-
-			public static readonly Setting<bool> Enabled = new Setting<bool>("Looting/Enabled", "Auto Loot Chests");
-
 			public static readonly Setting<bool> AutoLootChests = new Setting<bool>("Looting/AutoLootChests", "Auto Loot Chests");
 
 			public static readonly Setting<bool> AutoLootCorpses = new Setting<bool>("Looting/AutoLootCorpses", "Auto Loot Corpses");
@@ -78,6 +67,11 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> AutoLootMyCorpses = new Setting<bool>("Looting/AutoLootMyCorpse", "Auto Loot My Corpses");
 
 			public static readonly Setting<bool> LootSalvage = new Setting<bool>("Looting/LootSalvage", "Auto Loot Salvage");
+		}
+
+		public static class InventoryManagement
+		{
+			public static readonly Setting<bool> InventoryLogger = new Setting<bool>("InventoryManagement/InventoryLogger", "Inventory Logger Enabled");
 		}
 
 		public static class ItemInfoOnIdent
@@ -182,8 +176,8 @@ namespace MagTools.Settings
 					attributes.Add("Server", windowPosition.Server);
 					attributes.Add("AccountName", windowPosition.AccountName);
 
-					attributes.Add("X", windowPosition.X.ToString());
-					attributes.Add("Y", windowPosition.Y.ToString());
+					attributes.Add("X", windowPosition.X.ToString(CultureInfo.InvariantCulture));
+					attributes.Add("Y", windowPosition.Y.ToString(CultureInfo.InvariantCulture));
 
 					collection.Add(attributes);
 				}
@@ -193,8 +187,8 @@ namespace MagTools.Settings
 				newAttributes.Add("Server", newWindowPosition.Server);
 				newAttributes.Add("AccountName", newWindowPosition.AccountName);
 
-				newAttributes.Add("X", newWindowPosition.X.ToString());
-				newAttributes.Add("Y", newWindowPosition.Y.ToString());
+				newAttributes.Add("X", newWindowPosition.X.ToString(CultureInfo.InvariantCulture));
+				newAttributes.Add("Y", newWindowPosition.Y.ToString(CultureInfo.InvariantCulture));
 
 				collection.Add(newAttributes);
 
@@ -222,8 +216,8 @@ namespace MagTools.Settings
 							attributes.Add("Server", windowPosition.Server);
 							attributes.Add("AccountName", windowPosition.AccountName);
 
-							attributes.Add("X", windowPosition.X.ToString());
-							attributes.Add("Y", windowPosition.Y.ToString());
+							attributes.Add("X", windowPosition.X.ToString(CultureInfo.InvariantCulture));
+							attributes.Add("Y", windowPosition.Y.ToString(CultureInfo.InvariantCulture));
 
 							collection.Add(attributes);
 						}
@@ -240,17 +234,6 @@ namespace MagTools.Settings
 
 		public static class Filters
 		{
-			static Filters()
-			{
-				// In 1.0.8.5 we split SpellCasting into SpellCastingMine and SpellCastingOthers
-				if (SpellCasting.Value)
-				{
-					SpellCastingMine.Value = true;
-					SpellCastingOthers.Value = true;
-					SpellCasting.Value = false;
-				}
-			}
-
 			public static readonly Setting<bool> AttackEvades = new Setting<bool>("Filters/AttackEvades", "Attack Evades");
 
 			public static readonly Setting<bool> DefenseEvades = new Setting<bool>("Filters/DefenseEvades", "Defense Evades");
@@ -265,8 +248,6 @@ namespace MagTools.Settings
 
 			public static readonly Setting<bool> MonsterDeaths = new Setting<bool>("Filters/MonsterDeaths", "Monster Deaths");
 
-
-			public static readonly Setting<bool> SpellCasting = new Setting<bool>("Filters/SpellCasting", "Spell Casting");
 
 			public static readonly Setting<bool> SpellCastingMine = new Setting<bool>("Filters/SpellCastingMine", "Spell Casting - Mine");
 

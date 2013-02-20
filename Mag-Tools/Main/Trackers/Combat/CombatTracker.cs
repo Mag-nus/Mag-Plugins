@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+
 using MagTools.Trackers.Combat.Standard;
 using MagTools.Trackers.Combat.Aetheria;
 using MagTools.Trackers.Combat.Cloaks;

@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
+using MagTools.Inventory;
 using MagTools.Trackers.Equipment;
 
 /*
@@ -84,6 +85,7 @@ namespace MagTools
 		// General
 		ChatFilter chatFilter;
 		InventoryExporter inventoryExporter;
+		InventoryLogger inventoryLogger;
 
 		// Macros
 		Macros.OpenMainPackOnLogin openMainPackOnLogin;
@@ -141,6 +143,7 @@ namespace MagTools
 
 				// General
 				inventoryExporter = new InventoryExporter();
+				inventoryLogger = new InventoryLogger();
 
 				// Macros
 				openMainPackOnLogin = new Macros.OpenMainPackOnLogin();
@@ -283,6 +286,7 @@ namespace MagTools
 
 				// General
 				if (chatFilter != null) chatFilter.Dispose();
+				if (inventoryLogger != null) inventoryLogger.Dispose();
 
 				Host = null;
 				Current = null;

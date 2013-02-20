@@ -72,7 +72,9 @@
     <Compile Include="Client\NoFocusFPSManager.cs" />
     <Compile Include="Client\WindowPosition.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="InventoryExporter.cs" />
+    <Compile Include="Inventory\InventoryExporter.cs" />
+    <Compile Include="Inventory\InventoryLogger.cs" />
+    <Compile Include="Inventory\MyWorldObject.cs" />
     <Compile Include="IPluginCore.cs" />
     <Compile Include="ItemInfo\ILootRuleProcessor.cs" />
     <Compile Include="ItemInfo\ItemInfo.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="Macros\MaximizeChatOnLogin.cs" />
     <Compile Include="Macros\OneTouchHeal.cs" />
     <Compile Include="Macros\OpenMainPackOnLogin.cs" />
+    <Compile Include="SerializableDictionary.cs" />
     <Compile Include="Settings\Setting.cs" />
     <Compile Include="Settings\SettingsFile.cs" />
     <Compile Include="Settings\SettingsManager.cs" />
