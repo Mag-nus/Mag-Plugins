@@ -87,6 +87,9 @@
               <control progid="DecalControls.PushButton" name="ClientDelWindowPosition" left="160" top="120" width="130" height="20" text="Del Window Position" />
               <control progid="DecalControls.StaticText" name="ClientSetPosition" left="10" top="145" width="300" height="18" text="Current Set Position: "/>
               <control progid="DecalControls.StaticText" name="ClientSetPositionLabel" left="10" top="165" width="310" height="60" text="This sets the startup position for this account/server pair. The client window will be moved do these desktop coords on login."/>
+
+              <control progid="DecalControls.StaticText" name="NoFocusFPSLabel" left="10" top="250" width="310" height="30" text="This sets the frames per second the client will run at when its not in focus. Default is 10 (off):"/>
+              <control progid="DecalControls.Edit" name="NoFocusFPS" left="200" top="265" width="30" height="16" text="" />
             </control>
           </page>
 

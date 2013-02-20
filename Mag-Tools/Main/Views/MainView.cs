@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Globalization;
 using VirindiViewService.Controls;
 
 namespace MagTools.Views
@@ -44,6 +44,8 @@ namespace MagTools.Views
 		HudButton ClientSetWindowPosition { get; set; }
 		HudButton ClientDelWindowPosition { get; set; }
 		HudStaticText ClientSetPosition { get; set; }
+
+		HudTextBox NoFocusFPS { get; set; }
 
 		// Misc - Tools
 		public HudButton ClipboardWornEquipment { get; private set; }
@@ -101,6 +103,8 @@ namespace MagTools.Views
 				ClientDelWindowPosition = view != null ? (HudButton)view["ClientDelWindowPosition"] : new HudButton();
 				ClientSetPosition = view != null ? (HudStaticText)view["ClientSetPosition"] : new HudStaticText();
 
+				NoFocusFPS = view != null ? (HudTextBox)view["NoFocusFPS"] : new HudTextBox();
+
 				// Misc - Tools
 				ClipboardWornEquipment = view != null ? (HudButton)view["ClipboardWornEquipment"] : new HudButton();
 				ClipboardInventoryInfo = view != null ? (HudButton)view["ClipboardInventoryInfo"] : new HudButton();
@@ -115,7 +119,7 @@ namespace MagTools.Views
 
 				// Mana Tracker
 				ManaRecharge.Checked = Settings.SettingsManager.ManaManagement.AutoRecharge.Value;
-				Settings.SettingsManager.ManaManagement.AutoRecharge.Changed += (obj) => { ManaRecharge.Checked = obj.Value; };
+				Settings.SettingsManager.ManaManagement.AutoRecharge.Changed += obj => { ManaRecharge.Checked = obj.Value; };
 				ManaRecharge.Change += (s, e) => 
 				{
 					try
@@ -127,7 +131,7 @@ namespace MagTools.Views
 
 				// Combat Tracker
 				CombatTrackerExportOnLogOff.Checked = Settings.SettingsManager.CombatTracker.ExportOnLogOff.Value;
-				Settings.SettingsManager.CombatTracker.ExportOnLogOff.Changed += (obj) => { CombatTrackerExportOnLogOff.Checked = obj.Value; };
+				Settings.SettingsManager.CombatTracker.ExportOnLogOff.Changed += obj => { CombatTrackerExportOnLogOff.Checked = obj.Value; };
 				CombatTrackerExportOnLogOff.Change += (s, e) =>
 				{
 					try
@@ -138,7 +142,7 @@ namespace MagTools.Views
 				};
 
 				CombatTrackerPersistent.Checked = Settings.SettingsManager.CombatTracker.Persistent.Value;
-				Settings.SettingsManager.CombatTracker.Persistent.Changed += (obj) => { CombatTrackerPersistent.Checked = obj.Value; };
+				Settings.SettingsManager.CombatTracker.Persistent.Changed += obj => { CombatTrackerPersistent.Checked = obj.Value; };
 				CombatTrackerPersistent.Change += (s, e) =>
 				{
 					try
@@ -149,7 +153,7 @@ namespace MagTools.Views
 				};
 
 				CombatTrackerSortAlphabetically.Checked = Settings.SettingsManager.CombatTracker.SortAlphabetically.Value;
-				Settings.SettingsManager.CombatTracker.SortAlphabetically.Changed += (obj) => { CombatTrackerSortAlphabetically.Checked = obj.Value; };
+				Settings.SettingsManager.CombatTracker.SortAlphabetically.Changed += obj => { CombatTrackerSortAlphabetically.Checked = obj.Value; };
 				CombatTrackerSortAlphabetically.Change += (s, e) =>
 				{
 					try
@@ -247,6 +251,18 @@ namespace MagTools.Views
 					} catch (Exception ex) { Debug.LogException(ex); }
 				};
 				UpdateClientWindowPositionLabel();
+
+				NoFocusFPS.Text = Settings.SettingsManager.Misc.NoFocusFPS.Value.ToString(CultureInfo.InvariantCulture);
+				NoFocusFPS.Change += (s, e) =>
+				{
+					try
+					{
+						int value = Settings.SettingsManager.Misc.NoFocusFPS.DefaultValue;
+						int.TryParse(NoFocusFPS.Text, out value);
+						Settings.SettingsManager.Misc.NoFocusFPS.Value = value;
+					}
+					catch (Exception ex) { Debug.LogException(ex); }
+				};
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}

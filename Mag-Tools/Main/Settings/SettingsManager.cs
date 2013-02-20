@@ -234,6 +234,8 @@ namespace MagTools.Settings
 					}
 				}
 			}
+
+			public static readonly Setting<int> NoFocusFPS = new Setting<int>("Misc/NoFocusFPS", "No Focus FPS", 10);
 		}
 
 		public static class Filters

@@ -8,6 +8,8 @@ namespace MagTools.Settings
 
 		public readonly string Description;
 
+		public readonly T DefaultValue;
+
 		private T value;
 		public T Value
 		{
@@ -38,6 +40,8 @@ namespace MagTools.Settings
 			Xpath = xpath;
 
 			Description = description;
+
+			DefaultValue = defaultValue;
 
 			LoadValueFromConfig(defaultValue);
 		}

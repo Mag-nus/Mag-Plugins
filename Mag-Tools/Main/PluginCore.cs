@@ -101,6 +101,7 @@ namespace MagTools
 		// Misc
 		Client.WindowFrameRemover windowFrameRemover;
 		Client.WindowMover windowMover;
+		Client.NoFocusFPSManager noFocusFPSManager;
 
 		// These objects may reference other plugins
 		ItemInfo.ItemInfoPrinter itemInfoPrinter;
@@ -156,6 +157,7 @@ namespace MagTools
 				// Misc
 				windowFrameRemover = new Client.WindowFrameRemover();
 				windowMover = new Client.WindowMover();
+				noFocusFPSManager = new Client.NoFocusFPSManager();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -266,6 +268,7 @@ namespace MagTools
 				// Misc
 				if (windowFrameRemover != null) windowFrameRemover.Dispose();
 				if (windowMover != null) windowMover.Dispose();
+				if (noFocusFPSManager != null) noFocusFPSManager.Dispose();
 
 				// Trackers
 				if (equipmentTracker != null) equipmentTracker.Dispose();

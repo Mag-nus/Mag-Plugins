@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="ACClientChatSizeManager.cs" />
     <Compile Include="ChatFilter.cs" />
+    <Compile Include="Client\NoFocusFPSManager.cs" />
     <Compile Include="Client\WindowPosition.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="InventoryExporter.cs" />
