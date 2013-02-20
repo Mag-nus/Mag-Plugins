@@ -309,8 +309,12 @@ namespace MagTools
 		{
 			{ 1616, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 20)}, // Blood Drinker VI
 			{ 2096, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 22)}, // Infected Caress
-			{ 5183, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 22)}, // Incantation of Blood Drinker
-			{ 4395, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 24, 2)}, // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
+			// Pre Feb-2013
+			//{ 5183, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 22)}, // Incantation of Blood Drinker
+			//{ 4395, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 24, 2)}, // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
+			// Post Feb-2013
+			{ 5183, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 24)}, // Incantation of Blood Drinker
+			{ 4395, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 24)}, // Incantation of Blood Drinker
 
 			{ 2598, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 2, 2)}, // Minor Blood Thirst
 			{ 2586, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 4, 4)}, // Major Blood Thirst
@@ -328,8 +332,12 @@ namespace MagTools
 		{
 			{ 3258, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .06)}, // Spirit Drinker VI
 			{ 3259, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07)}, // Infected Spirit Caress
-			{ 5182, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07)}, // Incantation of Spirit Drinker
-			{ 4414, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08, .01)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
+			// Pre Feb-2013
+			//{ 5182, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07)}, // Incantation of Spirit Drinker
+			//{ 4414, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08, .01)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
+			// Post Feb-2013
+			{ 5182, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08)}, // Incantation of Spirit Drinker
+			{ 4414, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
 
 			{ 3251, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .01, .01)}, // Minor Spirit Thirst
 			{ 3250, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .03, .03)}, // Major Spirit Thirst
@@ -349,7 +357,10 @@ namespace MagTools
 
 			{ 1605, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .15)}, // Defender VI
 			{ 2101, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .17)}, // Cragstone's Will
-			{ 4400, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .17)}, // Incantation of Defender
+			// Pre Feb-2013
+			//{ 4400, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .17)}, // Incantation of Defender
+			// Post Feb-2013
+			{ 4400, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .20)}, // Incantation of Defender
 
 			{ 2600, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .03, .03)}, // Minor Defender
 			{ 3985, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .04, .04)}, // Mukkir Sense
