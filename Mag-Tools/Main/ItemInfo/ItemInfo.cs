@@ -156,7 +156,7 @@ namespace MagTools.ItemInfo
 						goto ShowSpell;
 
 					// Always show Minor/Major/Epic Impen
-					if (spellById.Name.Contains("Minor Impenetrability") || spellById.Name.Contains("Major Impenetrability") || spellById.Name.Contains("Epic Impenetrability"))
+					if (spellById.Name.Contains("Minor Impenetrability") || spellById.Name.Contains("Major Impenetrability") || spellById.Name.Contains("Epic Impenetrability") || spellById.Name.Contains("Legendary Impenetrability"))
 						goto ShowSpell;
 
 					// Always show trinket spells
