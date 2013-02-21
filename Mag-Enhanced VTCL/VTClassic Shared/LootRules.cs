@@ -1766,12 +1766,17 @@ namespace VTClassic
 		{
 			{ 1616, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 20)}, // Blood Drinker VI
 			{ 2096, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 22)}, // Infected Caress
-			{ 5183, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 22)}, // Incantation of Blood Drinker
-			{ 4395, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 24, 2)}, // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
+			// Pre Feb-2013
+			//{ 5183, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 22)}, // Incantation of Blood Drinker
+			//{ 4395, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 24, 2)}, // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
+			// Post Feb-2013
+			{ 5183, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 24)}, // Incantation of Blood Drinker
+			{ 4395, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 24)}, // Incantation of Blood Drinker
 
 			{ 2598, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 2, 2)}, // Minor Blood Thirst
 			{ 2586, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 4, 4)}, // Major Blood Thirst
 			{ 4661, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 7, 7)}, // Epic Blood Thirst
+			{ 6089, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 10, 10)}, // Legendary Blood Thirst
 
 			{ 3688, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 300)}, // Prodigal Blood Drinker
 
@@ -1779,18 +1784,24 @@ namespace VTClassic
 			{ 2604, new SpellInfo<IntValueKey>(IntValueKey.ArmorLevel, 20, 20)}, // Minor Impenetrability
 			{ 2592, new SpellInfo<IntValueKey>(IntValueKey.ArmorLevel, 40, 40)}, // Major Impenetrability
 			{ 4667, new SpellInfo<IntValueKey>(IntValueKey.ArmorLevel, 60, 60)}, // Epic Impenetrability
+			{ 6095, new SpellInfo<IntValueKey>(IntValueKey.ArmorLevel, 80, 80)}, // Legendary Impenetrability
 		};
 
 		static readonly Dictionary<int, SpellInfo<DoubleValueKey>> DoubleValueKeySpellEffects = new Dictionary<int, SpellInfo<DoubleValueKey>>()
 		{
 			{ 3258, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .06)}, // Spirit Drinker VI
 			{ 3259, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07)}, // Infected Spirit Caress
-			{ 5182, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07)}, // Incantation of Spirit Drinker
-			{ 4414, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08, .01)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
+			// Pre Feb-2013
+			//{ 5182, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07)}, // Incantation of Spirit Drinker
+			//{ 4414, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08, .01)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
+			// Post Feb-2013
+			{ 5182, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08)}, // Incantation of Spirit Drinker
+			{ 4414, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
 
 			{ 3251, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .01, .01)}, // Minor Spirit Thirst
 			{ 3250, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .03, .03)}, // Major Spirit Thirst
 			{ 4670, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .04, .04)}, // Epic Spirit Thirst
+			{ 6098, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07, .07)}, // Legendary Spirit Thirst
 
 			{ 3735, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .15)}, // Prodigal Spirit Drinker
 
@@ -1802,16 +1813,20 @@ namespace VTClassic
 			{ 2603, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .03, .03)}, // Minor Heart Thirst
 			{ 2591, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .05, .05)}, // Major Heart Thirst
 			{ 4666, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .07, .07)}, // Epic Heart Thirst
-
+			{ 6094, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .09, .09)}, // Legendary Heart Thirst
 
 			{ 1605, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .15)}, // Defender VI
 			{ 2101, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .17)}, // Cragstone's Will
-			{ 4400, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .17)}, // Incantation of Defender
+			// Pre Feb-2013
+			//{ 4400, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .17)}, // Incantation of Defender
+			// Post Feb-2013
+			{ 4400, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .20)}, // Incantation of Defender
 
 			{ 2600, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .03, .03)}, // Minor Defender
 			{ 3985, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .04, .04)}, // Mukkir Sense
 			{ 2588, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .05, .05)}, // Major Defender
 			{ 4663, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .07, .07)}, // Epic Defender
+			{ 6091, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .09, .09)}, // Legendary Defender
 
 			{ 3699, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .25)}, // Prodigal Defender
 
@@ -1824,6 +1839,8 @@ namespace VTClassic
 			{ 3199, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.10, 1.10)}, // Minor Hermetic Link
 			{ 3202, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.15, 1.15)}, // Moderate Hermetic Link
 			{ 3200, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.20, 1.20)}, // Major Hermetic Link
+			{ 6086, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.25, 1.25)}, // Epic Hermetic Link
+			{ 6087, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.30, 1.30)}, // Legendary Hermetic Link
 		};
 
 		public double BuffedAverageDamage
