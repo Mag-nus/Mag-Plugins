@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.dataGridView1 = new System.Windows.Forms.DataGridView();
 			this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -40,6 +40,7 @@
 			this.lblEpic = new System.Windows.Forms.Label();
 			this.lblMajor = new System.Windows.Forms.Label();
 			this.lblMinor = new System.Windows.Forms.Label();
+			this.lblLegendary = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -60,14 +61,14 @@
             this.Column5,
             this.Column6,
             this.Column7});
-			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-			dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-			dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Window;
-			dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-			dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-			this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
+			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+			dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+			dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Window;
+			dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+			dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+			this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
 			this.dataGridView1.Location = new System.Drawing.Point(0, 0);
 			this.dataGridView1.Margin = new System.Windows.Forms.Padding(0);
 			this.dataGridView1.MultiSelect = false;
@@ -142,7 +143,7 @@
 			// 
 			this.lblEpic.AutoSize = true;
 			this.lblEpic.BackColor = System.Drawing.Color.LightGreen;
-			this.lblEpic.Location = new System.Drawing.Point(3, 132);
+			this.lblEpic.Location = new System.Drawing.Point(59, 132);
 			this.lblEpic.Name = "lblEpic";
 			this.lblEpic.Size = new System.Drawing.Size(46, 13);
 			this.lblEpic.TabIndex = 25;
@@ -152,7 +153,7 @@
 			// 
 			this.lblMajor.AutoSize = true;
 			this.lblMajor.BackColor = System.Drawing.Color.Pink;
-			this.lblMajor.Location = new System.Drawing.Point(55, 132);
+			this.lblMajor.Location = new System.Drawing.Point(111, 132);
 			this.lblMajor.Name = "lblMajor";
 			this.lblMajor.Size = new System.Drawing.Size(51, 13);
 			this.lblMajor.TabIndex = 26;
@@ -162,16 +163,27 @@
 			// 
 			this.lblMinor.AutoSize = true;
 			this.lblMinor.BackColor = System.Drawing.Color.LightBlue;
-			this.lblMinor.Location = new System.Drawing.Point(112, 132);
+			this.lblMinor.Location = new System.Drawing.Point(168, 132);
 			this.lblMinor.Name = "lblMinor";
 			this.lblMinor.Size = new System.Drawing.Size(51, 13);
 			this.lblMinor.TabIndex = 27;
 			this.lblMinor.Text = "-- Minor --";
 			// 
+			// lblLegendary
+			// 
+			this.lblLegendary.AutoSize = true;
+			this.lblLegendary.BackColor = System.Drawing.Color.DarkOrange;
+			this.lblLegendary.Location = new System.Drawing.Point(3, 132);
+			this.lblLegendary.Name = "lblLegendary";
+			this.lblLegendary.Size = new System.Drawing.Size(51, 13);
+			this.lblLegendary.TabIndex = 28;
+			this.lblLegendary.Text = "- Lgndry -";
+			// 
 			// CantripSelectorControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.lblLegendary);
 			this.Controls.Add(this.lblMinor);
 			this.Controls.Add(this.lblMajor);
 			this.Controls.Add(this.lblEpic);
@@ -197,5 +209,6 @@
 		private System.Windows.Forms.Label lblEpic;
 		private System.Windows.Forms.Label lblMajor;
 		private System.Windows.Forms.Label lblMinor;
+		private System.Windows.Forms.Label lblLegendary;
 	}
 }

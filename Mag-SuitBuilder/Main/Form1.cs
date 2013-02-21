@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Serialization;
 
 using Mag_SuitBuilder.Equipment;
 using Mag_SuitBuilder.Search;
@@ -47,7 +51,76 @@ namespace Mag_SuitBuilder
 
 		private void btnLoadFromDB_Click(object sender, EventArgs e)
 		{
-			MessageBox.Show("Not implemented.");
+			this.Enabled = false;
+
+			XmlSerializer serializer = new XmlSerializer(typeof(List<MyWorldObject>));
+
+			inventoryTreeView.Nodes.Clear();
+			equipmentGroup.Clear();
+
+			string[] serverFolderPaths = Directory.GetDirectories(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-Tools\");
+
+			foreach (string serverFolderPath in serverFolderPaths)
+			{
+				string serverName = serverFolderPath.Substring(serverFolderPath.LastIndexOf(Path.DirectorySeparatorChar) + 1, serverFolderPath.Length - serverFolderPath.LastIndexOf(Path.DirectorySeparatorChar) - 1);
+
+				TreeNode serverNode = inventoryTreeView.Nodes.Add(serverName);
+
+				string[] characterFilePaths = Directory.GetFiles(serverFolderPath, "*.Inventory.xml", SearchOption.AllDirectories);
+
+				foreach (string characterFilePath in characterFilePaths)
+				{
+					string characterName = characterFilePath.Substring(characterFilePath.LastIndexOf(Path.DirectorySeparatorChar) + 1, characterFilePath.Length - characterFilePath.LastIndexOf(Path.DirectorySeparatorChar) - 1);
+					characterName = characterName.Substring(0, characterName.IndexOf("."));
+
+					TreeNode characterNode = serverNode.Nodes.Add(characterName);
+
+					List<MyWorldObject> myWorldObjects = new List<MyWorldObject>();
+
+					using (XmlReader reader = XmlReader.Create(characterFilePath))
+						myWorldObjects = (List<MyWorldObject>)serializer.Deserialize(reader);
+
+					EquipmentGroup newGroup = new EquipmentGroup();
+
+					foreach (var mwo in myWorldObjects)
+						newGroup.Add(new EquipmentPiece(mwo, characterName));
+
+					characterNode.Tag = newGroup;
+				}
+			}
+
+			inventoryTreeView.ExpandAll();
+
+			this.Enabled = true;
+		}
+
+		private void inventoryTreeView_AfterCheck(object sender, TreeViewEventArgs e)
+		{
+			foreach (TreeNode node in e.Node.Nodes)
+				node.Checked = e.Node.Checked;
+
+			if (e.Node.Tag is EquipmentGroup)
+			{
+				foreach (EquipmentPiece piece in (e.Node.Tag as EquipmentGroup))
+				{
+					if (!e.Node.Checked && equipmentGroup.Contains(piece))
+						equipmentGroup.Remove(piece);
+					else if (e.Node.Checked && !equipmentGroup.Contains(piece))
+						equipmentGroup.Add(piece);
+				}
+			}
+
+			foreach (EquipmentPiece piece in equipmentGroup)
+			{
+				if (piece.ArmorSet == null || piece.ArmorSet == ArmorSet.NoArmorSet || (piece.EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) == 0)
+					continue;
+
+				if (!cboPrimaryArmorSet.Items.Contains(piece.ArmorSet))
+				{
+					cboPrimaryArmorSet.Items.Add(piece.ArmorSet);
+					cboSecondaryArmorSet.Items.Add(piece.ArmorSet);
+				}
+			}
 		}
 
 		private void btnLoadFromClipboard_Click(object sender, EventArgs e)

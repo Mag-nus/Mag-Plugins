@@ -46,11 +46,13 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Equipment\ArmorSet.cs" />
+    <Compile Include="MyWorldObject.cs" />
     <Compile Include="Search\AccessorySearcher.cs" />
     <Compile Include="Search\Bucket.cs" />
     <Compile Include="Search\BucketSorter.cs" />
     <Compile Include="Search\CompletedSuit.cs" />
     <Compile Include="Search\Searcher.cs" />
+    <Compile Include="SerializableDictionary.cs" />
     <Compile Include="Spells\CantripSelectorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

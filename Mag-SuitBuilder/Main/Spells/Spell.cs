@@ -61,6 +61,8 @@ namespace Mag_SuitBuilder.Spells
 				CantripLevel = CantripLevels.Major;
 			else if (name.StartsWith("Epic "))
 				CantripLevel = CantripLevels.Epic;
+			else if (name.StartsWith("Legendary "))
+				CantripLevel = CantripLevels.Legendary;
 
 			// Get the Family
 			int nameIndex = SpellTableHeader.IndexOf("Name");
@@ -128,6 +130,7 @@ namespace Mag_SuitBuilder.Spells
 			Inner,
 			Major,
 			Epic,
+			Legendary,
 		}
 
 		public readonly CantripLevels CantripLevel;
@@ -196,6 +199,19 @@ namespace Mag_SuitBuilder.Spells
 			}
 
 			throw new ArgumentException("Spell of id: " + id + " not found in Spells.csv");
+		}
+
+		public static bool IsAKnownSpell(int id)
+		{
+			int idIndex = SpellTableHeader.IndexOf("Id");
+
+			foreach (string[] line in SpellTable)
+			{
+				if (line[idIndex] == id.ToString())
+					return true;
+			}
+
+			return false;
 		}
 
 		public static bool IsAKnownSpell(string text)

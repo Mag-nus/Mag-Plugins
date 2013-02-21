@@ -35,6 +35,7 @@ namespace Mag_SuitBuilder
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.inventoryTreeView = new System.Windows.Forms.TreeView();
 			this.btnHelp = new System.Windows.Forms.Button();
 			this.btnClear = new System.Windows.Forms.Button();
 			this.btnLoadFromClipboard = new System.Windows.Forms.Button();
@@ -63,9 +64,9 @@ namespace Mag_SuitBuilder
 			this.cmdExpandAll = new System.Windows.Forms.Button();
 			this.treeView1 = new System.Windows.Forms.TreeView();
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
-			this.cntrlSuitCantrips = new Mag_SuitBuilder.Spells.CantripSelectorControl();
 			this.btnStopCalculating = new System.Windows.Forms.Button();
 			this.btnCalculatePossibilities = new System.Windows.Forms.Button();
+			this.cntrlSuitCantrips = new Mag_SuitBuilder.Spells.CantripSelectorControl();
 			this.coveragePiece1 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece16 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece2 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
@@ -104,6 +105,7 @@ namespace Mag_SuitBuilder
 			// 
 			// tabPage3
 			// 
+			this.tabPage3.Controls.Add(this.inventoryTreeView);
 			this.tabPage3.Controls.Add(this.btnHelp);
 			this.tabPage3.Controls.Add(this.btnClear);
 			this.tabPage3.Controls.Add(this.btnLoadFromClipboard);
@@ -116,6 +118,17 @@ namespace Mag_SuitBuilder
 			this.tabPage3.TabIndex = 2;
 			this.tabPage3.Text = "Step 1. Add Inventory";
 			this.tabPage3.UseVisualStyleBackColor = true;
+			// 
+			// inventoryTreeView
+			// 
+			this.inventoryTreeView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this.inventoryTreeView.CheckBoxes = true;
+			this.inventoryTreeView.Location = new System.Drawing.Point(4, 35);
+			this.inventoryTreeView.Name = "inventoryTreeView";
+			this.inventoryTreeView.Size = new System.Drawing.Size(206, 677);
+			this.inventoryTreeView.TabIndex = 33;
+			this.inventoryTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.inventoryTreeView_AfterCheck);
 			// 
 			// btnHelp
 			// 
@@ -166,9 +179,9 @@ namespace Mag_SuitBuilder
 			this.equipmentGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.equipmentGrid.Location = new System.Drawing.Point(3, 35);
+			this.equipmentGrid.Location = new System.Drawing.Point(216, 35);
 			this.equipmentGrid.Name = "equipmentGrid";
-			this.equipmentGrid.Size = new System.Drawing.Size(1433, 677);
+			this.equipmentGrid.Size = new System.Drawing.Size(1220, 677);
 			this.equipmentGrid.TabIndex = 28;
 			this.equipmentGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.equipmentGrid_CellEndEdit);
 			this.equipmentGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.equipmentGrid_CellFormatting);
@@ -365,9 +378,9 @@ namespace Mag_SuitBuilder
 			this.tabPage1.Controls.Add(this.cmdExpandAll);
 			this.tabPage1.Controls.Add(this.treeView1);
 			this.tabPage1.Controls.Add(this.progressBar1);
-			this.tabPage1.Controls.Add(this.cntrlSuitCantrips);
 			this.tabPage1.Controls.Add(this.btnStopCalculating);
 			this.tabPage1.Controls.Add(this.btnCalculatePossibilities);
+			this.tabPage1.Controls.Add(this.cntrlSuitCantrips);
 			this.tabPage1.Controls.Add(this.coveragePiece1);
 			this.tabPage1.Controls.Add(this.coveragePiece16);
 			this.tabPage1.Controls.Add(this.coveragePiece2);
@@ -431,14 +444,6 @@ namespace Mag_SuitBuilder
 			this.progressBar1.Size = new System.Drawing.Size(181, 23);
 			this.progressBar1.TabIndex = 34;
 			// 
-			// cntrlSuitCantrips
-			// 
-			this.cntrlSuitCantrips.Enabled = false;
-			this.cntrlSuitCantrips.Location = new System.Drawing.Point(8, 564);
-			this.cntrlSuitCantrips.Name = "cntrlSuitCantrips";
-			this.cntrlSuitCantrips.Size = new System.Drawing.Size(528, 150);
-			this.cntrlSuitCantrips.TabIndex = 33;
-			// 
 			// btnStopCalculating
 			// 
 			this.btnStopCalculating.Enabled = false;
@@ -459,6 +464,14 @@ namespace Mag_SuitBuilder
 			this.btnCalculatePossibilities.Text = "Calculate Possibilities";
 			this.btnCalculatePossibilities.UseVisualStyleBackColor = true;
 			this.btnCalculatePossibilities.Click += new System.EventHandler(this.btnCalculatePossibilities_Click);
+			// 
+			// cntrlSuitCantrips
+			// 
+			this.cntrlSuitCantrips.Enabled = false;
+			this.cntrlSuitCantrips.Location = new System.Drawing.Point(8, 564);
+			this.cntrlSuitCantrips.Name = "cntrlSuitCantrips";
+			this.cntrlSuitCantrips.Size = new System.Drawing.Size(528, 150);
+			this.cntrlSuitCantrips.TabIndex = 33;
 			// 
 			// coveragePiece1
 			// 
@@ -686,6 +699,7 @@ namespace Mag_SuitBuilder
 		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.Button cmdCollapseAll;
 		private System.Windows.Forms.Button cmdExpandAll;
+		private System.Windows.Forms.TreeView inventoryTreeView;
 	}
 }
 

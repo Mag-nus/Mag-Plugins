@@ -15,6 +15,83 @@ namespace Mag_SuitBuilder.Equipment
 			SpellsToUseInSearch = new List<Spell>();
 		}
 
+		public EquipmentPiece(MyWorldObject mwo, string character = null) : this()
+		{
+			Character = character;
+
+			_name = mwo.Name;
+
+			if (mwo.LongValues.ContainsKey(218103822))
+			{
+				EquipableSlots = (Constants.EquippableSlotFlags)mwo.LongValues[218103822];
+
+				if ((int)EquipableSlots == 16777216 || (int)EquipableSlots == 1048576 || (int)EquipableSlots == 2097152 || mwo.Name.Contains("Cloak") || mwo.Name.Contains("Aetheria"))
+					EquipableSlots = 0;
+
+				if (Constants.IsUnderwear(Name))
+					EquipableSlots = Constants.GetEquippableSlots(Name);
+			}
+
+			// Pick out the Armor Set
+			if (mwo.LongValues.ContainsKey(265))
+			{
+				Dictionary<int, string> attributeSetInfo = Constants.GetAttributeSetInfo();
+
+				if (attributeSetInfo.ContainsKey((int)mwo.LongValues[265]))
+					ArmorSet = ArmorSet.GetArmorSet(attributeSetInfo[(int)mwo.LongValues[265]]);
+				else
+					ArmorSet = ArmorSet.GetArmorSet(mwo.LongValues[265].ToString());
+
+			}
+			// Find the AL
+			if (mwo.LongValues.ContainsKey(28))
+				ArmorLevel = (int)mwo.LongValues[28];
+
+			// Find the number of tinks
+			if (mwo.LongValues.ContainsKey(171))
+				Tinks = (int)mwo.LongValues[171];
+
+			// Find out if the piece has been imbued
+			if (mwo.LongValues.ContainsKey(179))
+				Imbued = mwo.LongValues[179] > 0;
+
+			// Add the spells
+			foreach (var s in mwo.Spells)
+			{
+				if (Spell.IsAKnownSpell(s))
+					spells.Add(Spell.GetSpell(s));
+			}
+
+			// Determine our base armor level
+			if (ArmorLevel != 0 && (EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) != 0)
+			{
+				int armorFromTinks = 0;
+
+				if (Tinks > 0)
+					armorFromTinks = Imbued ? (Tinks - 1) * 20 : Tinks * 20;
+
+				BaseArmorLevel = ArmorLevel - armorFromTinks;
+
+				// Lets try to determine if this item has been buffed. If so, lets just assume its been buffed with Impen 8 and subtract 240 from the piece.
+				// According to this page http://ac.wikkii.net/wiki/Loot#Armor, the highest piece of enchantable armor is 314
+				if (BaseArmorLevel > 314)
+					BaseArmorLevel -= 240;
+			}
+
+			// Add Impen to the base armor level
+			foreach (Spell spell in Spells)
+			{
+				if (spell.Name.Contains("Impenetrability"))
+				{
+					if (spell.CantripLevel == Spell.CantripLevels.Minor) BaseArmorLevel += 20;
+					if (spell.CantripLevel == Spell.CantripLevels.Major) BaseArmorLevel += 40;
+					if (spell.CantripLevel == Spell.CantripLevels.Epic) BaseArmorLevel += 60;
+
+					break;
+				}
+			}
+		}
+
 		// Copper Chainmail Leggings, AL 607, Tinks 10, Epic Invulnerability, Wield Lvl 150, Melee Defense 390 to Activate, Diff 262
 		// Gold Top, Tinks 2, Augmented Health III, Augmented Damage II, Major Storm Ward, Wield Lvl 150, Diff 410, Craft 9
 		// Iron Amuli Coat, Defender's Set, AL 618, Tinks 10, Epic Strength, Wield Lvl 180, Melee Defense 300 to Activate, Diff 160
@@ -74,9 +151,7 @@ namespace Mag_SuitBuilder.Equipment
 			}
 
 			// Determine our base armor level
-			if (ArmorLevel == 0 || (EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) == 0)
-				BaseArmorLevel = 0;
-			else
+			if (ArmorLevel != 0 && (EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) != 0)
 			{
 				int armorFromTinks = 0;
 
@@ -104,6 +179,8 @@ namespace Mag_SuitBuilder.Equipment
 				}
 			}
 		}
+
+		public string Character { get; private set; }
 
 		public bool Locked { get; set; }
 

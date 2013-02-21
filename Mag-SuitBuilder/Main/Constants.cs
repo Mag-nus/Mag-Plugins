@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Mag_SuitBuilder
@@ -235,6 +236,108 @@ namespace Mag_SuitBuilder
 			if (Regex.Match(name, "Trousers").Success) return UnderwearCoverage.FullPants;
 
 			return UnderwearCoverage.None;
+		}
+
+		/// <summary>
+		/// Returns a dictionary of attribute set ids vs names
+		/// </summary>
+		/// <returns></returns>
+		public static Dictionary<int, string> GetAttributeSetInfo()
+		{
+			Dictionary<int, string> attributeSetInfo = new Dictionary<int, string>
+			{
+				// This list was taken from Virindi Tank Loot Editor
+				// 01
+				// 02
+				// 03
+				// 04
+				{ 05, "Noble Relic Set" },
+				{ 06, "Ancient Relic Set" },
+				{ 07, "Relic Alduressa Set" },
+				{ 08, "Shou-jen Set" },
+				{ 09, "Empyrean Rings Set" },
+				{ 10, "Arm, Mind, Heart Set" },
+				{ 11, "Coat of the Perfect Light Set" },
+				{ 12, "Leggings of Perfect Light Set" },
+				{ 13, "Soldier's Set" },
+				{ 14, "Adept's Set" },
+				{ 15, "Archer's Set" },
+				{ 16, "Defender's Set" },
+				{ 17, "Tinker's Set" },
+				{ 18, "Crafter's Set" },
+				{ 19, "Hearty Set" },
+				{ 20, "Dexterous Set" },
+				{ 21, "Wise Set" },
+				{ 22, "Swift Set" },
+				{ 23, "Hardenend Set" },
+				{ 24, "Reinforced Set" },
+				{ 25, "Interlocking Set" },
+				{ 26, "Flame Proof Set" },
+				{ 27, "Acid Proof Set" },
+				{ 28, "Cold Proof Set" },
+				{ 29, "Lightning Proof Set" },
+				{ 30, "Dedication Set" },
+				{ 31, "Gladiatorial Clothing Set" },
+				{ 32, "Protective Clothing Set" },
+				// 33
+				// 34
+				{ 35, "Sigil of Defense" },
+				{ 36, "Sigil of Destruction" },
+				{ 37, "Sigil of Fury" },
+				{ 38, "Sigil of Growth" },
+				{ 39, "Sigil of Vigor" },
+				{ 40, "Heroic Protector Set" },
+				{ 41, "Heroic Destroyer Set" },
+				// 42
+				// 43
+				// 44
+				// 45
+				// 46
+				{ 47, "Upgraded Ancient Relic Set" },
+				// 48
+				{ 49, "Weave of Alchemy" },
+				{ 50, "Weave of Arcane Lore" },
+				{ 51, "Weave of Armor Tinkering" },
+				{ 52, "Weave of Assess Person" },
+				{ 53, "Weave of Light Weapons" },
+				{ 54, "Weave of Missile Weapons" },
+				{ 55, "Weave of Cooking" },
+				{ 56, "Weave of Creature Enchantment" },
+				{ 57, "Weave of Missile Weapons" },
+				{ 58, "Weave of Finesse" },
+				{ 59, "Weave of Deception" },
+				{ 60, "Weave of Fletching" },
+				{ 61, "Weave of Healing" },
+				{ 62, "Weave of Item Enchantment" },
+				{ 63, "Weave of Item Tinkering" },
+				{ 64, "Weave of Leadership" },
+				{ 65, "Weave of Life Magic" },
+				{ 66, "Weave of Loyalty" },
+				{ 67, "Weave of Light Weapons" },
+				{ 68, "Weave of Magic Defense" },
+				{ 69, "Weave of Magic Item Tinkering" },
+				{ 70, "Weave of Mana Conversion" },
+				{ 71, "Weave of Melee Defense" },
+				{ 72, "Weave of Missile Defense" },
+				{ 73, "Weave of Salvaging" },
+				{ 74, "Weave of Light Weapons" },
+				{ 75, "Weave of Light Weapons" },
+				{ 76, "Weave of Heavy Weapons" },
+				{ 77, "Weave of Missile Weapons" },
+				{ 78, "Weave of Two Handed Combat" },
+				{ 79, "Weave of Light Weapons" },
+				{ 80, "Weave of Void Magic" },
+				{ 81, "Weave of War Magic" },
+				{ 82, "Weave of Weapon Tinkering" },
+				{ 83, "Weave of Assess Creature " },
+				{ 84, "Weave of Dirty Fighting" },
+				{ 85, "Weave of Dual Wield" },
+				{ 86, "Weave of Recklessness" },
+				{ 87, "Weave of Shield" },
+				{ 88, "Weave of Sneak Attack" },
+			};
+
+			return attributeSetInfo;
 		}
 	}
 
