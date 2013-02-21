@@ -124,6 +124,7 @@ namespace Mag_SuitBuilder
 				if (Regex.Match(name, "Amuli Coat").Success) return EquippableSlotFlags.Chest; // Can only reduce to chest
 				//if (Regex.Match(name, "Chiran Coat").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms;
 				if (Regex.Match(name, "Chiran Coat").Success) return EquippableSlotFlags.Chest; // Can only reduce to chest
+				if (Regex.Match(name, "O-Yoroi Coat").Success) return EquippableSlotFlags.Chest; // Can only reduce to chest
 
 				//if (Regex.Match(name, "Shirt").Success) return EquippableSlotFlags.Chest | EquippableSlotFlags.Abdomen | EquippableSlotFlags.UpperArms;
 				if (Regex.Match(name, "Shirt").Success) return EquippableSlotFlags.Chest; // Can only reduce to chest

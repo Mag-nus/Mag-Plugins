@@ -25,6 +25,10 @@ namespace Mag_SuitBuilder.Equipment
 			{
 				EquipableSlots = (Constants.EquippableSlotFlags)mwo.LongValues[218103822];
 
+				// If the piece hasn't been reduced, and we can determine its reduction state by the name, lets use that instead
+				if (EquipableSlots.GetTotalBitsSet() > 1 && Constants.GetEquippableSlots(Name) != Constants.EquippableSlotFlags.None)
+					EquipableSlots = Constants.GetEquippableSlots(Name);
+
 				if ((int)EquipableSlots == 16777216 || (int)EquipableSlots == 1048576 || (int)EquipableSlots == 2097152 || mwo.Name.Contains("Cloak") || mwo.Name.Contains("Aetheria"))
 					EquipableSlots = 0;
 
@@ -86,6 +90,7 @@ namespace Mag_SuitBuilder.Equipment
 					if (spell.CantripLevel == Spell.CantripLevels.Minor) BaseArmorLevel += 20;
 					if (spell.CantripLevel == Spell.CantripLevels.Major) BaseArmorLevel += 40;
 					if (spell.CantripLevel == Spell.CantripLevels.Epic) BaseArmorLevel += 60;
+					if (spell.CantripLevel == Spell.CantripLevels.Legendary) BaseArmorLevel += 80;
 
 					break;
 				}
