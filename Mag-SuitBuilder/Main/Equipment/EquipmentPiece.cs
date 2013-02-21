@@ -29,7 +29,7 @@ namespace Mag_SuitBuilder.Equipment
 				if (EquipableSlots.GetTotalBitsSet() > 1 && Constants.GetEquippableSlots(Name) != Constants.EquippableSlotFlags.None)
 					EquipableSlots = Constants.GetEquippableSlots(Name);
 
-				if ((int)EquipableSlots == 16777216 || (int)EquipableSlots == 1048576 || (int)EquipableSlots == 2097152 || mwo.Name.Contains("Cloak") || mwo.Name.Contains("Aetheria"))
+				if ((int)EquipableSlots == 16777216 || (int)EquipableSlots == 1048576 || (int)EquipableSlots == 2097152 || (int)EquipableSlots == 4194304 || (int)EquipableSlots == 33554432 || mwo.Name.Contains("Cloak") || mwo.Name.Contains("Aetheria"))
 					EquipableSlots = 0;
 
 				if (Constants.IsUnderwear(Name))
