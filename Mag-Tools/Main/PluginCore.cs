@@ -397,6 +397,8 @@ namespace MagTools
 				startupErrors.Clear();
 
 				CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
+
+				//Util.ExportSpells(PluginPersonalFolder.FullName + @"\spells.csv");
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
