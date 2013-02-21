@@ -21,7 +21,7 @@ namespace MagTools.Inventory
 		public int LastIdTime;
 		//public List<int> LongKeys;
 		public string Name;
-		public ObjectClass ObjectClass;
+		public string ObjectClass; // I should have made this an int. :(
 		public int PhysicsDataFlags;
 		//public int SpellCount;
 		//public List<int> StringKeys;
@@ -61,7 +61,7 @@ namespace MagTools.Inventory
 			LastIdTime = wo.LastIdTime;
 			//LongKeys
 			Name = wo.Name;
-			ObjectClass = wo.ObjectClass;
+			ObjectClass = wo.ObjectClass.ToString();
 			PhysicsDataFlags = wo.PhysicsDataFlags;
 			//SpellCount
 			//StringKeys

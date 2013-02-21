@@ -44,7 +44,7 @@
     <Reference Include="Decal.Interop.Core, Version=2.9.6.5, Culture=neutral, PublicKeyToken=481f17d392f1fb65, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\..\..\..\..\Games\Decal 3.0\.NET 2.0 PIA\Decal.Interop.Core.DLL</HintPath>
+      <HintPath>C:\Games\Decal 3.0\.NET 2.0 PIA\Decal.Interop.Core.DLL</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />

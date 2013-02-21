@@ -24,6 +24,7 @@ namespace MagTools.Inventory
 			{
 				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+				CoreManager.Current.WorldFilter.MoveObject += new EventHandler<MoveObjectEventArgs>(WorldFilter_MoveObject);
 				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -50,6 +51,7 @@ namespace MagTools.Inventory
 				{
 					CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
 					CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+					CoreManager.Current.WorldFilter.MoveObject -= new EventHandler<MoveObjectEventArgs>(WorldFilter_MoveObject);
 					CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 				}
 
@@ -81,7 +83,7 @@ namespace MagTools.Inventory
 					loggedInAndWaitingForIdData = true;
 				}
 				else
-					DumpInventoryToFile();
+					DumpInventoryToFile(true);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -113,6 +115,33 @@ namespace MagTools.Inventory
 			}
 		}
 
+		readonly List<int> requestedIds = new List<int>();
+
+		void WorldFilter_MoveObject(object sender, MoveObjectEventArgs e)
+		{
+			try
+			{
+				if (!Settings.SettingsManager.InventoryManagement.InventoryLogger.Value)
+					return;
+
+				// Check if the player just received an item that it needs id data for
+				if (!e.Moved.HasIdData && ObjectClassNeedsIdent(e.Moved.ObjectClass) && !requestedIds.Contains(e.Moved.Id))
+				{
+					// Make sure its in our inventory
+					foreach (var invo in CoreManager.Current.WorldFilter.GetInventory())
+					{
+						if (invo.Id == e.Moved.Id)
+						{
+							requestedIds.Add(e.Moved.Id);
+							CoreManager.Current.Actions.RequestId(e.Moved.Id);
+							break;
+						}
+					}
+				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
 		void CharacterFilter_Logoff(object sender, Decal.Adapter.Wrappers.LogoffEventArgs e)
 		{
 			try
@@ -125,7 +154,7 @@ namespace MagTools.Inventory
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void DumpInventoryToFile()
+		void DumpInventoryToFile(bool requestIdsIfItemDoesntHave = false)
 		{
 			XmlSerializer serializer = new XmlSerializer(typeof(List<MyWorldObject>));
 
@@ -145,12 +174,21 @@ namespace MagTools.Inventory
 				{
 					if (prevso.Id == wo.Id && prevso.Name == wo.Name)
 					{
+						if (requestIdsIfItemDoesntHave && !prevso.HasIdData && !wo.HasIdData && ObjectClassNeedsIdent(wo.ObjectClass))
+							CoreManager.Current.Actions.RequestId(wo.Id);
+
 						prevso.UpdateFromObject(wo);
 						myWorldObjects.Add(prevso);
+
 						goto end;
 					}
 				}
+
+				if (requestIdsIfItemDoesntHave && !wo.HasIdData && ObjectClassNeedsIdent(wo.ObjectClass))
+					CoreManager.Current.Actions.RequestId(wo.Id);
+
 				myWorldObjects.Add(new MyWorldObject(wo));
+
 				end: ;
 			}
 

@@ -1800,7 +1800,7 @@ namespace VTClassic
 
 			{ 3251, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .01, .01)}, // Minor Spirit Thirst
 			{ 3250, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .03, .03)}, // Major Spirit Thirst
-			{ 4670, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .04, .04)}, // Epic Spirit Thirst
+			{ 4670, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .05, .05)}, // Epic Spirit Thirst
 			{ 6098, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07, .07)}, // Legendary Spirit Thirst
 
 			{ 3735, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .15)}, // Prodigal Spirit Drinker
