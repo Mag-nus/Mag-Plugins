@@ -148,7 +148,7 @@ namespace MagTools
 				// 44
 				// 45
 				// 46
-				// 47
+				{ 47, "Upgraded Ancient Relic Set" },
 				// 48
 				{ 49, "Weave of Alchemy" },
 				{ 50, "Weave of Arcane Lore" },
