@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace MagTools.Inventory
+namespace Mag.Shared
 {
 	[Serializable]
 	public class MyWorldObject

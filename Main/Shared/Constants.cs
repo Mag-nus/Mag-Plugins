@@ -2,7 +2,7 @@
 
 using Decal.Adapter.Wrappers;
 
-namespace MagTools
+namespace Mag.Shared
 {
 	public static class Constants
 	{
