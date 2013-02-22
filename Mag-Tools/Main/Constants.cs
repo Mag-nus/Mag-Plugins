@@ -324,6 +324,10 @@ namespace MagTools
 			{ 3688, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 300)}, // Prodigal Blood Drinker
 
 
+			{ 1486, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 200)}, // Impenetrability VI
+			{ 2108, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 220)}, // Brogard's Defiance
+			{ 4407, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 240)}, // Incantation of Impenetrability
+
 			{ 2604, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 20, 20)}, // Minor Impenetrability
 			{ 2592, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 40, 40)}, // Major Impenetrability
 			{ 4667, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 60, 60)}, // Epic Impenetrability

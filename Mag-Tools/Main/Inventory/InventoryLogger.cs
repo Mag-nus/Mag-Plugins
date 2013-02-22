@@ -158,27 +158,43 @@ namespace MagTools.Inventory
 		{
 			XmlSerializer serializer = new XmlSerializer(typeof(List<MyWorldObject>));
 
+			// Load the objects from our saved inventory.xml
 			List<MyWorldObject> previouslySavedObjects = new List<MyWorldObject>();
 
 			if (File.Exists(inventoryFileName))
 			{
-				using (XmlReader reader = XmlReader.Create(inventoryFileName))
-					previouslySavedObjects = (List<MyWorldObject>)serializer.Deserialize(reader);
+				try
+				{
+					using (XmlReader reader = XmlReader.Create(inventoryFileName))
+						previouslySavedObjects = (List<MyWorldObject>) serializer.Deserialize(reader);
+				}
+				catch (InvalidOperationException) // File is corrupt
+				{
+					Debug.WriteToChat("Inventory file is corrupt.");
+				}
 			}
 
+			// Go through our current inventory
 			List<MyWorldObject> myWorldObjects = new List<MyWorldObject>();
 
 			foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
 			{
+				// Check to see if we already have some information for this item
 				foreach (MyWorldObject prevso in previouslySavedObjects)
 				{
-					if (prevso.Id == wo.Id && prevso.Name == wo.Name)
+					if (prevso.Id == wo.Id && prevso.ObjectClass == (int)wo.ObjectClass)
 					{
+						// If neither our past nor our current item HadIdData, but it should, lets request it
 						if (requestIdsIfItemDoesntHave && !prevso.HasIdData && !wo.HasIdData && ObjectClassNeedsIdent(wo.ObjectClass))
+						{
 							CoreManager.Current.Actions.RequestId(wo.Id);
-
-						prevso.UpdateFromObject(wo);
-						myWorldObjects.Add(prevso);
+							myWorldObjects.Add(MyWorldObjectCreator.Create(wo));
+						}
+						else
+						{
+							// Add the WorldObject to the MyWorldObject data so we have up to date information
+							myWorldObjects.Add(MyWorldObjectCreator.Combine(prevso, wo));
+						}
 
 						goto end;
 					}
@@ -187,11 +203,12 @@ namespace MagTools.Inventory
 				if (requestIdsIfItemDoesntHave && !wo.HasIdData && ObjectClassNeedsIdent(wo.ObjectClass))
 					CoreManager.Current.Actions.RequestId(wo.Id);
 
-				myWorldObjects.Add(new MyWorldObject(wo));
+				myWorldObjects.Add(MyWorldObjectCreator.Create(wo));
 
 				end: ;
 			}
 
+			// Write it out to the inventory.xml file
 			XmlDocument xmlDoc = new XmlDocument();
 			XPathNavigator nav = xmlDoc.CreateNavigator();
 			using (XmlWriter writer = nav.AppendChild())

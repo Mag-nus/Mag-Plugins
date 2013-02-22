@@ -75,6 +75,7 @@
     <Compile Include="Inventory\InventoryExporter.cs" />
     <Compile Include="Inventory\InventoryLogger.cs" />
     <Compile Include="Inventory\MyWorldObject.cs" />
+    <Compile Include="Inventory\MyWorldObjectCreator.cs" />
     <Compile Include="IPluginCore.cs" />
     <Compile Include="ItemInfo\ILootRuleProcessor.cs" />
     <Compile Include="ItemInfo\ItemInfo.cs" />

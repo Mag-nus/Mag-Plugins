@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace MagTools.Inventory
+namespace Mag_InventoryViewer
 {
 	[Serializable]
 	public class MyWorldObject
 	{
+		public string Character { get; set; }
+
 		public bool HasIdData;
 		public int Id;
 		public int LastIdTime;
@@ -69,14 +71,14 @@ namespace MagTools.Inventory
 		}
 
 
-		public string Material { get { if (LongValues.ContainsKey(131)) return Constants.GetMaterialInfo().ContainsKey((int)LongValues[131]) ? Constants.GetMaterialInfo()[(int)LongValues[131]] : LongValues[131].ToString(CultureInfo.InvariantCulture); return null; } }
-		
+		//public string Material { get { if (LongValues.ContainsKey(131)) return Constants.GetMaterialInfo().ContainsKey((int)LongValues[131]) ? Constants.GetMaterialInfo()[(int)LongValues[131]] : LongValues[131].ToString(CultureInfo.InvariantCulture); return null; } }
+
 		public string Name { get { return StringValues.ContainsKey(1) ? StringValues[1] : null; } }
 
 
-		public string Mastery { get { if (LongValues.ContainsKey(353)) return Constants.GetMasteryInfo().ContainsKey((int)LongValues[353]) ? Constants.GetMasteryInfo()[(int)LongValues[353]] : LongValues[353].ToString(CultureInfo.InvariantCulture); return null; } }
+		//public string Mastery { get { if (LongValues.ContainsKey(353)) return Constants.GetMasteryInfo().ContainsKey((int)LongValues[353]) ? Constants.GetMasteryInfo()[(int)LongValues[353]] : LongValues[353].ToString(CultureInfo.InvariantCulture); return null; } }
 
-		public string ItemSet { get { if (LongValues.ContainsKey(265)) return Constants.GetAttributeSetInfo().ContainsKey((int)LongValues[265]) ? Constants.GetAttributeSetInfo()[(int)LongValues[265]] : LongValues[131].ToString(CultureInfo.InvariantCulture); return null; } }
+		//public string ItemSet { get { if (LongValues.ContainsKey(265)) return Constants.GetAttributeSetInfo().ContainsKey((int)LongValues[265]) ? Constants.GetAttributeSetInfo()[(int)LongValues[265]] : LongValues[131].ToString(CultureInfo.InvariantCulture); return null; } }
 
 
 		public int ArmorLevel { get { return LongValues.ContainsKey(28) ? (int)LongValues[28] : -1; } }
@@ -145,49 +147,7 @@ namespace MagTools.Inventory
 		public int Burden { get { return LongValues.ContainsKey(5) ? (int)LongValues[5] : -1; } }
 
 
-		public int CalcedStartingArmorLevel
-		{
-			get
-			{
-				int armorFromTinks = 0;
-				int armorFromBuffs = 0;
-
-				if (Tinks > 0)
-					armorFromTinks = (Imbue != null) ? (Tinks - 1) * 20 : Tinks * 20; // This assumes each tink adds an amor level of 20
-
-				foreach (int spell in ActiveSpells)
-				{
-					foreach (var effect in Constants.LongValueKeySpellEffects)
-					{
-						if (spell == effect.Key && (int)effect.Value.Key == 28)
-							armorFromBuffs -= (int)effect.Value.Change;
-					}
-				}
-
-				foreach (int spell in Spells)
-				{
-					foreach (var effect in Constants.LongValueKeySpellEffects)
-					{
-						if (spell == effect.Key && (int)effect.Value.Key == 28)
-							armorFromBuffs += (int)effect.Value.Bonus;
-					}
-				}
-
-				return ArmorLevel - armorFromTinks - armorFromBuffs;
-			}
-		}
-
-		// CalcedBuffedTinkedDamage
-
-		// BuffedMissileDamage
-
-		// ElementalDamageVersusMonsters
-
-		// AttackBonus
-
-		// MeleeDefenseBonus
-
-		// ManaCBonus
+		// Calculated Values
 
 		public override string ToString()
 		{
