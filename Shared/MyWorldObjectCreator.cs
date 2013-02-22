@@ -2,7 +2,7 @@
 
 using Decal.Adapter.Wrappers;
 
-namespace MagTools.Inventory
+namespace Mag.Shared
 {
 	public static class MyWorldObjectCreator
 	{

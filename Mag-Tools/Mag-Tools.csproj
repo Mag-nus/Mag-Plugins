@@ -67,15 +67,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\Constants.cs">
+      <Link>Constants.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\MyWorldObject.cs">
+      <Link>MyWorldObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\MyWorldObjectCreator.cs">
+      <Link>MyWorldObjectCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\SerializableDictionary.cs">
+      <Link>SerializableDictionary.cs</Link>
+    </Compile>
     <Compile Include="ACClientChatSizeManager.cs" />
     <Compile Include="ChatFilter.cs" />
     <Compile Include="Client\NoFocusFPSManager.cs" />
     <Compile Include="Client\WindowPosition.cs" />
-    <Compile Include="Constants.cs" />
     <Compile Include="Inventory\InventoryExporter.cs" />
     <Compile Include="Inventory\InventoryLogger.cs" />
-    <Compile Include="Inventory\MyWorldObject.cs" />
-    <Compile Include="Inventory\MyWorldObjectCreator.cs" />
     <Compile Include="IPluginCore.cs" />
     <Compile Include="ItemInfo\ILootRuleProcessor.cs" />
     <Compile Include="ItemInfo\ItemInfo.cs" />
@@ -95,7 +104,6 @@
     <Compile Include="Macros\MaximizeChatOnLogin.cs" />
     <Compile Include="Macros\OneTouchHeal.cs" />
     <Compile Include="Macros\OpenMainPackOnLogin.cs" />
-    <Compile Include="SerializableDictionary.cs" />
     <Compile Include="Settings\Setting.cs" />
     <Compile Include="Settings\SettingsFile.cs" />
     <Compile Include="Settings\SettingsManager.cs" />

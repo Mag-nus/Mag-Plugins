@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Mag.Shared;
+
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 using Decal.Filters;

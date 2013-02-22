@@ -5,6 +5,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 
+using Mag.Shared;
+
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
