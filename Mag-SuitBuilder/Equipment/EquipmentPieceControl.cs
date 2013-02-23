@@ -1,5 +1,7 @@
 ﻿using System.Windows.Forms;
 
+using Mag.Shared;
+
 namespace Mag_SuitBuilder.Equipment
 {
 	partial class EquipmentPieceControl : UserControl

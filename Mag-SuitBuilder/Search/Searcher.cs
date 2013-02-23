@@ -12,12 +12,12 @@ namespace Mag_SuitBuilder.Search
 		protected readonly EquipmentGroup Equipment = new EquipmentGroup();
 		protected readonly SuitBuilder SuitBuilder = new SuitBuilder();
 
-		protected Searcher(SearcherConfiguration config, IEnumerable<EquipmentPiece> equipment, CompletedSuit startingSuit = null)
+		protected Searcher(SearcherConfiguration config, IEnumerable<SuitBuildableMyWorldObject> equipment, CompletedSuit startingSuit = null)
 		{
 
 			Config = config;
 
-			foreach (EquipmentPiece piece in equipment)
+			foreach (var piece in equipment)
 				Equipment.Add(piece);
 
 			// Remove pieces that don't meet our minimum requirements
@@ -44,8 +44,9 @@ namespace Mag_SuitBuilder.Search
 			// Remove pieces we can't add to our base suit, or pieces that can provide no beneficial spell
 			for (int i = Equipment.Count - 1; i >= 0; i--)
 			{
-				if (!SuitBuilder.SlotIsOpen(Equipment[i].EquipableSlots) || !SuitBuilder.CanGetBeneficialSpellFrom(Equipment[i]))
-					Equipment.RemoveAt(i);
+				// todo hack fix
+				//if (!SuitBuilder.SlotIsOpen(Equipment[i].EquipableSlots) || !SuitBuilder.CanGetBeneficialSpellFrom(Equipment[i]))
+				//	Equipment.RemoveAt(i);
 			}
 		}
 				

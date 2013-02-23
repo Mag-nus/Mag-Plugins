@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using Mag_SuitBuilder.Equipment;
 using Mag_SuitBuilder.Spells;
 
+using Mag.Shared;
+
 namespace Mag_SuitBuilder.Search
 {
 	class SearcherConfiguration
@@ -27,6 +29,12 @@ namespace Mag_SuitBuilder.Search
 
 		public bool OnlyAddPiecesWithArmor { get; set; }
 
+
+		public bool ItemPassesRules(SuitBuildableMyWorldObject item)
+		{
+			// todo hack fix
+			return true;
+		}
 
 		public bool ItemPassesRules(EquipmentPiece item)
 		{
@@ -57,14 +65,12 @@ namespace Mag_SuitBuilder.Search
 			}
 
 			// If we're don't want to use any set pieces, remove them
-			if (PrimaryArmorSet == ArmorSet.NoArmorSet && SecondaryArmorSet == ArmorSet.NoArmorSet &&
-				(item.EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) != 0 && item.ArmorSet != ArmorSet.NoArmorSet)
+			if (PrimaryArmorSet == ArmorSet.NoArmorSet && SecondaryArmorSet == ArmorSet.NoArmorSet && item.EquipableSlots.IsBodyArmor() && item.ArmorSet != ArmorSet.NoArmorSet)
 				return false;
 			// If we're building a two set armor suit, and we don't want any blanks or fillers, remove any pieces of armor of other sets
 			if (PrimaryArmorSet != ArmorSet.NoArmorSet && SecondaryArmorSet != ArmorSet.NoArmorSet &&
 				PrimaryArmorSet != ArmorSet.AnyArmorSet && SecondaryArmorSet != ArmorSet.AnyArmorSet &&
-				(item.EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) != 0 &&
-				item.ArmorSet != PrimaryArmorSet && item.ArmorSet != SecondaryArmorSet)
+				item.EquipableSlots.IsBodyArmor() && item.ArmorSet != PrimaryArmorSet && item.ArmorSet != SecondaryArmorSet)
 				return false;
 
 			// Check to see if we only want pieces with armor

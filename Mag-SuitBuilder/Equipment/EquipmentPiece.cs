@@ -4,6 +4,8 @@ using System.ComponentModel;
 
 using Mag_SuitBuilder.Spells;
 
+using Mag.Shared;
+
 namespace Mag_SuitBuilder.Equipment
 {
 	class EquipmentPiece
@@ -24,7 +26,7 @@ namespace Mag_SuitBuilder.Equipment
 			if (mwo.LongValues.ContainsKey(218103822))
 			{
 				EquipableSlots = (Constants.EquippableSlotFlags)mwo.LongValues[218103822];
-
+				/*
 				// If the piece hasn't been reduced, and we can determine its reduction state by the name, lets use that instead
 				if (EquipableSlots.GetTotalBitsSet() > 1 && Constants.GetEquippableSlots(Name) != Constants.EquippableSlotFlags.None)
 					EquipableSlots = Constants.GetEquippableSlots(Name);
@@ -34,12 +36,13 @@ namespace Mag_SuitBuilder.Equipment
 
 				if (Constants.IsUnderwear(Name))
 					EquipableSlots = Constants.GetEquippableSlots(Name);
+				*/
 			}
 
 			// Pick out the Armor Set
 			if (mwo.LongValues.ContainsKey(265))
 			{
-				Dictionary<int, string> attributeSetInfo = Constants.GetAttributeSetInfo();
+				Dictionary<int, string> attributeSetInfo = Mag.Shared.Constants.GetAttributeSetInfo();
 
 				if (attributeSetInfo.ContainsKey((int)mwo.LongValues[265]))
 					ArmorSet = ArmorSet.GetArmorSet(attributeSetInfo[(int)mwo.LongValues[265]]);
@@ -67,7 +70,7 @@ namespace Mag_SuitBuilder.Equipment
 			}
 
 			// Determine our base armor level
-			if (ArmorLevel != 0 && (EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) != 0)
+			if (ArmorLevel != 0 && EquipableSlots.IsBodyArmor())
 			{
 				int armorFromTinks = 0;
 
@@ -156,7 +159,7 @@ namespace Mag_SuitBuilder.Equipment
 			}
 
 			// Determine our base armor level
-			if (ArmorLevel != 0 && (EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) != 0)
+			if (ArmorLevel != 0 && EquipableSlots.IsBodyArmor())
 			{
 				int armorFromTinks = 0;
 
@@ -197,7 +200,7 @@ namespace Mag_SuitBuilder.Equipment
 			{
 				_name = value;
 
-				EquipableSlots = Constants.GetEquippableSlots(Name);
+				//EquipableSlots = Constants.GetEquippableSlots(Name);
 			}
 		}
 
@@ -212,12 +215,14 @@ namespace Mag_SuitBuilder.Equipment
 				// Determine how many protectable body slots this piece covers
 				BodyPartsCovered = 0;
 
-				if ((EquipableSlots & Constants.EquippableSlotFlags.CanHaveArmor) != 0)
+				if (EquipableSlots.IsBodyArmor())
 				{
+					/*
 					if (Constants.IsUnderwear(Name))
 						BodyPartsCovered = Constants.GetUnderwearCoverage(Name).GetTotalBitsSet();
 					else
 						BodyPartsCovered = EquipableSlots.GetTotalBitsSet();
+					*/
 				}
 			}
 		}

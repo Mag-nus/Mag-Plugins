@@ -384,7 +384,7 @@ namespace MagTools.ItemInfo
 			{
 				int spellId = wo.ActiveSpell(i);
 
-				if (Constants.LongValueKeySpellEffects.ContainsKey(spellId) && Constants.LongValueKeySpellEffects[spellId].Key == key)
+				if (Constants.LongValueKeySpellEffects.ContainsKey(spellId) && Constants.LongValueKeySpellEffects[spellId].Key == (int)key)
 					value -= (int)Constants.LongValueKeySpellEffects[spellId].Change;
 			}
 
@@ -392,7 +392,7 @@ namespace MagTools.ItemInfo
 			{
 				int spellId = wo.Spell(i);
 
-				if (Constants.LongValueKeySpellEffects.ContainsKey(spellId) && Constants.LongValueKeySpellEffects[spellId].Key == key && Constants.LongValueKeySpellEffects[spellId].Bonus != 0)
+				if (Constants.LongValueKeySpellEffects.ContainsKey(spellId) && Constants.LongValueKeySpellEffects[spellId].Key == (int)key && Constants.LongValueKeySpellEffects[spellId].Bonus != 0)
 					value += (int)Constants.LongValueKeySpellEffects[spellId].Bonus;
 			}
 
@@ -410,7 +410,7 @@ namespace MagTools.ItemInfo
 			{
 				int spellId = wo.ActiveSpell(i);
 
-				if (Constants.DoubleValueKeySpellEffects.ContainsKey(spellId) && Constants.DoubleValueKeySpellEffects[spellId].Key == key)
+				if (Constants.DoubleValueKeySpellEffects.ContainsKey(spellId) && Constants.DoubleValueKeySpellEffects[spellId].Key == (int)key)
 				{
 					if ((int)Constants.DoubleValueKeySpellEffects[spellId].Change == 1)
 						value /= Constants.DoubleValueKeySpellEffects[spellId].Change;
@@ -423,7 +423,7 @@ namespace MagTools.ItemInfo
 			{
 				int spellId = wo.Spell(i);
 
-				if (Constants.DoubleValueKeySpellEffects.ContainsKey(spellId) && Constants.DoubleValueKeySpellEffects[spellId].Key == key && Constants.DoubleValueKeySpellEffects[spellId].Bonus != 0)
+				if (Constants.DoubleValueKeySpellEffects.ContainsKey(spellId) && Constants.DoubleValueKeySpellEffects[spellId].Key == (int)key && Constants.DoubleValueKeySpellEffects[spellId].Bonus != 0)
 				{
 					if ((int)Constants.DoubleValueKeySpellEffects[spellId].Change == 1)
 						value *= Constants.DoubleValueKeySpellEffects[spellId].Bonus;

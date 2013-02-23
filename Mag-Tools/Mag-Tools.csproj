@@ -68,18 +68,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Shared\Constants.cs">
-      <Link>Constants.cs</Link>
+      <Link>Shared\Constants.cs</Link>
     </Compile>
     <Compile Include="..\Shared\MyWorldObject.cs">
-      <Link>MyWorldObject.cs</Link>
+      <Link>Shared\MyWorldObject.cs</Link>
     </Compile>
     <Compile Include="..\Shared\MyWorldObjectCreator.cs">
-      <Link>MyWorldObjectCreator.cs</Link>
+      <Link>Shared\MyWorldObjectCreator.cs</Link>
     </Compile>
     <Compile Include="..\Shared\SerializableDictionary.cs">
-      <Link>SerializableDictionary.cs</Link>
+      <Link>Shared\SerializableDictionary.cs</Link>
     </Compile>
-    <Compile Include="ACClientChatSizeManager.cs" />
+    <Compile Include="..\Shared\Util.cs">
+      <Link>Shared\Util.cs</Link>
+    </Compile>
+    <Compile Include="Client\ChatSizeManager.cs" />
     <Compile Include="ChatFilter.cs" />
     <Compile Include="Client\NoFocusFPSManager.cs" />
     <Compile Include="Client\WindowPosition.cs" />
@@ -133,7 +136,6 @@
     <Compile Include="Trackers\Equipment\EquipmentTrackedItem.cs" />
     <Compile Include="Trackers\Equipment\EquipmentTrackedItemState.cs" />
     <Compile Include="Views\ManaTrackerGUI.cs" />
-    <Compile Include="Util.cs" />
     <Compile Include="Views\MainView.cs" />
     <Compile Include="Trackers\Equipment\EquipmentTracker.cs" />
     <Compile Include="PluginCore.cs" />

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace Mag_InventoryViewer
+namespace Mag.Shared
 {
 	class SortableBindingList<T> : BindingList<T> where T : class
 	{
@@ -96,6 +96,5 @@ namespace Mag_InventoryViewer
 			}
 
 		}
-
 	}
 }

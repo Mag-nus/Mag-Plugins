@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Mag_SuitBuilder.Equipment;
 using Mag_SuitBuilder.Spells;
 
+using Mag.Shared;
+
 namespace Mag_SuitBuilder.Search
 {
 	/// <summary>
@@ -55,9 +57,11 @@ namespace Mag_SuitBuilder.Search
 			items.Add(slots, item);
 			piecesHashSet.Add(item);
 
-			if ((item.EquipableSlots & Constants.EquippableSlotFlags.CanHaveArmor) != 0)
+			// This should use the coverage flags instead
+			// todo hack fix
+			if (item.EquipableSlots.IsBodyArmor())
 			{
-				if ((item.EquipableSlots & Constants.EquippableSlotFlags.Underwear) != 0)
+				if (item.EquipableSlots.IsUnderwear())
 					TotalBaseArmorLevel += (item.BaseArmorLevel * item.BodyPartsCovered);
 				else
 					TotalBaseArmorLevel += item.BaseArmorLevel;

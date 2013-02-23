@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
@@ -14,6 +15,8 @@ using Mag_SuitBuilder.Equipment;
 using Mag_SuitBuilder.Search;
 using Mag_SuitBuilder.Spells;
 
+using Mag.Shared;
+
 // Bugs
 // Spell compare is too slow, should be a hash compare
 // AccessorySearcher thread pool keeps going even after user clicks stop.
@@ -22,17 +25,21 @@ namespace Mag_SuitBuilder
 {
 	public partial class Form1 : Form
 	{
-		readonly EquipmentGroup equipmentGroup = new EquipmentGroup();
+		readonly EquipmentGroup boundList = new EquipmentGroup();
 
 		public Form1()
 		{
 			InitializeComponent();
 
-			Text = "Mag-SuitBuilder " + Application.ProductVersion;
-	
-			typeof(DataGridView).InvokeMember("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null, equipmentGrid, new object[] { true });
-			equipmentGrid.DataSource = equipmentGroup;
+			Text += " " + Application.ProductVersion;
+			txtInventoryRootPath.Text = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-Tools\";
 
+			typeof(DataGridView).InvokeMember("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null, equipmentGrid, new object[] { true });
+			equipmentGrid.DataSource = boundList;
+
+			filtersControl1.FiltersChanged += () => UpdateBoundListFromTreeViewNodes(inventoryTreeView.Nodes);
+
+			/*
 			cboPrimaryArmorSet.Items.Add(ArmorSet.NoArmorSet);
 			cboSecondaryArmorSet.Items.Add(ArmorSet.NoArmorSet);
 
@@ -41,6 +48,7 @@ namespace Mag_SuitBuilder
 
 			cboPrimaryArmorSet.SelectedIndex = cboPrimaryArmorSet.Items.Count - 1;
 			cboSecondaryArmorSet.SelectedIndex = cboSecondaryArmorSet.Items.Count - 1;
+			*/
 		}
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -49,132 +57,147 @@ namespace Mag_SuitBuilder
 				btnStopCalculating.PerformClick();
 		}
 
+		private void chkTree_CheckedChanged(object sender, EventArgs e)
+		{
+			inventoryTreeView.Visible = chkTree.Checked;
+			filtersControl1.Visible = chkFilters.Checked;
+
+		}
 		private void btnLoadFromDB_Click(object sender, EventArgs e)
 		{
 			this.Enabled = false;
 
-			XmlSerializer serializer = new XmlSerializer(typeof(List<MyWorldObject>));
+			XmlSerializer serializer = new XmlSerializer(typeof(List<SuitBuildableMyWorldObject>));
 
 			inventoryTreeView.Nodes.Clear();
-			equipmentGroup.Clear();
+			boundList.Clear();
 
-			string[] serverFolderPaths = Directory.GetDirectories(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-Tools\");
+			Dictionary<string, long> armorSets = new Dictionary<string, long>();
 
-			foreach (string serverFolderPath in serverFolderPaths)
+			string txtInventoryRootPathOrig = txtInventoryRootPath.Text;
+
+			string[] serverFolderPaths = Directory.GetDirectories(txtInventoryRootPath.Text);
+
+			for (int i = 0; i < serverFolderPaths.Length; i++)
 			{
-				string serverName = serverFolderPath.Substring(serverFolderPath.LastIndexOf(Path.DirectorySeparatorChar) + 1, serverFolderPath.Length - serverFolderPath.LastIndexOf(Path.DirectorySeparatorChar) - 1);
+				string serverName = serverFolderPaths[i].Substring(serverFolderPaths[i].LastIndexOf(Path.DirectorySeparatorChar) + 1, serverFolderPaths[i].Length - serverFolderPaths[i].LastIndexOf(Path.DirectorySeparatorChar) - 1);
 
 				TreeNode serverNode = inventoryTreeView.Nodes.Add(serverName);
 
-				string[] characterFilePaths = Directory.GetFiles(serverFolderPath, "*.Inventory.xml", SearchOption.AllDirectories);
+				string[] characterFilePaths = Directory.GetFiles(serverFolderPaths[i], "*.Inventory.xml", SearchOption.AllDirectories);
 
-				foreach (string characterFilePath in characterFilePaths)
+				for (int j = 0; j < characterFilePaths.Length; j++)
 				{
-					string characterName = characterFilePath.Substring(characterFilePath.LastIndexOf(Path.DirectorySeparatorChar) + 1, characterFilePath.Length - characterFilePath.LastIndexOf(Path.DirectorySeparatorChar) - 1);
+					txtInventoryRootPath.Text = txtInventoryRootPathOrig + "   Server " + (i + 1) + " of " + serverFolderPaths.Length + ", Character " + (j + 1) + " of " + characterFilePaths.Length;
+					txtInventoryRootPath.Refresh();
+
+					string characterName = characterFilePaths[j].Substring(characterFilePaths[j].LastIndexOf(Path.DirectorySeparatorChar) + 1, characterFilePaths[j].Length - characterFilePaths[j].LastIndexOf(Path.DirectorySeparatorChar) - 1);
 					characterName = characterName.Substring(0, characterName.IndexOf("."));
 
 					TreeNode characterNode = serverNode.Nodes.Add(characterName);
 
-					List<MyWorldObject> myWorldObjects = new List<MyWorldObject>();
+					List<SuitBuildableMyWorldObject> myWorldObjects = new List<SuitBuildableMyWorldObject>();
 
-					using (XmlReader reader = XmlReader.Create(characterFilePath))
-						myWorldObjects = (List<MyWorldObject>)serializer.Deserialize(reader);
+					// This is pretty hacked. SuitBuildableMyWorldObject is a derived class of MyWorldObject. It extends properties for the binding list.
+					// Mag-Tools serializes MyWorldObjects.
+					// I don't know how to deserialize those objects out as SuitBuildableMyWorldObjects.
+					var fileContents = File.ReadAllText(characterFilePaths[j]);
+					fileContents = fileContents.Replace("MyWorldObject", "SuitBuildableMyWorldObject");
 
-					EquipmentGroup newGroup = new EquipmentGroup();
+					using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContents)))
+					using (XmlReader reader = XmlReader.Create(stream))
+							myWorldObjects = (List<SuitBuildableMyWorldObject>)serializer.Deserialize(reader);
 
 					foreach (var mwo in myWorldObjects)
-						newGroup.Add(new EquipmentPiece(mwo, characterName));
+					{
+						mwo.Owner = characterName;
+						mwo.BuildSpellCache();
+						if (mwo.ItemSetId != -1 && !armorSets.ContainsKey(mwo.ItemSet) && mwo.EquippableSlot.IsBodyArmor())
+							armorSets.Add(mwo.ItemSet, mwo.ItemSetId);
+					}
 
-					characterNode.Tag = newGroup;
+					characterNode.Tag = myWorldObjects;
 				}
 			}
 
+			armorSets = (from entry in armorSets orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
+			filtersControl1.UpdateArmorSets(armorSets);
+
+			txtInventoryRootPath.Text = txtInventoryRootPathOrig + "    Selecting all nodes...";
+			txtInventoryRootPath.Refresh();
+
 			inventoryTreeView.ExpandAll();
+
+			if (inventoryTreeView.Nodes.Count > 0)
+				inventoryTreeView.Nodes[0].Checked = true;
+
+			txtInventoryRootPath.Text = txtInventoryRootPathOrig + "    Autosizing columns... If you have lots of inventory and a 486 this may take a while.";
+			txtInventoryRootPath.Refresh();
+
+			//equipmentGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
+
+			txtInventoryRootPath.Text = txtInventoryRootPathOrig;
 
 			this.Enabled = true;
 		}
 
+		int count;
 		private void inventoryTreeView_AfterCheck(object sender, TreeViewEventArgs e)
 		{
-			foreach (TreeNode node in e.Node.Nodes)
-				node.Checked = e.Node.Checked;
+			count++;
 
-			if (e.Node.Tag is EquipmentGroup)
-			{
-				foreach (EquipmentPiece piece in (e.Node.Tag as EquipmentGroup))
-				{
-					if (!e.Node.Checked && equipmentGroup.Contains(piece))
-						equipmentGroup.Remove(piece);
-					else if (e.Node.Checked && !equipmentGroup.Contains(piece))
-						equipmentGroup.Add(piece);
-				}
-			}
+			CheckAllChildNodes(e.Node.Nodes, e.Node.Checked);
 
-			foreach (EquipmentPiece piece in equipmentGroup)
-			{
-				if (piece.ArmorSet == null || piece.ArmorSet == ArmorSet.NoArmorSet || (piece.EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) == 0)
-					continue;
-
-				if (!cboPrimaryArmorSet.Items.Contains(piece.ArmorSet))
-				{
-					cboPrimaryArmorSet.Items.Add(piece.ArmorSet);
-					cboSecondaryArmorSet.Items.Add(piece.ArmorSet);
-				}
-			}
+			if ((--count) == 0)
+				UpdateBoundListFromTreeViewNodes(inventoryTreeView.Nodes);
 		}
 
-		private void btnLoadFromClipboard_Click(object sender, EventArgs e)
+		void CheckAllChildNodes(TreeNodeCollection nodes, bool checkedState)
 		{
-			if (!Clipboard.ContainsText(TextDataFormat.Text))
+			foreach (TreeNode node in nodes)
 			{
-				MessageBox.Show("Clipboard does not contain text." + Environment.NewLine + "I'm expecting multi-line input (each line is an item) that resembles the following: " + Environment.NewLine + Environment.NewLine +
-					"Copper Chainmail Leggings, AL 607, Tinks 10, Epic Invulnerability, Wield Lvl 150, Melee Defense 390 to Activate, Diff 262" + Environment.NewLine +
-					"Gold Top, Tinks 2, Augmented Health III, Augmented Damage II, Major Storm Ward, Wield Lvl 150, Diff 410, Craft 9" + Environment.NewLine +
-					"Iron Amuli Coat, Defender's Set, AL 618, Tinks 10, Epic Strength, Wield Lvl 180, Melee Defense 300 to Activate, Diff 160");
-				return;
-			}
-
-			string text = Clipboard.GetText();
-
-			string[] lines = Regex.Split(text, "\r\n");
-
-			foreach (string line in lines)
-			{
-				if (String.IsNullOrEmpty(line.Trim()))
-					continue;
-
-				EquipmentPiece piece = new EquipmentPiece(line);
-				equipmentGroup.Add(piece);
-			}
-
-			equipmentGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
-
-			foreach (EquipmentPiece piece in equipmentGroup)
-			{
-				if (piece.ArmorSet == null || piece.ArmorSet == ArmorSet.NoArmorSet || (piece.EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) == 0)
-					continue;
-
-				if (!cboPrimaryArmorSet.Items.Contains(piece.ArmorSet))
-				{
-					cboPrimaryArmorSet.Items.Add(piece.ArmorSet);
-					cboSecondaryArmorSet.Items.Add(piece.ArmorSet);
-				}
+				node.Checked = checkedState;
+				CheckAllChildNodes(node.Nodes, checkedState);
 			}
 		}
-
-		private void btnClear_Click(object sender, EventArgs e)
+	
+		void UpdateBoundListFromTreeViewNodes(TreeNodeCollection nodes, bool clear = true)
 		{
-			equipmentGroup.Clear();
+			if (clear)
+			{
+				boundList.RaiseListChangedEvents = false;
+				boundList.Clear();
+			}
+
+			foreach (TreeNode node in nodes)
+			{
+				if (node.Tag is List<SuitBuildableMyWorldObject>)
+				{
+					foreach (SuitBuildableMyWorldObject piece in (node.Tag as List<SuitBuildableMyWorldObject>))
+					{
+						if (node.Checked && filtersControl1.ItemPassesFilters(piece))
+							boundList.Add(piece);
+					}
+				}
+
+				UpdateBoundListFromTreeViewNodes(node.Nodes, false);
+			}
+
+			if (clear)
+			{
+				boundList.RaiseListChangedEvents = true;
+				boundList.ResetBindings();
+			}
 		}
 
 		private void btnHelp_Click(object sender, EventArgs e)
 		{
 			MessageBox.Show("All columns can be sorted. Some column cells can be edited." + Environment.NewLine + Environment.NewLine +
-				"Check the first checkbox (Locked) for pieces you want your suit built around." + Environment.NewLine + Environment.NewLine +
+				"Use the [Locked] checkbox for pieces you want your suit built around." + Environment.NewLine + Environment.NewLine +
 				"Rows in dark gray are equipment pieces that will be removed from the search as they are surpassed by another item." + Environment.NewLine + Environment.NewLine +
-				"Method 1 loads all Charname.Inventory.xml files from MyDocuments\\Decal Plugins\\Mag-Tools\\ServerName(s) from all servers" + Environment.NewLine + Environment.NewLine +
-				"Method 2 loads information from the windows clipboard (cntrl+c cntrl+v) that you may have generated using Mag-Tools->Misc->Tools->Clipboard Inventory Info." + Environment.NewLine + Environment.NewLine +
-				"If items are showing up in your results that you do not want, simply select the row and hit the delete key to remove them from new searches.");
+				"[Load Inventory] loads all Charname.Inventory.xml files from MyDocuments\\Decal Plugins\\Mag-Tools\\ServerName(s) from all servers." + Environment.NewLine +
+				"Enable inventory logging in Mag-Tools under Misc->Options->Inventory Logger Enabled" + Environment.NewLine + Environment.NewLine +
+				"If items are showing up in your results that you do not want, simply check the [Exclude] column.");
 		}
 
 		private void equipmentGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -184,16 +207,37 @@ namespace Mag_SuitBuilder
 
 		private void equipmentGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
 		{
-			if (equipmentGroup.ItemIsSurpassed(equipmentGroup[e.RowIndex]))
-				e.CellStyle.BackColor = Color.DarkGray;
+			// This needs to be done differently
+			//if (boundList.ItemIsSurpassed(boundList[e.RowIndex]))
+			//	e.CellStyle.BackColor = Color.DarkGray;
 		}
 
-		private void loadDefaultSpells_Click(object sender, EventArgs e)
+		private void equipmentGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
 		{
-			string buttonText = (sender as Button).Text;
-
-			cntrlCantripFilters.LoadDefaults(buttonText);
+			// This just hides numeric fields that aren't supported, they return -1
+			if ((e.Value is int && (int)e.Value == -1) ||
+				(e.Value is double && (double)e.Value == -1) ||
+				(e.Value is Constants.EquippableSlotFlags && (Constants.EquippableSlotFlags)e.Value == Constants.EquippableSlotFlags.None) ||
+				(e.Value is Constants.CoverageFlags && (Constants.CoverageFlags)e.Value == Constants.CoverageFlags.None))
+			{
+				e.PaintBackground(e.ClipBounds, true);
+				e.Handled = true;
+			}
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		ArmorSearcher armorSearcher;
 
@@ -211,14 +255,14 @@ namespace Mag_SuitBuilder
 			}
 
 			SearcherConfiguration config = new SearcherConfiguration();
-			config.MinimumArmorLevelPerPiece = int.Parse(txtMinimumBaseArmorLevel.Text);
-			config.CantripsToLookFor = cntrlCantripFilters;
-			config.PrimaryArmorSet = cboPrimaryArmorSet.SelectedItem as ArmorSet;
-			config.SecondaryArmorSet = cboSecondaryArmorSet.SelectedItem as ArmorSet;
+			//config.MinimumArmorLevelPerPiece = int.Parse(txtMinimumBaseArmorLevel.Text);
+			//config.CantripsToLookFor = cntrlCantripFilters;
+			//config.PrimaryArmorSet = cboPrimaryArmorSet.SelectedItem as ArmorSet;
+			//config.SecondaryArmorSet = cboSecondaryArmorSet.SelectedItem as ArmorSet;
 			config.OnlyAddPiecesWithArmor = true;
-
+			/* todo hack fix
 			// Go through our Equipment and remove/disable any extra spells that we're not looking for
-			foreach (EquipmentPiece piece in equipmentGroup)
+			foreach (var piece in equipmentGroup)
 			{
 				piece.SpellsToUseInSearch.Clear();
 
@@ -227,14 +271,14 @@ namespace Mag_SuitBuilder
 					if (config.SpellPassesRules(spell))
 						piece.SpellsToUseInSearch.Add(spell);
 				}
-			}
+			}*/
 
 			// Build our base suit from locked in pieces
 			CompletedSuit baseSuit = new CompletedSuit();
 
 			// Add pieces in order of slots covered, starting with the fewest
 			for (int slotCount = 1; slotCount <= 5; slotCount++)
-			{
+			{/* todo hack fix
 				for (int i = 0; i < equipmentGroup.Count; i++)
 				{
 					if (equipmentGroup[i].Locked && equipmentGroup[i].EquipableSlots.GetTotalBitsSet() == slotCount)
@@ -267,13 +311,13 @@ namespace Mag_SuitBuilder
 							MessageBox.Show("Failed to add " + equipmentGroup[i].Name + " to base suit of armor.");
 						}
 					}
-				}
+				}*/
 			}
 
 			if (baseSuit.Count > 0)
 				AddCompletedSuitToTreeView(baseSuit);
 
-			armorSearcher = new ArmorSearcher(config, equipmentGroup, baseSuit);
+			//armorSearcher = new ArmorSearcher(config, equipmentGroup, baseSuit);
 
 			armorSearcher.SuitCreated += new Action<CompletedSuit>(armorSearcher_SuitCreated);
 			armorSearcher.SearchCompleted += new Action(armorSearcher_SearchCompleted);
@@ -311,10 +355,12 @@ namespace Mag_SuitBuilder
 
 			ThreadPool.QueueUserWorkItem(delegate
 			{
+				/*
 				AccessorySearcher accSearcher = new AccessorySearcher(new SearcherConfiguration(), equipmentGroup, obj);
 				accSearcher.SuitCreated += new Action<CompletedSuit>(accSearcher_SuitCreated);
 				accSearcher.Start();
 				accSearcher.SuitCreated -= new Action<CompletedSuit>(accSearcher_SuitCreated);
+				*/
 			});
 		}
 

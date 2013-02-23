@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-
-using Decal.Adapter.Wrappers;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Mag.Shared
 {
@@ -293,11 +292,11 @@ namespace Mag.Shared
 
 		public struct SpellInfo<T>
 		{
-			public readonly T Key;
-			public readonly double Change;
-			public readonly double Bonus;
+			public readonly int Key;
+			public readonly T Change;
+			public readonly T Bonus;
 
-			public SpellInfo(T key, double change, double bonus = 0)
+			public SpellInfo(int key, T change, T bonus = default(T))
 			{
 				Key = key;
 				Change = change;
@@ -305,90 +304,214 @@ namespace Mag.Shared
 			}
 		}
 
-		public static readonly Dictionary<int, SpellInfo<LongValueKey>> LongValueKeySpellEffects = new Dictionary<int, SpellInfo<LongValueKey>>()
+		// Taken from Decal.Adapter.Wrappers.LongValueKey
+		const int LongValueKey_MaxDamage = 218103842;
+		const int LongValueKey_ArmorLevel = 28;
+
+		public static readonly Dictionary<int, SpellInfo<int>> LongValueKeySpellEffects = new Dictionary<int, SpellInfo<int>>()
 		{
-			{ 1616, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 20)}, // Blood Drinker VI
-			{ 2096, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 22)}, // Infected Caress
+			{ 1616, new SpellInfo<int>(LongValueKey_MaxDamage, 20)}, // Blood Drinker VI
+			{ 2096, new SpellInfo<int>(LongValueKey_MaxDamage, 22)}, // Infected Caress
 			// Pre Feb-2013
-			//{ 5183, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 22)}, // Incantation of Blood Drinker
-			//{ 4395, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 24, 2)}, // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
+			//{ 5183, new SpellInfo<LongValueKey>(LongValueKey_MaxDamage, 22)}, // Incantation of Blood Drinker
+			//{ 4395, new SpellInfo<LongValueKey>(LongValueKey_MaxDamage, 24, 2)}, // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
 			// Post Feb-2013
-			{ 5183, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 24)}, // Incantation of Blood Drinker
-			{ 4395, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 24)}, // Incantation of Blood Drinker
+			{ 5183, new SpellInfo<int>(LongValueKey_MaxDamage, 24)}, // Incantation of Blood Drinker
+			{ 4395, new SpellInfo<int>(LongValueKey_MaxDamage, 24)}, // Incantation of Blood Drinker
 
-			{ 2598, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 2, 2)}, // Minor Blood Thirst
-			{ 2586, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 4, 4)}, // Major Blood Thirst
-			{ 4661, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 7, 7)}, // Epic Blood Thirst
-			{ 6089, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 10, 10)}, // Legendary Blood Thirst
+			{ 2598, new SpellInfo<int>(LongValueKey_MaxDamage, 2, 2)}, // Minor Blood Thirst
+			{ 2586, new SpellInfo<int>(LongValueKey_MaxDamage, 4, 4)}, // Major Blood Thirst
+			{ 4661, new SpellInfo<int>(LongValueKey_MaxDamage, 7, 7)}, // Epic Blood Thirst
+			{ 6089, new SpellInfo<int>(LongValueKey_MaxDamage, 10, 10)}, // Legendary Blood Thirst
 
-			{ 3688, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 300)}, // Prodigal Blood Drinker
+			{ 3688, new SpellInfo<int>(LongValueKey_MaxDamage, 300)}, // Prodigal Blood Drinker
 
 
-			{ 1486, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 200)}, // Impenetrability VI
-			{ 2108, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 220)}, // Brogard's Defiance
-			{ 4407, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 240)}, // Incantation of Impenetrability
+			{ 1486, new SpellInfo<int>(LongValueKey_ArmorLevel, 200)}, // Impenetrability VI
+			{ 2108, new SpellInfo<int>(LongValueKey_ArmorLevel, 220)}, // Brogard's Defiance
+			{ 4407, new SpellInfo<int>(LongValueKey_ArmorLevel, 240)}, // Incantation of Impenetrability
 
-			{ 2604, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 20, 20)}, // Minor Impenetrability
-			{ 2592, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 40, 40)}, // Major Impenetrability
-			{ 4667, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 60, 60)}, // Epic Impenetrability
-			{ 6095, new SpellInfo<LongValueKey>(LongValueKey.ArmorLevel, 80, 80)}, // Legendary Impenetrability
+			{ 2604, new SpellInfo<int>(LongValueKey_ArmorLevel, 20, 20)}, // Minor Impenetrability
+			{ 2592, new SpellInfo<int>(LongValueKey_ArmorLevel, 40, 40)}, // Major Impenetrability
+			{ 4667, new SpellInfo<int>(LongValueKey_ArmorLevel, 60, 60)}, // Epic Impenetrability
+			{ 6095, new SpellInfo<int>(LongValueKey_ArmorLevel, 80, 80)}, // Legendary Impenetrability
 		};
 
-		public static readonly Dictionary<int, SpellInfo<DoubleValueKey>> DoubleValueKeySpellEffects = new Dictionary<int, SpellInfo<DoubleValueKey>>()
+		// Taken from Decal.Adapter.Wrappers.DoubleValueKey
+		const int DoubleValueKey_ElementalDamageVersusMonsters = 152;
+		const int DoubleValueKey_AttackBonus = 167772172;
+		const int DoubleValueKey_MeleeDefenseBonus = 29;
+		const int DoubleValueKey_ManaCBonus = 144;
+
+		public static readonly Dictionary<int, SpellInfo<double>> DoubleValueKeySpellEffects = new Dictionary<int, SpellInfo<double>>()
 		{
-			{ 3258, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .06)}, // Spirit Drinker VI
-			{ 3259, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07)}, // Infected Spirit Caress
+			{ 3258, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .06)}, // Spirit Drinker VI
+			{ 3259, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .07)}, // Infected Spirit Caress
 			// Pre Feb-2013
-			//{ 5182, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07)}, // Incantation of Spirit Drinker
-			//{ 4414, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08, .01)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
+			//{ 5182, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .07)}, // Incantation of Spirit Drinker
+			//{ 4414, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .08, .01)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
 			// Post Feb-2013
-			{ 5182, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08)}, // Incantation of Spirit Drinker
-			{ 4414, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
+			{ 5182, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .08)}, // Incantation of Spirit Drinker
+			{ 4414, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .08)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
 
-			{ 3251, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .01, .01)}, // Minor Spirit Thirst
-			{ 3250, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .03, .03)}, // Major Spirit Thirst
-			{ 4670, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .05, .05)}, // Epic Spirit Thirst
-			{ 6098, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07, .07)}, // Legendary Spirit Thirst
+			{ 3251, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .01, .01)}, // Minor Spirit Thirst
+			{ 3250, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .03, .03)}, // Major Spirit Thirst
+			{ 4670, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .05, .05)}, // Epic Spirit Thirst
+			{ 6098, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .07, .07)}, // Legendary Spirit Thirst
 
-			{ 3735, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .15)}, // Prodigal Spirit Drinker
-
-
-			{ 1592, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .15)}, // Heart Seeker VI
-			{ 2106, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .17)}, // Elysa's Sight
-			{ 4405, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .20)}, // Incantation of Heart Seeker
-
-			{ 2603, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .03, .03)}, // Minor Heart Thirst
-			{ 2591, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .05, .05)}, // Major Heart Thirst
-			{ 4666, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .07, .07)}, // Epic Heart Thirst
-			{ 6094, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .09, .09)}, // Legendary Heart Thirst
+			{ 3735, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .15)}, // Prodigal Spirit Drinker
 
 
-			{ 1605, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .15)}, // Defender VI
-			{ 2101, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .17)}, // Cragstone's Will
+			{ 1592, new SpellInfo<double>(DoubleValueKey_AttackBonus, .15)}, // Heart Seeker VI
+			{ 2106, new SpellInfo<double>(DoubleValueKey_AttackBonus, .17)}, // Elysa's Sight
+			{ 4405, new SpellInfo<double>(DoubleValueKey_AttackBonus, .20)}, // Incantation of Heart Seeker
+
+			{ 2603, new SpellInfo<double>(DoubleValueKey_AttackBonus, .03, .03)}, // Minor Heart Thirst
+			{ 2591, new SpellInfo<double>(DoubleValueKey_AttackBonus, .05, .05)}, // Major Heart Thirst
+			{ 4666, new SpellInfo<double>(DoubleValueKey_AttackBonus, .07, .07)}, // Epic Heart Thirst
+			{ 6094, new SpellInfo<double>(DoubleValueKey_AttackBonus, .09, .09)}, // Legendary Heart Thirst
+
+
+			{ 1605, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .15)}, // Defender VI
+			{ 2101, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .17)}, // Cragstone's Will
 			// Pre Feb-2013
-			//{ 4400, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .17)}, // Incantation of Defender
+			//{ 4400, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .17)}, // Incantation of Defender
 			// Post Feb-2013
-			{ 4400, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .20)}, // Incantation of Defender
+			{ 4400, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .20)}, // Incantation of Defender
 
-			{ 2600, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .03, .03)}, // Minor Defender
-			{ 3985, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .04, .04)}, // Mukkir Sense
-			{ 2588, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .05, .05)}, // Major Defender
-			{ 4663, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .07, .07)}, // Epic Defender
-			{ 6091, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .09, .09)}, // Legendary Defender
+			{ 2600, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .03, .03)}, // Minor Defender
+			{ 3985, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .04, .04)}, // Mukkir Sense
+			{ 2588, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .05, .05)}, // Major Defender
+			{ 4663, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .07, .07)}, // Epic Defender
+			{ 6091, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .09, .09)}, // Legendary Defender
 
-			{ 3699, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .25)}, // Prodigal Defender
+			{ 3699, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .25)}, // Prodigal Defender
 
 
-			{ 1480, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.60)}, // Hermetic Link VI
-			{ 2117, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.70)}, // Mystic's Blessing
-			{ 4418, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.80)}, // Incantation of Hermetic Link
+			{ 1480, new SpellInfo<double>(DoubleValueKey_ManaCBonus, 1.60)}, // Hermetic Link VI
+			{ 2117, new SpellInfo<double>(DoubleValueKey_ManaCBonus, 1.70)}, // Mystic's Blessing
+			{ 4418, new SpellInfo<double>(DoubleValueKey_ManaCBonus, 1.80)}, // Incantation of Hermetic Link
 
-			{ 3201, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.05, 1.05)}, // Feeble Hermetic Link
-			{ 3199, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.10, 1.10)}, // Minor Hermetic Link
-			{ 3202, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.15, 1.15)}, // Moderate Hermetic Link
-			{ 3200, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.20, 1.20)}, // Major Hermetic Link
-			{ 6086, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.25, 1.25)}, // Epic Hermetic Link
-			{ 6087, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.30, 1.30)}, // Legendary Hermetic Link
+			{ 3201, new SpellInfo<double>(DoubleValueKey_ManaCBonus, 1.05, 1.05)}, // Feeble Hermetic Link
+			{ 3199, new SpellInfo<double>(DoubleValueKey_ManaCBonus, 1.10, 1.10)}, // Minor Hermetic Link
+			{ 3202, new SpellInfo<double>(DoubleValueKey_ManaCBonus, 1.15, 1.15)}, // Moderate Hermetic Link
+			{ 3200, new SpellInfo<double>(DoubleValueKey_ManaCBonus, 1.20, 1.20)}, // Major Hermetic Link
+			{ 6086, new SpellInfo<double>(DoubleValueKey_ManaCBonus, 1.25, 1.25)}, // Epic Hermetic Link
+			{ 6087, new SpellInfo<double>(DoubleValueKey_ManaCBonus, 1.30, 1.30)}, // Legendary Hermetic Link
 		};
+
+		/// <summary>
+		/// This is the mapping for LongValueKey.EquippableSlots.
+		/// It represents where you can drag items to on your paper doll.
+		/// </summary>
+		[Flags]
+		public enum EquippableSlotFlags
+		{
+			None			= 0,
+
+			Head			= 0x00000001,
+
+			ShirtChest		= 0x00000002,
+			PantsAbdomen	= 0x00000004,
+			ShirtUpperArms	= 0x00000008,
+			ShirtLowerArms	= 0x00000010,
+
+			Hands			= 0x00000020,
+
+			PantsUpperLegs	= 0x00000040,
+			PantsLowerLegs	= 0x00000080,
+
+			Feet			= 0x00000100,
+			Chest			= 0x00000200,
+			Abdomen			= 0x00000400,
+			UpperArms		= 0x00000800,
+			LowerArms		= 0x00001000,
+			UpperLegs		= 0x00002000,
+			LowerLegs		= 0x00004000,
+		
+			Necklace		= 0x00008000,
+			RightBracelet	= 0x00010000,
+			LeftBracelet	= 0x00020000,
+			RightRing		= 0x00040000,
+			LeftRing		= 0x00080000,
+
+			MeleeWeapon		= 0x00100000,
+			Shield			= 0x00200000,
+			MissileWeapon	= 0x00400000,
+			//				= 0x00800000, // Ammo?
+			Wand			= 0x01000000,
+			TwoHandWeapon	= 0x02000000,
+
+			Trinket			= 0x04000000,
+			Cloak			= 0x08000000,
+
+			BlueAetheria	= 0x10000000,
+			YellowAetheria	= 0x20000000,
+			RedAetheria		= 0x40000000,
+			//				= 0x80000000,
+		}
+
+		/// <summary>
+		/// This is the mapping for LongValueKey.Coverage.
+		/// It represents what body parts an armor piece covers when used in defensive/armor calculations.
+		/// </summary>
+		[Flags]
+		public enum CoverageFlags
+		{
+			None			= 0,
+
+			UnderAbdomenPre	= 0x00000001, // Original pants abdomen?
+			UnderUpperLegs	= 0x00000002, // I think... 0x13 = Abdomen/UpperLegs
+			UnderLowerLegs	= 0x00000004, // I think... 0x16 = Abdomen/UpperLegs/LowerLegs
+			UnderChest		= 0x00000008,
+			UnderAbdomen	= 0x00000010, // Original shirt abdomen?
+			UnderUpperArms	= 0x00000020,
+			UnderLowerArms	= 0x00000040,
+			//				= 0x00000080,
+			UpperLegs		= 0x00000100,
+			LowerLegs		= 0x00000200,
+			Chest			= 0x00000400,
+			Abdomen			= 0x00000800,
+			UpperArms		= 0x00001000,
+			LowerArms		= 0x00002000,
+			Head			= 0x00004000,
+			Hands			= 0x00008000,
+			Feet			= 0x00010000,
+
+			Cloak			= 0x00020000,
+		}
+	}
+
+	public static class EnumExtensions
+	{
+		public static int GetTotalBitsSet(this int value)
+		{
+			int slotFlags = (int)value;
+			int bitsSet = 0;
+
+			while (slotFlags != 0)
+			{
+				if ((slotFlags & 1) == 1)
+					bitsSet++;
+				slotFlags >>= 1;
+			}
+
+			return bitsSet;
+		}
+
+		public static int GetTotalBitsSet(this Constants.EquippableSlotFlags value)
+		{
+			return ((int)value).GetTotalBitsSet();
+		}
+
+		public static int GetTotalBitsSet(this Constants.CoverageFlags value)
+		{
+			return ((int)value).GetTotalBitsSet();
+		}
+
+		public static bool IsBodyArmor(this Constants.EquippableSlotFlags value) { return ((int)value & 0x00007F21) != 0; }
+		public static bool IsUnderwear(this Constants.EquippableSlotFlags value) { return ((int)value & 0x000000DE) != 0; }
+		public static bool IsShirt(this Constants.EquippableSlotFlags value) { return ((int)value & 0x0000001E) != 0; }
+		public static bool IsPants(this Constants.EquippableSlotFlags value) { return ((int)value & 0x000000C4) != 0; }
 	}
 }

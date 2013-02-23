@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
+using Mag.Shared;
+
 using Decal.Adapter;
 
 namespace MagTools.Trackers.Combat.Standard

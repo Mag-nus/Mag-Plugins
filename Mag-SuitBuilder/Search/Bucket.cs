@@ -2,9 +2,11 @@
 
 using Mag_SuitBuilder.Equipment;
 
+using Mag.Shared;
+
 namespace Mag_SuitBuilder.Search
 {
-	class Bucket : List<EquipmentPiece>
+	class Bucket : List<SuitBuildableMyWorldObject>
 	{
 		public readonly Constants.EquippableSlotFlags Slot;
 		public readonly bool IsBodyArmor;
@@ -12,7 +14,7 @@ namespace Mag_SuitBuilder.Search
 		public Bucket(Constants.EquippableSlotFlags slot)
 		{
 			Slot = slot;
-			IsBodyArmor = (slot & Constants.EquippableSlotFlags.AllBodyArmor) != 0;
+			IsBodyArmor = slot.IsBodyArmor();
 		}
 	}
 }

@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace Mag_SuitBuilder.Spells
 {
-	public partial class CantripSelectorControl : UserControl, ICollection<Spell>
+	public partial class CantripSelectorControl : UserControl, ICollection<Spell>, INotifyCollectionChanged
 	{
 		public CantripSelectorControl()
 		{
@@ -95,6 +96,8 @@ namespace Mag_SuitBuilder.Spells
 
 		Collection<Spell> items = new Collection<Spell>();
 
+		public event NotifyCollectionChangedEventHandler CollectionChanged;
+
 		public IEnumerator<Spell> GetEnumerator()
 		{
 			return items.GetEnumerator();
@@ -114,6 +117,9 @@ namespace Mag_SuitBuilder.Spells
 			}
 		
 			items.Add(item);
+
+			if (CollectionChanged != null)
+				CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
 
 			foreach (DataGridViewRow row in dataGridView1.Rows)
 			{
@@ -150,6 +156,9 @@ namespace Mag_SuitBuilder.Spells
 		{
 			items.Clear();
 
+			if (CollectionChanged != null)
+				CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+
 			foreach (DataGridViewRow row in dataGridView1.Rows)
 			{
 				foreach (DataGridViewCell cell in row.Cells)
@@ -173,6 +182,12 @@ namespace Mag_SuitBuilder.Spells
 		public bool Remove(Spell item)
 		{
 			bool result = items.Remove(item);
+
+			if (result)
+			{
+				if (CollectionChanged != null)
+					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+			}
 
 			foreach (DataGridViewRow row in dataGridView1.Rows)
 			{
@@ -358,6 +373,16 @@ namespace Mag_SuitBuilder.Spells
 			index++;
 
 			Add(spells[index]);
+		}
+
+		private void cmdLoadDefaults_Click(object sender, System.EventArgs e)
+		{
+			LoadDefaults(defaultsComboBox.Text);
+		}
+
+		private void cmdClear_Click(object sender, System.EventArgs e)
+		{
+			Clear();
 		}
 	}
 }
