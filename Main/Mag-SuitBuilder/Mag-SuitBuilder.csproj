@@ -62,6 +62,9 @@
     <Compile Include="..\Shared\MyWorldObject.cs">
       <Link>Shared\MyWorldObject.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\ObjectClass.cs">
+      <Link>Shared\ObjectClass.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\SerializableDictionary.cs">
       <Link>Shared\SerializableDictionary.cs</Link>
     </Compile>
