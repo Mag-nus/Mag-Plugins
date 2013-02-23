@@ -37,19 +37,19 @@ namespace Mag_SuitBuilder.Search
 			buckets = new BucketSorter();
 
 			// All these slots can have armor
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Head))		buckets.Add(new Bucket(Constants.EquippableSlotFlags.Head));
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Hands))		buckets.Add(new Bucket(Constants.EquippableSlotFlags.Hands));
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Feet))		buckets.Add(new Bucket(Constants.EquippableSlotFlags.Feet));
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Chest))		buckets.Add(new Bucket(Constants.EquippableSlotFlags.Chest));
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Abdomen))		buckets.Add(new Bucket(Constants.EquippableSlotFlags.Abdomen));
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.UpperArms))	buckets.Add(new Bucket(Constants.EquippableSlotFlags.UpperArms));
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.LowerArms))	buckets.Add(new Bucket(Constants.EquippableSlotFlags.LowerArms));
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.UpperLegs))	buckets.Add(new Bucket(Constants.EquippableSlotFlags.UpperLegs));
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.LowerLegs))	buckets.Add(new Bucket(Constants.EquippableSlotFlags.LowerLegs));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Head))		buckets.Add(new Bucket(EquippableSlotFlags.Head));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Hands))		buckets.Add(new Bucket(EquippableSlotFlags.Hands));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Feet))		buckets.Add(new Bucket(EquippableSlotFlags.Feet));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Chest))		buckets.Add(new Bucket(EquippableSlotFlags.Chest));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Abdomen))		buckets.Add(new Bucket(EquippableSlotFlags.Abdomen));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.UpperArms))	buckets.Add(new Bucket(EquippableSlotFlags.UpperArms));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.LowerArms))	buckets.Add(new Bucket(EquippableSlotFlags.LowerArms));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.UpperLegs))	buckets.Add(new Bucket(EquippableSlotFlags.UpperLegs));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.LowerLegs))	buckets.Add(new Bucket(EquippableSlotFlags.LowerLegs));
 
 			// todo hack fix
-			//if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Shirt)) buckets.Add(new Bucket(Constants.EquippableSlotFlags.Shirt));
-			//if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Pants)) buckets.Add(new Bucket(Constants.EquippableSlotFlags.Pants));
+			//if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Shirt)) buckets.Add(new Bucket(EquippableSlotFlags.Shirt));
+			//if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Pants)) buckets.Add(new Bucket(EquippableSlotFlags.Pants));
 		
 			// Put all of our inventory into its appropriate bucket
 			foreach (var piece in Equipment)

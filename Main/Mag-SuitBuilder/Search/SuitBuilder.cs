@@ -22,14 +22,14 @@ namespace Mag_SuitBuilder.Search
 		private class PieceSlotCache
 		{
 			public EquipmentPiece Piece;
-			public Constants.EquippableSlotFlags Slot;
+			public EquippableSlotFlags Slot;
 			public int SpellCount;
 		}
 
 		readonly PieceSlotCache[] cache = new PieceSlotCache[17];
 		int nextOpenCacheIndex;
 
-		Constants.EquippableSlotFlags occupiedSlots = Constants.EquippableSlotFlags.None;
+		EquippableSlotFlags occupiedSlots = EquippableSlotFlags.None;
 
 		readonly Spell[] spells = new Spell[17 * 5];
 		int nextOpenSpellIndex;
@@ -40,7 +40,7 @@ namespace Mag_SuitBuilder.Search
 
 		public int TotalBodyArmorPieces { get; private set; }
 
-		public void Push(EquipmentPiece item, Constants.EquippableSlotFlags slot)
+		public void Push(EquipmentPiece item, EquippableSlotFlags slot)
 		{
 			cache[nextOpenCacheIndex].Piece = item;
 			cache[nextOpenCacheIndex].Slot = slot;
@@ -92,7 +92,7 @@ namespace Mag_SuitBuilder.Search
 			nextOpenCacheIndex--;
 		}
 
-		public bool SlotIsOpen(Constants.EquippableSlotFlags slot)
+		public bool SlotIsOpen(EquippableSlotFlags slot)
 		{
 			return ((occupiedSlots & slot) == 0);
 		}

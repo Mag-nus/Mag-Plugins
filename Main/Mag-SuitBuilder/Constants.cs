@@ -7,17 +7,17 @@ namespace Mag_SuitBuilder
 	/*
 	public static class Constants
 	{
-		public static Mag.Shared.Constants.EquippableSlotFlags GetEquippableSlots(string name)
+		public static Mag.Shared.EquippableSlotFlags GetEquippableSlots(string name)
 		{
 			if (String.IsNullOrEmpty(name))
-				return Mag.Shared.Constants.EquippableSlotFlags.None;
+				return Mag.Shared.EquippableSlotFlags.None;
 
 			// Built using info from: http://ac.wikkii.net/wiki/Armor_Coverage
 
 			if (!IsUnderwear(name))
 			{
 				// Single Slot
-				if (Regex.Match(name, "Helm").Success) return Mag.Shared.Constants.EquippableSlotFlags.Head;
+				if (Regex.Match(name, "Helm").Success) return Mag.Shared.EquippableSlotFlags.Head;
 				if (Regex.Match(name, "Coif").Success) return EquippableSlotFlags.Head;
 				if (Regex.Match(name, "Basinet").Success) return EquippableSlotFlags.Head;
 				if (Regex.Match(name, "Cowl").Success) return EquippableSlotFlags.Head;
@@ -132,7 +132,7 @@ namespace Mag_SuitBuilder
 				if ((underwearCoverage & UnderwearCoverage.Abdomen) == UnderwearCoverage.Abdomen) return EquippableSlotFlags.Pants;
 			}
 
-			return Mag.Shared.Constants.EquippableSlotFlags.None;
+			return Mag.Shared.EquippableSlotFlags.None;
 		}
 
 		public static bool IsUnderwear(string name)

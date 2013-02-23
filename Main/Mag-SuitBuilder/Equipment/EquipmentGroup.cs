@@ -15,7 +15,7 @@ namespace Mag_SuitBuilder.Equipment
 				if (compareItem == item)
 				{
 					// For armor pieces, we can through through the entire list and find the piece with the highest AL.
-					if ((item.EquipableSlots & Constants.EquippableSlotFlags.AllBodyArmor) != 0)
+					if ((item.EquipableSlots & EquippableSlotFlags.AllBodyArmor) != 0)
 						continue;
 					
 					// For non-armor pieces, we cannot compare an item against the entire list or we may end up removing

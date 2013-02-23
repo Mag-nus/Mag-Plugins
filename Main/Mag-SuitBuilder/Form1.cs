@@ -217,8 +217,8 @@ namespace Mag_SuitBuilder
 			// This just hides numeric fields that aren't supported, they return -1
 			if ((e.Value is int && (int)e.Value == -1) ||
 				(e.Value is double && (double)e.Value == -1) ||
-				(e.Value is Constants.EquippableSlotFlags && (Constants.EquippableSlotFlags)e.Value == Constants.EquippableSlotFlags.None) ||
-				(e.Value is Constants.CoverageFlags && (Constants.CoverageFlags)e.Value == Constants.CoverageFlags.None))
+				(e.Value is EquippableSlotFlags && (EquippableSlotFlags)e.Value == EquippableSlotFlags.None) ||
+				(e.Value is CoverageFlags && (CoverageFlags)e.Value == CoverageFlags.None))
 			{
 				e.PaintBackground(e.ClipBounds, true);
 				e.Handled = true;
@@ -290,18 +290,18 @@ namespace Mag_SuitBuilder
 								baseSuit.AddItem(equipmentGroup[i].EquipableSlots, equipmentGroup[i]);
 							else
 							{
-								if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Bracelet &&
-								    baseSuit[Constants.EquippableSlotFlags.LeftBracelet] == null)
-									baseSuit.AddItem(Constants.EquippableSlotFlags.LeftBracelet, equipmentGroup[i]);
-								else if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Bracelet &&
-								         baseSuit[Constants.EquippableSlotFlags.RightBracelet] == null)
-									baseSuit.AddItem(Constants.EquippableSlotFlags.RightBracelet, equipmentGroup[i]);
-								else if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Ring &&
-								         baseSuit[Constants.EquippableSlotFlags.LeftRing] == null)
-									baseSuit.AddItem(Constants.EquippableSlotFlags.LeftRing, equipmentGroup[i]);
-								else if (equipmentGroup[i].EquipableSlots == Constants.EquippableSlotFlags.Ring &&
-								         baseSuit[Constants.EquippableSlotFlags.RightRing] == null)
-									baseSuit.AddItem(Constants.EquippableSlotFlags.RightRing, equipmentGroup[i]);
+								if (equipmentGroup[i].EquipableSlots == EquippableSlotFlags.Bracelet &&
+								    baseSuit[EquippableSlotFlags.LeftBracelet] == null)
+									baseSuit.AddItem(EquippableSlotFlags.LeftBracelet, equipmentGroup[i]);
+								else if (equipmentGroup[i].EquipableSlots == EquippableSlotFlags.Bracelet &&
+								         baseSuit[EquippableSlotFlags.RightBracelet] == null)
+									baseSuit.AddItem(EquippableSlotFlags.RightBracelet, equipmentGroup[i]);
+								else if (equipmentGroup[i].EquipableSlots == EquippableSlotFlags.Ring &&
+								         baseSuit[EquippableSlotFlags.LeftRing] == null)
+									baseSuit.AddItem(EquippableSlotFlags.LeftRing, equipmentGroup[i]);
+								else if (equipmentGroup[i].EquipableSlots == EquippableSlotFlags.Ring &&
+								         baseSuit[EquippableSlotFlags.RightRing] == null)
+									baseSuit.AddItem(EquippableSlotFlags.RightRing, equipmentGroup[i]);
 								else
 									baseSuit.AddItem(equipmentGroup[i].EquipableSlots, equipmentGroup[i]);
 							}

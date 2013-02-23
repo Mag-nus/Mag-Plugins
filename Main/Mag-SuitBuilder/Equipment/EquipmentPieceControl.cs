@@ -11,7 +11,7 @@ namespace Mag_SuitBuilder.Equipment
 			InitializeComponent();
 		}
 
-		public Constants.EquippableSlotFlags EquipableSlots { get; set; }
+		public EquippableSlotFlags EquipableSlots { get; set; }
 
 		public bool CanEquip(EquipmentPiece piece)
 		{

@@ -25,10 +25,10 @@ namespace Mag_SuitBuilder.Equipment
 
 			if (mwo.LongValues.ContainsKey(218103822))
 			{
-				EquipableSlots = (Constants.EquippableSlotFlags)mwo.LongValues[218103822];
+				EquipableSlots = (EquippableSlotFlags)mwo.LongValues[218103822];
 				/*
 				// If the piece hasn't been reduced, and we can determine its reduction state by the name, lets use that instead
-				if (EquipableSlots.GetTotalBitsSet() > 1 && Constants.GetEquippableSlots(Name) != Constants.EquippableSlotFlags.None)
+				if (EquipableSlots.GetTotalBitsSet() > 1 && Constants.GetEquippableSlots(Name) != EquippableSlotFlags.None)
 					EquipableSlots = Constants.GetEquippableSlots(Name);
 
 				if ((int)EquipableSlots == 16777216 || (int)EquipableSlots == 1048576 || (int)EquipableSlots == 2097152 || (int)EquipableSlots == 4194304 || (int)EquipableSlots == 33554432 || mwo.Name.Contains("Cloak") || mwo.Name.Contains("Aetheria"))
@@ -204,8 +204,8 @@ namespace Mag_SuitBuilder.Equipment
 			}
 		}
 
-		private Constants.EquippableSlotFlags _equipableSlots;
-		public Constants.EquippableSlotFlags EquipableSlots
+		private EquippableSlotFlags _equipableSlots;
+		public EquippableSlotFlags EquipableSlots
 		{
 			get { return _equipableSlots; }
 			private set

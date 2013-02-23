@@ -20,29 +20,29 @@ namespace Mag_SuitBuilder.Equipment
 		public bool Exclude { get; set; }
 
 		[XmlIgnore]
-		public Constants.EquippableSlotFlags EquippableSlot
+		public EquippableSlotFlags EquippableSlot
 		{
 			get
 			{
-				return LongValues.ContainsKey(218103822) ? (Constants.EquippableSlotFlags)LongValues[218103822] : Constants.EquippableSlotFlags.None;
+				return LongValues.ContainsKey(218103822) ? (EquippableSlotFlags)LongValues[218103822] : EquippableSlotFlags.None;
 			}
 		}
 
 		[XmlIgnore]
-		public Constants.CoverageFlags Coverage
+		public CoverageFlags Coverage
 		{
 			get
 			{
-				return LongValues.ContainsKey(218103821) ? (Constants.CoverageFlags)LongValues[218103821] : Constants.CoverageFlags.None;
+				return LongValues.ContainsKey(218103821) ? (CoverageFlags)LongValues[218103821] : CoverageFlags.None;
 			}
 		}
 
 		[XmlIgnore]
-		public Constants.EquippableSlotFlags EquippedSlot
+		public EquippableSlotFlags EquippedSlot
 		{
 			get
 			{
-				return LongValues.ContainsKey(10) ? (Constants.EquippableSlotFlags)LongValues[10] : Constants.EquippableSlotFlags.None;
+				return LongValues.ContainsKey(10) ? (EquippableSlotFlags)LongValues[10] : EquippableSlotFlags.None;
 			}
 		}
 
