@@ -70,6 +70,12 @@
     <Compile Include="..\Shared\Constants.cs">
       <Link>Shared\Constants.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\DoubleValueKey.cs">
+      <Link>DoubleValueKey.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\LongValueKey.cs">
+      <Link>LongValueKey.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\MyWorldObject.cs">
       <Link>Shared\MyWorldObject.cs</Link>
     </Compile>
@@ -78,6 +84,9 @@
     </Compile>
     <Compile Include="..\Shared\SerializableDictionary.cs">
       <Link>Shared\SerializableDictionary.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\StringValueKey.cs">
+      <Link>StringValueKey.cs</Link>
     </Compile>
     <Compile Include="..\Shared\Util.cs">
       <Link>Shared\Util.cs</Link>

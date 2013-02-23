@@ -78,7 +78,7 @@ namespace MagTools.Inventory
 
 					foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
 					{
-						if (!wo.HasIdData && ObjectClassNeedsIdent(wo.ObjectClass))
+						if (!wo.HasIdData && ObjectClassNeedsIdent(wo.ObjectClass, wo.Name))
 							CoreManager.Current.Actions.RequestId(wo.Id);
 					}
 
@@ -101,7 +101,7 @@ namespace MagTools.Inventory
 
 				foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
 				{
-					if (!wo.HasIdData && ObjectClassNeedsIdent(wo.ObjectClass))
+					if (!wo.HasIdData && ObjectClassNeedsIdent(wo.ObjectClass, wo.Name))
 					{
 						allInventoryHasIdData = false;
 						break;
@@ -127,7 +127,7 @@ namespace MagTools.Inventory
 					return;
 
 				// Check if the player just received an item that it needs id data for
-				if (!e.Moved.HasIdData && ObjectClassNeedsIdent(e.Moved.ObjectClass) && !requestedIds.Contains(e.Moved.Id))
+				if (!e.Moved.HasIdData && ObjectClassNeedsIdent(e.Moved.ObjectClass, e.Moved.Name) && !requestedIds.Contains(e.Moved.Id))
 				{
 					// Make sure its in our inventory
 					foreach (var invo in CoreManager.Current.WorldFilter.GetInventory())
@@ -187,7 +187,7 @@ namespace MagTools.Inventory
 					if (prevso.Id == wo.Id && prevso.ObjectClass == (int)wo.ObjectClass)
 					{
 						// If neither our past nor our current item HadIdData, but it should, lets request it
-						if (requestIdsIfItemDoesntHave && !prevso.HasIdData && !wo.HasIdData && ObjectClassNeedsIdent(wo.ObjectClass))
+						if (requestIdsIfItemDoesntHave && !prevso.HasIdData && !wo.HasIdData && ObjectClassNeedsIdent(wo.ObjectClass, wo.Name))
 						{
 							CoreManager.Current.Actions.RequestId(wo.Id);
 							myWorldObjects.Add(MyWorldObjectCreator.Create(wo));
@@ -202,7 +202,7 @@ namespace MagTools.Inventory
 					}
 				}
 
-				if (requestIdsIfItemDoesntHave && !wo.HasIdData && ObjectClassNeedsIdent(wo.ObjectClass))
+				if (requestIdsIfItemDoesntHave && !wo.HasIdData && ObjectClassNeedsIdent(wo.ObjectClass, wo.Name))
 					CoreManager.Current.Actions.RequestId(wo.Id);
 
 				myWorldObjects.Add(MyWorldObjectCreator.Create(wo));
@@ -224,11 +224,12 @@ namespace MagTools.Inventory
 			xmlDoc.Save(inventoryFileName);
 		}
 
-		private bool ObjectClassNeedsIdent(ObjectClass objectClass)
+		private bool ObjectClassNeedsIdent(ObjectClass objectClass, string name)
 		{
-			if ((objectClass == ObjectClass.Armor || objectClass == ObjectClass.Clothing ||
+			if (objectClass == ObjectClass.Armor || objectClass == ObjectClass.Clothing ||
 				objectClass == ObjectClass.MeleeWeapon || objectClass == ObjectClass.MissileWeapon || objectClass == ObjectClass.WandStaffOrb ||
-				objectClass == ObjectClass.Jewelry))
+				objectClass == ObjectClass.Jewelry ||
+				(objectClass == ObjectClass.Gem && !String.IsNullOrEmpty(name) && name.Contains("Aetheria"))) // Aetheria are Gems
 				return true;
 
 			return false;

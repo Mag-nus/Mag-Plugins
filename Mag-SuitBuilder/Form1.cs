@@ -38,17 +38,6 @@ namespace Mag_SuitBuilder
 			equipmentGrid.DataSource = boundList;
 
 			filtersControl1.FiltersChanged += () => UpdateBoundListFromTreeViewNodes(inventoryTreeView.Nodes);
-
-			/*
-			cboPrimaryArmorSet.Items.Add(ArmorSet.NoArmorSet);
-			cboSecondaryArmorSet.Items.Add(ArmorSet.NoArmorSet);
-
-			cboPrimaryArmorSet.Items.Add(ArmorSet.AnyArmorSet);
-			cboSecondaryArmorSet.Items.Add(ArmorSet.AnyArmorSet);
-
-			cboPrimaryArmorSet.SelectedIndex = cboPrimaryArmorSet.Items.Count - 1;
-			cboSecondaryArmorSet.SelectedIndex = cboSecondaryArmorSet.Items.Count - 1;
-			*/
 		}
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)

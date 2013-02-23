@@ -20,6 +20,15 @@ namespace Mag_SuitBuilder.Equipment
 		public bool Exclude { get; set; }
 
 		[XmlIgnore]
+		public ObjectClass ObjClass
+		{
+			get
+			{
+				return (ObjectClass)ObjectClass;
+			}
+		}
+
+		[XmlIgnore]
 		public EquippableSlotFlags EquippableSlot
 		{
 			get
