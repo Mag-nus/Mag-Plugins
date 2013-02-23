@@ -19,9 +19,9 @@ namespace Mag_SuitBuilder.Search
 	/// When enumerating, keep in mind that SlotFlags could have one or more slot bits set for any piece.
 	/// No pieces should have overlapping slots.
 	/// </summary>
-	class CompletedSuit : IEnumerable<KeyValuePair<Constants.EquippableSlotFlags, EquipmentPiece>>
+	class CompletedSuit : IEnumerable<KeyValuePair<EquippableSlotFlags, EquipmentPiece>>
 	{
-		readonly Dictionary<Constants.EquippableSlotFlags, EquipmentPiece> items = new Dictionary<Constants.EquippableSlotFlags, EquipmentPiece>();
+		readonly Dictionary<EquippableSlotFlags, EquipmentPiece> items = new Dictionary<EquippableSlotFlags, EquipmentPiece>();
 
 		readonly HashSet<EquipmentPiece> piecesHashSet = new HashSet<EquipmentPiece>();
 
@@ -45,7 +45,7 @@ namespace Mag_SuitBuilder.Search
 		readonly Dictionary<ArmorSet, int> armorSetCounts = new Dictionary<ArmorSet, int>();
 
 		/// <exception cref="ArgumentException">Trying to add an item that covers a slot already filled.</exception>
-		public void AddItem(Constants.EquippableSlotFlags slots, EquipmentPiece item)
+		public void AddItem(EquippableSlotFlags slots, EquipmentPiece item)
 		{
 			// Make sure we don't overlap a slot
 			foreach (var o in this)
@@ -103,11 +103,11 @@ namespace Mag_SuitBuilder.Search
 			}
 		}
 
-		public EquipmentPiece this[Constants.EquippableSlotFlags slot]
+		public EquipmentPiece this[EquippableSlotFlags slot]
 		{
 			get
 			{
-				foreach (KeyValuePair<Constants.EquippableSlotFlags, EquipmentPiece> kvp in items)
+				foreach (KeyValuePair<EquippableSlotFlags, EquipmentPiece> kvp in items)
 				{
 					if ((kvp.Key & slot) == slot)
 						return kvp.Value;
@@ -137,7 +137,7 @@ namespace Mag_SuitBuilder.Search
 			return piecesHashSet.IsSupersetOf(other.piecesHashSet);
 		}
 
-		public IEnumerator<KeyValuePair<Constants.EquippableSlotFlags, EquipmentPiece>> GetEnumerator()
+		public IEnumerator<KeyValuePair<EquippableSlotFlags, EquipmentPiece>> GetEnumerator()
 		{
 			return items.GetEnumerator();
 		}

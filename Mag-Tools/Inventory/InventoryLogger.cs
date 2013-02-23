@@ -211,6 +211,11 @@ namespace MagTools.Inventory
 			}
 
 			// Write it out to the inventory.xml file
+			FileInfo fileInfo = new FileInfo(inventoryFileName);
+
+			if (fileInfo.Directory != null && !fileInfo.Directory.Exists)
+				fileInfo.Directory.Create();
+
 			XmlDocument xmlDoc = new XmlDocument();
 			XPathNavigator nav = xmlDoc.CreateNavigator();
 			using (XmlWriter writer = nav.AppendChild())

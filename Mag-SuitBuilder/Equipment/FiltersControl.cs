@@ -66,10 +66,10 @@ namespace Mag_SuitBuilder.Equipment
 
 		public bool ItemPassesFilters(SuitBuildableMyWorldObject mwo)
 		{
-			if (checkRemoveEquipped.Checked && mwo.EquippedSlot != Constants.EquippableSlotFlags.None)
+			if (checkRemoveEquipped.Checked && mwo.EquippedSlot != EquippableSlotFlags.None)
 				return false;
 
-			if (chkRemoveUnequipped.Checked && mwo.EquippedSlot == Constants.EquippableSlotFlags.None)
+			if (chkRemoveUnequipped.Checked && mwo.EquippedSlot == EquippableSlotFlags.None)
 				return false;
 
 			int minimumBaseArmorLevel;

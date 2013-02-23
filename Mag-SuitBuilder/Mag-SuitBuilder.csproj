@@ -47,6 +47,18 @@
     <Compile Include="..\Shared\Constants.cs">
       <Link>Shared\Constants.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\CoverageFlags.cs">
+      <Link>Shared\CoverageFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\DoubleValueKey.cs">
+      <Link>Shared\DoubleValueKey.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\EquippableSlotFlags.cs">
+      <Link>Shared\EquippableSlotFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\LongValueKey.cs">
+      <Link>Shared\LongValueKey.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\MyWorldObject.cs">
       <Link>Shared\MyWorldObject.cs</Link>
     </Compile>
@@ -55,6 +67,9 @@
     </Compile>
     <Compile Include="..\Shared\SortableBindingList.cs">
       <Link>Shared\SortableBindingList.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\StringValueKey.cs">
+      <Link>Shared\StringValueKey.cs</Link>
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="Equipment\ArmorSet.cs" />

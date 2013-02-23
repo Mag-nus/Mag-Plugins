@@ -42,17 +42,17 @@ namespace Mag_SuitBuilder.Search
 		{
 			BucketSorter sorter = new BucketSorter();
 
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Trinket)) sorter.Add(new Bucket(Constants.EquippableSlotFlags.Trinket));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Trinket)) sorter.Add(new Bucket(EquippableSlotFlags.Trinket));
 
 			// todo hack fix
-			//if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Shirt))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.Shirt));
-			//if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Pants))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.Pants));
+			//if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Shirt))	sorter.Add(new Bucket(EquippableSlotFlags.Shirt));
+			//if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Pants))	sorter.Add(new Bucket(EquippableSlotFlags.Pants));
 
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Necklace))		sorter.Add(new Bucket(Constants.EquippableSlotFlags.Necklace));
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.RightBracelet))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.RightBracelet));
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.LeftBracelet))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.LeftBracelet));
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.RightRing))		sorter.Add(new Bucket(Constants.EquippableSlotFlags.RightRing));
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.LeftRing))		sorter.Add(new Bucket(Constants.EquippableSlotFlags.LeftRing));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Necklace))		sorter.Add(new Bucket(EquippableSlotFlags.Necklace));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.RightBracelet))	sorter.Add(new Bucket(EquippableSlotFlags.RightBracelet));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.LeftBracelet))	sorter.Add(new Bucket(EquippableSlotFlags.LeftBracelet));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.RightRing))		sorter.Add(new Bucket(EquippableSlotFlags.RightRing));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.LeftRing))		sorter.Add(new Bucket(EquippableSlotFlags.LeftRing));
 
 			// Put all of our inventory into its appropriate bucket
 			foreach (SuitBuildableMyWorldObject piece in Equipment)
