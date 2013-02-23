@@ -7,7 +7,7 @@ using Decal.Adapter.Wrappers;
 
 using Decal.Filters;
 
-namespace MagTools
+namespace Mag.Shared
 {
 	public static class Util
 	{

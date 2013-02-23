@@ -152,7 +152,7 @@ namespace Mag.Shared
 				int armorFromTinks = 0;
 				int armorFromBuffs = 0;
 
-				if (Tinks > 0)
+				if (Tinks > 0 && ArmorLevel > 0)
 					armorFromTinks = (Imbue != null) ? (Tinks - 1) * 20 : Tinks * 20; // This assumes each tink adds an amor level of 20
 
 				foreach (int spell in ActiveSpells)
@@ -160,7 +160,7 @@ namespace Mag.Shared
 					foreach (var effect in Constants.LongValueKeySpellEffects)
 					{
 						if (spell == effect.Key && (int)effect.Value.Key == 28)
-							armorFromBuffs -= (int)effect.Value.Change;
+							armorFromBuffs += (int)effect.Value.Change;
 					}
 				}
 
@@ -169,7 +169,7 @@ namespace Mag.Shared
 					foreach (var effect in Constants.LongValueKeySpellEffects)
 					{
 						if (spell == effect.Key && (int)effect.Value.Key == 28)
-							armorFromBuffs += (int)effect.Value.Bonus;
+							armorFromBuffs -= (int)effect.Value.Bonus;
 					}
 				}
 

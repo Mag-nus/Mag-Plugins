@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Mag_SuitBuilder.Equipment;
 using Mag_SuitBuilder.Spells;
 
+using Mag.Shared;
+
 namespace Mag_SuitBuilder.Search
 {
 	class SuitBuilder
@@ -58,7 +60,7 @@ namespace Mag_SuitBuilder.Search
 
 			if (item.BaseArmorLevel > 0)
 			{
-				if ((item.EquipableSlots & Constants.EquippableSlotFlags.Underwear) != 0)
+				if (item.EquipableSlots.IsBodyArmor())
 					TotalBaseArmorLevel += (item.BaseArmorLevel * item.BodyPartsCovered);
 				else
 					TotalBaseArmorLevel += (item.BaseArmorLevel * slot.GetTotalBitsSet());
@@ -78,7 +80,7 @@ namespace Mag_SuitBuilder.Search
 
 			if (cache[nextOpenCacheIndex - 1].Piece.BaseArmorLevel > 0)
 			{
-				if ((cache[nextOpenCacheIndex - 1].Piece.EquipableSlots & Constants.EquippableSlotFlags.Underwear) != 0)
+				if (cache[nextOpenCacheIndex - 1].Piece.EquipableSlots.IsBodyArmor())
 					TotalBaseArmorLevel -= (cache[nextOpenCacheIndex - 1].Piece.BaseArmorLevel * cache[nextOpenCacheIndex - 1].Piece.BodyPartsCovered);
 				else
 					TotalBaseArmorLevel -= (cache[nextOpenCacheIndex - 1].Piece.BaseArmorLevel * cache[nextOpenCacheIndex - 1].Slot.GetTotalBitsSet());
@@ -110,6 +112,11 @@ namespace Mag_SuitBuilder.Search
 				return false;
 
 			return true;
+		}
+
+		public bool CanGetBeneficialSpellFrom(SuitBuildableMyWorldObject item)
+		{
+			throw new NotImplementedException();
 		}
 
 		public bool CanGetBeneficialSpellFrom(EquipmentPiece item)

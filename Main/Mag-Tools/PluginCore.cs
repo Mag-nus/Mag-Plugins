@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
+using MagTools.Client;
 using MagTools.Inventory;
 using MagTools.Trackers.Equipment;
 
@@ -367,7 +368,7 @@ namespace MagTools
 						{
 							try
 							{
-								ACClientChatSizeManager.Maximize();
+								ChatSizeManager.Maximize();
 							}
 							catch (Exception ex) { Debug.LogException(ex); }
 						};
@@ -381,7 +382,7 @@ namespace MagTools
 						{
 							try
 							{
-								ACClientChatSizeManager.Minimize();
+								ChatSizeManager.Minimize();
 							}
 							catch (Exception ex) { Debug.LogException(ex); }
 						};

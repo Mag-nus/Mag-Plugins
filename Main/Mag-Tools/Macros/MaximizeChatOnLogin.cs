@@ -1,5 +1,7 @@
 ﻿using System;
 
+using MagTools.Client;
+
 using Decal.Adapter;
 
 namespace MagTools.Macros
@@ -49,7 +51,7 @@ namespace MagTools.Macros
 				if (!Settings.SettingsManager.Misc.MaximizeChatOnLogin.Value)
 					return;
 
-				ACClientChatSizeManager.Maximize(true);
+				ChatSizeManager.Maximize(true);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}

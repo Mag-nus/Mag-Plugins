@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Mag.Shared;
+
 using Decal.Adapter;
 
 namespace MagTools.Trackers.Combat.Cloaks

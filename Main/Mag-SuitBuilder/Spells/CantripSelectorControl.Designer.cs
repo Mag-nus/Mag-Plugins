@@ -41,6 +41,9 @@
 			this.lblMajor = new System.Windows.Forms.Label();
 			this.lblMinor = new System.Windows.Forms.Label();
 			this.lblLegendary = new System.Windows.Forms.Label();
+			this.defaultsComboBox = new System.Windows.Forms.ComboBox();
+			this.cmdLoadDefaults = new System.Windows.Forms.Button();
+			this.cmdClear = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -50,8 +53,6 @@
 			this.dataGridView1.AllowUserToDeleteRows = false;
 			this.dataGridView1.AllowUserToResizeColumns = false;
 			this.dataGridView1.AllowUserToResizeRows = false;
-			this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
 			this.dataGridView1.ColumnHeadersVisible = false;
 			this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
@@ -69,7 +70,7 @@
 			dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
 			dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
 			this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
-			this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+			this.dataGridView1.Location = new System.Drawing.Point(0, 31);
 			this.dataGridView1.Margin = new System.Windows.Forms.Padding(0);
 			this.dataGridView1.MultiSelect = false;
 			this.dataGridView1.Name = "dataGridView1";
@@ -143,7 +144,7 @@
 			// 
 			this.lblEpic.AutoSize = true;
 			this.lblEpic.BackColor = System.Drawing.Color.LightGreen;
-			this.lblEpic.Location = new System.Drawing.Point(59, 132);
+			this.lblEpic.Location = new System.Drawing.Point(59, 163);
 			this.lblEpic.Name = "lblEpic";
 			this.lblEpic.Size = new System.Drawing.Size(46, 13);
 			this.lblEpic.TabIndex = 25;
@@ -153,7 +154,7 @@
 			// 
 			this.lblMajor.AutoSize = true;
 			this.lblMajor.BackColor = System.Drawing.Color.Pink;
-			this.lblMajor.Location = new System.Drawing.Point(111, 132);
+			this.lblMajor.Location = new System.Drawing.Point(111, 163);
 			this.lblMajor.Name = "lblMajor";
 			this.lblMajor.Size = new System.Drawing.Size(51, 13);
 			this.lblMajor.TabIndex = 26;
@@ -163,7 +164,7 @@
 			// 
 			this.lblMinor.AutoSize = true;
 			this.lblMinor.BackColor = System.Drawing.Color.LightBlue;
-			this.lblMinor.Location = new System.Drawing.Point(168, 132);
+			this.lblMinor.Location = new System.Drawing.Point(168, 163);
 			this.lblMinor.Name = "lblMinor";
 			this.lblMinor.Size = new System.Drawing.Size(51, 13);
 			this.lblMinor.TabIndex = 27;
@@ -173,23 +174,65 @@
 			// 
 			this.lblLegendary.AutoSize = true;
 			this.lblLegendary.BackColor = System.Drawing.Color.DarkOrange;
-			this.lblLegendary.Location = new System.Drawing.Point(3, 132);
+			this.lblLegendary.Location = new System.Drawing.Point(3, 163);
 			this.lblLegendary.Name = "lblLegendary";
 			this.lblLegendary.Size = new System.Drawing.Size(51, 13);
 			this.lblLegendary.TabIndex = 28;
 			this.lblLegendary.Text = "- Lgndry -";
 			// 
+			// defaultsComboBox
+			// 
+			this.defaultsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.defaultsComboBox.FormattingEnabled = true;
+			this.defaultsComboBox.Items.AddRange(new object[] {
+            "War",
+            "Void",
+            "Heavy",
+            "Light",
+            "Finesse",
+            "Missile",
+            "Two Hand",
+            "Tinker"});
+			this.defaultsComboBox.Location = new System.Drawing.Point(114, 5);
+			this.defaultsComboBox.Name = "defaultsComboBox";
+			this.defaultsComboBox.Size = new System.Drawing.Size(154, 21);
+			this.defaultsComboBox.TabIndex = 29;
+			// 
+			// cmdLoadDefaults
+			// 
+			this.cmdLoadDefaults.Location = new System.Drawing.Point(0, 3);
+			this.cmdLoadDefaults.Name = "cmdLoadDefaults";
+			this.cmdLoadDefaults.Size = new System.Drawing.Size(105, 23);
+			this.cmdLoadDefaults.TabIndex = 30;
+			this.cmdLoadDefaults.Text = "Load Defautls For:";
+			this.cmdLoadDefaults.UseVisualStyleBackColor = true;
+			this.cmdLoadDefaults.Click += new System.EventHandler(this.cmdLoadDefaults_Click);
+			// 
+			// cmdClear
+			// 
+			this.cmdClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.cmdClear.Location = new System.Drawing.Point(461, 5);
+			this.cmdClear.Name = "cmdClear";
+			this.cmdClear.Size = new System.Drawing.Size(64, 23);
+			this.cmdClear.TabIndex = 31;
+			this.cmdClear.Text = "Clear";
+			this.cmdClear.UseVisualStyleBackColor = true;
+			this.cmdClear.Click += new System.EventHandler(this.cmdClear_Click);
+			// 
 			// CantripSelectorControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.cmdClear);
+			this.Controls.Add(this.cmdLoadDefaults);
+			this.Controls.Add(this.defaultsComboBox);
 			this.Controls.Add(this.lblLegendary);
 			this.Controls.Add(this.lblMinor);
 			this.Controls.Add(this.lblMajor);
 			this.Controls.Add(this.lblEpic);
 			this.Controls.Add(this.dataGridView1);
 			this.Name = "CantripSelectorControl";
-			this.Size = new System.Drawing.Size(528, 150);
+			this.Size = new System.Drawing.Size(528, 181);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -210,5 +253,8 @@
 		private System.Windows.Forms.Label lblMajor;
 		private System.Windows.Forms.Label lblMinor;
 		private System.Windows.Forms.Label lblLegendary;
+		private System.Windows.Forms.ComboBox defaultsComboBox;
+		private System.Windows.Forms.Button cmdLoadDefaults;
+		private System.Windows.Forms.Button cmdClear;
 	}
 }

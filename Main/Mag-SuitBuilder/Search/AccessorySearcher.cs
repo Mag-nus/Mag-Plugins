@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using Mag_SuitBuilder.Equipment;
+
+using Mag.Shared;
 
 namespace Mag_SuitBuilder.Search
 {
@@ -9,22 +12,24 @@ namespace Mag_SuitBuilder.Search
 	/// </summary>
 	class AccessorySearcher : Searcher
 	{
-		public AccessorySearcher(SearcherConfiguration config, IEnumerable<EquipmentPiece> accessories, CompletedSuit startingSuit = null) : base(config, accessories, startingSuit)
+		public AccessorySearcher(SearcherConfiguration config, IEnumerable<SuitBuildableMyWorldObject> accessories, CompletedSuit startingSuit = null) : base(config, accessories, startingSuit)
 		{
 			// Sort the list with the highest amount of epics
 			// As a temp fix we just sort based on spell count
 			Equipment.Sort((a, b) =>
 			{
-				if (a.BaseArmorLevel > 0 && b.BaseArmorLevel > 0) return b.BaseArmorLevel.CompareTo(a.BaseArmorLevel);
-				if (a.BaseArmorLevel > 0 && b.BaseArmorLevel == 0) return -1;
-				if (a.BaseArmorLevel == 0 && b.BaseArmorLevel > 0) return 1;
-				return b.SpellsToUseInSearch.Count.CompareTo(a.SpellsToUseInSearch.Count); // this needs to be fixed
+				if (a.CalcedStartingArmorLevel > 0 && b.CalcedStartingArmorLevel > 0) return b.CalcedStartingArmorLevel.CompareTo(a.CalcedStartingArmorLevel);
+				if (a.CalcedStartingArmorLevel > 0 && b.CalcedStartingArmorLevel == 0) return -1;
+				if (a.CalcedStartingArmorLevel == 0 && b.CalcedStartingArmorLevel > 0) return 1;
+				// todo hack fix
+				//return b.SpellsToUseInSearch.Count.CompareTo(a.SpellsToUseInSearch.Count); // this needs to be fixed
+				return 1;
 			});
 
 			// Remove any pieces that have armor
 			for (int i = Equipment.Count - 1; i >= 0; i--)
 			{
-				if (Equipment[i].BaseArmorLevel > 0)
+				if (Equipment[i].CalcedStartingArmorLevel > 0)
 					Equipment.RemoveAt(i);
 			}
 		}
@@ -39,17 +44,18 @@ namespace Mag_SuitBuilder.Search
 
 			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Trinket)) sorter.Add(new Bucket(Constants.EquippableSlotFlags.Trinket));
 
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Shirt)) sorter.Add(new Bucket(Constants.EquippableSlotFlags.Shirt));
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Pants)) sorter.Add(new Bucket(Constants.EquippableSlotFlags.Pants));
+			// todo hack fix
+			//if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Shirt))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.Shirt));
+			//if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Pants))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.Pants));
 
 			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.Necklace))		sorter.Add(new Bucket(Constants.EquippableSlotFlags.Necklace));
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.RightBracelet))sorter.Add(new Bucket(Constants.EquippableSlotFlags.RightBracelet));
+			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.RightBracelet))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.RightBracelet));
 			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.LeftBracelet))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.LeftBracelet));
-			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.RightRing))	sorter.Add(new Bucket(Constants.EquippableSlotFlags.RightRing));
+			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.RightRing))		sorter.Add(new Bucket(Constants.EquippableSlotFlags.RightRing));
 			if (SuitBuilder.SlotIsOpen(Constants.EquippableSlotFlags.LeftRing))		sorter.Add(new Bucket(Constants.EquippableSlotFlags.LeftRing));
 
 			// Put all of our inventory into its appropriate bucket
-			foreach (EquipmentPiece piece in Equipment)
+			foreach (SuitBuildableMyWorldObject piece in Equipment)
 				sorter.PutItemInBuckets(piece);
 
 			// Remove any empty buckets
@@ -131,7 +137,8 @@ namespace Mag_SuitBuilder.Search
 			}
 
 			//for (int i = 0; i < buckets[index].Count ; i++)
-			foreach (EquipmentPiece piece in buckets[index]) // Using foreach: 10.85s, for: 11s
+			throw new NotImplementedException();/*
+			foreach (SuitBuildableMyWorldObject piece in buckets[index]) // Using foreach: 10.85s, for: 11s
 			{
 				if (SuitBuilder.SlotIsOpen(buckets[index].Slot) && SuitBuilder.CanGetBeneficialSpellFrom(piece))
 				{
@@ -141,7 +148,7 @@ namespace Mag_SuitBuilder.Search
 
 					SuitBuilder.Pop();
 				}
-			}
+			}*/
 
 			SearchThroughBuckets(buckets, index + 1);
 		}

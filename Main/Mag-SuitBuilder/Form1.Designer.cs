@@ -32,33 +32,16 @@ namespace Mag_SuitBuilder
 		private void InitializeComponent()
 		{
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage3 = new System.Windows.Forms.TabPage();
-			this.inventoryTreeView = new System.Windows.Forms.TreeView();
-			this.btnHelp = new System.Windows.Forms.Button();
-			this.btnClear = new System.Windows.Forms.Button();
-			this.btnLoadFromClipboard = new System.Windows.Forms.Button();
-			this.btnLoadFromDB = new System.Windows.Forms.Button();
+			this.panel1 = new System.Windows.Forms.Panel();
 			this.equipmentGrid = new System.Windows.Forms.DataGridView();
-			this.tabPage2 = new System.Windows.Forms.TabPage();
-			this.button2 = new System.Windows.Forms.Button();
-			this.button9 = new System.Windows.Forms.Button();
-			this.button7 = new System.Windows.Forms.Button();
-			this.button8 = new System.Windows.Forms.Button();
-			this.button6 = new System.Windows.Forms.Button();
-			this.button5 = new System.Windows.Forms.Button();
-			this.button4 = new System.Windows.Forms.Button();
-			this.button3 = new System.Windows.Forms.Button();
-			this.button1 = new System.Windows.Forms.Button();
-			this.label6 = new System.Windows.Forms.Label();
-			this.cboSecondaryArmorSet = new System.Windows.Forms.ComboBox();
-			this.label2 = new System.Windows.Forms.Label();
-			this.cboPrimaryArmorSet = new System.Windows.Forms.ComboBox();
-			this.label3 = new System.Windows.Forms.Label();
-			this.txtMinimumBaseArmorLevel = new System.Windows.Forms.TextBox();
-			this.label1 = new System.Windows.Forms.Label();
-			this.cntrlCantripFilters = new Mag_SuitBuilder.Spells.CantripSelectorControl();
+			this.inventoryTreeView = new System.Windows.Forms.TreeView();
+			this.chkFilters = new System.Windows.Forms.CheckBox();
+			this.chkTree = new System.Windows.Forms.CheckBox();
+			this.txtInventoryRootPath = new System.Windows.Forms.TextBox();
+			this.btnHelp = new System.Windows.Forms.Button();
+			this.btnLoadFromDB = new System.Windows.Forms.Button();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.cmdCollapseAll = new System.Windows.Forms.Button();
 			this.cmdExpandAll = new System.Windows.Forms.Button();
@@ -66,6 +49,7 @@ namespace Mag_SuitBuilder
 			this.progressBar1 = new System.Windows.Forms.ProgressBar();
 			this.btnStopCalculating = new System.Windows.Forms.Button();
 			this.btnCalculatePossibilities = new System.Windows.Forms.Button();
+			this.filtersControl1 = new FiltersControl();
 			this.cntrlSuitCantrips = new Mag_SuitBuilder.Spells.CantripSelectorControl();
 			this.coveragePiece1 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece16 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
@@ -86,15 +70,14 @@ namespace Mag_SuitBuilder
 			this.coveragePiece9 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.tabControl1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
+			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.equipmentGrid)).BeginInit();
-			this.tabPage2.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage3);
-			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Controls.Add(this.tabPage1);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
@@ -105,12 +88,12 @@ namespace Mag_SuitBuilder
 			// 
 			// tabPage3
 			// 
-			this.tabPage3.Controls.Add(this.inventoryTreeView);
+			this.tabPage3.Controls.Add(this.panel1);
+			this.tabPage3.Controls.Add(this.chkFilters);
+			this.tabPage3.Controls.Add(this.chkTree);
+			this.tabPage3.Controls.Add(this.txtInventoryRootPath);
 			this.tabPage3.Controls.Add(this.btnHelp);
-			this.tabPage3.Controls.Add(this.btnClear);
-			this.tabPage3.Controls.Add(this.btnLoadFromClipboard);
 			this.tabPage3.Controls.Add(this.btnLoadFromDB);
-			this.tabPage3.Controls.Add(this.equipmentGrid);
 			this.tabPage3.Location = new System.Drawing.Point(4, 22);
 			this.tabPage3.Name = "tabPage3";
 			this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -119,20 +102,85 @@ namespace Mag_SuitBuilder
 			this.tabPage3.Text = "Step 1. Add Inventory";
 			this.tabPage3.UseVisualStyleBackColor = true;
 			// 
+			// panel1
+			// 
+			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.panel1.Controls.Add(this.equipmentGrid);
+			this.panel1.Controls.Add(this.filtersControl1);
+			this.panel1.Controls.Add(this.inventoryTreeView);
+			this.panel1.Location = new System.Drawing.Point(1, 32);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(1437, 681);
+			this.panel1.TabIndex = 37;
+			// 
+			// equipmentGrid
+			// 
+			this.equipmentGrid.AllowUserToAddRows = false;
+			this.equipmentGrid.AllowUserToDeleteRows = false;
+			this.equipmentGrid.AllowUserToOrderColumns = true;
+			this.equipmentGrid.AllowUserToResizeRows = false;
+			dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(234)))));
+			this.equipmentGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			this.equipmentGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.equipmentGrid.Location = new System.Drawing.Point(736, 0);
+			this.equipmentGrid.Name = "equipmentGrid";
+			this.equipmentGrid.Size = new System.Drawing.Size(701, 681);
+			this.equipmentGrid.TabIndex = 28;
+			this.equipmentGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.equipmentGrid_CellEndEdit);
+			this.equipmentGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.equipmentGrid_CellFormatting);
+			this.equipmentGrid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.equipmentGrid_CellPainting);
+			// 
 			// inventoryTreeView
 			// 
-			this.inventoryTreeView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
 			this.inventoryTreeView.CheckBoxes = true;
-			this.inventoryTreeView.Location = new System.Drawing.Point(4, 35);
+			this.inventoryTreeView.Dock = System.Windows.Forms.DockStyle.Left;
+			this.inventoryTreeView.Location = new System.Drawing.Point(0, 0);
 			this.inventoryTreeView.Name = "inventoryTreeView";
-			this.inventoryTreeView.Size = new System.Drawing.Size(206, 677);
+			this.inventoryTreeView.Size = new System.Drawing.Size(206, 681);
 			this.inventoryTreeView.TabIndex = 33;
 			this.inventoryTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.inventoryTreeView_AfterCheck);
 			// 
+			// chkFilters
+			// 
+			this.chkFilters.AutoSize = true;
+			this.chkFilters.Checked = true;
+			this.chkFilters.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkFilters.Location = new System.Drawing.Point(62, 9);
+			this.chkFilters.Name = "chkFilters";
+			this.chkFilters.Size = new System.Drawing.Size(53, 17);
+			this.chkFilters.TabIndex = 35;
+			this.chkFilters.Text = "Filters";
+			this.chkFilters.UseVisualStyleBackColor = true;
+			this.chkFilters.CheckedChanged += new System.EventHandler(this.chkTree_CheckedChanged);
+			// 
+			// chkTree
+			// 
+			this.chkTree.AutoSize = true;
+			this.chkTree.Checked = true;
+			this.chkTree.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkTree.Location = new System.Drawing.Point(8, 9);
+			this.chkTree.Name = "chkTree";
+			this.chkTree.Size = new System.Drawing.Size(48, 17);
+			this.chkTree.TabIndex = 18;
+			this.chkTree.Text = "Tree";
+			this.chkTree.UseVisualStyleBackColor = true;
+			this.chkTree.CheckedChanged += new System.EventHandler(this.chkTree_CheckedChanged);
+			// 
+			// txtInventoryRootPath
+			// 
+			this.txtInventoryRootPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.txtInventoryRootPath.Location = new System.Drawing.Point(216, 9);
+			this.txtInventoryRootPath.Name = "txtInventoryRootPath";
+			this.txtInventoryRootPath.Size = new System.Drawing.Size(1136, 20);
+			this.txtInventoryRootPath.TabIndex = 34;
+			// 
 			// btnHelp
 			// 
-			this.btnHelp.Location = new System.Drawing.Point(881, 6);
+			this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnHelp.Location = new System.Drawing.Point(1358, 6);
 			this.btnHelp.Name = "btnHelp";
 			this.btnHelp.Size = new System.Drawing.Size(75, 23);
 			this.btnHelp.TabIndex = 32;
@@ -140,237 +188,15 @@ namespace Mag_SuitBuilder
 			this.btnHelp.UseVisualStyleBackColor = true;
 			this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
 			// 
-			// btnClear
-			// 
-			this.btnClear.Location = new System.Drawing.Point(773, 6);
-			this.btnClear.Name = "btnClear";
-			this.btnClear.Size = new System.Drawing.Size(75, 23);
-			this.btnClear.TabIndex = 31;
-			this.btnClear.Text = "Clear";
-			this.btnClear.UseVisualStyleBackColor = true;
-			this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
-			// 
-			// btnLoadFromClipboard
-			// 
-			this.btnLoadFromClipboard.Location = new System.Drawing.Point(379, 6);
-			this.btnLoadFromClipboard.Name = "btnLoadFromClipboard";
-			this.btnLoadFromClipboard.Size = new System.Drawing.Size(365, 23);
-			this.btnLoadFromClipboard.TabIndex = 30;
-			this.btnLoadFromClipboard.Text = "Method 2. Load Inventory Info from Mag-Tools Clipboard Output";
-			this.btnLoadFromClipboard.UseVisualStyleBackColor = true;
-			this.btnLoadFromClipboard.Click += new System.EventHandler(this.btnLoadFromClipboard_Click);
-			// 
 			// btnLoadFromDB
 			// 
-			this.btnLoadFromDB.Location = new System.Drawing.Point(8, 6);
+			this.btnLoadFromDB.Location = new System.Drawing.Point(123, 6);
 			this.btnLoadFromDB.Name = "btnLoadFromDB";
-			this.btnLoadFromDB.Size = new System.Drawing.Size(365, 23);
+			this.btnLoadFromDB.Size = new System.Drawing.Size(87, 23);
 			this.btnLoadFromDB.TabIndex = 29;
-			this.btnLoadFromDB.Text = "Method 1. Load Inventory Database from Mag-Tools Export on Disk";
+			this.btnLoadFromDB.Text = "Load Inventory";
 			this.btnLoadFromDB.UseVisualStyleBackColor = true;
 			this.btnLoadFromDB.Click += new System.EventHandler(this.btnLoadFromDB_Click);
-			// 
-			// equipmentGrid
-			// 
-			this.equipmentGrid.AllowUserToOrderColumns = true;
-			this.equipmentGrid.AllowUserToResizeRows = false;
-			dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(234)))));
-			this.equipmentGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-			this.equipmentGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.equipmentGrid.Location = new System.Drawing.Point(216, 35);
-			this.equipmentGrid.Name = "equipmentGrid";
-			this.equipmentGrid.Size = new System.Drawing.Size(1220, 677);
-			this.equipmentGrid.TabIndex = 28;
-			this.equipmentGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.equipmentGrid_CellEndEdit);
-			this.equipmentGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.equipmentGrid_CellFormatting);
-			// 
-			// tabPage2
-			// 
-			this.tabPage2.Controls.Add(this.button2);
-			this.tabPage2.Controls.Add(this.button9);
-			this.tabPage2.Controls.Add(this.button7);
-			this.tabPage2.Controls.Add(this.button8);
-			this.tabPage2.Controls.Add(this.button6);
-			this.tabPage2.Controls.Add(this.button5);
-			this.tabPage2.Controls.Add(this.button4);
-			this.tabPage2.Controls.Add(this.button3);
-			this.tabPage2.Controls.Add(this.button1);
-			this.tabPage2.Controls.Add(this.label6);
-			this.tabPage2.Controls.Add(this.cboSecondaryArmorSet);
-			this.tabPage2.Controls.Add(this.label2);
-			this.tabPage2.Controls.Add(this.cboPrimaryArmorSet);
-			this.tabPage2.Controls.Add(this.label3);
-			this.tabPage2.Controls.Add(this.txtMinimumBaseArmorLevel);
-			this.tabPage2.Controls.Add(this.label1);
-			this.tabPage2.Controls.Add(this.cntrlCantripFilters);
-			this.tabPage2.Location = new System.Drawing.Point(4, 22);
-			this.tabPage2.Name = "tabPage2";
-			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(1441, 715);
-			this.tabPage2.TabIndex = 1;
-			this.tabPage2.Text = "Step 2. Setup Filters";
-			this.tabPage2.UseVisualStyleBackColor = true;
-			// 
-			// button2
-			// 
-			this.button2.Location = new System.Drawing.Point(721, 128);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(97, 23);
-			this.button2.TabIndex = 53;
-			this.button2.Text = "Clear";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.loadDefaultSpells_Click);
-			// 
-			// button9
-			// 
-			this.button9.Location = new System.Drawing.Point(721, 41);
-			this.button9.Name = "button9";
-			this.button9.Size = new System.Drawing.Size(97, 23);
-			this.button9.TabIndex = 52;
-			this.button9.Text = "Tinker";
-			this.button9.UseVisualStyleBackColor = true;
-			this.button9.Click += new System.EventHandler(this.loadDefaultSpells_Click);
-			// 
-			// button7
-			// 
-			this.button7.Location = new System.Drawing.Point(309, 70);
-			this.button7.Name = "button7";
-			this.button7.Size = new System.Drawing.Size(97, 23);
-			this.button7.TabIndex = 51;
-			this.button7.Text = "Void";
-			this.button7.UseVisualStyleBackColor = true;
-			this.button7.Click += new System.EventHandler(this.loadDefaultSpells_Click);
-			// 
-			// button8
-			// 
-			this.button8.Location = new System.Drawing.Point(309, 41);
-			this.button8.Name = "button8";
-			this.button8.Size = new System.Drawing.Size(97, 23);
-			this.button8.TabIndex = 50;
-			this.button8.Text = "War";
-			this.button8.UseVisualStyleBackColor = true;
-			this.button8.Click += new System.EventHandler(this.loadDefaultSpells_Click);
-			// 
-			// button6
-			// 
-			this.button6.Location = new System.Drawing.Point(515, 41);
-			this.button6.Name = "button6";
-			this.button6.Size = new System.Drawing.Size(97, 23);
-			this.button6.TabIndex = 49;
-			this.button6.Text = "Two Hand";
-			this.button6.UseVisualStyleBackColor = true;
-			this.button6.Click += new System.EventHandler(this.loadDefaultSpells_Click);
-			// 
-			// button5
-			// 
-			this.button5.Location = new System.Drawing.Point(412, 128);
-			this.button5.Name = "button5";
-			this.button5.Size = new System.Drawing.Size(97, 23);
-			this.button5.TabIndex = 48;
-			this.button5.Text = "Finesse";
-			this.button5.UseVisualStyleBackColor = true;
-			this.button5.Click += new System.EventHandler(this.loadDefaultSpells_Click);
-			// 
-			// button4
-			// 
-			this.button4.Location = new System.Drawing.Point(412, 99);
-			this.button4.Name = "button4";
-			this.button4.Size = new System.Drawing.Size(97, 23);
-			this.button4.TabIndex = 47;
-			this.button4.Text = "Light";
-			this.button4.UseVisualStyleBackColor = true;
-			this.button4.Click += new System.EventHandler(this.loadDefaultSpells_Click);
-			// 
-			// button3
-			// 
-			this.button3.Location = new System.Drawing.Point(412, 70);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(97, 23);
-			this.button3.TabIndex = 46;
-			this.button3.Text = "Heavy";
-			this.button3.UseVisualStyleBackColor = true;
-			this.button3.Click += new System.EventHandler(this.loadDefaultSpells_Click);
-			// 
-			// button1
-			// 
-			this.button1.Location = new System.Drawing.Point(412, 41);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(97, 23);
-			this.button1.TabIndex = 44;
-			this.button1.Text = "Missile";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.loadDefaultSpells_Click);
-			// 
-			// label6
-			// 
-			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(306, 12);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(554, 26);
-			this.label6.TabIndex = 43;
-			this.label6.Text = resources.GetString("label6.Text");
-			// 
-			// cboSecondaryArmorSet
-			// 
-			this.cboSecondaryArmorSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboSecondaryArmorSet.Location = new System.Drawing.Point(121, 70);
-			this.cboSecondaryArmorSet.Name = "cboSecondaryArmorSet";
-			this.cboSecondaryArmorSet.Size = new System.Drawing.Size(144, 21);
-			this.cboSecondaryArmorSet.TabIndex = 38;
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(8, 73);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(107, 13);
-			this.label2.TabIndex = 37;
-			this.label2.Text = "Secondary Armor Set";
-			// 
-			// cboPrimaryArmorSet
-			// 
-			this.cboPrimaryArmorSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cboPrimaryArmorSet.Location = new System.Drawing.Point(121, 38);
-			this.cboPrimaryArmorSet.Name = "cboPrimaryArmorSet";
-			this.cboPrimaryArmorSet.Size = new System.Drawing.Size(144, 21);
-			this.cboPrimaryArmorSet.TabIndex = 36;
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(8, 41);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(90, 13);
-			this.label3.TabIndex = 35;
-			this.label3.Text = "Primary Armor Set";
-			// 
-			// txtMinimumBaseArmorLevel
-			// 
-			this.txtMinimumBaseArmorLevel.Location = new System.Drawing.Point(215, 12);
-			this.txtMinimumBaseArmorLevel.MaxLength = 3;
-			this.txtMinimumBaseArmorLevel.Name = "txtMinimumBaseArmorLevel";
-			this.txtMinimumBaseArmorLevel.Size = new System.Drawing.Size(33, 20);
-			this.txtMinimumBaseArmorLevel.TabIndex = 34;
-			this.txtMinimumBaseArmorLevel.Text = "200";
-			this.txtMinimumBaseArmorLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(8, 12);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(201, 13);
-			this.label1.TabIndex = 33;
-			this.label1.Text = "Minimum base armor level for body armor:";
-			// 
-			// cntrlCantripFilters
-			// 
-			this.cntrlCantripFilters.Location = new System.Drawing.Point(309, 157);
-			this.cntrlCantripFilters.Name = "cntrlCantripFilters";
-			this.cntrlCantripFilters.Size = new System.Drawing.Size(528, 150);
-			this.cntrlCantripFilters.TabIndex = 32;
 			// 
 			// tabPage1
 			// 
@@ -403,7 +229,7 @@ namespace Mag_SuitBuilder
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
 			this.tabPage1.Size = new System.Drawing.Size(1441, 715);
 			this.tabPage1.TabIndex = 0;
-			this.tabPage1.Text = "Step 3. Generate Suits";
+			this.tabPage1.Text = "Step 2. Generate Suits";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
 			// cmdCollapseAll
@@ -465,6 +291,15 @@ namespace Mag_SuitBuilder
 			this.btnCalculatePossibilities.UseVisualStyleBackColor = true;
 			this.btnCalculatePossibilities.Click += new System.EventHandler(this.btnCalculatePossibilities_Click);
 			// 
+			// filtersControl1
+			// 
+			this.filtersControl1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.filtersControl1.Dock = System.Windows.Forms.DockStyle.Left;
+			this.filtersControl1.Location = new System.Drawing.Point(206, 0);
+			this.filtersControl1.Name = "filtersControl1";
+			this.filtersControl1.Size = new System.Drawing.Size(530, 681);
+			this.filtersControl1.TabIndex = 0;
+			// 
 			// cntrlSuitCantrips
 			// 
 			this.cntrlSuitCantrips.Enabled = false;
@@ -476,7 +311,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece1
 			// 
 			this.coveragePiece1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece1.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.Necklace;
+			this.coveragePiece1.EquipableSlots = Mag.Shared.Constants.EquippableSlotFlags.Necklace;
 			this.coveragePiece1.Location = new System.Drawing.Point(8, 8);
 			this.coveragePiece1.Name = "coveragePiece1";
 			this.coveragePiece1.Size = new System.Drawing.Size(153, 133);
@@ -485,7 +320,8 @@ namespace Mag_SuitBuilder
 			// coveragePiece16
 			// 
 			this.coveragePiece16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece16.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.Pants;
+			this.coveragePiece16.EquipableSlots = ((Mag.Shared.Constants.EquippableSlotFlags)(((Mag.Shared.Constants.EquippableSlotFlags.PantsAbdomen | Mag.Shared.Constants.EquippableSlotFlags.PantsUpperLegs)
+			| Mag.Shared.Constants.EquippableSlotFlags.PantsLowerLegs)));
 			this.coveragePiece16.Location = new System.Drawing.Point(803, 425);
 			this.coveragePiece16.Name = "coveragePiece16";
 			this.coveragePiece16.Size = new System.Drawing.Size(153, 133);
@@ -494,7 +330,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece2
 			// 
 			this.coveragePiece2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece2.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.Trinket;
+			this.coveragePiece2.EquipableSlots = Mag.Shared.Constants.EquippableSlotFlags.Trinket;
 			this.coveragePiece2.Location = new System.Drawing.Point(8, 147);
 			this.coveragePiece2.Name = "coveragePiece2";
 			this.coveragePiece2.Size = new System.Drawing.Size(153, 133);
@@ -503,7 +339,9 @@ namespace Mag_SuitBuilder
 			// coveragePiece17
 			// 
 			this.coveragePiece17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece17.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.Shirt;
+			this.coveragePiece17.EquipableSlots = ((Mag.Shared.Constants.EquippableSlotFlags)((((Mag.Shared.Constants.EquippableSlotFlags.ShirtChest | Mag.Shared.Constants.EquippableSlotFlags.PantsAbdomen)
+			| Mag.Shared.Constants.EquippableSlotFlags.ShirtUpperArms)
+			| Mag.Shared.Constants.EquippableSlotFlags.ShirtLowerArms)));
 			this.coveragePiece17.Location = new System.Drawing.Point(803, 286);
 			this.coveragePiece17.Name = "coveragePiece17";
 			this.coveragePiece17.Size = new System.Drawing.Size(153, 133);
@@ -512,7 +350,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece3
 			// 
 			this.coveragePiece3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece3.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.LeftBracelet;
+			this.coveragePiece3.EquipableSlots = Mag.Shared.Constants.EquippableSlotFlags.LeftBracelet;
 			this.coveragePiece3.Location = new System.Drawing.Point(8, 286);
 			this.coveragePiece3.Name = "coveragePiece3";
 			this.coveragePiece3.Size = new System.Drawing.Size(153, 133);
@@ -521,7 +359,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece14
 			// 
 			this.coveragePiece14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece14.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.RightRing;
+			this.coveragePiece14.EquipableSlots = Mag.Shared.Constants.EquippableSlotFlags.RightRing;
 			this.coveragePiece14.Location = new System.Drawing.Point(644, 425);
 			this.coveragePiece14.Name = "coveragePiece14";
 			this.coveragePiece14.Size = new System.Drawing.Size(153, 133);
@@ -530,7 +368,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece4
 			// 
 			this.coveragePiece4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece4.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.LeftRing;
+			this.coveragePiece4.EquipableSlots = Mag.Shared.Constants.EquippableSlotFlags.LeftRing;
 			this.coveragePiece4.Location = new System.Drawing.Point(8, 425);
 			this.coveragePiece4.Name = "coveragePiece4";
 			this.coveragePiece4.Size = new System.Drawing.Size(153, 133);
@@ -539,7 +377,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece15
 			// 
 			this.coveragePiece15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece15.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.RightBracelet;
+			this.coveragePiece15.EquipableSlots = Mag.Shared.Constants.EquippableSlotFlags.RightBracelet;
 			this.coveragePiece15.Location = new System.Drawing.Point(644, 286);
 			this.coveragePiece15.Name = "coveragePiece15";
 			this.coveragePiece15.Size = new System.Drawing.Size(153, 133);
@@ -548,7 +386,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece5
 			// 
 			this.coveragePiece5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece5.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.UpperArms;
+			this.coveragePiece5.EquipableSlots = Mag.Shared.Constants.EquippableSlotFlags.UpperArms;
 			this.coveragePiece5.Location = new System.Drawing.Point(167, 147);
 			this.coveragePiece5.Name = "coveragePiece5";
 			this.coveragePiece5.Size = new System.Drawing.Size(153, 133);
@@ -557,7 +395,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece13
 			// 
 			this.coveragePiece13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece13.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.Feet;
+			this.coveragePiece13.EquipableSlots = Mag.Shared.Constants.EquippableSlotFlags.Feet;
 			this.coveragePiece13.Location = new System.Drawing.Point(542, 564);
 			this.coveragePiece13.Name = "coveragePiece13";
 			this.coveragePiece13.Size = new System.Drawing.Size(153, 133);
@@ -566,7 +404,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece6
 			// 
 			this.coveragePiece6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece6.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.Chest;
+			this.coveragePiece6.EquipableSlots = Mag.Shared.Constants.EquippableSlotFlags.Chest;
 			this.coveragePiece6.Location = new System.Drawing.Point(326, 147);
 			this.coveragePiece6.Name = "coveragePiece6";
 			this.coveragePiece6.Size = new System.Drawing.Size(153, 133);
@@ -575,7 +413,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece12
 			// 
 			this.coveragePiece12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece12.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.LowerLegs;
+			this.coveragePiece12.EquipableSlots = Mag.Shared.Constants.EquippableSlotFlags.LowerLegs;
 			this.coveragePiece12.Location = new System.Drawing.Point(485, 425);
 			this.coveragePiece12.Name = "coveragePiece12";
 			this.coveragePiece12.Size = new System.Drawing.Size(153, 133);
@@ -584,7 +422,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece7
 			// 
 			this.coveragePiece7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece7.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.Head;
+			this.coveragePiece7.EquipableSlots = Mag.Shared.Constants.EquippableSlotFlags.Head;
 			this.coveragePiece7.Location = new System.Drawing.Point(326, 8);
 			this.coveragePiece7.Name = "coveragePiece7";
 			this.coveragePiece7.Size = new System.Drawing.Size(153, 133);
@@ -593,7 +431,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece11
 			// 
 			this.coveragePiece11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece11.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.Hands;
+			this.coveragePiece11.EquipableSlots = Mag.Shared.Constants.EquippableSlotFlags.Hands;
 			this.coveragePiece11.Location = new System.Drawing.Point(167, 425);
 			this.coveragePiece11.Name = "coveragePiece11";
 			this.coveragePiece11.Size = new System.Drawing.Size(153, 133);
@@ -602,7 +440,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece8
 			// 
 			this.coveragePiece8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece8.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.LowerArms;
+			this.coveragePiece8.EquipableSlots = Mag.Shared.Constants.EquippableSlotFlags.LowerArms;
 			this.coveragePiece8.Location = new System.Drawing.Point(167, 286);
 			this.coveragePiece8.Name = "coveragePiece8";
 			this.coveragePiece8.Size = new System.Drawing.Size(153, 133);
@@ -611,7 +449,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece10
 			// 
 			this.coveragePiece10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece10.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.UpperLegs;
+			this.coveragePiece10.EquipableSlots = Mag.Shared.Constants.EquippableSlotFlags.UpperLegs;
 			this.coveragePiece10.Location = new System.Drawing.Point(485, 286);
 			this.coveragePiece10.Name = "coveragePiece10";
 			this.coveragePiece10.Size = new System.Drawing.Size(153, 133);
@@ -620,7 +458,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece9
 			// 
 			this.coveragePiece9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece9.EquipableSlots = Mag_SuitBuilder.Constants.EquippableSlotFlags.Abdomen;
+			this.coveragePiece9.EquipableSlots = Mag.Shared.Constants.EquippableSlotFlags.Abdomen;
 			this.coveragePiece9.Location = new System.Drawing.Point(326, 286);
 			this.coveragePiece9.Name = "coveragePiece9";
 			this.coveragePiece9.Size = new System.Drawing.Size(153, 133);
@@ -639,9 +477,9 @@ namespace Mag_SuitBuilder
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage3.ResumeLayout(false);
+			this.tabPage3.PerformLayout();
+			this.panel1.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.equipmentGrid)).EndInit();
-			this.tabPage2.ResumeLayout(false);
-			this.tabPage2.PerformLayout();
 			this.tabPage1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
@@ -668,38 +506,23 @@ namespace Mag_SuitBuilder
 		private EquipmentPieceControl coveragePiece17;
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
-		private System.Windows.Forms.TabPage tabPage2;
 		private System.Windows.Forms.Button btnCalculatePossibilities;
 		private System.Windows.Forms.TabPage tabPage3;
 		private System.Windows.Forms.DataGridView equipmentGrid;
-		private System.Windows.Forms.Button btnLoadFromClipboard;
 		private System.Windows.Forms.Button btnLoadFromDB;
-		private System.Windows.Forms.Button btnClear;
 		private System.Windows.Forms.Button btnStopCalculating;
-		private CantripSelectorControl cntrlCantripFilters;
-		private System.Windows.Forms.TextBox txtMinimumBaseArmorLevel;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.ComboBox cboSecondaryArmorSet;
-		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.ComboBox cboPrimaryArmorSet;
-		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Button btnHelp;
-		private System.Windows.Forms.Button button9;
-		private System.Windows.Forms.Button button7;
-		private System.Windows.Forms.Button button8;
-		private System.Windows.Forms.Button button6;
-		private System.Windows.Forms.Button button5;
-		private System.Windows.Forms.Button button4;
-		private System.Windows.Forms.Button button3;
-		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.Label label6;
 		private CantripSelectorControl cntrlSuitCantrips;
 		private System.Windows.Forms.ProgressBar progressBar1;
 		private System.Windows.Forms.TreeView treeView1;
-		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.Button cmdCollapseAll;
 		private System.Windows.Forms.Button cmdExpandAll;
 		private System.Windows.Forms.TreeView inventoryTreeView;
+		private System.Windows.Forms.TextBox txtInventoryRootPath;
+		private System.Windows.Forms.CheckBox chkFilters;
+		private System.Windows.Forms.CheckBox chkTree;
+		private System.Windows.Forms.Panel panel1;
+		private FiltersControl filtersControl1;
 	}
 }
 

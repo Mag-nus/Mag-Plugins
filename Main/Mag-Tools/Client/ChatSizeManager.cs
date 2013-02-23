@@ -3,9 +3,9 @@ using System.Runtime.InteropServices;
 
 using Decal.Adapter;
 
-namespace MagTools
+namespace MagTools.Client
 {
-	static class ACClientChatSizeManager
+	static class ChatSizeManager
 	{
 		public enum ChatState
 		{

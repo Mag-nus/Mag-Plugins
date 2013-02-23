@@ -6,11 +6,11 @@ namespace Mag_SuitBuilder.Search
 {
 	class BucketSorter : List<Bucket>
 	{
-		public void PutItemInBuckets(EquipmentPiece piece)
+		public void PutItemInBuckets(SuitBuildableMyWorldObject piece)
 		{
 			foreach (Bucket bucket in this)
 			{
-				if ((piece.EquipableSlots & bucket.Slot) == bucket.Slot)
+				if ((piece.EquippableSlot & bucket.Slot) == bucket.Slot)
 					bucket.Add(piece);
 			}
 		}
