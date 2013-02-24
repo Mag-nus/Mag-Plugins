@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 using Mag_SuitBuilder.Equipment;
-using Mag_SuitBuilder.Spells;
 
 namespace Mag_SuitBuilder.Search
 {
@@ -14,7 +13,6 @@ namespace Mag_SuitBuilder.Search
 
 		protected Searcher(SearcherConfiguration config, IEnumerable<SuitBuildableMyWorldObject> equipment, CompletedSuit startingSuit = null)
 		{
-
 			Config = config;
 
 			foreach (var piece in equipment)
@@ -44,9 +42,8 @@ namespace Mag_SuitBuilder.Search
 			// Remove pieces we can't add to our base suit, or pieces that can provide no beneficial spell
 			for (int i = Equipment.Count - 1; i >= 0; i--)
 			{
-				// todo hack fix
-				//if (!SuitBuilder.SlotIsOpen(Equipment[i].EquipableSlots) || !SuitBuilder.CanGetBeneficialSpellFrom(Equipment[i]))
-				//	Equipment.RemoveAt(i);
+				if (!SuitBuilder.SlotIsOpen(Equipment[i].EquippableSlots) || !SuitBuilder.CanGetBeneficialSpellFrom(Equipment[i]))
+					Equipment.RemoveAt(i);
 			}
 		}
 				

@@ -19,11 +19,11 @@ namespace Mag_SuitBuilder.Search
 	/// When enumerating, keep in mind that SlotFlags could have one or more slot bits set for any piece.
 	/// No pieces should have overlapping slots.
 	/// </summary>
-	class CompletedSuit : IEnumerable<KeyValuePair<EquippableSlotFlags, EquipmentPiece>>
+	class CompletedSuit : IEnumerable<KeyValuePair<EquippableSlotFlags, SuitBuildableMyWorldObject>>
 	{
-		readonly Dictionary<EquippableSlotFlags, EquipmentPiece> items = new Dictionary<EquippableSlotFlags, EquipmentPiece>();
+		readonly Dictionary<EquippableSlotFlags, SuitBuildableMyWorldObject> items = new Dictionary<EquippableSlotFlags, SuitBuildableMyWorldObject>();
 
-		readonly HashSet<EquipmentPiece> piecesHashSet = new HashSet<EquipmentPiece>();
+		readonly HashSet<SuitBuildableMyWorldObject> piecesHashSet = new HashSet<SuitBuildableMyWorldObject>();
 
 		/// <summary>
 		/// Gets the number of equipment pieces in the suit.
@@ -39,13 +39,14 @@ namespace Mag_SuitBuilder.Search
 		/// </summary>
 		public IEnumerable<Spell> EffectiveSpells { get { return effectiveSpells; } }
 
+		public int TotalEffectiveLegendaries { get; private set; }
 		public int TotalEffectiveEpics { get; private set; }
 		public int TotalEffectiveMajors { get; private set; }
 
-		readonly Dictionary<ArmorSet, int> armorSetCounts = new Dictionary<ArmorSet, int>();
+		readonly Dictionary<int, int> armorSetCounts = new Dictionary<int, int>();
 
 		/// <exception cref="ArgumentException">Trying to add an item that covers a slot already filled.</exception>
-		public void AddItem(EquippableSlotFlags slots, EquipmentPiece item)
+		public void AddItem(EquippableSlotFlags slots, SuitBuildableMyWorldObject item)
 		{
 			// Make sure we don't overlap a slot
 			foreach (var o in this)
@@ -57,22 +58,10 @@ namespace Mag_SuitBuilder.Search
 			items.Add(slots, item);
 			piecesHashSet.Add(item);
 
-			// This should use the coverage flags instead
-			// todo hack fix
-			if (item.EquipableSlots.IsBodyArmor())
-			{
-				if (item.EquipableSlots.IsUnderwear())
-					TotalBaseArmorLevel += (item.BaseArmorLevel * item.BodyPartsCovered);
-				else
-					TotalBaseArmorLevel += item.BaseArmorLevel;
-			}
+			TotalBaseArmorLevel += (item.CalcedStartingArmorLevel * slots.GetTotalBitsSet());
 
-			foreach (Spell itemSpell in item.Spells)
+			foreach (Spell itemSpell in item.SpellsToUseInSearch)
 			{
-				// Don't count impen as an effective spell
-				if (itemSpell.IsOfSameFamilyAndGroup(Spell.GetSpell("Epic Impenetrability")))
-					continue;
-
 				foreach (Spell suitSpell in effectiveSpells)
 				{
 					if (suitSpell.IsSameOrSurpasses(itemSpell))
@@ -84,30 +73,33 @@ namespace Mag_SuitBuilder.Search
 				end:;
 			}
 
+			TotalEffectiveLegendaries = 0;
 			TotalEffectiveEpics = 0;
 			TotalEffectiveMajors = 0;
 			foreach (Spell spell in EffectiveSpells)
 			{
-				if (spell.CantripLevel >= Spell.CantripLevels.Epic)
+				if (spell.CantripLevel >= Spell.CantripLevels.Legendary)
+					TotalEffectiveLegendaries++;
+				else if (spell.CantripLevel >= Spell.CantripLevels.Epic)
 					TotalEffectiveEpics++;
 				else if (spell.CantripLevel >= Spell.CantripLevels.Major)
 					TotalEffectiveMajors++;
 			}
 
-			if (item.ArmorSet != ArmorSet.NoArmorSet)
+			if (item.ItemSetId != 0)
 			{
-				if (armorSetCounts.ContainsKey(item.ArmorSet))
-					armorSetCounts[item.ArmorSet]++;
+				if (armorSetCounts.ContainsKey(item.ItemSetId))
+					armorSetCounts[item.ItemSetId]++;
 				else
-					armorSetCounts.Add(item.ArmorSet, 1);
+					armorSetCounts.Add(item.ItemSetId, 1);
 			}
 		}
 
-		public EquipmentPiece this[EquippableSlotFlags slot]
+		public SuitBuildableMyWorldObject this[EquippableSlotFlags slot]
 		{
 			get
 			{
-				foreach (KeyValuePair<EquippableSlotFlags, EquipmentPiece> kvp in items)
+				foreach (KeyValuePair<EquippableSlotFlags, SuitBuildableMyWorldObject> kvp in items)
 				{
 					if ((kvp.Key & slot) == slot)
 						return kvp.Value;
@@ -137,7 +129,7 @@ namespace Mag_SuitBuilder.Search
 			return piecesHashSet.IsSupersetOf(other.piecesHashSet);
 		}
 
-		public IEnumerator<KeyValuePair<EquippableSlotFlags, EquipmentPiece>> GetEnumerator()
+		public IEnumerator<KeyValuePair<EquippableSlotFlags, SuitBuildableMyWorldObject>> GetEnumerator()
 		{
 			return items.GetEnumerator();
 		}
@@ -151,7 +143,7 @@ namespace Mag_SuitBuilder.Search
 		{
 			string sets = null;
 
-			foreach (KeyValuePair<ArmorSet, int> kvp in armorSetCounts)
+			foreach (KeyValuePair<int, int> kvp in armorSetCounts)
 			{
 				if (sets != null)
 					sets += ", ";
@@ -160,7 +152,7 @@ namespace Mag_SuitBuilder.Search
 
 			}
 
-			return piecesHashSet.Count + ", AL: " + TotalBaseArmorLevel + ", Epics: " + TotalEffectiveEpics + ", Majors: " + TotalEffectiveMajors + ", " + sets;
+			return piecesHashSet.Count + ", AL: " + TotalBaseArmorLevel + ", [L/E/M]: [" + TotalEffectiveLegendaries + "/" + TotalEffectiveEpics + "/" + TotalEffectiveMajors + "] " + sets;
 		}
 	}
 }

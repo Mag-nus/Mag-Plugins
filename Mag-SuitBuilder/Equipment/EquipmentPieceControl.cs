@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Globalization;
+using System.Windows.Forms;
 
 using Mag.Shared;
 
@@ -11,44 +12,46 @@ namespace Mag_SuitBuilder.Equipment
 			InitializeComponent();
 		}
 
-		public EquippableSlotFlags EquipableSlots { get; set; }
+		public EquippableSlotFlags EquippableSlots { get; set; }
 
-		public bool CanEquip(EquipmentPiece piece)
-		{
-			return (piece.EquipableSlots & EquipableSlots) == EquipableSlots;
+		public bool CanEquip(SuitBuildableMyWorldObject piece)
+		{/*
+			if (EquippableSlots.IsShirt() && piece.EquippableSlots.IsShirt())
+				return true;
+
+			if (EquippableSlots.IsPants() && piece.EquippableSlots.IsPants())
+				return true;
+			*/
+			return (piece.EquippableSlots & EquippableSlots) == EquippableSlots;
 		}
 
-		public void SetEquipmentPiece(EquipmentPiece piece)
+		public void SetEquipmentPiece(SuitBuildableMyWorldObject piece)
 		{
+			lblItemName.Text = null;
+
+			txtArmorLevel.Text = null;
+
+			txtArmorSet.Text = null;
+
+			txtSpell1.Text = null;
+			txtSpell2.Text = null;
+			txtSpell3.Text = null;
+			txtSpell4.Text = null;
+
 			if (piece == null || !CanEquip(piece))
-			{
-				lblItemName.Text = null;
-
-				txtArmorLevel.Text = null;
-
-				txtArmorSet.Text = null;
-
-				txtSpell1.Text = null;
-				txtSpell2.Text = null;
-				txtSpell3.Text = null;
-				txtSpell4.Text = null;
-
 				return;
-			}
 
 			lblItemName.Text = piece.Name;
 
-			if (piece.BaseArmorLevel == 0)
-				txtArmorLevel.Text = null;
-			else
-				txtArmorLevel.Text = piece.BaseArmorLevel.ToString();
+			if (piece.CalcedStartingArmorLevel > 0)
+				txtArmorLevel.Text = piece.CalcedStartingArmorLevel.ToString(CultureInfo.InvariantCulture);
 
-			txtArmorSet.Text = piece.ArmorSet.ToString();
+			txtArmorSet.Text = piece.ItemSet;
 
-			txtSpell1.Text = piece.Spell1;
-			txtSpell2.Text = piece.Spell2;
-			txtSpell3.Text = piece.Spell3;
-			txtSpell4.Text = piece.Spell4;
+			if (piece.CachedSpells.Count > 0) txtSpell1.Text = piece.CachedSpells[0].ToString();
+			if (piece.CachedSpells.Count > 1) txtSpell2.Text = piece.CachedSpells[1].ToString();
+			if (piece.CachedSpells.Count > 2) txtSpell3.Text = piece.CachedSpells[2].ToString();
+			if (piece.CachedSpells.Count > 3) txtSpell4.Text = piece.CachedSpells[3].ToString();
 		}
 	}
 }

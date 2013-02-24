@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 
 namespace Mag_SuitBuilder.Equipment
@@ -68,3 +68,4 @@ namespace Mag_SuitBuilder.Equipment
 		public static ArmorSet AnyArmorSet = new ArmorSet("Any Armor Set");
 	}
 }
+*/

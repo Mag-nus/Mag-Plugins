@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using Mag_SuitBuilder.Equipment;
 
@@ -42,11 +41,10 @@ namespace Mag_SuitBuilder.Search
 		{
 			BucketSorter sorter = new BucketSorter();
 
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Trinket)) sorter.Add(new Bucket(EquippableSlotFlags.Trinket));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Trinket))		sorter.Add(new Bucket(EquippableSlotFlags.Trinket));
 
-			// todo hack fix
-			//if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Shirt))	sorter.Add(new Bucket(EquippableSlotFlags.Shirt));
-			//if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Pants))	sorter.Add(new Bucket(EquippableSlotFlags.Pants));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.ShirtChest))		sorter.Add(new Bucket(EquippableSlotFlags.ShirtChest));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.PantsUpperLegs)) sorter.Add(new Bucket(EquippableSlotFlags.PantsUpperLegs));
 
 			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Necklace))		sorter.Add(new Bucket(EquippableSlotFlags.Necklace));
 			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.RightBracelet))	sorter.Add(new Bucket(EquippableSlotFlags.RightBracelet));
@@ -137,7 +135,6 @@ namespace Mag_SuitBuilder.Search
 			}
 
 			//for (int i = 0; i < buckets[index].Count ; i++)
-			throw new NotImplementedException();/*
 			foreach (SuitBuildableMyWorldObject piece in buckets[index]) // Using foreach: 10.85s, for: 11s
 			{
 				if (SuitBuilder.SlotIsOpen(buckets[index].Slot) && SuitBuilder.CanGetBeneficialSpellFrom(piece))
@@ -148,7 +145,7 @@ namespace Mag_SuitBuilder.Search
 
 					SuitBuilder.Pop();
 				}
-			}*/
+			}
 
 			SearchThroughBuckets(buckets, index + 1);
 		}

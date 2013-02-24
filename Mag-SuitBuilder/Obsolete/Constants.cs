@@ -1,10 +1,9 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Mag_SuitBuilder
 {
-	/*
 	public static class Constants
 	{
 		public static Mag.Shared.EquippableSlotFlags GetEquippableSlots(string name)
@@ -181,5 +180,6 @@ namespace Mag_SuitBuilder
 
 			return UnderwearCoverage.None;
 		}
-	}*/
+	}
 }
+*/

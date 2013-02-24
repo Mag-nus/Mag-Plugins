@@ -229,7 +229,8 @@ namespace MagTools.Inventory
 			if (objectClass == ObjectClass.Armor || objectClass == ObjectClass.Clothing ||
 				objectClass == ObjectClass.MeleeWeapon || objectClass == ObjectClass.MissileWeapon || objectClass == ObjectClass.WandStaffOrb ||
 				objectClass == ObjectClass.Jewelry ||
-				(objectClass == ObjectClass.Gem && !String.IsNullOrEmpty(name) && name.Contains("Aetheria"))) // Aetheria are Gems
+				(objectClass == ObjectClass.Gem && !String.IsNullOrEmpty(name) && name.Contains("Aetheria")) || // Aetheria are Gems
+				(objectClass == ObjectClass.Misc && !String.IsNullOrEmpty(name) && name.Contains("Essence"))) // Essences (Summoning Gems) are Misc
 				return true;
 
 			return false;

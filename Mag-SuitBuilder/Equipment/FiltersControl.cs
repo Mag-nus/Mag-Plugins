@@ -47,18 +47,18 @@ namespace Mag_SuitBuilder.Equipment
 				FiltersChanged();
 		}
 
-		public void UpdateArmorSets(IDictionary<string, long> armorSets)
+		public void UpdateArmorSets(IDictionary<string, int> armorSets)
 		{
 			cboPrimaryArmorSet.Items.Clear();
-			cboPrimaryArmorSet.Items.Add(new KeyValuePair<string, long>("No Armor Set", 0));
-			cboPrimaryArmorSet.Items.Add(new KeyValuePair<string, long>("Any Armor Set", 255));
+			cboPrimaryArmorSet.Items.Add(new KeyValuePair<string, int>("No Armor Set", 0));
+			cboPrimaryArmorSet.Items.Add(new KeyValuePair<string, int>("Any Armor Set", 255));
 			cboPrimaryArmorSet.SelectedIndex = 1;
 			foreach (var v in armorSets)
 				cboPrimaryArmorSet.Items.Add(v);
 
 			cboSecondaryArmorSet.Items.Clear();
-			cboSecondaryArmorSet.Items.Add(new KeyValuePair<string, long>("No Armor Set", 0));
-			cboSecondaryArmorSet.Items.Add(new KeyValuePair<string, long>("Any Armor Set", 255));
+			cboSecondaryArmorSet.Items.Add(new KeyValuePair<string, int>("No Armor Set", 0));
+			cboSecondaryArmorSet.Items.Add(new KeyValuePair<string, int>("Any Armor Set", 255));
 			cboSecondaryArmorSet.SelectedIndex = 1;
 			foreach (var v in armorSets)
 				cboSecondaryArmorSet.Items.Add(v);
@@ -74,7 +74,7 @@ namespace Mag_SuitBuilder.Equipment
 
 			int minimumBaseArmorLevel;
 			int.TryParse(txtMinimumBaseArmorLevel.Text, out minimumBaseArmorLevel);
-			if ((mwo.ObjectClass == 2 || mwo.ObjectClass == 3) && mwo.CalcedStartingArmorLevel < minimumBaseArmorLevel && mwo.EquippableSlot.IsBodyArmor())
+			if ((mwo.ObjectClass == 2 || mwo.ObjectClass == 3) && mwo.CalcedStartingArmorLevel < minimumBaseArmorLevel && mwo.EquippableSlots.IsBodyArmor())
 				return false;
 
 			if (mwo.ObjectClass == 2) // Armor
@@ -106,23 +106,15 @@ namespace Mag_SuitBuilder.Equipment
 				if (!chkAllElseObjectClasses.Checked) return false;
 			}
 
-			if (mwo.EquippableSlot.IsBodyArmor())
+			if (mwo.EquippableSlots.IsBodyArmor())
 			{
-				KeyValuePair<string, long> primarykvp = new KeyValuePair<string, long>();
-				KeyValuePair<string, long> secondarykvp = new KeyValuePair<string, long>();
-
-				if (cboPrimaryArmorSet.SelectedItem is KeyValuePair<string, long>)
-					primarykvp = (KeyValuePair<string, long>)cboPrimaryArmorSet.SelectedItem;
-				if (cboSecondaryArmorSet.SelectedItem is KeyValuePair<string, long>)
-					secondarykvp = (KeyValuePair<string, long>)cboSecondaryArmorSet.SelectedItem;
-
 				// Both are No Armor Set and the item has a set
-				if (primarykvp.Value == 0 && secondarykvp.Value == 0 && mwo.ItemSetId != 0)
+				if (PrimaryArmorSetId == 0 && SecondaryArmorSetId == 0 && mwo.ItemSetId != 0)
 					return false;
 
-				if (primarykvp.Value != 255 && secondarykvp.Value != 255)
+				if (PrimaryArmorSetId != 255 && SecondaryArmorSetId != 255)
 				{
-					if (primarykvp.Value != mwo.ItemSetId && secondarykvp.Value != mwo.ItemSetId)
+					if (PrimaryArmorSetId != mwo.ItemSetId && SecondaryArmorSetId != mwo.ItemSetId)
 						return false;
 				}
 			}
@@ -142,6 +134,36 @@ namespace Mag_SuitBuilder.Equipment
 			}
 
 			return true;
+		}
+
+		public int PrimaryArmorSetId
+		{
+			get
+			{
+				if (cboPrimaryArmorSet.SelectedItem is KeyValuePair<string, int>)
+					return ((KeyValuePair<string, int>)cboPrimaryArmorSet.SelectedItem).Value;
+
+				return 255;
+			}
+		}
+
+		public int SecondaryArmorSetId
+		{
+			get
+			{
+				if (cboSecondaryArmorSet.SelectedItem is KeyValuePair<string, int>)
+					return ((KeyValuePair<string, int>)cboSecondaryArmorSet.SelectedItem).Value;
+
+				return 255;
+			}
+		}
+
+		public ICollection<Spell> CantripsToLookFor
+		{
+			get
+			{
+				return cantripSelectorControl1;
+			}
 		}
 	}
 }

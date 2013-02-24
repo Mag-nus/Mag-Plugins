@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Mag_SuitBuilder.Equipment;
 
@@ -41,15 +42,14 @@ namespace Mag_SuitBuilder.Search
 			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Hands))		buckets.Add(new Bucket(EquippableSlotFlags.Hands));
 			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Feet))		buckets.Add(new Bucket(EquippableSlotFlags.Feet));
 			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Chest))		buckets.Add(new Bucket(EquippableSlotFlags.Chest));
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Abdomen))		buckets.Add(new Bucket(EquippableSlotFlags.Abdomen));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Abdomen))	buckets.Add(new Bucket(EquippableSlotFlags.Abdomen));
 			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.UpperArms))	buckets.Add(new Bucket(EquippableSlotFlags.UpperArms));
 			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.LowerArms))	buckets.Add(new Bucket(EquippableSlotFlags.LowerArms));
 			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.UpperLegs))	buckets.Add(new Bucket(EquippableSlotFlags.UpperLegs));
 			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.LowerLegs))	buckets.Add(new Bucket(EquippableSlotFlags.LowerLegs));
 
-			// todo hack fix
-			//if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Shirt)) buckets.Add(new Bucket(EquippableSlotFlags.Shirt));
-			//if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Pants)) buckets.Add(new Bucket(EquippableSlotFlags.Pants));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.ShirtChest))		buckets.Add(new Bucket(EquippableSlotFlags.ShirtChest));
+			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.PantsUpperLegs)) buckets.Add(new Bucket(EquippableSlotFlags.PantsUpperLegs));
 		
 			// Put all of our inventory into its appropriate bucket
 			foreach (var piece in Equipment)
@@ -159,14 +159,14 @@ namespace Mag_SuitBuilder.Search
 
 				return;
 			}
-			throw new NotImplementedException();/*
+
 			if (index == 0) // If this is the first bucket we're searching through, multi-thread the subsearches
 			{
 				Parallel.ForEach(buckets[index], piece =>
 				{
 					SuitBuilder clone = builder.Clone();
 
-					if (clone.SlotIsOpen(buckets[index].Slot) && (!piece.SuitSlot.IsBodyArmor() || clone.HasRoomForArmorSet(Config.PrimaryArmorSet, Config.SecondaryArmorSet, piece.ArmorSet)) && clone.CanGetBeneficialSpellFrom(piece))
+					if (clone.SlotIsOpen(buckets[index].Slot) && (!piece.EquippableSlots.IsBodyArmor() || clone.HasRoomForArmorSet(Config.PrimaryArmorSet, Config.SecondaryArmorSet, piece.ItemSetId)) && clone.CanGetBeneficialSpellFrom(piece))
 					{
 						clone.Push(piece, buckets[index].Slot);
 
@@ -180,7 +180,7 @@ namespace Mag_SuitBuilder.Search
 			{
 				foreach (SuitBuildableMyWorldObject piece in buckets[index])
 				{
-					if (builder.SlotIsOpen(buckets[index].Slot) && (!piece.EquipableSlots.IsBodyArmor() || builder.HasRoomForArmorSet(Config.PrimaryArmorSet, Config.SecondaryArmorSet, piece.ArmorSet)) && builder.CanGetBeneficialSpellFrom(piece))
+					if (builder.SlotIsOpen(buckets[index].Slot) && (!piece.EquippableSlots.IsBodyArmor() || builder.HasRoomForArmorSet(Config.PrimaryArmorSet, Config.SecondaryArmorSet, piece.ItemSetId)) && builder.CanGetBeneficialSpellFrom(piece))
 					{
 						builder.Push(piece, buckets[index].Slot);
 
@@ -189,7 +189,7 @@ namespace Mag_SuitBuilder.Search
 						builder.Pop();
 					}
 				}
-			}*/
+			}
 
 			SearchThroughBuckets(builder, index + 1);
 		}

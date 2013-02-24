@@ -8,288 +8,261 @@ namespace Mag.Shared
 		/// Returns a dictionary of skill ids vs names
 		/// </summary>
 		/// <returns></returns>
-		public static Dictionary<int, string> GetSkillInfo()
+		public static readonly Dictionary<int, string> SkillInfo = new Dictionary<int, string>
 		{
-			Dictionary<int, string> skillInfo = new Dictionary<int, string>
-			{
-				// This list was taken from the Alinco source
-				{ 0x1, "Axe" },
-				{ 0x2, "Bow" },
-				{ 0x3, "Crossbow" },
-				{ 0x4, "Dagger" },
-				{ 0x5, "Mace" },
-				{ 0x6, "Melee Defense" },
-				{ 0x7, "Missile Defense" },
-				// 0x8
-				{ 0x9, "Spear" },
-				{ 0xA, "Staff" },
-				{ 0xB, "Sword" },
-				{ 0xC, "Thrown Weapons" },
-				{ 0xD, "Unarmed Combat" },
-				{ 0xE, "Arcane Lore" },
-				{ 0xF, "Magic Defense" },
-				{ 0x10, "Mana Conversion" },
-				{ 0x12, "Item Tinkering" },
-				{ 0x13, "Assess Person" },
-				{ 0x14, "Deception" },
-				{ 0x15, "Healing" },
-				{ 0x16, "Jump" },
-				{ 0x17, "Lockpick" },
-				{ 0x18, "Run" },
-				{ 0x1B, "Assess Creature" },
-				{ 0x1C, "Weapon Tinkering" },
-				{ 0x1D, "Armor Tinkering" },
-				{ 0x1E, "Magic Item Tinkering" },
-				{ 0x1F, "Creature Enchantment" },
-				{ 0x20, "Item Enchantment" },
-				{ 0x21, "Life Magic" },
-				{ 0x22, "War Magic" },
-				{ 0x23, "Leadership" },
-				{ 0x24, "Loyalty" },
-				{ 0x25, "Fletching" },
-				{ 0x26, "Alchemy" },
-				{ 0x27, "Cooking" },
-				{ 0x28, "Salvaging" },
-				{ 0x29, "Two Handed Combat" },
-				// 0x2A
-				{ 0x2B, "Void" },
-				{ 0x2C, "Heavy Weapons" },
-				{ 0x2D, "Light Weapons" },
-				{ 0x2E, "Finesse Weapons" },
-				{ 0x2F, "Missile Weapons" },
-				{ 0x30, "Shield" },
-				{ 0x31, "Dual Wield" },
-				{ 0x32, "Recklessness" },
-				{ 0x33, "Sneak Attack" },
-				{ 0x34, "Dirty Fighting" },
-				// 0x35
-				{ 0x36, "Summoning" },
-			};
-
-			return skillInfo;
-		}
+			// This list was taken from the Alinco source
+			{ 0x1, "Axe" },
+			{ 0x2, "Bow" },
+			{ 0x3, "Crossbow" },
+			{ 0x4, "Dagger" },
+			{ 0x5, "Mace" },
+			{ 0x6, "Melee Defense" },
+			{ 0x7, "Missile Defense" },
+			// 0x8
+			{ 0x9, "Spear" },
+			{ 0xA, "Staff" },
+			{ 0xB, "Sword" },
+			{ 0xC, "Thrown Weapons" },
+			{ 0xD, "Unarmed Combat" },
+			{ 0xE, "Arcane Lore" },
+			{ 0xF, "Magic Defense" },
+			{ 0x10, "Mana Conversion" },
+			{ 0x12, "Item Tinkering" },
+			{ 0x13, "Assess Person" },
+			{ 0x14, "Deception" },
+			{ 0x15, "Healing" },
+			{ 0x16, "Jump" },
+			{ 0x17, "Lockpick" },
+			{ 0x18, "Run" },
+			{ 0x1B, "Assess Creature" },
+			{ 0x1C, "Weapon Tinkering" },
+			{ 0x1D, "Armor Tinkering" },
+			{ 0x1E, "Magic Item Tinkering" },
+			{ 0x1F, "Creature Enchantment" },
+			{ 0x20, "Item Enchantment" },
+			{ 0x21, "Life Magic" },
+			{ 0x22, "War Magic" },
+			{ 0x23, "Leadership" },
+			{ 0x24, "Loyalty" },
+			{ 0x25, "Fletching" },
+			{ 0x26, "Alchemy" },
+			{ 0x27, "Cooking" },
+			{ 0x28, "Salvaging" },
+			{ 0x29, "Two Handed Combat" },
+			// 0x2A
+			{ 0x2B, "Void" },
+			{ 0x2C, "Heavy Weapons" },
+			{ 0x2D, "Light Weapons" },
+			{ 0x2E, "Finesse Weapons" },
+			{ 0x2F, "Missile Weapons" },
+			{ 0x30, "Shield" },
+			{ 0x31, "Dual Wield" },
+			{ 0x32, "Recklessness" },
+			{ 0x33, "Sneak Attack" },
+			{ 0x34, "Dirty Fighting" },
+			// 0x35
+			{ 0x36, "Summoning" },
+		};
 
 		/// <summary>
 		/// Returns a dictionary of mastery ids vs names
 		/// </summary>
 		/// <returns></returns>
-		public static Dictionary<int, string> GetMasteryInfo()
+		public static Dictionary<int, string> MasteryInfo = new Dictionary<int, string>
 		{
-			Dictionary<int, string> masteryInfo = new Dictionary<int, string>
-			{
-				{ 1, "Unarmed Weapon" },
-				{ 2, "Sword" },
-				{ 3, "Axe" },
-				{ 4, "Mace" },
-				{ 5, "Spear" },
-				{ 6, "Dagger" },
-				{ 7, "Staff" },
-				{ 8, "Bow" },
-				{ 9, "Crossbow" },
-				{ 10, "Thrown" },
-				{ 11, "Two Handed Combat" },
-			};
-
-			return masteryInfo;
-		}
+			{ 1, "Unarmed Weapon" },
+			{ 2, "Sword" },
+			{ 3, "Axe" },
+			{ 4, "Mace" },
+			{ 5, "Spear" },
+			{ 6, "Dagger" },
+			{ 7, "Staff" },
+			{ 8, "Bow" },
+			{ 9, "Crossbow" },
+			{ 10, "Thrown" },
+			{ 11, "Two Handed Combat" },
+		};
 
 		/// <summary>
 		/// Returns a dictionary of attribute set ids vs names
 		/// </summary>
 		/// <returns></returns>
-		public static Dictionary<int, string> GetAttributeSetInfo()
+		public static Dictionary<int, string> AttributeSetInfo = new Dictionary<int, string>
 		{
-			Dictionary<int, string> attributeSetInfo = new Dictionary<int, string>
-			{
-				// This list was taken from Virindi Tank Loot Editor
-				// 01
-				// 02
-				// 03
-				// 04
-				{ 05, "Noble Relic Set" },
-				{ 06, "Ancient Relic Set" },
-				{ 07, "Relic Alduressa Set" },
-				{ 08, "Shou-jen Set" },
-				{ 09, "Empyrean Rings Set" },
-				{ 10, "Arm, Mind, Heart Set" },
-				{ 11, "Coat of the Perfect Light Set" },
-				{ 12, "Leggings of Perfect Light Set" },
-				{ 13, "Soldier's Set" },
-				{ 14, "Adept's Set" },
-				{ 15, "Archer's Set" },
-				{ 16, "Defender's Set" },
-				{ 17, "Tinker's Set" },
-				{ 18, "Crafter's Set" },
-				{ 19, "Hearty Set" },
-				{ 20, "Dexterous Set" },
-				{ 21, "Wise Set" },
-				{ 22, "Swift Set" },
-				{ 23, "Hardenend Set" },
-				{ 24, "Reinforced Set" },
-				{ 25, "Interlocking Set" },
-				{ 26, "Flame Proof Set" },
-				{ 27, "Acid Proof Set" },
-				{ 28, "Cold Proof Set" },
-				{ 29, "Lightning Proof Set" },
-				{ 30, "Dedication Set" },
-				{ 31, "Gladiatorial Clothing Set" },
-				{ 32, "Protective Clothing Set" },
-				// 33
-				// 34
-				{ 35, "Sigil of Defense" },
-				{ 36, "Sigil of Destruction" },
-				{ 37, "Sigil of Fury" },
-				{ 38, "Sigil of Growth" },
-				{ 39, "Sigil of Vigor" },
-				{ 40, "Heroic Protector Set" },
-				{ 41, "Heroic Destroyer Set" },
-				// 42
-				// 43
-				// 44
-				// 45
-				// 46
-				{ 47, "Upgraded Ancient Relic Set" },
-				// 48
-				{ 49, "Weave of Alchemy" },
-				{ 50, "Weave of Arcane Lore" },
-				{ 51, "Weave of Armor Tinkering" },
-				{ 52, "Weave of Assess Person" },
-				{ 53, "Weave of Light Weapons" },
-				{ 54, "Weave of Missile Weapons" },
-				{ 55, "Weave of Cooking" },
-				{ 56, "Weave of Creature Enchantment" },
-				{ 57, "Weave of Missile Weapons" },
-				{ 58, "Weave of Finesse" },
-				{ 59, "Weave of Deception" },
-				{ 60, "Weave of Fletching" },
-				{ 61, "Weave of Healing" },
-				{ 62, "Weave of Item Enchantment" },
-				{ 63, "Weave of Item Tinkering" },
-				{ 64, "Weave of Leadership" },
-				{ 65, "Weave of Life Magic" },
-				{ 66, "Weave of Loyalty" },
-				{ 67, "Weave of Light Weapons" },
-				{ 68, "Weave of Magic Defense" },
-				{ 69, "Weave of Magic Item Tinkering" },
-				{ 70, "Weave of Mana Conversion" },
-				{ 71, "Weave of Melee Defense" },
-				{ 72, "Weave of Missile Defense" },
-				{ 73, "Weave of Salvaging" },
-				{ 74, "Weave of Light Weapons" },
-				{ 75, "Weave of Light Weapons" },
-				{ 76, "Weave of Heavy Weapons" },
-				{ 77, "Weave of Missile Weapons" },
-				{ 78, "Weave of Two Handed Combat" },
-				{ 79, "Weave of Light Weapons" },
-				{ 80, "Weave of Void Magic" },
-				{ 81, "Weave of War Magic" },
-				{ 82, "Weave of Weapon Tinkering" },
-				{ 83, "Weave of Assess Creature " },
-				{ 84, "Weave of Dirty Fighting" },
-				{ 85, "Weave of Dual Wield" },
-				{ 86, "Weave of Recklessness" },
-				{ 87, "Weave of Shield" },
-				{ 88, "Weave of Sneak Attack" },
-			};
-
-			return attributeSetInfo;
-		}
+			// This list was taken from Virindi Tank Loot Editor
+			// 01
+			// 02
+			// 03
+			// 04
+			{ 05, "Noble Relic Set" },
+			{ 06, "Ancient Relic Set" },
+			{ 07, "Relic Alduressa Set" },
+			{ 08, "Shou-jen Set" },
+			{ 09, "Empyrean Rings Set" },
+			{ 10, "Arm, Mind, Heart Set" },
+			{ 11, "Coat of the Perfect Light Set" },
+			{ 12, "Leggings of Perfect Light Set" },
+			{ 13, "Soldier's Set" },
+			{ 14, "Adept's Set" },
+			{ 15, "Archer's Set" },
+			{ 16, "Defender's Set" },
+			{ 17, "Tinker's Set" },
+			{ 18, "Crafter's Set" },
+			{ 19, "Hearty Set" },
+			{ 20, "Dexterous Set" },
+			{ 21, "Wise Set" },
+			{ 22, "Swift Set" },
+			{ 23, "Hardenend Set" },
+			{ 24, "Reinforced Set" },
+			{ 25, "Interlocking Set" },
+			{ 26, "Flame Proof Set" },
+			{ 27, "Acid Proof Set" },
+			{ 28, "Cold Proof Set" },
+			{ 29, "Lightning Proof Set" },
+			{ 30, "Dedication Set" },
+			{ 31, "Gladiatorial Clothing Set" },
+			{ 32, "Protective Clothing Set" },
+			// 33
+			// 34
+			{ 35, "Sigil of Defense" },
+			{ 36, "Sigil of Destruction" },
+			{ 37, "Sigil of Fury" },
+			{ 38, "Sigil of Growth" },
+			{ 39, "Sigil of Vigor" },
+			{ 40, "Heroic Protector Set" },
+			{ 41, "Heroic Destroyer Set" },
+			// 42
+			// 43
+			// 44
+			// 45
+			// 46
+			{ 47, "Upgraded Ancient Relic Set" },
+			// 48
+			{ 49, "Weave of Alchemy" },
+			{ 50, "Weave of Arcane Lore" },
+			{ 51, "Weave of Armor Tinkering" },
+			{ 52, "Weave of Assess Person" },
+			{ 53, "Weave of Light Weapons" },
+			{ 54, "Weave of Missile Weapons" },
+			{ 55, "Weave of Cooking" },
+			{ 56, "Weave of Creature Enchantment" },
+			{ 57, "Weave of Missile Weapons" },
+			{ 58, "Weave of Finesse" },
+			{ 59, "Weave of Deception" },
+			{ 60, "Weave of Fletching" },
+			{ 61, "Weave of Healing" },
+			{ 62, "Weave of Item Enchantment" },
+			{ 63, "Weave of Item Tinkering" },
+			{ 64, "Weave of Leadership" },
+			{ 65, "Weave of Life Magic" },
+			{ 66, "Weave of Loyalty" },
+			{ 67, "Weave of Light Weapons" },
+			{ 68, "Weave of Magic Defense" },
+			{ 69, "Weave of Magic Item Tinkering" },
+			{ 70, "Weave of Mana Conversion" },
+			{ 71, "Weave of Melee Defense" },
+			{ 72, "Weave of Missile Defense" },
+			{ 73, "Weave of Salvaging" },
+			{ 74, "Weave of Light Weapons" },
+			{ 75, "Weave of Light Weapons" },
+			{ 76, "Weave of Heavy Weapons" },
+			{ 77, "Weave of Missile Weapons" },
+			{ 78, "Weave of Two Handed Combat" },
+			{ 79, "Weave of Light Weapons" },
+			{ 80, "Weave of Void Magic" },
+			{ 81, "Weave of War Magic" },
+			{ 82, "Weave of Weapon Tinkering" },
+			{ 83, "Weave of Assess Creature " },
+			{ 84, "Weave of Dirty Fighting" },
+			{ 85, "Weave of Dual Wield" },
+			{ 86, "Weave of Recklessness" },
+			{ 87, "Weave of Shield" },
+			{ 88, "Weave of Sneak Attack" },
+		};
 
 		/// <summary>
 		/// Returns a dictionary of material ids vs names
 		/// </summary>
 		/// <returns></returns>
-		public static Dictionary<int, string> GetMaterialInfo()
+		public static Dictionary<int, string> MaterialInfo = new Dictionary<int, string>
 		{
-			Dictionary<int, string> materialInfo = new Dictionary<int, string>
-			{
-				{ 1, "Ceramic" },
-				{ 2, "Porcelain" },
-				// 3
-				{ 4, "Linen" },
-				{ 5, "Satin" },
-				{ 6, "Silk" },
-				{ 7, "Velvet" },
-				{ 8, "Wool" },
-				// 9
-
-				{ 10, "Agate" },
-				{ 11, "Amber" },
-				{ 12, "Amethyst" },
-				{ 13, "Aquamarine" },
-				{ 14, "Azurite" },
-				{ 15, "Black Garnet" },
-				{ 16, "Black Opal" },
-				{ 17, "Bloodstone" },
-				{ 18, "Carnelian" },
-				{ 19, "Citrine" },
-
-				{ 20, "Diamond" },
-				{ 21, "Emerald" },
-				{ 22, "Fire Opal" },
-				{ 23, "Green Garnet" },
-				{ 24, "Green Jade" },
-				{ 25, "Hematite" },
-				{ 26, "Imperial Topaz" },
-				{ 27, "Jet" },
-				{ 28, "Lapis Lazuli" },
-				{ 29, "Lavender Jade" },
-
-				{ 30, "Malachite" },
-				{ 31, "Moonstone" },
-				{ 32, "Onyx" },
-				{ 33, "Opal" },
-				{ 34, "Peridot" },
-				{ 35, "Red Garnet" },
-				{ 36, "Red Jade" },
-				{ 37, "Rose Quartz" },
-				{ 38, "Ruby" },
-				{ 39, "Sapphire" },
-
-				{ 40, "Smokey Quartz" },
-				{ 41, "Sunstone" },
-				{ 42, "Tiger Eye" },
-				{ 43, "Tourmaline" },
-				{ 44, "Turquoise" },
-				{ 45, "White Jade" },
-				{ 46, "White Quartz" },
-				{ 47, "White Sapphire" },
-				{ 48, "Yellow Garnet" },
-				{ 49, "Yellow Topaz" },
-
-				{ 50, "Zircon" },
-				{ 51, "Ivory" },
-				{ 52, "Leather" },
-				{ 53, "Armoredillo Hide" },
-				{ 54, "Gromnie Hide" },
-				{ 55, "Reed Shark Hide" },
-				// 56
-				{ 57, "Brass" },
-				{ 58, "Bronze" },
-				{ 59, "Copper" },
-
-				{ 60, "Gold" },
-				{ 61, "Iron" },
-				{ 62, "Pyreal" },
-				{ 63, "Silver" },
-				{ 64, "Steel" },
-				// 65
-				{ 66, "Alabaster" },
-				{ 67, "Granite" },
-				{ 68, "Marble" },
-				{ 69, "Obsidian" },
-
-				{ 70, "Sandstone" },
-				{ 71, "Serpentine" },
-				{ 73, "Ebony" },
-				{ 74, "Mahogany" },
-				{ 75, "Oak" },
-				{ 76, "Pine" },
-				{ 77, "Teak" },
-			};
-
-			return materialInfo;
-		}
+			{ 1, "Ceramic" },
+			{ 2, "Porcelain" },
+			// 3
+			{ 4, "Linen" },
+			{ 5, "Satin" },
+			{ 6, "Silk" },
+			{ 7, "Velvet" },
+			{ 8, "Wool" },
+			// 9
+			{ 10, "Agate" },
+			{ 11, "Amber" },
+			{ 12, "Amethyst" },
+			{ 13, "Aquamarine" },
+			{ 14, "Azurite" },
+			{ 15, "Black Garnet" },
+			{ 16, "Black Opal" },
+			{ 17, "Bloodstone" },
+			{ 18, "Carnelian" },
+			{ 19, "Citrine" },
+			{ 20, "Diamond" },
+			{ 21, "Emerald" },
+			{ 22, "Fire Opal" },
+			{ 23, "Green Garnet" },
+			{ 24, "Green Jade" },
+			{ 25, "Hematite" },
+			{ 26, "Imperial Topaz" },
+			{ 27, "Jet" },
+			{ 28, "Lapis Lazuli" },
+			{ 29, "Lavender Jade" },
+			{ 30, "Malachite" },
+			{ 31, "Moonstone" },
+			{ 32, "Onyx" },
+			{ 33, "Opal" },
+			{ 34, "Peridot" },
+			{ 35, "Red Garnet" },
+			{ 36, "Red Jade" },
+			{ 37, "Rose Quartz" },
+			{ 38, "Ruby" },
+			{ 39, "Sapphire" },
+			{ 40, "Smokey Quartz" },
+			{ 41, "Sunstone" },
+			{ 42, "Tiger Eye" },
+			{ 43, "Tourmaline" },
+			{ 44, "Turquoise" },
+			{ 45, "White Jade" },
+			{ 46, "White Quartz" },
+			{ 47, "White Sapphire" },
+			{ 48, "Yellow Garnet" },
+			{ 49, "Yellow Topaz" },
+			{ 50, "Zircon" },
+			{ 51, "Ivory" },
+			{ 52, "Leather" },
+			{ 53, "Armoredillo Hide" },
+			{ 54, "Gromnie Hide" },
+			{ 55, "Reed Shark Hide" },
+			// 56
+			{ 57, "Brass" },
+			{ 58, "Bronze" },
+			{ 59, "Copper" },
+			{ 60, "Gold" },
+			{ 61, "Iron" },
+			{ 62, "Pyreal" },
+			{ 63, "Silver" },
+			{ 64, "Steel" },
+			// 65
+			{ 66, "Alabaster" },
+			{ 67, "Granite" },
+			{ 68, "Marble" },
+			{ 69, "Obsidian" },
+			{ 70, "Sandstone" },
+			{ 71, "Serpentine" },
+			{ 73, "Ebony" },
+			{ 74, "Mahogany" },
+			{ 75, "Oak" },
+			{ 76, "Pine" },
+			{ 77, "Teak" },
+		};
 
 		public struct SpellInfo<T>
 		{

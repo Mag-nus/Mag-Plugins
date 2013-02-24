@@ -1,5 +1,4 @@
 ﻿
-using System.ComponentModel;
 using Mag_SuitBuilder.Spells;
 
 using Mag.Shared;
@@ -11,11 +10,11 @@ namespace Mag_SuitBuilder.Equipment
 		public bool ItemIsSurpassed(SuitBuildableMyWorldObject item)
 		{
 			foreach (SuitBuildableMyWorldObject compareItem in this)
-			{/*
+			{
 				if (compareItem == item)
 				{
 					// For armor pieces, we can through through the entire list and find the piece with the highest AL.
-					if ((item.EquipableSlots & EquippableSlotFlags.AllBodyArmor) != 0)
+					if (item.EquippableSlots.IsBodyArmor())
 						continue;
 					
 					// For non-armor pieces, we cannot compare an item against the entire list or we may end up removing
@@ -23,29 +22,36 @@ namespace Mag_SuitBuilder.Equipment
 					// To prevent that, we just do a top down approach
 					break;
 				}
-				*/
+
+				if (compareItem.Exclude)
+					continue;
+
 				// Items must be of the same armor set
-				if (compareItem.ItemSet != item.ItemSet)
+				if (compareItem.ItemSetId != item.ItemSetId)
 					continue;
 
 				// This checks to see that the compare item covers at least all the slots that the passed item does
-				int compareSlots = 0;
-				if (compareItem.IntValues.ContainsKey(10)) compareSlots = compareItem.IntValues[10];
-				int itemSlots = 0;
-				if (item.IntValues.ContainsKey(10)) itemSlots = item.IntValues[10];
-				if ((compareSlots & itemSlots) != itemSlots)
+				if (compareItem.Coverage.IsBodyArmor() && item.Coverage.IsBodyArmor())
+				{
+					if ((compareItem.Coverage & item.Coverage) != item.Coverage)
+						continue;
+				}
+				else if ((compareItem.EquippableSlots & item.EquippableSlots) != item.EquippableSlots)
 					continue;
-				/*
+
 				// Does this item have a spell that the compare item does not?
 				{
 					bool itemHasSpellSurpasingPreviousItem = false;
 
-					foreach (Spell itemSpell in item.Spells)
+					foreach (Spell itemSpell in item.CachedSpells)
 					{
+						if (itemSpell.CantripLevel < Spell.CantripLevels.Epic)
+							continue;
+
 						bool itemSpellSurpasesPreviousItemSpells = false;
 						bool spellOfSameFamilyAndGroupFound = false;
 
-						foreach (Spell previousSpell in compareItem.Spells)
+						foreach (Spell previousSpell in compareItem.CachedSpells)
 						{
 							if (itemSpell.Surpasses(previousSpell))
 							{
@@ -66,9 +72,9 @@ namespace Mag_SuitBuilder.Equipment
 					if (itemHasSpellSurpasingPreviousItem)
 						continue;
 				}
-				*/
+
 				// If this item has higher AL, it's not surpassed
-				if (compareItem.CalcedStartingArmorLevel > 0 && item.CalcedStartingArmorLevel > 0 && compareItem.CalcedStartingArmorLevel < item.CalcedStartingArmorLevel)
+				if (compareItem.CalcedStartingArmorLevel < item.CalcedStartingArmorLevel)
 					continue;
 
 				return true;

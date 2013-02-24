@@ -15,66 +15,42 @@ namespace Mag_SuitBuilder.Search
 			CantripsToLookFor = new Collection<Spell>();
 		}
 
-
-		/// <summary>
-		/// This should be the minimum untinked, unbuffed (but including minor/major/epic impen) armor level.
-		/// </summary>
-		public int MinimumArmorLevelPerPiece { get; set; }
-
 		public ICollection<Spell> CantripsToLookFor { get; set; }
 
-		public ArmorSet PrimaryArmorSet { get; set; }
+		/// <summary>
+		/// Armor set Id. 0 = None, 255 = Any
+		/// </summary>
+		public int PrimaryArmorSet { get; set; }
 
-		public ArmorSet SecondaryArmorSet { get; set; }
-
-		public bool OnlyAddPiecesWithArmor { get; set; }
+		/// <summary>
+		/// Armor set Id. 0 = None, 255 = Any
+		/// </summary>
+		public int SecondaryArmorSet { get; set; }
 
 
 		public bool ItemPassesRules(SuitBuildableMyWorldObject item)
 		{
-			// todo hack fix
-			return true;
-		}
-
-		public bool ItemPassesRules(EquipmentPiece item)
-		{
-			if (MinimumArmorLevelPerPiece > 0 && item.EquipableSlots.IsBodyArmor() && item.BaseArmorLevel != 0 && MinimumArmorLevelPerPiece > item.BaseArmorLevel)
-				return false;
-
 			if (CantripsToLookFor.Count > 0)
 			{
-				bool found = false;
-
 				foreach (Spell cantrip in CantripsToLookFor)
 				{
-					foreach (Spell itemSpell in item.Spells)
+					foreach (Spell itemSpell in item.CachedSpells)
 					{
 						if (itemSpell.IsSameOrSurpasses(cantrip))
-						{
-							found = true;
-							break;
-						}
+							goto end;
 					}
-
-					if (found)
-						break;
 				}
 
-				if (!found)
-					return false;
+				end: ;
 			}
 
 			// If we're don't want to use any set pieces, remove them
-			if (PrimaryArmorSet == ArmorSet.NoArmorSet && SecondaryArmorSet == ArmorSet.NoArmorSet && item.EquipableSlots.IsBodyArmor() && item.ArmorSet != ArmorSet.NoArmorSet)
-				return false;
-			// If we're building a two set armor suit, and we don't want any blanks or fillers, remove any pieces of armor of other sets
-			if (PrimaryArmorSet != ArmorSet.NoArmorSet && SecondaryArmorSet != ArmorSet.NoArmorSet &&
-				PrimaryArmorSet != ArmorSet.AnyArmorSet && SecondaryArmorSet != ArmorSet.AnyArmorSet &&
-				item.EquipableSlots.IsBodyArmor() && item.ArmorSet != PrimaryArmorSet && item.ArmorSet != SecondaryArmorSet)
+			if (PrimaryArmorSet == 0 && SecondaryArmorSet == 0 && item.EquippableSlots.IsBodyArmor() && item.ItemSetId != 0)
 				return false;
 
-			// Check to see if we only want pieces with armor
-			if (OnlyAddPiecesWithArmor && item.BaseArmorLevel == 0)
+			// If we're building a two set armor suit, and we don't want any blanks or fillers, remove any pieces of armor of other sets
+			if (PrimaryArmorSet != 0 && SecondaryArmorSet != 0 && PrimaryArmorSet != 255 && SecondaryArmorSet != 255 &&
+				item.EquippableSlots.IsBodyArmor() && item.ItemSetId != PrimaryArmorSet && item.ItemSetId != SecondaryArmorSet)
 				return false;
 
 			return true;
@@ -82,10 +58,6 @@ namespace Mag_SuitBuilder.Search
 
 		public bool SpellPassesRules(Spell spell)
 		{
-			// If this spell is not a cantrip, or its an impen, it dosn't pass the search rules.
-			if (spell.CantripLevel == Spell.CantripLevels.None || spell.IsOfSameFamilyAndGroup(Spell.GetSpell("Epic Impenetrability")))
-				return false;
-
 			if (CantripsToLookFor.Count == 0)
 				return true;
 
