@@ -62,6 +62,8 @@ namespace Mag.Shared
 				{ 0x32, "Recklessness" },
 				{ 0x33, "Sneak Attack" },
 				{ 0x34, "Dirty Fighting" },
+				// 0x35
+				{ 0x36, "Summoning" },
 			};
 
 			return skillInfo;
@@ -309,6 +311,7 @@ namespace Mag.Shared
 
 		public static readonly Dictionary<int, SpellInfo<int>> LongValueKeySpellEffects = new Dictionary<int, SpellInfo<int>>()
 		{
+			/* These are no longer useful. In 2012 they removed these item spells and converted them to auras that are cast on the player, not on the item.
 			{ 1616, new SpellInfo<int>(LongValueKey_MaxDamage, 20)}, // Blood Drinker VI
 			{ 2096, new SpellInfo<int>(LongValueKey_MaxDamage, 22)}, // Infected Caress
 			// Pre Feb-2013
@@ -317,7 +320,7 @@ namespace Mag.Shared
 			// Post Feb-2013
 			{ 5183, new SpellInfo<int>(LongValueKey_MaxDamage, 24)}, // Incantation of Blood Drinker
 			{ 4395, new SpellInfo<int>(LongValueKey_MaxDamage, 24)}, // Incantation of Blood Drinker
-
+			*/
 			{ 2598, new SpellInfo<int>(LongValueKey_MaxDamage, 2, 2)}, // Minor Blood Thirst
 			{ 2586, new SpellInfo<int>(LongValueKey_MaxDamage, 4, 4)}, // Major Blood Thirst
 			{ 4661, new SpellInfo<int>(LongValueKey_MaxDamage, 7, 7)}, // Epic Blood Thirst
@@ -344,6 +347,7 @@ namespace Mag.Shared
 
 		public static readonly Dictionary<int, SpellInfo<double>> DoubleValueKeySpellEffects = new Dictionary<int, SpellInfo<double>>()
 		{
+			/* These are no longer useful. In 2012 they removed these item spells and converted them to auras that are cast on the player, not on the item.
 			{ 3258, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .06)}, // Spirit Drinker VI
 			{ 3259, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .07)}, // Infected Spirit Caress
 			// Pre Feb-2013
@@ -352,7 +356,7 @@ namespace Mag.Shared
 			// Post Feb-2013
 			{ 5182, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .08)}, // Incantation of Spirit Drinker
 			{ 4414, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .08)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
-
+			*/
 			{ 3251, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .01, .01)}, // Minor Spirit Thirst
 			{ 3250, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .03, .03)}, // Major Spirit Thirst
 			{ 4670, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .05, .05)}, // Epic Spirit Thirst
@@ -361,23 +365,25 @@ namespace Mag.Shared
 			{ 3735, new SpellInfo<double>(DoubleValueKey_ElementalDamageVersusMonsters, .15)}, // Prodigal Spirit Drinker
 
 
+			/* These are no longer useful. In 2012 they removed these item spells and converted them to auras that are cast on the player, not on the item.
 			{ 1592, new SpellInfo<double>(DoubleValueKey_AttackBonus, .15)}, // Heart Seeker VI
 			{ 2106, new SpellInfo<double>(DoubleValueKey_AttackBonus, .17)}, // Elysa's Sight
 			{ 4405, new SpellInfo<double>(DoubleValueKey_AttackBonus, .20)}, // Incantation of Heart Seeker
-
+			*/
 			{ 2603, new SpellInfo<double>(DoubleValueKey_AttackBonus, .03, .03)}, // Minor Heart Thirst
 			{ 2591, new SpellInfo<double>(DoubleValueKey_AttackBonus, .05, .05)}, // Major Heart Thirst
 			{ 4666, new SpellInfo<double>(DoubleValueKey_AttackBonus, .07, .07)}, // Epic Heart Thirst
 			{ 6094, new SpellInfo<double>(DoubleValueKey_AttackBonus, .09, .09)}, // Legendary Heart Thirst
 
 
+			/* These are no longer useful. In 2012 they removed these item spells and converted them to auras that are cast on the player, not on the item.
 			{ 1605, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .15)}, // Defender VI
 			{ 2101, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .17)}, // Cragstone's Will
 			// Pre Feb-2013
 			//{ 4400, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .17)}, // Incantation of Defender
 			// Post Feb-2013
 			{ 4400, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .20)}, // Incantation of Defender
-
+			*/
 			{ 2600, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .03, .03)}, // Minor Defender
 			{ 3985, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .04, .04)}, // Mukkir Sense
 			{ 2588, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .05, .05)}, // Major Defender
@@ -387,10 +393,11 @@ namespace Mag.Shared
 			{ 3699, new SpellInfo<double>(DoubleValueKey_MeleeDefenseBonus, .25)}, // Prodigal Defender
 
 
+			/* These are no longer useful. In 2012 they removed these item spells and converted them to auras that are cast on the player, not on the item.
 			{ 1480, new SpellInfo<double>(DoubleValueKey_ManaCBonus, 1.60)}, // Hermetic Link VI
 			{ 2117, new SpellInfo<double>(DoubleValueKey_ManaCBonus, 1.70)}, // Mystic's Blessing
 			{ 4418, new SpellInfo<double>(DoubleValueKey_ManaCBonus, 1.80)}, // Incantation of Hermetic Link
-
+			*/
 			{ 3201, new SpellInfo<double>(DoubleValueKey_ManaCBonus, 1.05, 1.05)}, // Feeble Hermetic Link
 			{ 3199, new SpellInfo<double>(DoubleValueKey_ManaCBonus, 1.10, 1.10)}, // Minor Hermetic Link
 			{ 3202, new SpellInfo<double>(DoubleValueKey_ManaCBonus, 1.15, 1.15)}, // Moderate Hermetic Link

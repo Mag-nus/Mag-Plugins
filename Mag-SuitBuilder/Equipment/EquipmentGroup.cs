@@ -29,10 +29,10 @@ namespace Mag_SuitBuilder.Equipment
 					continue;
 
 				// This checks to see that the compare item covers at least all the slots that the passed item does
-				long compareSlots = 0;
-				if (compareItem.LongValues.ContainsKey(10)) compareSlots = compareItem.LongValues[10];
-				long itemSlots = 0;
-				if (item.LongValues.ContainsKey(10)) itemSlots = item.LongValues[10];
+				int compareSlots = 0;
+				if (compareItem.IntValues.ContainsKey(10)) compareSlots = compareItem.IntValues[10];
+				int itemSlots = 0;
+				if (item.IntValues.ContainsKey(10)) itemSlots = item.IntValues[10];
 				if ((compareSlots & itemSlots) != itemSlots)
 					continue;
 				/*

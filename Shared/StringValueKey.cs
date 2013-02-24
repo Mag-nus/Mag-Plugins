@@ -19,6 +19,7 @@ namespace Mag.Shared
 		ImbuedBy = 40,
 		DateBorn = 43,
 		MonarchyTitle = 47,
+
 		SecondaryName = 184549376,
 	}
 }

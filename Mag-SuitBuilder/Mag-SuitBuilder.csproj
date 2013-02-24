@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\BoolValueKey.cs">
+      <Link>Shared\BoolValueKey.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\Constants.cs">
       <Link>Shared\Constants.cs</Link>
     </Compile>

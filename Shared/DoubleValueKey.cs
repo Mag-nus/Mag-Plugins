@@ -12,6 +12,7 @@ namespace Mag.Shared
 		MissileDBonus = 149,
 		MagicDBonus = 150,
 		ElementalDamageVersusMonsters = 152,
+
 		SlashProt = 167772160,
 		PierceProt = 167772161,
 		BludgeonProt = 167772162,

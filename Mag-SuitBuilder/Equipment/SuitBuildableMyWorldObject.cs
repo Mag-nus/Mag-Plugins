@@ -33,7 +33,7 @@ namespace Mag_SuitBuilder.Equipment
 		{
 			get
 			{
-				return LongValues.ContainsKey(218103822) ? (EquippableSlotFlags)LongValues[218103822] : EquippableSlotFlags.None;
+				return IntValues.ContainsKey(218103822) ? (EquippableSlotFlags)IntValues[218103822] : EquippableSlotFlags.None;
 			}
 		}
 
@@ -42,7 +42,7 @@ namespace Mag_SuitBuilder.Equipment
 		{
 			get
 			{
-				return LongValues.ContainsKey(218103821) ? (CoverageFlags)LongValues[218103821] : CoverageFlags.None;
+				return IntValues.ContainsKey(218103821) ? (CoverageFlags)IntValues[218103821] : CoverageFlags.None;
 			}
 		}
 
@@ -51,12 +51,15 @@ namespace Mag_SuitBuilder.Equipment
 		{
 			get
 			{
-				return LongValues.ContainsKey(10) ? (EquippableSlotFlags)LongValues[10] : EquippableSlotFlags.None;
+				return IntValues.ContainsKey(10) ? (EquippableSlotFlags)IntValues[10] : EquippableSlotFlags.None;
 			}
 		}
 
+
+
+
 		[Browsable(false)]
-		public long ItemSetId { get { return LongValues.ContainsKey(265) ? LongValues[265] : -1; } }
+		public long ItemSetId { get { return IntValues.ContainsKey(265) ? IntValues[265] : -1; } }
 
 		private readonly List<Spell> cachedSpells = new List<Spell>();
 		private bool buildSpellCache;

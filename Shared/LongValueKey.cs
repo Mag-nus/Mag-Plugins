@@ -47,6 +47,7 @@ namespace Mag.Shared
 		WieldReqAttribute = 159,
 		WieldReqValue = 160,
 		SlayerSpecies = 166,
+		SummoningCooldownTimer = 167,
 		NumberItemsSalvagedFrom = 170,
 		NumberTimesTinkered = 171,
 		DescriptionFormat = 172,
@@ -62,6 +63,21 @@ namespace Mag.Shared
 		ElementalDmgBonus = 204,
 		CleaveType = 263,
 		ArmorSet = 265,
+
+		Mastery = 353,
+
+		SummoningGemBuffedSkillRequirement = 367,
+		SummoningGemLevelRequirement = 369,
+
+		DamRating = 370,
+		DamResRating = 371,
+		CritRating = 372,
+		CritResistRating = 373,
+		CritDamRating = 374,
+		CritDamResistRating = 375,
+		HealBoostRating = 376,
+		VitalityRating = 379,
+
 		Type = 218103808,
 		Icon = 218103809,
 		Container = 218103810,

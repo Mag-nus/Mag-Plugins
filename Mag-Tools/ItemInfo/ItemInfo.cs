@@ -16,10 +16,12 @@ namespace MagTools.ItemInfo
 	public class ItemInfo
 	{
 		private readonly WorldObject wo;
+		private readonly MyWorldObject mwo;
 
 		public ItemInfo(WorldObject worldObject)
 		{
 			wo = worldObject;
+			mwo = MyWorldObjectCreator.Create(worldObject);
 		}
 
 		public override string ToString()
@@ -261,6 +263,10 @@ namespace MagTools.ItemInfo
 				}
 			}
 
+			// Summoning Gem
+			if (wo.Values((LongValueKey)369) > 0)
+				sb.Append(", Use Lvl " + wo.Values((LongValueKey)369));
+
 			// Melee Defense 300 to Activate
 			// If the activation is lower than the wield requirement, don't show it.
 			if (wo.Values(LongValueKey.SkillLevelReq) > 0 && (wo.Values(LongValueKey.WieldReqAttribute) != wo.Values(LongValueKey.ActivationReqSkillId) || wo.Values(LongValueKey.WieldReqValue) < wo.Values(LongValueKey.SkillLevelReq)))
@@ -269,6 +275,24 @@ namespace MagTools.ItemInfo
 					sb.Append(", " + Constants.GetSkillInfo()[wo.Values(LongValueKey.ActivationReqSkillId)] + " " + wo.Values(LongValueKey.SkillLevelReq) + " to Activate");
 				else
 					sb.Append(", Unknown skill: " + wo.Values(LongValueKey.ActivationReqSkillId) + " " + wo.Values(LongValueKey.SkillLevelReq) + " to Activate");
+			}
+
+			// Summoning Gem
+			if (wo.Values((LongValueKey)366) > 0 && wo.Values((LongValueKey)367) > 0)
+			{
+				if (Constants.GetSkillInfo().ContainsKey(wo.Values((LongValueKey)366)))
+					sb.Append(", " + Constants.GetSkillInfo()[wo.Values((LongValueKey)366)] + " " + wo.Values((LongValueKey)367) + " to Use");
+				else
+					sb.Append(", Unknown skill: " + wo.Values((LongValueKey)366) + " " + wo.Values((LongValueKey)367) + " to Use");
+			}
+
+			// Summoning Gem
+			if (wo.Values((LongValueKey)368) > 0 && wo.Values((LongValueKey)367) > 0)
+			{
+				if (Constants.GetSkillInfo().ContainsKey(wo.Values((LongValueKey)368)))
+					sb.Append(", Spec " + Constants.GetSkillInfo()[wo.Values((LongValueKey)368)] + " " + wo.Values((LongValueKey)367) + " to Use");
+				else
+					sb.Append(", Unknown skill spec: " + wo.Values((LongValueKey)368) + " " + wo.Values((LongValueKey)367) + " to Use");
 			}
 
 			if (wo.Values(LongValueKey.LoreRequirement) > 0)
@@ -306,10 +330,25 @@ namespace MagTools.ItemInfo
 					sb.Append(", BU " + wo.Values(LongValueKey.Burden));
 			}
 
+			if (mwo.TotalRating > 0)
+			{
+				sb.Append(", [");
+				bool first = true;
+				if (mwo.DamRating > 0) { sb.Append("D " + mwo.DamRating); first = false; }
+				if (mwo.DamResistRating > 0) { if (!first) sb.Append(", "); sb.Append("DR " + mwo.DamResistRating); first = false; }
+				if (mwo.CritRating > 0) { if (!first) sb.Append(", "); sb.Append("C " + mwo.CritRating); first = false; }
+				if (mwo.CritDamRating > 0) { if (!first) sb.Append(", "); sb.Append("CD " + mwo.CritDamRating); first = false; }
+				if (mwo.CritResistRating > 0) { if (!first) sb.Append(", "); sb.Append("CR " + mwo.CritResistRating); first = false; }
+				if (mwo.CritDamResistRating > 0) { if (!first) sb.Append(", "); sb.Append("CDR " + mwo.CritDamResistRating); first = false; }
+				if (mwo.HealBoostRating > 0) { if (!first) sb.Append(", "); sb.Append("HB " + mwo.HealBoostRating); first = false; }
+				if (mwo.VitalityRating > 0) { if (!first) sb.Append(", "); sb.Append("V " + mwo.VitalityRating); first = false; }
+				sb.Append("]");
+			}
+
 			return sb.ToString();
 		}
 
-		public double BuffedAverageDamage
+		/*public double BuffedAverageDamage // This is worthless
 		{
 			get
 			{
@@ -319,7 +358,7 @@ namespace MagTools.ItemInfo
 
 				return (minDamage + maxDamage) / 2;
 			}
-		}
+		}*/
 
 		public double CalcedBuffedTinkedDamage
 		{
