@@ -120,6 +120,19 @@ namespace VTClassic
 		ItemMaxLevel = 319, // Mag-nus added 3/11/2012
 		CloakChanceType = 352, // Mag-nus added 3/11/2012
 		WeaponMasteryCategory = 353, // Mag-nus added for Feb, 2012 patch.
+
+		SummoningGemBuffedSkillRequirement = 367, // Mag-nus added for Feb, 2013 patch.
+		SummoningGemLevelRequirement = 369, // Mag-nus added for Feb, 2013 patch.
+
+		DamRating = 370, // Mag-nus added for Feb, 2013 patch.
+		DamResRating = 371, // Mag-nus added for Feb, 2013 patch.
+		CritRating = 372, // Mag-nus added for Feb, 2013 patch.
+		CritResistRating = 373, // Mag-nus added for Feb, 2013 patch.
+		CritDamRating = 374, // Mag-nus added for Feb, 2013 patch.
+		CritDamResistRating = 375, // Mag-nus added for Feb, 2013 patch.
+		HealBoostRating = 376, // Mag-nus added for Feb, 2013 patch.
+		VitalityRating = 379, // Mag-nus added for Feb, 2013 patch.
+
         Type = 218103808,
         Icon = 218103809,
         Container = 218103810,
@@ -574,6 +587,9 @@ namespace VTClassic
 			r.Add("Recklessness", 50);
 			r.Add("Sneak Attack", 51);
 			r.Add("Dirty Fighting", 52);
+
+			// Added Feb, 2013
+			r.Add("Summoning", 54);
 
             return r;
         }

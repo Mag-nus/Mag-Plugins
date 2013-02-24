@@ -73,14 +73,14 @@ namespace Mag.Shared
 		}
 
 
-		public string Material { get { if (IntValues.ContainsKey(131)) return Constants.GetMaterialInfo().ContainsKey(IntValues[131]) ? Constants.GetMaterialInfo()[IntValues[131]] : IntValues[131].ToString(CultureInfo.InvariantCulture); return null; } }
+		public string Material { get { if (IntValues.ContainsKey(131)) return Constants.MaterialInfo.ContainsKey(IntValues[131]) ? Constants.MaterialInfo[IntValues[131]] : IntValues[131].ToString(CultureInfo.InvariantCulture); return null; } }
 		
 		public string Name { get { return StringValues.ContainsKey(1) ? StringValues[1] : null; } }
 
 
-		public string Mastery { get { if (IntValues.ContainsKey(353)) return Constants.GetMasteryInfo().ContainsKey(IntValues[353]) ? Constants.GetMasteryInfo()[IntValues[353]] : IntValues[353].ToString(CultureInfo.InvariantCulture); return null; } }
+		public string Mastery { get { if (IntValues.ContainsKey(353)) return Constants.MasteryInfo.ContainsKey(IntValues[353]) ? Constants.MasteryInfo[IntValues[353]] : IntValues[353].ToString(CultureInfo.InvariantCulture); return null; } }
 
-		public string ItemSet { get { if (IntValues.ContainsKey(265)) return Constants.GetAttributeSetInfo().ContainsKey(IntValues[265]) ? Constants.GetAttributeSetInfo()[IntValues[265]] : IntValues[131].ToString(CultureInfo.InvariantCulture); return null; } }
+		public string ItemSet { get { if (IntValues.ContainsKey(265)) return Constants.AttributeSetInfo.ContainsKey(IntValues[265]) ? Constants.AttributeSetInfo[IntValues[265]] : IntValues[131].ToString(CultureInfo.InvariantCulture); return null; } }
 
 
 		public int ArmorLevel { get { return IntValues.ContainsKey(28) ? IntValues[28] : -1; } }
@@ -187,6 +187,9 @@ namespace Mag.Shared
 
 				if (Tinks > 0 && ArmorLevel > 0)
 					armorFromTinks = (Imbue != null) ? (Tinks - 1) * 20 : Tinks * 20; // This assumes each tink adds an amor level of 20
+
+				if (!IntValues.ContainsKey(131) || IntValues[131] == 0) // If this item has no material, its not a loot gen, assume its a quest item and subtract 200 al
+					armorFromTinks = 200;
 
 				foreach (int spell in ActiveSpells)
 				{

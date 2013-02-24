@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -26,7 +27,7 @@ namespace Mag_SuitBuilder.Equipment
 			if (mwo.IntValues.ContainsKey(218103822))
 			{
 				EquipableSlots = (EquippableSlotFlags)mwo.IntValues[218103822];
-				/*
+		
 				// If the piece hasn't been reduced, and we can determine its reduction state by the name, lets use that instead
 				if (EquipableSlots.GetTotalBitsSet() > 1 && Constants.GetEquippableSlots(Name) != EquippableSlotFlags.None)
 					EquipableSlots = Constants.GetEquippableSlots(Name);
@@ -36,16 +37,14 @@ namespace Mag_SuitBuilder.Equipment
 
 				if (Constants.IsUnderwear(Name))
 					EquipableSlots = Constants.GetEquippableSlots(Name);
-				*/
+
 			}
 
 			// Pick out the Armor Set
 			if (mwo.IntValues.ContainsKey(265))
 			{
-				Dictionary<int, string> attributeSetInfo = Constants.GetAttributeSetInfo();
-
-				if (attributeSetInfo.ContainsKey(mwo.IntValues[265]))
-					ArmorSet = ArmorSet.GetArmorSet(attributeSetInfo[mwo.IntValues[265]]);
+				if (Constants.AttributeSetInfo.ContainsKey(mwo.IntValues[265]))
+					ArmorSet = ArmorSet.GetArmorSet(Constants.AttributeSetInfo[mwo.IntValues[265]]);
 				else
 					ArmorSet = ArmorSet.GetArmorSet(mwo.IntValues[265].ToString(CultureInfo.InvariantCulture));
 
@@ -217,12 +216,10 @@ namespace Mag_SuitBuilder.Equipment
 
 				if (EquipableSlots.IsBodyArmor())
 				{
-					/*
 					if (Constants.IsUnderwear(Name))
 						BodyPartsCovered = Constants.GetUnderwearCoverage(Name).GetTotalBitsSet();
 					else
 						BodyPartsCovered = EquipableSlots.GetTotalBitsSet();
-					*/
 				}
 			}
 		}
@@ -301,3 +298,4 @@ namespace Mag_SuitBuilder.Equipment
 		public List<Spell> SpellsToUseInSearch { get; private set; }
 	}
 }
+*/

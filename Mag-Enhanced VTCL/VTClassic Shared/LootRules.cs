@@ -150,6 +150,7 @@ namespace VTClassic
 		BuffedLongValKeyGE = 2003,
 		BuffedDoubleValKeyGE = 2005,
 		CalcdBuffedTinkedDamageGE = 2006,
+		TotalRatingsGE = 2007,
 
         DisabledRule = 9999,
     }
@@ -192,6 +193,7 @@ namespace VTClassic
 				case eLootRuleType.BuffedLongValKeyGE: return new BuffedLongValKeyGE();
 				case eLootRuleType.BuffedDoubleValKeyGE: return new BuffedDoubleValKeyGE();
 				case eLootRuleType.CalcdBuffedTinkedDamageGE: return new CalcdBuffedTinkedDamageGE();
+				case eLootRuleType.TotalRatingsGE: return new TotalRatingsGE();
 
                 case eLootRuleType.DisabledRule: return new DisabledRule(true);
 
@@ -1886,6 +1888,24 @@ namespace VTClassic
 			}
 		}
 
+		public int TotalRatings
+		{
+			get
+			{
+				/*
+				DamRating = 370,
+				DamResRating = 371,
+				CritRating = 372,
+				CritResistRating = 373,
+				CritDamRating = 374,
+				CritDamResistRating = 375,
+				HealBoostRating = 376,
+				VitalityRating = 379,
+				*/
+				return gameItemInfo.GetValueInt(370, 0) + gameItemInfo.GetValueInt(371, 0) + gameItemInfo.GetValueInt(372, 0) + gameItemInfo.GetValueInt(373, 0) + gameItemInfo.GetValueInt(374, 0) + gameItemInfo.GetValueInt(375, 0) + gameItemInfo.GetValueInt(376, 0) + gameItemInfo.GetValueInt(379, 0);
+			}
+		}
+
 		/// <summary>
 		/// maxDamage * ((1 - critChance) * (2 - variance) / 2 + (critChance * critMultiplier));
 		/// </summary>
@@ -2005,7 +2025,7 @@ namespace VTClassic
 
 		public override string FriendlyName()
 		{
-			return "Buffed Median Damage >=";
+			return "Calced Buffed Median Damage >=";
 		}
 
 		public override bool MayRequireID()
@@ -2015,7 +2035,7 @@ namespace VTClassic
 
 #if VTC_EDITOR
 		public override bool UI_TextValue_Uses() { return true; }
-		public override string UI_TextValue_Label() { return "Buffed Median Damage"; }
+		public override string UI_TextValue_Label() { return "Calced Buffed Median Damage"; }
 		public override void UI_TextValue_Set(string value) { double.TryParse(value, out keyval); }
 		public override string UI_TextValue_Get() { return keyval.ToString(); }
 #endif
@@ -2072,7 +2092,7 @@ namespace VTClassic
 
 		public override string FriendlyName()
 		{
-			return "Buffed Missile Damage >=";
+			return "Calced Buffed Missile Damage >=";
 		}
 
 		public override bool MayRequireID()
@@ -2082,7 +2102,7 @@ namespace VTClassic
 
 #if VTC_EDITOR
 		public override bool UI_TextValue_Uses() { return true; }
-		public override string UI_TextValue_Label() { return "Buffed Missile Damage"; }
+		public override string UI_TextValue_Label() { return "Calced Buffed Missile Damage"; }
 		public override void UI_TextValue_Set(string value) { double.TryParse(value, out keyval); }
 		public override string UI_TextValue_Get() { return keyval.ToString(); }
 #endif
@@ -2297,12 +2317,79 @@ namespace VTClassic
 
 #if VTC_EDITOR
 		public override bool UI_TextValue_Uses() { return true; }
-		public override string UI_TextValue_Label() { return "Median Damage"; }
+		public override string UI_TextValue_Label() { return "Calced Buffed Tinked Damage"; }
 		public override void UI_TextValue_Set(string value) { double.TryParse(value, out keyval); }
 		public override string UI_TextValue_Get() { return keyval.ToString(); }
 #endif
 	}
 	#endregion CalcdBuffedTinkedDamageGE
+
+	#region TotalRatingsGE
+	internal class TotalRatingsGE : iLootRule
+	{
+		public double keyval = 0d;
+
+		public TotalRatingsGE() { }
+		public TotalRatingsGE(int k) { keyval = k; }
+
+		public override eLootRuleType GetRuleType() { return eLootRuleType.TotalRatingsGE; }
+
+#if VTC_PLUGIN
+		public override bool Match(GameItemInfo id)
+		{
+			MagItemInfo magItemInfo = new MagItemInfo(id);
+
+			return magItemInfo.TotalRatings >= keyval;
+		}
+
+		public override void EarlyMatch(GameItemInfo id, out bool hasdecision, out bool ismatch)
+		{
+			if (id.ObjectClass == ObjectClass.Gem)
+			{
+				hasdecision = false;
+				ismatch = false;        //Doesn't matter, just have to assign
+			}
+			else
+			{
+				hasdecision = true;
+				ismatch = false;
+			}
+		}
+#endif
+
+		public override void Read(System.IO.StreamReader inf, int profileversion)
+		{
+			keyval = GameInfo.HaxConvertDouble(inf.ReadLine());
+		}
+
+		public override void Write(CountedStreamWriter inf)
+		{
+			inf.WriteLine(Convert.ToString(keyval, System.Globalization.CultureInfo.InvariantCulture));
+		}
+
+		public override string DisplayString()
+		{
+			return String.Format("Calced Total Ratings >= {0}", keyval);
+		}
+
+		public override string FriendlyName()
+		{
+			return "Calced Total Ratings >=";
+		}
+
+		public override bool MayRequireID()
+		{
+			return true;
+		}
+
+#if VTC_EDITOR
+		public override bool UI_TextValue_Uses() { return true; }
+		public override string UI_TextValue_Label() { return "Calced Total Ratings"; }
+		public override void UI_TextValue_Set(string value) { double.TryParse(value, out keyval); }
+		public override string UI_TextValue_Get() { return keyval.ToString(); }
+#endif
+	}
+	#endregion TotalRatingsGE
 	// Mag-nus added, end.
 
 	#region DisabledRule

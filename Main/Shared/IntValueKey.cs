@@ -1,7 +1,7 @@
 ﻿
 namespace Mag.Shared
 {
-	public enum LongValueKey
+	public enum IntValueKey
 	{
 		Species = 2,
 		Burden = 5,

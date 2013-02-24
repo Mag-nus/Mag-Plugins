@@ -10,7 +10,7 @@ namespace Mag_SuitBuilder.Search
 		{
 			foreach (Bucket bucket in this)
 			{
-				if ((piece.EquippableSlot & bucket.Slot) == bucket.Slot)
+				if ((piece.EquippableSlots & bucket.Slot) == bucket.Slot)
 					bucket.Add(piece);
 			}
 		}

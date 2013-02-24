@@ -59,8 +59,8 @@
     <Compile Include="..\Shared\EquippableSlotFlags.cs">
       <Link>Shared\EquippableSlotFlags.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\LongValueKey.cs">
-      <Link>Shared\LongValueKey.cs</Link>
+    <Compile Include="..\Shared\IntValueKey.cs">
+      <Link>Shared\IntValueKey.cs</Link>
     </Compile>
     <Compile Include="..\Shared\MyWorldObject.cs">
       <Link>Shared\MyWorldObject.cs</Link>
@@ -77,8 +77,8 @@
     <Compile Include="..\Shared\StringValueKey.cs">
       <Link>Shared\StringValueKey.cs</Link>
     </Compile>
-    <Compile Include="Constants.cs" />
-    <Compile Include="Equipment\ArmorSet.cs" />
+    <Compile Include="Obsolete\Constants.cs" />
+    <Compile Include="Obsolete\ArmorSet.cs" />
     <Compile Include="Search\AccessorySearcher.cs" />
     <Compile Include="Search\Bucket.cs" />
     <Compile Include="Search\BucketSorter.cs" />
@@ -104,7 +104,7 @@
       <DependentUpon>EquipmentPieceControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Equipment\EquipmentGroup.cs" />
-    <Compile Include="Equipment\EquipmentPiece.cs" />
+    <Compile Include="Obsolete\EquipmentPiece.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

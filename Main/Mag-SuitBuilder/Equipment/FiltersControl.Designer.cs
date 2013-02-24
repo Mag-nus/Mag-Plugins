@@ -276,10 +276,10 @@
 		private System.Windows.Forms.CheckBox chkWandStaffOrb;
 		private System.Windows.Forms.CheckBox chkAllElseObjectClasses;
 		private System.Windows.Forms.CheckBox chkRemoveUnequipped;
-		private Spells.CantripSelectorControl cantripSelectorControl1;
 		private System.Windows.Forms.ComboBox cboSecondaryArmorSet;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.ComboBox cboPrimaryArmorSet;
 		private System.Windows.Forms.Label label3;
+		private Spells.CantripSelectorControl cantripSelectorControl1;
 	}
 }

@@ -29,7 +29,7 @@ namespace Mag_SuitBuilder.Equipment
 		}
 
 		[XmlIgnore]
-		public EquippableSlotFlags EquippableSlot
+		public EquippableSlotFlags EquippableSlots
 		{
 			get
 			{
@@ -57,24 +57,44 @@ namespace Mag_SuitBuilder.Equipment
 
 
 
-
-		[Browsable(false)]
-		public long ItemSetId { get { return IntValues.ContainsKey(265) ? IntValues[265] : -1; } }
-
-		private readonly List<Spell> cachedSpells = new List<Spell>();
-		private bool buildSpellCache;
-		public void BuildSpellCache()
+		private bool itemSearchCacheBuilt;
+		public void BuiltItemSearchCache()
 		{
-			if (buildSpellCache)
+			if (itemSearchCacheBuilt)
 				return;
+
+			ItemSetId = IntValues.ContainsKey(265) ? IntValues[265] : 0;
+
 			foreach (var spellId in Spells)
 			{
 				Spell spell = Spell.GetSpell(spellId);
 				cachedSpells.Add(spell);
 			}
-			buildSpellCache = true;
+
+			itemSearchCacheBuilt = true;
 		}
+
+		[XmlIgnore]
 		[Browsable(false)]
-		public IEnumerable<Spell> CachedSpells { get { return cachedSpells; } }
+		public int ItemSetId;
+
+		private readonly List<Spell> cachedSpells = new List<Spell>();
+
+		[XmlIgnore]
+		[Browsable(false)]
+		public IList<Spell> CachedSpells { get { return cachedSpells; } }
+
+		/// <summary>
+		/// Is this item surpassed by something else in the group?
+		/// </summary>
+		[XmlIgnore]
+		[Browsable(false)]
+		public bool IsSurpassed { get; set; }
+
+
+
+		[XmlIgnore]
+		[Browsable(false)]
+		public List<Spell> SpellsToUseInSearch = new List<Spell>();
 	}
 }

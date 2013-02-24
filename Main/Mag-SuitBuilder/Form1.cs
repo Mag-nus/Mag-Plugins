@@ -37,7 +37,25 @@ namespace Mag_SuitBuilder
 			typeof(DataGridView).InvokeMember("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null, equipmentGrid, new object[] { true });
 			equipmentGrid.DataSource = boundList;
 
+			DataGridViewCellStyle style = new DataGridViewCellStyle();
+			style.Format = "N3";
+
+			foreach (DataGridViewColumn col in equipmentGrid.Columns)
+			{
+				if (col.HeaderText == "Variance" || col.HeaderText == "DamageBonus" || col.HeaderText == "ElementalDamageVersusMonsters" || col.HeaderText == "AttackBonus" || col.HeaderText == "MeleeDefenseBonus" || col.HeaderText == "MagicDBonus" || col.HeaderText == "MissileDBonus" || col.HeaderText == "ManaCBonus" ||
+					col.HeaderText == "SalvageWorkmanship" ||
+					col.HeaderText == "CalcedBuffedTinkedDoT" || col.HeaderText == "CalcedBuffedMissileDamage" || col.HeaderText == "BuffedElementalDamageVersusMonsters" || col.HeaderText == "BuffedAttackBonus" || col.HeaderText == "BuffedMeleeDefenseBonus" || col.HeaderText == "BuffedManaCBonus")
+					col.DefaultCellStyle = style;
+			}
+
 			filtersControl1.FiltersChanged += () => UpdateBoundListFromTreeViewNodes(inventoryTreeView.Nodes);
+
+			boundList.ListChanged += (s, e) =>
+			{
+				foreach (var item in boundList)
+					item.IsSurpassed = boundList.ItemIsSurpassed(item);
+				equipmentGrid.Invalidate();
+			};
 		}
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -64,7 +82,7 @@ namespace Mag_SuitBuilder
 			inventoryTreeView.Nodes.Clear();
 			boundList.Clear();
 
-			Dictionary<string, long> armorSets = new Dictionary<string, long>();
+			Dictionary<string, int> armorSets = new Dictionary<string, int>();
 
 			string txtInventoryRootPathOrig = txtInventoryRootPath.Text;
 
@@ -103,8 +121,8 @@ namespace Mag_SuitBuilder
 					foreach (var mwo in myWorldObjects)
 					{
 						mwo.Owner = characterName;
-						mwo.BuildSpellCache();
-						if (mwo.ItemSetId != -1 && !armorSets.ContainsKey(mwo.ItemSet) && mwo.EquippableSlot.IsBodyArmor())
+						mwo.BuiltItemSearchCache();
+						if (mwo.ItemSetId != 0 && !armorSets.ContainsKey(mwo.ItemSet) && mwo.EquippableSlots.IsBodyArmor())
 							armorSets.Add(mwo.ItemSet, mwo.ItemSetId);
 					}
 
@@ -198,14 +216,17 @@ namespace Mag_SuitBuilder
 
 		private void equipmentGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
 		{
-			equipmentGrid.InvalidateRow(e.RowIndex);
+			foreach (var item in boundList)
+				item.IsSurpassed = boundList.ItemIsSurpassed(item);
+
+			equipmentGrid.Invalidate();
 		}
 
 		private void equipmentGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
 		{
-			// This needs to be done differently
-			//if (boundList.ItemIsSurpassed(boundList[e.RowIndex]))
-			//	e.CellStyle.BackColor = Color.DarkGray;
+			//if (boundList.ItemIsSurpassed(boundList[e.RowIndex])) // This method is real time but slow
+			if (boundList[e.RowIndex].IsSurpassed)
+				e.CellStyle.BackColor = Color.DarkGray;
 		}
 
 		private void equipmentGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -251,69 +272,63 @@ namespace Mag_SuitBuilder
 			}
 
 			SearcherConfiguration config = new SearcherConfiguration();
-			//config.MinimumArmorLevelPerPiece = int.Parse(txtMinimumBaseArmorLevel.Text);
-			//config.CantripsToLookFor = cntrlCantripFilters;
-			//config.PrimaryArmorSet = cboPrimaryArmorSet.SelectedItem as ArmorSet;
-			//config.SecondaryArmorSet = cboSecondaryArmorSet.SelectedItem as ArmorSet;
-			config.OnlyAddPiecesWithArmor = true;
-			/* todo hack fix
+			config.CantripsToLookFor = filtersControl1.CantripsToLookFor;
+			config.PrimaryArmorSet = filtersControl1.PrimaryArmorSetId;
+			config.SecondaryArmorSet = filtersControl1.SecondaryArmorSetId;
+
 			// Go through our Equipment and remove/disable any extra spells that we're not looking for
-			foreach (var piece in equipmentGroup)
+			foreach (var piece in boundList)
 			{
 				piece.SpellsToUseInSearch.Clear();
 
-				foreach (Spell spell in piece.Spells)
+				foreach (Spell spell in piece.CachedSpells)
 				{
-					if (config.SpellPassesRules(spell))
+					if (config.SpellPassesRules(spell) && !spell.IsOfSameFamilyAndGroup(Spell.GetSpell("Epic Impenetrability")))
 						piece.SpellsToUseInSearch.Add(spell);
 				}
-			}*/
+			}
 
 			// Build our base suit from locked in pieces
 			CompletedSuit baseSuit = new CompletedSuit();
-
-			// Add pieces in order of slots covered, starting with the fewest
+			/* todo hack fix
+			// Add locked pieces in order of slots covered, starting with the fewest
 			for (int slotCount = 1; slotCount <= 5; slotCount++)
-			{/* todo hack fix
-				for (int i = 0; i < equipmentGroup.Count; i++)
+			{
+				for (int i = 0; i < boundList.Count; i++)
 				{
-					if (equipmentGroup[i].Locked && equipmentGroup[i].EquipableSlots.GetTotalBitsSet() == slotCount)
+					if (boundList[i].Locked && boundList[i].EquippableSlots.GetTotalBitsSet() == slotCount)
 					{
 						try
 						{
-							if (slotCount == 1 || equipmentGroup[i].EquipableSlots.IsBodyArmor())
+							if (slotCount == 1 || boundList[i].EquippableSlots.IsBodyArmor())
 								// For body armor, we add it to whatever slots its marked as filling. We don't assume reduction.
-								baseSuit.AddItem(equipmentGroup[i].EquipableSlots, equipmentGroup[i]);
+								baseSuit.AddItem(boundList[i].EquippableSlots, boundList[i]);
 							else
 							{
-								if (equipmentGroup[i].EquipableSlots == EquippableSlotFlags.Bracelet &&
-								    baseSuit[EquippableSlotFlags.LeftBracelet] == null)
-									baseSuit.AddItem(EquippableSlotFlags.LeftBracelet, equipmentGroup[i]);
-								else if (equipmentGroup[i].EquipableSlots == EquippableSlotFlags.Bracelet &&
-								         baseSuit[EquippableSlotFlags.RightBracelet] == null)
-									baseSuit.AddItem(EquippableSlotFlags.RightBracelet, equipmentGroup[i]);
-								else if (equipmentGroup[i].EquipableSlots == EquippableSlotFlags.Ring &&
-								         baseSuit[EquippableSlotFlags.LeftRing] == null)
-									baseSuit.AddItem(EquippableSlotFlags.LeftRing, equipmentGroup[i]);
-								else if (equipmentGroup[i].EquipableSlots == EquippableSlotFlags.Ring &&
-								         baseSuit[EquippableSlotFlags.RightRing] == null)
-									baseSuit.AddItem(EquippableSlotFlags.RightRing, equipmentGroup[i]);
+								if (boundList[i].EquippableSlots == EquippableSlotFlags.Bracelet && baseSuit[EquippableSlotFlags.LeftBracelet] == null)
+									baseSuit.AddItem(EquippableSlotFlags.LeftBracelet, boundList[i]);
+								else if (boundList[i].EquippableSlots == EquippableSlotFlags.Bracelet && baseSuit[EquippableSlotFlags.RightBracelet] == null)
+									baseSuit.AddItem(EquippableSlotFlags.RightBracelet, boundList[i]);
+								else if (boundList[i].EquippableSlots == EquippableSlotFlags.Ring && baseSuit[EquippableSlotFlags.LeftRing] == null)
+									baseSuit.AddItem(EquippableSlotFlags.LeftRing, boundList[i]);
+								else if (boundList[i].EquippableSlots == EquippableSlotFlags.Ring && baseSuit[EquippableSlotFlags.RightRing] == null)
+									baseSuit.AddItem(EquippableSlotFlags.RightRing, boundList[i]);
 								else
-									baseSuit.AddItem(equipmentGroup[i].EquipableSlots, equipmentGroup[i]);
+									baseSuit.AddItem(boundList[i].EquippableSlots, boundList[i]);
 							}
 						}
 						catch (ArgumentException)
 						{
-							MessageBox.Show("Failed to add " + equipmentGroup[i].Name + " to base suit of armor.");
+							MessageBox.Show("Failed to add " + boundList[i].Name + " to base suit of armor.");
 						}
 					}
-				}*/
-			}
+				}
+			}*/
 
 			if (baseSuit.Count > 0)
 				AddCompletedSuitToTreeView(baseSuit);
 
-			//armorSearcher = new ArmorSearcher(config, equipmentGroup, baseSuit);
+			armorSearcher = new ArmorSearcher(config, boundList, baseSuit);
 
 			armorSearcher.SuitCreated += new Action<CompletedSuit>(armorSearcher_SuitCreated);
 			armorSearcher.SearchCompleted += new Action(armorSearcher_SearchCompleted);
@@ -351,12 +366,10 @@ namespace Mag_SuitBuilder
 
 			ThreadPool.QueueUserWorkItem(delegate
 			{
-				/*
-				AccessorySearcher accSearcher = new AccessorySearcher(new SearcherConfiguration(), equipmentGroup, obj);
+				AccessorySearcher accSearcher = new AccessorySearcher(new SearcherConfiguration(), boundList, obj);
 				accSearcher.SuitCreated += new Action<CompletedSuit>(accSearcher_SuitCreated);
 				accSearcher.Start();
 				accSearcher.SuitCreated -= new Action<CompletedSuit>(accSearcher_SuitCreated);
-				*/
 			});
 		}
 
@@ -438,7 +451,7 @@ namespace Mag_SuitBuilder
 
 		private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			CompletedSuitTreeNode node = (e.Node as CompletedSuitTreeNode);
+			CompletedSuitTreeNode node = e.Node as CompletedSuitTreeNode;
 
 			if (node != null)
 				PopulateFromEquipmentGroup(node.Suit);
@@ -453,9 +466,9 @@ namespace Mag_SuitBuilder
 			{
 				if (cntrl is EquipmentPieceControl)
 				{
-					EquipmentPieceControl coveragePiece = (cntrl as EquipmentPieceControl);
+					EquipmentPieceControl coveragePiece = cntrl as EquipmentPieceControl;
 
-					coveragePiece.SetEquipmentPiece(suit[coveragePiece.EquipableSlots]);
+					coveragePiece.SetEquipmentPiece(suit[coveragePiece.EquippableSlots]);
 
 					cntrl.Refresh();
 				}
