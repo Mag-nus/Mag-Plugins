@@ -15,13 +15,7 @@ namespace Mag_SuitBuilder.Equipment
 		public EquippableSlotFlags EquippableSlots { get; set; }
 
 		public bool CanEquip(SuitBuildableMyWorldObject piece)
-		{/*
-			if (EquippableSlots.IsShirt() && piece.EquippableSlots.IsShirt())
-				return true;
-
-			if (EquippableSlots.IsPants() && piece.EquippableSlots.IsPants())
-				return true;
-			*/
+		{
 			return (piece.EquippableSlots & EquippableSlots) == EquippableSlots;
 		}
 
