@@ -257,15 +257,15 @@ namespace MagTools.ItemInfo
 				else
 				{
 					if (Constants.GetSkillInfo().ContainsKey(wo.Values(LongValueKey.WieldReqAttribute)))
-						sb.Append(", " + Constants.GetSkillInfo()[wo.Values(LongValueKey.WieldReqAttribute)] + " " + wo.Values(LongValueKey.WieldReqValue) + " to Wield");
+						sb.Append(", " + Constants.GetSkillInfo()[wo.Values(LongValueKey.WieldReqAttribute)] + " " + wo.Values(LongValueKey.WieldReqValue));
 					else
-						sb.Append(", Unknown skill: " +wo.Values(LongValueKey.WieldReqAttribute) + " " + wo.Values(LongValueKey.WieldReqValue) + " to Wield");
+						sb.Append(", Unknown skill: " +wo.Values(LongValueKey.WieldReqAttribute) + " " + wo.Values(LongValueKey.WieldReqValue));
 				}
 			}
 
 			// Summoning Gem
 			if (wo.Values((LongValueKey)369) > 0)
-				sb.Append(", Use Lvl " + wo.Values((LongValueKey)369));
+				sb.Append(", Lvl " + wo.Values((LongValueKey)369));
 
 			// Melee Defense 300 to Activate
 			// If the activation is lower than the wield requirement, don't show it.
@@ -281,18 +281,18 @@ namespace MagTools.ItemInfo
 			if (wo.Values((LongValueKey)366) > 0 && wo.Values((LongValueKey)367) > 0)
 			{
 				if (Constants.GetSkillInfo().ContainsKey(wo.Values((LongValueKey)366)))
-					sb.Append(", " + Constants.GetSkillInfo()[wo.Values((LongValueKey)366)] + " " + wo.Values((LongValueKey)367) + " to Use");
+					sb.Append(", " + Constants.GetSkillInfo()[wo.Values((LongValueKey)366)] + " " + wo.Values((LongValueKey)367));
 				else
-					sb.Append(", Unknown skill: " + wo.Values((LongValueKey)366) + " " + wo.Values((LongValueKey)367) + " to Use");
+					sb.Append(", Unknown skill: " + wo.Values((LongValueKey)366) + " " + wo.Values((LongValueKey)367));
 			}
 
 			// Summoning Gem
 			if (wo.Values((LongValueKey)368) > 0 && wo.Values((LongValueKey)367) > 0)
 			{
 				if (Constants.GetSkillInfo().ContainsKey(wo.Values((LongValueKey)368)))
-					sb.Append(", Spec " + Constants.GetSkillInfo()[wo.Values((LongValueKey)368)] + " " + wo.Values((LongValueKey)367) + " to Use");
+					sb.Append(", Spec " + Constants.GetSkillInfo()[wo.Values((LongValueKey)368)] + " " + wo.Values((LongValueKey)367));
 				else
-					sb.Append(", Unknown skill spec: " + wo.Values((LongValueKey)368) + " " + wo.Values((LongValueKey)367) + " to Use");
+					sb.Append(", Unknown skill spec: " + wo.Values((LongValueKey)368) + " " + wo.Values((LongValueKey)367));
 			}
 
 			if (wo.Values(LongValueKey.LoreRequirement) > 0)

@@ -225,7 +225,7 @@ namespace Mag.Shared
 
 				int numberOfTinksLeft = Math.Max(10 - Math.Max(Tinks, 0), 0);
 
-				if (IntValues.ContainsKey(179) && IntValues[179] != 0)
+				if (!IntValues.ContainsKey(179) || IntValues[179] == 0)
 					numberOfTinksLeft--; // Factor in an imbue tink
 
 				// If this is not a loot generated item, it can't be tinked
