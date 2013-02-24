@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-
+using System.Globalization;
 using Mag_SuitBuilder.Spells;
 
 using Mag.Shared;
@@ -23,9 +23,9 @@ namespace Mag_SuitBuilder.Equipment
 
 			_name = mwo.Name;
 
-			if (mwo.LongValues.ContainsKey(218103822))
+			if (mwo.IntValues.ContainsKey(218103822))
 			{
-				EquipableSlots = (EquippableSlotFlags)mwo.LongValues[218103822];
+				EquipableSlots = (EquippableSlotFlags)mwo.IntValues[218103822];
 				/*
 				// If the piece hasn't been reduced, and we can determine its reduction state by the name, lets use that instead
 				if (EquipableSlots.GetTotalBitsSet() > 1 && Constants.GetEquippableSlots(Name) != EquippableSlotFlags.None)
@@ -40,27 +40,27 @@ namespace Mag_SuitBuilder.Equipment
 			}
 
 			// Pick out the Armor Set
-			if (mwo.LongValues.ContainsKey(265))
+			if (mwo.IntValues.ContainsKey(265))
 			{
-				Dictionary<int, string> attributeSetInfo = Mag.Shared.Constants.GetAttributeSetInfo();
+				Dictionary<int, string> attributeSetInfo = Constants.GetAttributeSetInfo();
 
-				if (attributeSetInfo.ContainsKey((int)mwo.LongValues[265]))
-					ArmorSet = ArmorSet.GetArmorSet(attributeSetInfo[(int)mwo.LongValues[265]]);
+				if (attributeSetInfo.ContainsKey(mwo.IntValues[265]))
+					ArmorSet = ArmorSet.GetArmorSet(attributeSetInfo[mwo.IntValues[265]]);
 				else
-					ArmorSet = ArmorSet.GetArmorSet(mwo.LongValues[265].ToString());
+					ArmorSet = ArmorSet.GetArmorSet(mwo.IntValues[265].ToString(CultureInfo.InvariantCulture));
 
 			}
 			// Find the AL
-			if (mwo.LongValues.ContainsKey(28))
-				ArmorLevel = (int)mwo.LongValues[28];
+			if (mwo.IntValues.ContainsKey(28))
+				ArmorLevel = mwo.IntValues[28];
 
 			// Find the number of tinks
-			if (mwo.LongValues.ContainsKey(171))
-				Tinks = (int)mwo.LongValues[171];
+			if (mwo.IntValues.ContainsKey(171))
+				Tinks = mwo.IntValues[171];
 
 			// Find out if the piece has been imbued
-			if (mwo.LongValues.ContainsKey(179))
-				Imbued = mwo.LongValues[179] > 0;
+			if (mwo.IntValues.ContainsKey(179))
+				Imbued = mwo.IntValues[179] > 0;
 
 			// Add the spells
 			foreach (var s in mwo.Spells)

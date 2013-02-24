@@ -93,6 +93,8 @@ namespace MagTools.Client
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		int debugMessagesPrinted;
+
 		bool _throttling;
 		bool Throttling
 		{
@@ -107,12 +109,15 @@ namespace MagTools.Client
 
 				_throttling = value;
 
-				if (Settings.SettingsManager.Misc.DebuggingEnabled.Value)
+				if (Settings.SettingsManager.Misc.DebuggingEnabled.Value && debugMessagesPrinted < 2)
 				{
 					if (_throttling)
 						Debug.WriteToChat("NoFocusFPSManager throttling set to " + _throttling + " with a target FPS of " + Settings.SettingsManager.Misc.NoFocusFPS.Value);
 					else
 						Debug.WriteToChat("NoFocusFPSManager throttling set to " + _throttling);
+					debugMessagesPrinted++;
+					if (debugMessagesPrinted >= 2)
+						Debug.WriteToChat("NoFocusFPSManager: no more debug messages will be printed this session.");
 				}
 
 				if (_throttling)

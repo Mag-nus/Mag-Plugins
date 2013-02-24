@@ -52,6 +52,9 @@ namespace Mag_SuitBuilder
 			filtersControl1.Visible = chkFilters.Checked;
 
 		}
+
+		bool autoSizedColumns;
+
 		private void btnLoadFromDB_Click(object sender, EventArgs e)
 		{
 			this.Enabled = false;
@@ -120,10 +123,14 @@ namespace Mag_SuitBuilder
 			if (inventoryTreeView.Nodes.Count > 0)
 				inventoryTreeView.Nodes[0].Checked = true;
 
-			txtInventoryRootPath.Text = txtInventoryRootPathOrig + "    Autosizing columns... If you have lots of inventory and a 486 this may take a while.";
-			txtInventoryRootPath.Refresh();
+			if (!autoSizedColumns)
+			{
+				txtInventoryRootPath.Text = txtInventoryRootPathOrig + "    Autosizing columns... If you have lots of inventory and a 486 this may take a while.";
+				txtInventoryRootPath.Refresh();
 
-			//equipmentGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
+				autoSizedColumns = true;
+				//equipmentGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
+			}
 
 			txtInventoryRootPath.Text = txtInventoryRootPathOrig;
 
@@ -205,7 +212,7 @@ namespace Mag_SuitBuilder
 		{
 			// This just hides numeric fields that aren't supported, they return -1
 			if ((e.Value is int && (int)e.Value == -1) ||
-				(e.Value is double && (double)e.Value == -1) ||
+				(e.Value is double && Math.Abs((double)e.Value + 1) < Double.Epsilon) ||
 				(e.Value is EquippableSlotFlags && (EquippableSlotFlags)e.Value == EquippableSlotFlags.None) ||
 				(e.Value is CoverageFlags && (CoverageFlags)e.Value == CoverageFlags.None))
 			{

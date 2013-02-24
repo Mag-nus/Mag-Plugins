@@ -12,7 +12,7 @@ namespace Mag.Shared
 
 			Dictionary<int, bool> boolValues = new Dictionary<int,bool>();
 			Dictionary<int, double> doubleValues = new Dictionary<int,double>();
-			Dictionary<int, long> longValues = new Dictionary<int,long>();
+			Dictionary<int, int> intValues = new Dictionary<int, int>();
 			Dictionary<int, string> stringValues = new Dictionary<int,string>();
 			List<int> activeSpells = new List<int>();
 			List<int> spells = new List<int>();
@@ -24,7 +24,7 @@ namespace Mag.Shared
 				doubleValues.Add(key, wo.Values((DoubleValueKey)key));
 
 			foreach (var key in wo.LongKeys)
-				longValues.Add(key, wo.Values((LongValueKey)key));
+				intValues.Add(key, wo.Values((LongValueKey)key));
 
 			foreach (var key in wo.StringKeys)
 				stringValues.Add(key, wo.Values((StringValueKey)key));
@@ -35,7 +35,7 @@ namespace Mag.Shared
 			for (int i = 0; i < wo.SpellCount; i++)
 				spells.Add(wo.Spell(i));
 
-			mwo.Init(wo.HasIdData, wo.Id, wo.LastIdTime, (int)wo.ObjectClass, boolValues, doubleValues, longValues, stringValues, activeSpells, spells);
+			mwo.Init(wo.HasIdData, wo.Id, wo.LastIdTime, (int)wo.ObjectClass, boolValues, doubleValues, intValues, stringValues, activeSpells, spells);
 
 			return mwo;
 		}
@@ -48,9 +48,9 @@ namespace Mag.Shared
 			MyWorldObject mwo = Create(newer);
 
 			if (older.HasIdData && !newer.HasIdData)
-				older.Init(older.HasIdData, mwo.Id, older.LastIdTime, mwo.ObjectClass, mwo.BoolValues, mwo.DoubleValues, mwo.LongValues, mwo.StringValues, older.ActiveSpells, older.Spells);
+				older.Init(older.HasIdData, mwo.Id, older.LastIdTime, mwo.ObjectClass, mwo.BoolValues, mwo.DoubleValues, mwo.IntValues, mwo.StringValues, older.ActiveSpells, older.Spells);
 			else
-				older.Init(mwo.HasIdData, mwo.Id, mwo.LastIdTime, mwo.ObjectClass, mwo.BoolValues, mwo.DoubleValues, mwo.LongValues, mwo.StringValues, mwo.ActiveSpells, mwo.Spells);
+				older.Init(mwo.HasIdData, mwo.Id, mwo.LastIdTime, mwo.ObjectClass, mwo.BoolValues, mwo.DoubleValues, mwo.IntValues, mwo.StringValues, mwo.ActiveSpells, mwo.Spells);
 
 			return older;
 		}
