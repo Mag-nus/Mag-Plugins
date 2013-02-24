@@ -2344,16 +2344,16 @@ namespace VTClassic
 
 		public override void EarlyMatch(GameItemInfo id, out bool hasdecision, out bool ismatch)
 		{
-			if (id.ObjectClass == ObjectClass.Gem)
+			//if (id.ObjectClass == ObjectClass.Misc | id.ObjectClass == ObjectClass.Armor | id.ObjectClass == ObjectClass.Clothing | id.ObjectClass == ObjectClass.Jewelry)
 			{
 				hasdecision = false;
 				ismatch = false;        //Doesn't matter, just have to assign
-			}
+			}/*
 			else
 			{
 				hasdecision = true;
 				ismatch = false;
-			}
+			}*/
 		}
 #endif
 
