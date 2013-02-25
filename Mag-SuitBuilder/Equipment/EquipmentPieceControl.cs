@@ -1,5 +1,8 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Windows.Forms;
+
+using Mag_SuitBuilder.Spells;
 
 using Mag.Shared;
 
@@ -21,31 +24,62 @@ namespace Mag_SuitBuilder.Equipment
 
 		public void SetEquipmentPiece(SuitBuildableMyWorldObject piece)
 		{
+			lblCharacter.Text = null;
 			lblItemName.Text = null;
 
-			txtArmorLevel.Text = null;
+			lblAL.Text = null;
+			lblArmorSet.Text = null;
 
-			txtArmorSet.Text = null;
-
-			txtSpell1.Text = null;
-			txtSpell2.Text = null;
-			txtSpell3.Text = null;
-			txtSpell4.Text = null;
+			lblSpell1.Text = null;
+			lblSpell2.Text = null;
+			lblSpell3.Text = null;
+			lblSpell4.Text = null;
+			lblSpell5.Text = null;
+			lblSpell6.Text = null;
 
 			if (piece == null || !CanEquip(piece))
 				return;
 
+			lblCharacter.Text = piece.Owner;
 			lblItemName.Text = piece.Name;
 
 			if (piece.CalcedStartingArmorLevel > 0)
-				txtArmorLevel.Text = piece.CalcedStartingArmorLevel.ToString(CultureInfo.InvariantCulture);
+				lblAL.Text = piece.CalcedStartingArmorLevel.ToString(CultureInfo.InvariantCulture);
 
-			txtArmorSet.Text = piece.ItemSet;
+			lblArmorSet.Text = piece.ItemSet;
 
-			if (piece.CachedSpells.Count > 0) txtSpell1.Text = piece.CachedSpells[0].ToString();
-			if (piece.CachedSpells.Count > 1) txtSpell2.Text = piece.CachedSpells[1].ToString();
-			if (piece.CachedSpells.Count > 2) txtSpell3.Text = piece.CachedSpells[2].ToString();
-			if (piece.CachedSpells.Count > 3) txtSpell4.Text = piece.CachedSpells[3].ToString();
+			List<Spell> spellsInOrder = new List<Spell>();
+
+			for (Spell.CantripLevels level = Spell.CantripLevels.Legendary; level > Spell.CantripLevels.None; level--)
+			{
+				foreach (Spell spell in piece.CachedSpells)
+				{
+					if (spellsInOrder.Contains(spell))
+						continue;
+
+					if (spell.CantripLevel >= level)
+						spellsInOrder.Add(spell);
+				}
+			}
+
+			for (Spell.BuffLevels level = Spell.BuffLevels.VIII; level >= Spell.BuffLevels.None; level--)
+			{
+				foreach (Spell spell in piece.CachedSpells)
+				{
+					if (spellsInOrder.Contains(spell))
+						continue;
+
+					if (spell.BuffLevel >= level)
+						spellsInOrder.Add(spell);
+				}
+			}
+
+			if (spellsInOrder.Count > 0) lblSpell1.Text = spellsInOrder[0].ToString();
+			if (spellsInOrder.Count > 1) lblSpell2.Text = spellsInOrder[1].ToString();
+			if (spellsInOrder.Count > 2) lblSpell3.Text = spellsInOrder[2].ToString();
+			if (spellsInOrder.Count > 3) lblSpell4.Text = spellsInOrder[3].ToString();
+			if (spellsInOrder.Count > 4) lblSpell5.Text = spellsInOrder[4].ToString();
+			if (spellsInOrder.Count > 5) lblSpell6.Text = spellsInOrder[5].ToString();
 		}
 	}
 }

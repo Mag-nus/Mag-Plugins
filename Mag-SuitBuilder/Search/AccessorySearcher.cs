@@ -7,7 +7,7 @@ using Mag.Shared;
 namespace Mag_SuitBuilder.Search
 {
 	/// <summary>
-	/// The class takes equipment (underwear, jewelry) and applies them to a base suit pushing out the top permutations.
+	/// The class takes equipment (trinkets/underwear/jewelry) without armor and applies them to a base suit pushing out the top permutations.
 	/// </summary>
 	class AccessorySearcher : Searcher
 	{
@@ -20,9 +20,7 @@ namespace Mag_SuitBuilder.Search
 				if (a.CalcedStartingArmorLevel > 0 && b.CalcedStartingArmorLevel > 0) return b.CalcedStartingArmorLevel.CompareTo(a.CalcedStartingArmorLevel);
 				if (a.CalcedStartingArmorLevel > 0 && b.CalcedStartingArmorLevel == 0) return -1;
 				if (a.CalcedStartingArmorLevel == 0 && b.CalcedStartingArmorLevel > 0) return 1;
-				// todo hack fix
-				//return b.SpellsToUseInSearch.Count.CompareTo(a.SpellsToUseInSearch.Count); // this needs to be fixed
-				return 1;
+				return b.SpellsToUseInSearch.Count.CompareTo(a.SpellsToUseInSearch.Count);
 			});
 
 			// Remove any pieces that have armor

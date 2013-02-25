@@ -30,7 +30,10 @@ namespace Mag_SuitBuilder
 		public Form1()
 		{
 			InitializeComponent();
+		}
 
+		protected override void OnLoad(EventArgs e)
+		{
 			Text += " " + Application.ProductVersion;
 			txtInventoryRootPath.Text = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-Tools\";
 
@@ -50,12 +53,14 @@ namespace Mag_SuitBuilder
 
 			filtersControl1.FiltersChanged += () => UpdateBoundListFromTreeViewNodes(inventoryTreeView.Nodes);
 
-			boundList.ListChanged += (s, e) =>
+			boundList.ListChanged += (s, e2) =>
 			{
 				foreach (var item in boundList)
 					item.IsSurpassed = boundList.ItemIsSurpassed(item);
 				equipmentGrid.Invalidate();
 			};
+
+			base.OnLoad(e);
 		}
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -102,11 +107,11 @@ namespace Mag_SuitBuilder
 					txtInventoryRootPath.Refresh();
 
 					string characterName = characterFilePaths[j].Substring(characterFilePaths[j].LastIndexOf(Path.DirectorySeparatorChar) + 1, characterFilePaths[j].Length - characterFilePaths[j].LastIndexOf(Path.DirectorySeparatorChar) - 1);
-					characterName = characterName.Substring(0, characterName.IndexOf("."));
+					characterName = characterName.Substring(0, characterName.IndexOf(".", StringComparison.Ordinal));
 
 					TreeNode characterNode = serverNode.Nodes.Add(characterName);
 
-					List<SuitBuildableMyWorldObject> myWorldObjects = new List<SuitBuildableMyWorldObject>();
+					List<SuitBuildableMyWorldObject> myWorldObjects;
 
 					// This is pretty hacked. SuitBuildableMyWorldObject is a derived class of MyWorldObject. It extends properties for the binding list.
 					// Mag-Tools serializes MyWorldObjects.
@@ -147,7 +152,7 @@ namespace Mag_SuitBuilder
 				txtInventoryRootPath.Refresh();
 
 				autoSizedColumns = true;
-				//equipmentGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
+				equipmentGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
 			}
 
 			txtInventoryRootPath.Text = txtInventoryRootPathOrig;
@@ -290,40 +295,19 @@ namespace Mag_SuitBuilder
 
 			// Build our base suit from locked in pieces
 			CompletedSuit baseSuit = new CompletedSuit();
-			/* todo hack fix
+
 			// Add locked pieces in order of slots covered, starting with the fewest
 			for (int slotCount = 1; slotCount <= 5; slotCount++)
 			{
-				for (int i = 0; i < boundList.Count; i++)
+				foreach (SuitBuildableMyWorldObject item in boundList)
 				{
-					if (boundList[i].Locked && boundList[i].EquippableSlots.GetTotalBitsSet() == slotCount)
+					if (item.Locked && item.EquippableSlots.GetTotalBitsSet() == slotCount)
 					{
-						try
-						{
-							if (slotCount == 1 || boundList[i].EquippableSlots.IsBodyArmor())
-								// For body armor, we add it to whatever slots its marked as filling. We don't assume reduction.
-								baseSuit.AddItem(boundList[i].EquippableSlots, boundList[i]);
-							else
-							{
-								if (boundList[i].EquippableSlots == EquippableSlotFlags.Bracelet && baseSuit[EquippableSlotFlags.LeftBracelet] == null)
-									baseSuit.AddItem(EquippableSlotFlags.LeftBracelet, boundList[i]);
-								else if (boundList[i].EquippableSlots == EquippableSlotFlags.Bracelet && baseSuit[EquippableSlotFlags.RightBracelet] == null)
-									baseSuit.AddItem(EquippableSlotFlags.RightBracelet, boundList[i]);
-								else if (boundList[i].EquippableSlots == EquippableSlotFlags.Ring && baseSuit[EquippableSlotFlags.LeftRing] == null)
-									baseSuit.AddItem(EquippableSlotFlags.LeftRing, boundList[i]);
-								else if (boundList[i].EquippableSlots == EquippableSlotFlags.Ring && baseSuit[EquippableSlotFlags.RightRing] == null)
-									baseSuit.AddItem(EquippableSlotFlags.RightRing, boundList[i]);
-								else
-									baseSuit.AddItem(boundList[i].EquippableSlots, boundList[i]);
-							}
-						}
-						catch (ArgumentException)
-						{
-							MessageBox.Show("Failed to add " + boundList[i].Name + " to base suit of armor.");
-						}
+						if (!baseSuit.AddItem(item))
+							MessageBox.Show("Failed to add " + item.Name + " to base suit of armor.");
 					}
 				}
-			}*/
+			}
 
 			if (baseSuit.Count > 0)
 				AddCompletedSuitToTreeView(baseSuit);
@@ -335,12 +319,12 @@ namespace Mag_SuitBuilder
 
 			new Thread(() =>
 			{
-				DateTime startTime = DateTime.Now;
+				//DateTime startTime = DateTime.Now;
 
 				// Do the actual search here
 				armorSearcher.Start();
 
-				DateTime endTime = DateTime.Now;
+				//DateTime endTime = DateTime.Now;
 
 				//MessageBox.Show((endTime - startTime).TotalSeconds.ToString());
 			}).Start();
