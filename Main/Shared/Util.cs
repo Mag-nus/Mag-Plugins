@@ -261,5 +261,21 @@ namespace Mag.Shared
 				writer.Close();
 			}
 		}
+
+		public static string NumberFormatter(int number, string format, int largestViewableNumber, string reducedFormat = "#,##0.0")
+		{
+			if (number <= largestViewableNumber)
+				return number.ToString(format);
+
+			int spaces = largestViewableNumber.ToString(format).Length;
+
+			if (((float)number / 1000).ToString(reducedFormat).Length <= spaces)
+				return ((float)number / 1000).ToString(reducedFormat) + "k"; // thousand
+
+			if (((float)number / 1000000).ToString(reducedFormat).Length <= spaces)
+				return ((float)number / 1000000).ToString(reducedFormat) + "M"; // million
+
+			return ((float)number / 1000000000).ToString(reducedFormat) + "G"; // billion
+		}
 	}
 }
