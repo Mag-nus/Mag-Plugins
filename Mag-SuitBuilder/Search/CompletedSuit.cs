@@ -51,6 +51,7 @@ namespace Mag_SuitBuilder.Search
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>
+		/// <exception cref="ArgumentException">Trying to add an item that covers a slot already filled.</exception>
 		public bool AddItem(SuitBuildableMyWorldObject item)
 		{
 			EquippableSlotFlags slotToAddTo = item.EquippableSlots;
@@ -63,6 +64,8 @@ namespace Mag_SuitBuilder.Search
 					slotToAddTo = EquippableSlotFlags.LeftBracelet;
 				else if (this[EquippableSlotFlags.RightBracelet] == null)
 					slotToAddTo = EquippableSlotFlags.RightBracelet;
+				else
+					return false;
 			}
 			else if (item.EquippableSlots == (EquippableSlotFlags.LeftRing | EquippableSlotFlags.RightRing))
 			{
@@ -70,6 +73,8 @@ namespace Mag_SuitBuilder.Search
 					slotToAddTo = EquippableSlotFlags.LeftRing;
 				else if (this[EquippableSlotFlags.RightRing] == null)
 					slotToAddTo = EquippableSlotFlags.RightRing;
+				else
+					return false;
 			}
 			else if (item.EquippableSlots.IsShirt())
 				slotToAddTo = EquippableSlotFlags.ShirtChest;

@@ -38,6 +38,8 @@
 			this.lblSpell4 = new System.Windows.Forms.Label();
 			this.lblSpell5 = new System.Windows.Forms.Label();
 			this.lblSpell6 = new System.Windows.Forms.Label();
+			this.chkLocked = new System.Windows.Forms.CheckBox();
+			this.chkExclude = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// lblItemName
@@ -130,11 +132,37 @@
 			this.lblSpell6.TabIndex = 21;
 			this.lblSpell6.Text = "Spell6";
 			// 
+			// chkLocked
+			// 
+			this.chkLocked.AutoSize = true;
+			this.chkLocked.Enabled = false;
+			this.chkLocked.Location = new System.Drawing.Point(115, 103);
+			this.chkLocked.Name = "chkLocked";
+			this.chkLocked.Size = new System.Drawing.Size(44, 17);
+			this.chkLocked.TabIndex = 22;
+			this.chkLocked.Text = "Lck";
+			this.chkLocked.UseVisualStyleBackColor = true;
+			this.chkLocked.CheckedChanged += new System.EventHandler(this.chkLocked_CheckedChanged);
+			// 
+			// chkExclude
+			// 
+			this.chkExclude.AutoSize = true;
+			this.chkExclude.Enabled = false;
+			this.chkExclude.Location = new System.Drawing.Point(115, 118);
+			this.chkExclude.Name = "chkExclude";
+			this.chkExclude.Size = new System.Drawing.Size(44, 17);
+			this.chkExclude.TabIndex = 23;
+			this.chkExclude.Text = "Exc";
+			this.chkExclude.UseVisualStyleBackColor = true;
+			this.chkExclude.CheckedChanged += new System.EventHandler(this.chkExclude_CheckedChanged);
+			// 
 			// EquipmentPieceControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.Controls.Add(this.chkExclude);
+			this.Controls.Add(this.chkLocked);
 			this.Controls.Add(this.lblSpell6);
 			this.Controls.Add(this.lblSpell5);
 			this.Controls.Add(this.lblSpell4);
@@ -164,5 +192,7 @@
 		private System.Windows.Forms.Label lblSpell4;
 		private System.Windows.Forms.Label lblSpell5;
 		private System.Windows.Forms.Label lblSpell6;
+		private System.Windows.Forms.CheckBox chkLocked;
+		private System.Windows.Forms.CheckBox chkExclude;
 	}
 }

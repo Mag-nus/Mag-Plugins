@@ -16,7 +16,10 @@ namespace Mag_SuitBuilder.Search
 			Config = config;
 
 			foreach (var piece in equipment)
-				Equipment.Add(piece);
+			{
+				if (!piece.Exclude)
+					Equipment.Add(piece);
+			}
 
 			// Remove pieces that don't meet our minimum requirements
 			for (int i = Equipment.Count - 1; i >= 0; i--)

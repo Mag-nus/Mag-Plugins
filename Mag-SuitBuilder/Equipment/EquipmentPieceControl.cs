@@ -16,6 +16,7 @@ namespace Mag_SuitBuilder.Equipment
 		}
 
 		public EquippableSlotFlags EquippableSlots { get; set; }
+		SuitBuildableMyWorldObject mwo;
 
 		public bool CanEquip(SuitBuildableMyWorldObject piece)
 		{
@@ -24,6 +25,8 @@ namespace Mag_SuitBuilder.Equipment
 
 		public void SetEquipmentPiece(SuitBuildableMyWorldObject piece)
 		{
+			mwo = null;
+
 			lblCharacter.Text = null;
 			lblItemName.Text = null;
 
@@ -36,6 +39,13 @@ namespace Mag_SuitBuilder.Equipment
 			lblSpell4.Text = null;
 			lblSpell5.Text = null;
 			lblSpell6.Text = null;
+
+			chkLocked.Enabled = false;
+			chkLocked.Checked = false;
+			chkExclude.Enabled = false;
+			chkExclude.Checked = false;
+
+			mwo = piece;
 
 			if (piece == null || !CanEquip(piece))
 				return;
@@ -80,6 +90,29 @@ namespace Mag_SuitBuilder.Equipment
 			if (spellsInOrder.Count > 3) lblSpell4.Text = spellsInOrder[3].ToString();
 			if (spellsInOrder.Count > 4) lblSpell5.Text = spellsInOrder[4].ToString();
 			if (spellsInOrder.Count > 5) lblSpell6.Text = spellsInOrder[5].ToString();
+
+			chkLocked.Enabled = true;
+			chkLocked.Checked = piece.Locked;
+			chkExclude.Enabled = true;
+			chkExclude.Checked = piece.Exclude;
+		}
+
+		private void chkLocked_CheckedChanged(object sender, System.EventArgs e)
+		{
+			if (mwo == null)
+				return;
+
+			mwo.Locked = chkLocked.Checked;
+			chkExclude.Checked = !chkLocked.Checked;
+		}
+
+		private void chkExclude_CheckedChanged(object sender, System.EventArgs e)
+		{
+			if (mwo == null)
+				return;
+
+			mwo.Exclude = chkExclude.Checked;
+			chkLocked.Checked = !chkExclude.Checked;
 		}
 	}
 }
