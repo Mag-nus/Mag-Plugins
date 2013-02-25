@@ -19,7 +19,6 @@ using Mag.Shared;
 
 // Bugs
 // Spell compare is too slow, should be a hash compare
-// AccessorySearcher thread pool keeps going even after user clicks stop.
 
 namespace Mag_SuitBuilder
 {
@@ -262,6 +261,7 @@ namespace Mag_SuitBuilder
 
 
 		ArmorSearcher armorSearcher;
+		List<Searcher> accessorySearchers = new List<Searcher>(); // We use this list to stop accessory searchers when the user stops the build.
 
 		private void btnCalculatePossibilities_Click(object sender, System.EventArgs e)
 		{
@@ -275,6 +275,8 @@ namespace Mag_SuitBuilder
 				armorSearcher.SuitCreated -= new Action<CompletedSuit>(armorSearcher_SuitCreated);
 				armorSearcher.SearchCompleted -= new Action(armorSearcher_SearchCompleted);
 			}
+
+			accessorySearchers.Clear();
 
 			SearcherConfiguration config = new SearcherConfiguration();
 			config.CantripsToLookFor = filtersControl1.CantripsToLookFor;
@@ -303,8 +305,15 @@ namespace Mag_SuitBuilder
 				{
 					if (item.Locked && item.EquippableSlots.GetTotalBitsSet() == slotCount)
 					{
-						if (!baseSuit.AddItem(item))
-							MessageBox.Show("Failed to add " + item.Name + " to base suit of armor.");
+						try
+						{
+							if (!baseSuit.AddItem(item))
+								MessageBox.Show("Failed to add " + item.Name + " to base suit of armor.");
+						}
+						catch (ArgumentException) // Item failed to add
+						{
+							MessageBox.Show("Failed to add " + item.Name + " to base suit of armor. It overlaps another piece");
+						}
 					}
 				}
 			}
@@ -351,6 +360,7 @@ namespace Mag_SuitBuilder
 			ThreadPool.QueueUserWorkItem(delegate
 			{
 				AccessorySearcher accSearcher = new AccessorySearcher(new SearcherConfiguration(), boundList, obj);
+				accessorySearchers.Add(accSearcher);
 				accSearcher.SuitCreated += new Action<CompletedSuit>(accSearcher_SuitCreated);
 				accSearcher.Start();
 				accSearcher.SuitCreated -= new Action<CompletedSuit>(accSearcher_SuitCreated);
@@ -421,6 +431,8 @@ namespace Mag_SuitBuilder
 				btnCalculatePossibilities.Enabled = true;
 				FlashWindow(this.Handle, true);
 			}));
+
+			// Accessory searchers could still be running...
 		}
 
 		private void btnStopCalculating_Click(object sender, EventArgs e)
@@ -429,6 +441,13 @@ namespace Mag_SuitBuilder
 			btnStopCalculating.Enabled = false;
 
 			armorSearcher.Stop();
+
+			foreach (Searcher searcher in accessorySearchers)
+			{
+				if (searcher != null && searcher.Running)
+					searcher.Stop();
+			}
+			accessorySearchers.Clear();
 
 			btnCalculatePossibilities.Enabled = true;
 		}
