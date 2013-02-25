@@ -61,19 +61,25 @@ namespace Mag_SuitBuilder.Search
 					MessageBox.Show("Unable to add " + piece + " into an appropriate bucket. EquippableSlots != Coverage" + Environment.NewLine + "EquippableSlots: " + piece.EquippableSlots + Environment.NewLine + "Coverage: " + piece.Coverage);
 				else if (piece.EquippableSlots.IsBodyArmor() && piece.EquippableSlots.GetTotalBitsSet() > 1)
 				{
-					// Lets try to reduce this
-					foreach (var option in piece.Coverage.ReductionOptions())
+					if (piece.Material == null) // Can't reduce non-loot gen pieces
+						buckets.PutItemInBuckets(piece);
+					else
 					{
-						if (option == CoverageFlags.Head) buckets.PutItemInBuckets(piece, EquippableSlotFlags.Head);
-						else if (option == CoverageFlags.Chest) buckets.PutItemInBuckets(piece, EquippableSlotFlags.Chest);
-						else if (option == CoverageFlags.UpperArms) buckets.PutItemInBuckets(piece, EquippableSlotFlags.UpperArms);
-						else if (option == CoverageFlags.LowerArms) buckets.PutItemInBuckets(piece, EquippableSlotFlags.LowerArms);
-						else if (option == CoverageFlags.Hands) buckets.PutItemInBuckets(piece, EquippableSlotFlags.Hands);
-						else if (option == CoverageFlags.Abdomen) buckets.PutItemInBuckets(piece, EquippableSlotFlags.Abdomen);
-						else if (option == CoverageFlags.UpperLegs) buckets.PutItemInBuckets(piece, EquippableSlotFlags.UpperLegs);
-						else if (option == CoverageFlags.LowerLegs) buckets.PutItemInBuckets(piece, EquippableSlotFlags.LowerLegs);
-						else if (option == CoverageFlags.Feet) buckets.PutItemInBuckets(piece, EquippableSlotFlags.Feet);
-						else MessageBox.Show("Unable to add " + piece + " into an appropriate bucket." + Environment.NewLine + "Reduction coverage option of " + option + " not expected.");
+						// Lets try to reduce this
+						foreach (var option in piece.Coverage.ReductionOptions())
+						{
+							if (option == CoverageFlags.Head) buckets.PutItemInBuckets(piece, EquippableSlotFlags.Head);
+							else if (option == CoverageFlags.Chest) buckets.PutItemInBuckets(piece, EquippableSlotFlags.Chest);
+							else if (option == CoverageFlags.UpperArms) buckets.PutItemInBuckets(piece, EquippableSlotFlags.UpperArms);
+							else if (option == CoverageFlags.LowerArms) buckets.PutItemInBuckets(piece, EquippableSlotFlags.LowerArms);
+							else if (option == CoverageFlags.Hands) buckets.PutItemInBuckets(piece, EquippableSlotFlags.Hands);
+							else if (option == CoverageFlags.Abdomen) buckets.PutItemInBuckets(piece, EquippableSlotFlags.Abdomen);
+							else if (option == CoverageFlags.UpperLegs) buckets.PutItemInBuckets(piece, EquippableSlotFlags.UpperLegs);
+							else if (option == CoverageFlags.LowerLegs) buckets.PutItemInBuckets(piece, EquippableSlotFlags.LowerLegs);
+							else if (option == CoverageFlags.Feet) buckets.PutItemInBuckets(piece, EquippableSlotFlags.Feet);
+							else
+								MessageBox.Show("Unable to add " + piece + " into an appropriate bucket." + Environment.NewLine + "Reduction coverage option of " + option + " not expected.");
+						}
 					}
 				}
 				else
