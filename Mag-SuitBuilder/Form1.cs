@@ -193,7 +193,7 @@ namespace Mag_SuitBuilder
 				{
 					foreach (SuitBuildableMyWorldObject piece in (node.Tag as List<SuitBuildableMyWorldObject>))
 					{
-						if (node.Checked && filtersControl1.ItemPassesFilters(piece))
+						if (node.Checked && (piece.Locked || filtersControl1.ItemPassesFilters(piece)))
 							boundList.Add(piece);
 					}
 				}

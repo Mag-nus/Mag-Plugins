@@ -55,6 +55,59 @@ namespace Mag_SuitBuilder.Equipment
 			}
 		}
 
+		private string itemSpells;
+
+		[XmlIgnore]
+		public string ItemSpells
+		{
+			get
+			{
+				if (itemSpells != null)
+					return itemSpells;
+
+				List<Spell> spellList = new List<Spell>();
+
+				foreach (var spell in Spells)
+				{
+					if (Spell.IsAKnownSpell(spell))
+						spellList.Add(Spell.GetSpell(spell));
+
+				}
+				List<Spell> spellsInOrder = new List<Spell>();
+
+				for (Spell.CantripLevels level = Spell.CantripLevels.Legendary; level > Spell.CantripLevels.None; level--)
+				{
+					foreach (Spell spell in spellList)
+					{
+						if (spellsInOrder.Contains(spell))
+							continue;
+
+						if (spell.CantripLevel >= level)
+							spellsInOrder.Add(spell);
+					}
+				}
+
+				for (Spell.BuffLevels level = Spell.BuffLevels.VIII; level >= Spell.BuffLevels.None; level--)
+				{
+					foreach (Spell spell in spellList)
+					{
+						if (spellsInOrder.Contains(spell))
+							continue;
+
+						if (spell.BuffLevel >= level)
+							spellsInOrder.Add(spell);
+					}
+				}
+
+				foreach (var spell in spellsInOrder)
+				{
+					if (itemSpells != null) itemSpells += ", ";
+					itemSpells += spell;
+				}
+
+				return itemSpells;
+			}
+		}
 
 
 		private bool itemSearchCacheBuilt;
