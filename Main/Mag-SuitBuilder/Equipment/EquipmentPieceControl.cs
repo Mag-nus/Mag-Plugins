@@ -103,7 +103,11 @@ namespace Mag_SuitBuilder.Equipment
 				return;
 
 			mwo.Locked = chkLocked.Checked;
-			chkExclude.Checked = !chkLocked.Checked;
+			if (mwo.Locked && mwo.Exclude)
+			{
+				mwo.Exclude = false;
+				chkExclude.Checked = false;
+			}
 		}
 
 		private void chkExclude_CheckedChanged(object sender, System.EventArgs e)
@@ -112,7 +116,11 @@ namespace Mag_SuitBuilder.Equipment
 				return;
 
 			mwo.Exclude = chkExclude.Checked;
-			chkLocked.Checked = !chkExclude.Checked;
+			if (mwo.Locked && mwo.Exclude)
+			{
+				mwo.Locked = false;
+				chkLocked.Checked = false;
+			}
 		}
 	}
 }
