@@ -80,7 +80,7 @@ namespace Mag.Shared
 
 		public string Mastery { get { if (IntValues.ContainsKey(353)) return Constants.MasteryInfo.ContainsKey(IntValues[353]) ? Constants.MasteryInfo[IntValues[353]] : IntValues[353].ToString(CultureInfo.InvariantCulture); return null; } }
 
-		public string ItemSet { get { if (IntValues.ContainsKey(265)) return Constants.AttributeSetInfo.ContainsKey(IntValues[265]) ? Constants.AttributeSetInfo[IntValues[265]] : IntValues[131].ToString(CultureInfo.InvariantCulture); return null; } }
+		public string ItemSet { get { if (IntValues.ContainsKey(265)) return Constants.AttributeSetInfo.ContainsKey(IntValues[265]) ? Constants.AttributeSetInfo[IntValues[265]] : IntValues[265].ToString(CultureInfo.InvariantCulture); return null; } }
 
 
 		public int ArmorLevel { get { return IntValues.ContainsKey(28) ? IntValues[28] : -1; } }
