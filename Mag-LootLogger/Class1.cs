@@ -3,6 +3,8 @@ using System.IO;
 using System.Collections.ObjectModel;
 using System.Text;
 
+using Mag.Shared;
+
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
@@ -38,10 +40,7 @@ namespace Mag_LootLogger
 
 				// Only loot chests and vaults, etc...
 				if (container.Name.Contains("Chest") || container.Name.Contains("Vault") || container.Name.Contains("Reliquary"))
-				{
 					Start();
-					return;
-				}
 			}
 			catch { }
 		}
@@ -156,6 +155,8 @@ namespace Mag_LootLogger
 
 			using (StreamWriter writer = new StreamWriter(logFile.FullName, true))
 			{
+				MyWorldObject mwo = MyWorldObjectCreator.Create(item);
+
 				StringBuilder output = new StringBuilder();
 
 				output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
@@ -167,8 +168,11 @@ namespace Mag_LootLogger
 				output.Append('"' + item.Name + '"' + ",");
 				output.Append(item.ObjectClass.ToString() + ",");
 
-				output.Append((item.Values(LongValueKey.EquipSkill) > 0 ? Util.GetSkillNameById(item.Values(LongValueKey.EquipSkill)) : String.Empty) + ",");
-				output.Append((item.Values((LongValueKey)353) > 0 ? Util.GetMasteryNameById(item.Values((LongValueKey)353)) : String.Empty) + ",");
+				string skillName = Constants.SkillInfo.ContainsKey((int)LongValueKey.EquipSkill) ? Constants.SkillInfo[(int)LongValueKey.EquipSkill] : null;
+				output.Append((item.Values(LongValueKey.EquipSkill) > 0 ? skillName : String.Empty) + ",");
+
+				string masteryName = Constants.SkillInfo.ContainsKey(353) ? Constants.SkillInfo[353] : null;
+				output.Append((item.Values((LongValueKey)353) > 0 ? masteryName : String.Empty) + ",");
 
 				if (item.Values(LongValueKey.DamageType) > 0)
 				{
@@ -203,56 +207,13 @@ namespace Mag_LootLogger
 				output.Append((item.Values(DoubleValueKey.MissileDBonus, 1) != 1 ? Math.Round(((item.Values(DoubleValueKey.MissileDBonus) - 1) * 100), 1).ToString() : String.Empty) + ",");
 				output.Append((item.Values(DoubleValueKey.ManaCBonus) != 0 ? Math.Round((item.Values(DoubleValueKey.ManaCBonus) * 100)).ToString() : String.Empty) + ",");
 
-				{
-					int maxDamage = item.Values(LongValueKey.MaxDamage);
-					int elementalDmgBonus = item.Values(LongValueKey.ElementalDmgBonus, 0);
-					double damageBonus = item.Values(DoubleValueKey.DamageBonus, 1);
-					double elementalDamageVersusMonsters = item.Values(DoubleValueKey.ElementalDamageVersusMonsters, 1);
-					double attackBonus = item.Values(DoubleValueKey.AttackBonus, 1);
-					double meleeDefenseBonus = item.Values(DoubleValueKey.MeleeDefenseBonus, 1);
-					double manaCBonus = item.Values(DoubleValueKey.ManaCBonus);
-
-					for (int i = 0 ; i < item.Values(LongValueKey.SpellCount) ; i++)
-					{
-						int spellId = item.Spell(i);
-
-						// LongValueKey.MaxDamage
-						if (spellId == 4395) maxDamage += 2; // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
-						if (spellId == 2598) maxDamage += 2; // Minor Blood Thirst
-						if (spellId == 2586) maxDamage += 4; // Major Blood Thirst
-						if (spellId == 4661) maxDamage += 7; // Epic Blood Thirst
-
-						// DoubleValueKey.ElementalDamageVersusMonsters
-						if (spellId == 4414) elementalDamageVersusMonsters += .01; // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
-						if (spellId == 3251) elementalDamageVersusMonsters += .01; // Minor Spirit Thirst
-						if (spellId == 3250) elementalDamageVersusMonsters += .03; // Major Spirit Thirst
-						if (spellId == 4670) elementalDamageVersusMonsters += .04; // Epic Spirit Thirst
-
-						// DoubleValueKey.AttackBonus
-						if (spellId == 2603) attackBonus += .03; // Minor Heart Thirst
-						if (spellId == 2591) attackBonus += .05; // Major Heart Thirst
-						if (spellId == 4666) attackBonus += .07; // Epic Heart Thirst
-
-						// DoubleValueKey.MeleeDefenseBonus
-						if (spellId == 2600) meleeDefenseBonus += .03; // Minor Defender
-						if (spellId == 2588) meleeDefenseBonus += .05; // Major Defender
-						if (spellId == 4663) meleeDefenseBonus += .07; // Epic Defender
-
-						// DoubleValueKey.ManaCBonus
-						if (spellId == 3201) manaCBonus *= 1.05; // Feeble Hermetic Link
-						if (spellId == 3199) manaCBonus *= 1.10; // Minor Hermetic Link
-						if (spellId == 3202) manaCBonus *= 1.15; // Moderate Hermetic Link
-						if (spellId == 3200) manaCBonus *= 1.20; // Major Hermetic Link
-					}
-
-					output.Append((maxDamage > 0 ? maxDamage.ToString() : String.Empty) + ",");
-					output.Append((elementalDmgBonus != 0 ? elementalDmgBonus.ToString() : String.Empty) + ",");
-					output.Append((damageBonus != 1 ? Math.Round(((damageBonus - 1) * 100)).ToString() : String.Empty) + ",");
-					output.Append((elementalDamageVersusMonsters != 1 ? Math.Round(((elementalDamageVersusMonsters - 1) * 100)).ToString() : String.Empty) + ",");
-					output.Append((attackBonus != 1 ? Math.Round(((attackBonus - 1) * 100)).ToString() : String.Empty) + ",");
-					output.Append((meleeDefenseBonus != 1 ? Math.Round(((meleeDefenseBonus - 1) * 100)).ToString() : String.Empty) + ",");
-					output.Append((manaCBonus != 0 ? Math.Round(manaCBonus * 100).ToString() : String.Empty) + ",");
-				}
+				output.Append((mwo.GetBuffedIntValueKey((int)LongValueKey.MaxDamage) > 0 ? mwo.GetBuffedIntValueKey((int)LongValueKey.MaxDamage).ToString() : String.Empty) + ",");
+				output.Append((mwo.GetBuffedIntValueKey((int)LongValueKey.ElementalDmgBonus) > 0 ? mwo.GetBuffedIntValueKey((int)LongValueKey.ElementalDmgBonus).ToString() : String.Empty) + ",");
+				output.Append((mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.DamageBonus, 1) != 1 ? Math.Round(((mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.DamageBonus) - 1) * 100)).ToString() : String.Empty) + ",");
+				output.Append((mwo.BuffedElementalDamageVersusMonsters != -1 ? Math.Round(((mwo.BuffedElementalDamageVersusMonsters - 1) * 100)).ToString() : String.Empty) + ",");
+				output.Append((mwo.BuffedAttackBonus != -1 ? Math.Round(((mwo.BuffedAttackBonus - 1) * 100)).ToString() : String.Empty) + ",");
+				output.Append((mwo.BuffedMeleeDefenseBonus != -1 ? Math.Round(((mwo.BuffedMeleeDefenseBonus - 1) * 100)).ToString() : String.Empty) + ",");
+				output.Append((mwo.BuffedManaCBonus != -1 ? Math.Round(mwo.BuffedManaCBonus * 100).ToString() : String.Empty) + ",");
 
 				output.Append((item.Values(LongValueKey.WieldReqValue) > 0 ? item.Values(LongValueKey.WieldReqValue).ToString() : String.Empty) + ",");
 
