@@ -118,19 +118,26 @@ namespace Mag_SuitBuilder
 					var fileContents = File.ReadAllText(characterFilePaths[j]);
 					fileContents = fileContents.Replace("MyWorldObject", "SuitBuildableMyWorldObject");
 
-					using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContents)))
-					using (XmlReader reader = XmlReader.Create(stream))
-							myWorldObjects = (List<SuitBuildableMyWorldObject>)serializer.Deserialize(reader);
-
-					foreach (var mwo in myWorldObjects)
+					try
 					{
-						mwo.Owner = characterName;
-						mwo.BuiltItemSearchCache();
-						if (mwo.ItemSetId != 0 && !armorSets.ContainsKey(mwo.ItemSet) && mwo.EquippableSlots.IsBodyArmor())
-							armorSets.Add(mwo.ItemSet, mwo.ItemSetId);
-					}
+						using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContents)))
+						using (XmlReader reader = XmlReader.Create(stream))
+							myWorldObjects = (List<SuitBuildableMyWorldObject>) serializer.Deserialize(reader);
 
-					characterNode.Tag = myWorldObjects;
+						foreach (var mwo in myWorldObjects)
+						{
+							mwo.Owner = characterName;
+							mwo.BuiltItemSearchCache();
+							if (mwo.ItemSetId != 0 && !armorSets.ContainsKey(mwo.ItemSet) && mwo.EquippableSlots.IsBodyArmor())
+								armorSets.Add(mwo.ItemSet, mwo.ItemSetId);
+						}
+
+						characterNode.Tag = myWorldObjects;
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show("Error parsing file: " + characterFilePaths[j] + Environment.NewLine + "Try deleting the characters Name.Inventory.xml file and relog him." + Environment.NewLine + Environment.NewLine + ex);
+					}
 				}
 			}
 
@@ -369,7 +376,8 @@ namespace Mag_SuitBuilder
 
 		void accSearcher_SuitCreated(CompletedSuit obj)
 		{
-			BeginInvoke((MethodInvoker)(() => AddCompletedSuitToTreeView(obj)));
+			if (!IsDisposed)
+				BeginInvoke((MethodInvoker)(() => AddCompletedSuitToTreeView(obj)));
 		}
 
 		void AddCompletedSuitToTreeView(CompletedSuit suit)
