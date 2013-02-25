@@ -70,9 +70,32 @@ namespace Mag.Shared
 			return bitsSet;
 		}
 
-		public static bool IsBodyArmor(this EquippableSlotFlags value) { return ((int)value & 0x00007F21) != 0; }
-		public static bool IsUnderwear(this EquippableSlotFlags value) { return ((int)value & 0x000000DE) != 0; }
-		public static bool IsShirt(this EquippableSlotFlags value) { return ((int)value & 0x0000001E) != 0; }
-		public static bool IsPants(this EquippableSlotFlags value) { return ((int)value & 0x000000C4) != 0; }
+		// Some feet armor have EquippableSlotFlags.Feet | EquippableSlotFlags.PantsLowerLegs
+
+		public static bool IsBodyArmor(this EquippableSlotFlags value)
+		{
+			return ((int)value & 0x00007F21) != 0;
+		}
+
+		public static bool IsUnderwear(this EquippableSlotFlags value)
+		{
+			if (value == (EquippableSlotFlags.Feet | EquippableSlotFlags.PantsLowerLegs))
+				return false;
+
+			return ((int)value & 0x000000DE) != 0;
+		}
+
+		public static bool IsShirt(this EquippableSlotFlags value)
+		{
+			return ((int)value & 0x0000001E) != 0;
+		}
+
+		public static bool IsPants(this EquippableSlotFlags value)
+		{
+			if (value == (EquippableSlotFlags.Feet | EquippableSlotFlags.PantsLowerLegs))
+				return false;
+
+			return ((int)value & 0x000000C4) != 0;
+		}
 	}
 }

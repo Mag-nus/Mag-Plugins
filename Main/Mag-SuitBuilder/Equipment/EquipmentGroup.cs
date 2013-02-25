@@ -9,6 +9,9 @@ namespace Mag_SuitBuilder.Equipment
 	{
 		public bool ItemIsSurpassed(SuitBuildableMyWorldObject item)
 		{
+			if (item.ObjectClass != (int)ObjectClass.Armor && item.ObjectClass != (int)ObjectClass.Clothing && item.ObjectClass != (int)ObjectClass.Jewelry)
+				return false;
+
 			foreach (SuitBuildableMyWorldObject compareItem in this)
 			{
 				if (compareItem == item)

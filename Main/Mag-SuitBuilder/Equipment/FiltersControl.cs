@@ -23,12 +23,6 @@ namespace Mag_SuitBuilder.Equipment
 
 		public Action FiltersChanged;
 
-		private void btnClearAllFilters_Click(object sender, EventArgs e)
-		{
-			checkRemoveEquipped.Checked = false;
-			txtMinimumBaseArmorLevel.Text = "0";
-		}
-
 		private void chkFilter_CheckedChanged(object sender, EventArgs e)
 		{
 			if (FiltersChanged != null)
@@ -74,32 +68,48 @@ namespace Mag_SuitBuilder.Equipment
 
 			int minimumBaseArmorLevel;
 			int.TryParse(txtMinimumBaseArmorLevel.Text, out minimumBaseArmorLevel);
-			if ((mwo.ObjectClass == 2 || mwo.ObjectClass == 3) && mwo.CalcedStartingArmorLevel < minimumBaseArmorLevel && mwo.EquippableSlots.IsBodyArmor())
+			if ((mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel < minimumBaseArmorLevel && mwo.EquippableSlots.IsBodyArmor())
 				return false;
 
-			if (mwo.ObjectClass == 2) // Armor
+			if (mwo.ObjectClass == (int)ObjectClass.Armor)
 			{
 				if (!chkArmor.Checked) return false;
 			}
-			else if (mwo.ObjectClass == 3) // Clothing
+			else if (mwo.ObjectClass == (int)ObjectClass.Clothing)
 			{
 				if (!chkClothing.Checked) return false;
 			}
-			else if (mwo.ObjectClass == 4) // Jewelry
+			else if (mwo.ObjectClass == (int)ObjectClass.Jewelry)
 			{
 				if (!chkJewelry.Checked) return false;
 			}
-			else if (mwo.ObjectClass == 1) // MeleeWeapon
+			else if (mwo.ObjectClass == (int)ObjectClass.MeleeWeapon)
 			{
 				if (!chkMeleeWeapon.Checked) return false;
 			}
-			else if (mwo.ObjectClass == 9) // MissileWeapon
+			else if (mwo.ObjectClass == (int)ObjectClass.MissileWeapon)
 			{
 				if (!chkMissileWeapon.Checked) return false;
 			}
-			else if (mwo.ObjectClass == 31) // WandStaffOrb
+			else if (mwo.ObjectClass == (int)ObjectClass.WandStaffOrb)
 			{
 				if (!chkWandStaffOrb.Checked) return false;
+			}
+			else if (mwo.ObjectClass == (int)ObjectClass.Salvage)
+			{
+				if (!chkSalvage.Checked) return false;
+			}
+			else if (mwo.ObjectClass == (int)ObjectClass.Container || mwo.ObjectClass == (int)ObjectClass.Foci)
+			{
+				if (!chkContainersFoci.Checked) return false;
+			}
+			else if (mwo.ObjectClass == (int)ObjectClass.Money || mwo.ObjectClass == (int)ObjectClass.TradeNote || mwo.ObjectClass == (int)ObjectClass.Key)
+			{
+				if (!chkMoneyNotesKeys.Checked) return false;
+			}
+			else if (mwo.ObjectClass == (int)ObjectClass.SpellComponent || mwo.ObjectClass == (int)ObjectClass.HealingKit || mwo.ObjectClass == (int)ObjectClass.Food || mwo.ObjectClass == (int)ObjectClass.ManaStone)
+			{
+				if (!chkCompsKitsFoodManaStones.Checked) return false;
 			}
 			else if (mwo.ObjectClass != 0) // All Else
 			{

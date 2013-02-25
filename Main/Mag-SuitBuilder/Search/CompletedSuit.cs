@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using Mag_SuitBuilder.Equipment;
 using Mag_SuitBuilder.Spells;
@@ -45,6 +46,44 @@ namespace Mag_SuitBuilder.Search
 
 		readonly Dictionary<int, int> armorSetCounts = new Dictionary<int, int>();
 
+		/// <summary>
+		/// This will try to add the item to the suit
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		public bool AddItem(SuitBuildableMyWorldObject item)
+		{
+			EquippableSlotFlags slotToAddTo = item.EquippableSlots;
+
+			if (item.EquippableSlots == (EquippableSlotFlags.Feet | EquippableSlotFlags.PantsLowerLegs)) // Some armor boots
+				slotToAddTo = EquippableSlotFlags.Feet;
+			else if (item.EquippableSlots == (EquippableSlotFlags.LeftBracelet | EquippableSlotFlags.RightBracelet))
+			{
+				if (this[EquippableSlotFlags.LeftBracelet] == null)
+					slotToAddTo = EquippableSlotFlags.LeftBracelet;
+				else if (this[EquippableSlotFlags.RightBracelet] == null)
+					slotToAddTo = EquippableSlotFlags.RightBracelet;
+			}
+			else if (item.EquippableSlots == (EquippableSlotFlags.LeftRing | EquippableSlotFlags.RightRing))
+			{
+				if (this[EquippableSlotFlags.LeftRing] == null)
+					slotToAddTo = EquippableSlotFlags.LeftRing;
+				else if (this[EquippableSlotFlags.RightRing] == null)
+					slotToAddTo = EquippableSlotFlags.RightRing;
+			}
+			else if (item.EquippableSlots.IsShirt())
+				slotToAddTo = EquippableSlotFlags.ShirtChest;
+			else if (item.EquippableSlots.IsPants())
+				slotToAddTo = EquippableSlotFlags.PantsUpperLegs;
+
+			if (this[slotToAddTo] != null)
+				return false;
+
+			AddItem(slotToAddTo, item);
+
+			return true;
+		}
+
 		/// <exception cref="ArgumentException">Trying to add an item that covers a slot already filled.</exception>
 		public void AddItem(EquippableSlotFlags slots, SuitBuildableMyWorldObject item)
 		{
@@ -58,7 +97,8 @@ namespace Mag_SuitBuilder.Search
 			items.Add(slots, item);
 			piecesHashSet.Add(item);
 
-			TotalBaseArmorLevel += (item.CalcedStartingArmorLevel * slots.GetTotalBitsSet());
+			if (item.CalcedStartingArmorLevel > 0)
+				TotalBaseArmorLevel += (item.CalcedStartingArmorLevel * slots.GetTotalBitsSet());
 
 			foreach (Spell itemSpell in item.SpellsToUseInSearch)
 			{
@@ -141,9 +181,21 @@ namespace Mag_SuitBuilder.Search
 
 		public override string ToString()
 		{
-			string sets = null;
+			Dictionary<string, int> armorSets = new Dictionary<string, int>();
 
 			foreach (KeyValuePair<int, int> kvp in armorSetCounts)
+			{
+				if (Constants.AttributeSetInfo.ContainsKey(kvp.Key))
+					armorSets.Add(Constants.AttributeSetInfo[kvp.Key], kvp.Value);
+				else
+					armorSets.Add("Id:" + kvp.Key, kvp.Value);
+			}
+
+			armorSets = (from entry in armorSets orderby entry.Value descending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
+
+			string sets = null;
+
+			foreach (var kvp in armorSets)
 			{
 				if (sets != null)
 					sets += ", ";

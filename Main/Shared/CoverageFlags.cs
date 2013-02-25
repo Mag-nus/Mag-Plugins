@@ -68,7 +68,14 @@ namespace Mag.Shared
 					options.Add(CoverageFlags.UpperArms);
 					options.Add(CoverageFlags.LowerArms);
 				}
+				else if (value == (CoverageFlags.UpperLegs | CoverageFlags.LowerLegs))
+				{
+					options.Add(CoverageFlags.UpperLegs);
+					options.Add(CoverageFlags.LowerLegs);
+				}
 				else if (value == (CoverageFlags.Chest | CoverageFlags.Abdomen))
+					options.Add(CoverageFlags.Chest);
+				else if (value == (CoverageFlags.Chest | CoverageFlags.Abdomen | CoverageFlags.UpperArms))
 					options.Add(CoverageFlags.Chest);
 				else if (value == (CoverageFlags.Chest | CoverageFlags.UpperArms | CoverageFlags.LowerArms))
 					options.Add(CoverageFlags.Chest);

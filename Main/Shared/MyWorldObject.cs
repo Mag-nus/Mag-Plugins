@@ -188,7 +188,7 @@ namespace Mag.Shared
 				if (Tinks > 0 && ArmorLevel > 0)
 					armorFromTinks = (Imbue != null) ? (Tinks - 1) * 20 : Tinks * 20; // This assumes each tink adds an amor level of 20
 
-				if (!IntValues.ContainsKey(131) || IntValues[131] == 0) // If this item has no material, its not a loot gen, assume its a quest item and subtract 200 al
+				if ((!IntValues.ContainsKey(131) || IntValues[131] == 0) && ArmorLevel > 0) // If this item has no material, its not a loot gen, assume its a quest item and subtract 200 al
 					armorFromTinks = 200;
 
 				foreach (int spell in ActiveSpells)
