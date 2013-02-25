@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using Mag.Shared;
 using MagTools.Trackers.Combat;
 using MagTools.Trackers.Combat.Standard;
 
@@ -238,7 +238,7 @@ namespace MagTools.Views
 			{
 				for (int compareRow = row + 1 ; compareRow < monsterList.RowCount ; compareRow++)
 				{
-					if (String.Compare(((HudStaticText)monsterList[row][1]).Text, ((HudStaticText)monsterList[compareRow][1]).Text) == 1)
+					if (String.CompareOrdinal(((HudStaticText)monsterList[row][1]).Text, ((HudStaticText)monsterList[compareRow][1]).Text) == 1)
 					{
 						string obj0 = ((HudStaticText)monsterList[row][0]).Text;
 						((HudStaticText)monsterList[row][0]).Text = ((HudStaticText)monsterList[compareRow][0]).Text;
@@ -322,11 +322,11 @@ namespace MagTools.Views
 				if (targetRow != 0)
 				{
 					if (killingBlows != 0)
-						((HudStaticText)monsterList[targetRow][2]).Text = killingBlows.ToString(("#,##0"));
+						((HudStaticText)monsterList[targetRow][2]).Text = Util.NumberFormatter(killingBlows, ("#,##0"), 99999);
 					if (damageReceived != 0)
-						((HudStaticText)monsterList[targetRow][3]).Text = damageReceived.ToString(("#,##0"));
+						((HudStaticText)monsterList[targetRow][3]).Text = Util.NumberFormatter(damageReceived, ("#,##0"), 9999999);
 					if (damageGiven != 0)
-						((HudStaticText)monsterList[targetRow][4]).Text = damageGiven.ToString(("#,##0"));
+						((HudStaticText)monsterList[targetRow][4]).Text = Util.NumberFormatter(damageGiven, ("#,##0"), 99999999);
 
 					if (targetRow == selectedRow)
 					{
