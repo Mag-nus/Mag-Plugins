@@ -31,6 +31,19 @@ namespace Mag.Shared
 			LastIdTime = lastIdTime;
 			ObjectClass = objectClass;
 
+			AddTo(boolValues, doubleValues, intValues, stringValues);
+
+			ActiveSpells.Clear();
+			foreach (var i in activeSpells)
+				ActiveSpells.Add(i);
+
+			Spells.Clear();
+			foreach (var i in spells)
+				Spells.Add(i);
+		}
+
+		public void AddTo(IDictionary<int, bool> boolValues, IDictionary<int, double> doubleValues, IDictionary<int, int> intValues, IDictionary<int, string> stringValues)
+		{
 			foreach (var kvp in boolValues)
 			{
 				if (boolValues.ContainsKey(kvp.Key))
@@ -62,14 +75,6 @@ namespace Mag.Shared
 				else
 					StringValues.Add(kvp.Key, kvp.Value);
 			}
-
-			Spells.Clear();
-			foreach (var i in spells)
-				Spells.Add(i);
-
-			ActiveSpells.Clear();
-			foreach (var i in activeSpells)
-				ActiveSpells.Add(i);
 		}
 
 
