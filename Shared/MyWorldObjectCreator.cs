@@ -42,15 +42,12 @@ namespace Mag.Shared
 
 		public static MyWorldObject Combine(MyWorldObject older, WorldObject newer)
 		{
-			if (newer.HasIdData)
+			if (!older.HasIdData || newer.HasIdData)
 				return Create(newer);
 
 			MyWorldObject mwo = Create(newer);
 
-			if (older.HasIdData && !newer.HasIdData)
-				older.Init(older.HasIdData, mwo.Id, older.LastIdTime, mwo.ObjectClass, mwo.BoolValues, mwo.DoubleValues, mwo.IntValues, mwo.StringValues, older.ActiveSpells, older.Spells);
-			else
-				older.Init(mwo.HasIdData, mwo.Id, mwo.LastIdTime, mwo.ObjectClass, mwo.BoolValues, mwo.DoubleValues, mwo.IntValues, mwo.StringValues, mwo.ActiveSpells, mwo.Spells);
+			older.AddTo(mwo.BoolValues, mwo.DoubleValues, mwo.IntValues, mwo.StringValues);
 
 			return older;
 		}
