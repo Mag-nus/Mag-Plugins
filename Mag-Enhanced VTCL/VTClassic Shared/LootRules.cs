@@ -1766,14 +1766,13 @@ namespace VTClassic
 
 		static readonly Dictionary<int, SpellInfo<IntValueKey>> LongValueKeySpellEffects = new Dictionary<int, SpellInfo<IntValueKey>>()
 		{
+			// In 2012 they removed these item spells and converted them to auras that are cast on the player, not on the item.
 			{ 1616, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 20)}, // Blood Drinker VI
 			{ 2096, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 22)}, // Infected Caress
-			// Pre Feb-2013
-			//{ 5183, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 22)}, // Incantation of Blood Drinker
-			//{ 4395, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 24, 2)}, // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8
-			// Post Feb-2013
-			{ 5183, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 24)}, // Incantation of Blood Drinker
-			{ 4395, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 24)}, // Incantation of Blood Drinker
+			//{ 5183, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 22)}, // Incantation of Blood Drinker Pre Feb-2013
+			//{ 4395, new SpellInfo<LongValueKey>(LongValueKey.MaxDamage, 24, 2)}, // Incantation of Blood Drinker, this spell on the item adds 2 more points of damage over a user casted 8 Pre Feb-2013
+			{ 5183, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 24)}, // Incantation of Blood Drinker Post Feb-2013
+			{ 4395, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 24)}, // Incantation of Blood Drinker Post Feb-2013
 
 			{ 2598, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 2, 2)}, // Minor Blood Thirst
 			{ 2586, new SpellInfo<IntValueKey>(IntValueKey.MaxDamage, 4, 4)}, // Major Blood Thirst
@@ -1791,14 +1790,13 @@ namespace VTClassic
 
 		static readonly Dictionary<int, SpellInfo<DoubleValueKey>> DoubleValueKeySpellEffects = new Dictionary<int, SpellInfo<DoubleValueKey>>()
 		{
+			// In 2012 they removed these item spells and converted them to auras that are cast on the player, not on the item.
 			{ 3258, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .06)}, // Spirit Drinker VI
 			{ 3259, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07)}, // Infected Spirit Caress
-			// Pre Feb-2013
-			//{ 5182, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07)}, // Incantation of Spirit Drinker
-			//{ 4414, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08, .01)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
-			// Post Feb-2013
-			{ 5182, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08)}, // Incantation of Spirit Drinker
-			{ 4414, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8
+			//{ 5182, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .07)}, // Incantation of Spirit Drinker Pre Feb-2013
+			//{ 4414, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08, .01)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8 Pre Feb-2013
+			{ 5182, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08)}, // Incantation of Spirit Drinker Post Feb-2013
+			{ 4414, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .08)}, // Incantation of Spirit Drinker, this spell on the item adds 1 more % of damage over a user casted 8 Post Feb-2013
 
 			{ 3251, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .01, .01)}, // Minor Spirit Thirst
 			{ 3250, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .03, .03)}, // Major Spirit Thirst
@@ -1808,6 +1806,7 @@ namespace VTClassic
 			{ 3735, new SpellInfo<DoubleValueKey>(DoubleValueKey.ElementalDamageVersusMonsters, .15)}, // Prodigal Spirit Drinker
 
 
+			// In 2012 they removed these item spells and converted them to auras that are cast on the player, not on the item.
 			{ 1592, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .15)}, // Heart Seeker VI
 			{ 2106, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .17)}, // Elysa's Sight
 			{ 4405, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .20)}, // Incantation of Heart Seeker
@@ -1817,12 +1816,12 @@ namespace VTClassic
 			{ 4666, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .07, .07)}, // Epic Heart Thirst
 			{ 6094, new SpellInfo<DoubleValueKey>(DoubleValueKey.AttackBonus, .09, .09)}, // Legendary Heart Thirst
 
+
+			// In 2012 they removed these item spells and converted them to auras that are cast on the player, not on the item.
 			{ 1605, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .15)}, // Defender VI
 			{ 2101, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .17)}, // Cragstone's Will
-			// Pre Feb-2013
-			//{ 4400, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .17)}, // Incantation of Defender
-			// Post Feb-2013
-			{ 4400, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .20)}, // Incantation of Defender
+			//{ 4400, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .17)}, // Incantation of Defender Pre Feb-2013
+			{ 4400, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .20)}, // Incantation of Defender Post Feb-2013
 
 			{ 2600, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .03, .03)}, // Minor Defender
 			{ 3985, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .04, .04)}, // Mukkir Sense
@@ -1833,6 +1832,7 @@ namespace VTClassic
 			{ 3699, new SpellInfo<DoubleValueKey>(DoubleValueKey.MeleeDefenseBonus, .25)}, // Prodigal Defender
 
 
+			// In 2012 they removed these item spells and converted them to auras that are cast on the player, not on the item.
 			{ 1480, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.60)}, // Hermetic Link VI
 			{ 2117, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.70)}, // Mystic's Blessing
 			{ 4418, new SpellInfo<DoubleValueKey>(DoubleValueKey.ManaCBonus, 1.80)}, // Incantation of Hermetic Link
@@ -1875,8 +1875,8 @@ namespace VTClassic
 
 				for (int i = 1 ; i <= numberOfTinksLeft ; i++)
 				{
-					double ironTinkDoT = CalculateDamageOverTime(maxDamage + 22 + 1, variance);
-					double graniteTinkDoT = CalculateDamageOverTime(maxDamage + 22, variance * .8);
+					double ironTinkDoT = CalculateDamageOverTime(maxDamage + 24 + 1, variance);
+					double graniteTinkDoT = CalculateDamageOverTime(maxDamage + 24, variance * .8);
 
 					if (ironTinkDoT >= graniteTinkDoT)
 						maxDamage++;
@@ -1884,7 +1884,7 @@ namespace VTClassic
 						variance *= .8;
 				}
 
-				return CalculateDamageOverTime(maxDamage + 22, variance);
+				return CalculateDamageOverTime(maxDamage + 24, variance);
 			}
 		}
 

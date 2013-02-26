@@ -242,8 +242,8 @@ namespace Mag.Shared
 
 				for (int i = 1; i <= numberOfTinksLeft; i++)
 				{
-					double ironTinkDoT = CalculateDamageOverTime(maxDamage + 22 + 1, variance);
-					double graniteTinkDoT = CalculateDamageOverTime(maxDamage + 22, variance * .8);
+					double ironTinkDoT = CalculateDamageOverTime(maxDamage + 24 + 1, variance);
+					double graniteTinkDoT = CalculateDamageOverTime(maxDamage + 24, variance * .8);
 
 					if (ironTinkDoT >= graniteTinkDoT)
 						maxDamage++;
@@ -251,7 +251,7 @@ namespace Mag.Shared
 						variance *= .8;
 				}
 
-				return CalculateDamageOverTime(maxDamage + 22, variance);
+				return CalculateDamageOverTime(maxDamage + 24, variance);
 			}
 		}
 
