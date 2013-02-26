@@ -47,7 +47,23 @@
 			this.chkContainersFoci = new System.Windows.Forms.CheckBox();
 			this.chkMoneyNotesKeys = new System.Windows.Forms.CheckBox();
 			this.chkCompsKitsFoodManaStones = new System.Windows.Forms.CheckBox();
+			this.chkMasteryBow = new System.Windows.Forms.CheckBox();
+			this.chkMasteryCrossbow = new System.Windows.Forms.CheckBox();
+			this.chkMasteryThrown = new System.Windows.Forms.CheckBox();
+			this.chkMasteryUA = new System.Windows.Forms.CheckBox();
+			this.chkMasterySword = new System.Windows.Forms.CheckBox();
+			this.chkMasteryAxe = new System.Windows.Forms.CheckBox();
+			this.chkMasteryMace = new System.Windows.Forms.CheckBox();
+			this.chkMasterySpear = new System.Windows.Forms.CheckBox();
+			this.chkMasteryDagger = new System.Windows.Forms.CheckBox();
+			this.chkMasteryStaff = new System.Windows.Forms.CheckBox();
+			this.chkMeleeHeavy = new System.Windows.Forms.CheckBox();
+			this.chkMeleeLight = new System.Windows.Forms.CheckBox();
+			this.chkMeleeFinesse = new System.Windows.Forms.CheckBox();
+			this.chkMelee2H = new System.Windows.Forms.CheckBox();
 			this.cantripSelectorControl1 = new Mag_SuitBuilder.Spells.CantripSelectorControl();
+			this.chkWandStaffOrbWar = new System.Windows.Forms.CheckBox();
+			this.chkWandStaffOrbVoid = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// txtMinimumBaseArmorLevel
@@ -138,7 +154,7 @@
 			this.chkMissileWeapon.AutoSize = true;
 			this.chkMissileWeapon.Checked = true;
 			this.chkMissileWeapon.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMissileWeapon.Location = new System.Drawing.Point(3, 167);
+			this.chkMissileWeapon.Location = new System.Drawing.Point(3, 213);
 			this.chkMissileWeapon.Name = "chkMissileWeapon";
 			this.chkMissileWeapon.Size = new System.Drawing.Size(101, 17);
 			this.chkMissileWeapon.TabIndex = 46;
@@ -151,7 +167,7 @@
 			this.chkWandStaffOrb.AutoSize = true;
 			this.chkWandStaffOrb.Checked = true;
 			this.chkWandStaffOrb.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkWandStaffOrb.Location = new System.Drawing.Point(3, 190);
+			this.chkWandStaffOrb.Location = new System.Drawing.Point(3, 259);
 			this.chkWandStaffOrb.Name = "chkWandStaffOrb";
 			this.chkWandStaffOrb.Size = new System.Drawing.Size(100, 17);
 			this.chkWandStaffOrb.TabIndex = 47;
@@ -164,7 +180,7 @@
 			this.chkAllElseObjectClasses.AutoSize = true;
 			this.chkAllElseObjectClasses.Checked = true;
 			this.chkAllElseObjectClasses.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkAllElseObjectClasses.Location = new System.Drawing.Point(3, 305);
+			this.chkAllElseObjectClasses.Location = new System.Drawing.Point(2, 397);
 			this.chkAllElseObjectClasses.Name = "chkAllElseObjectClasses";
 			this.chkAllElseObjectClasses.Size = new System.Drawing.Size(60, 17);
 			this.chkAllElseObjectClasses.TabIndex = 48;
@@ -222,7 +238,7 @@
 			// chkSalvage
 			// 
 			this.chkSalvage.AutoSize = true;
-			this.chkSalvage.Location = new System.Drawing.Point(4, 213);
+			this.chkSalvage.Location = new System.Drawing.Point(3, 305);
 			this.chkSalvage.Name = "chkSalvage";
 			this.chkSalvage.Size = new System.Drawing.Size(65, 17);
 			this.chkSalvage.TabIndex = 56;
@@ -233,7 +249,7 @@
 			// chkContainersFoci
 			// 
 			this.chkContainersFoci.AutoSize = true;
-			this.chkContainersFoci.Location = new System.Drawing.Point(4, 236);
+			this.chkContainersFoci.Location = new System.Drawing.Point(3, 328);
 			this.chkContainersFoci.Name = "chkContainersFoci";
 			this.chkContainersFoci.Size = new System.Drawing.Size(108, 17);
 			this.chkContainersFoci.TabIndex = 57;
@@ -244,7 +260,7 @@
 			// chkMoneyNotesKeys
 			// 
 			this.chkMoneyNotesKeys.AutoSize = true;
-			this.chkMoneyNotesKeys.Location = new System.Drawing.Point(3, 259);
+			this.chkMoneyNotesKeys.Location = new System.Drawing.Point(2, 351);
 			this.chkMoneyNotesKeys.Name = "chkMoneyNotesKeys";
 			this.chkMoneyNotesKeys.Size = new System.Drawing.Size(133, 17);
 			this.chkMoneyNotesKeys.TabIndex = 58;
@@ -255,7 +271,7 @@
 			// chkCompsKitsFoodManaStones
 			// 
 			this.chkCompsKitsFoodManaStones.AutoSize = true;
-			this.chkCompsKitsFoodManaStones.Location = new System.Drawing.Point(3, 282);
+			this.chkCompsKitsFoodManaStones.Location = new System.Drawing.Point(2, 374);
 			this.chkCompsKitsFoodManaStones.Name = "chkCompsKitsFoodManaStones";
 			this.chkCompsKitsFoodManaStones.Size = new System.Drawing.Size(195, 17);
 			this.chkCompsKitsFoodManaStones.TabIndex = 59;
@@ -263,18 +279,242 @@
 			this.chkCompsKitsFoodManaStones.UseVisualStyleBackColor = true;
 			this.chkCompsKitsFoodManaStones.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
 			// 
+			// chkMasteryBow
+			// 
+			this.chkMasteryBow.AutoSize = true;
+			this.chkMasteryBow.Checked = true;
+			this.chkMasteryBow.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkMasteryBow.Location = new System.Drawing.Point(9, 236);
+			this.chkMasteryBow.Name = "chkMasteryBow";
+			this.chkMasteryBow.Size = new System.Drawing.Size(47, 17);
+			this.chkMasteryBow.TabIndex = 60;
+			this.chkMasteryBow.Text = "Bow";
+			this.chkMasteryBow.UseVisualStyleBackColor = true;
+			this.chkMasteryBow.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkMasteryCrossbow
+			// 
+			this.chkMasteryCrossbow.AutoSize = true;
+			this.chkMasteryCrossbow.Checked = true;
+			this.chkMasteryCrossbow.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkMasteryCrossbow.Location = new System.Drawing.Point(55, 236);
+			this.chkMasteryCrossbow.Name = "chkMasteryCrossbow";
+			this.chkMasteryCrossbow.Size = new System.Drawing.Size(72, 17);
+			this.chkMasteryCrossbow.TabIndex = 61;
+			this.chkMasteryCrossbow.Text = "Crossbow";
+			this.chkMasteryCrossbow.UseVisualStyleBackColor = true;
+			this.chkMasteryCrossbow.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkMasteryThrown
+			// 
+			this.chkMasteryThrown.AutoSize = true;
+			this.chkMasteryThrown.Checked = true;
+			this.chkMasteryThrown.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkMasteryThrown.Location = new System.Drawing.Point(133, 236);
+			this.chkMasteryThrown.Name = "chkMasteryThrown";
+			this.chkMasteryThrown.Size = new System.Drawing.Size(62, 17);
+			this.chkMasteryThrown.TabIndex = 62;
+			this.chkMasteryThrown.Text = "Thrown";
+			this.chkMasteryThrown.UseVisualStyleBackColor = true;
+			this.chkMasteryThrown.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkMasteryUA
+			// 
+			this.chkMasteryUA.AutoSize = true;
+			this.chkMasteryUA.Checked = true;
+			this.chkMasteryUA.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkMasteryUA.Location = new System.Drawing.Point(14, 190);
+			this.chkMasteryUA.Name = "chkMasteryUA";
+			this.chkMasteryUA.Size = new System.Drawing.Size(41, 17);
+			this.chkMasteryUA.TabIndex = 63;
+			this.chkMasteryUA.Text = "UA";
+			this.chkMasteryUA.UseVisualStyleBackColor = true;
+			this.chkMasteryUA.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkMasterySword
+			// 
+			this.chkMasterySword.AutoSize = true;
+			this.chkMasterySword.Checked = true;
+			this.chkMasterySword.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkMasterySword.Location = new System.Drawing.Point(61, 190);
+			this.chkMasterySword.Name = "chkMasterySword";
+			this.chkMasterySword.Size = new System.Drawing.Size(56, 17);
+			this.chkMasterySword.TabIndex = 66;
+			this.chkMasterySword.Text = "Sword";
+			this.chkMasterySword.UseVisualStyleBackColor = true;
+			this.chkMasterySword.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkMasteryAxe
+			// 
+			this.chkMasteryAxe.AutoSize = true;
+			this.chkMasteryAxe.Checked = true;
+			this.chkMasteryAxe.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkMasteryAxe.Location = new System.Drawing.Point(123, 190);
+			this.chkMasteryAxe.Name = "chkMasteryAxe";
+			this.chkMasteryAxe.Size = new System.Drawing.Size(44, 17);
+			this.chkMasteryAxe.TabIndex = 67;
+			this.chkMasteryAxe.Text = "Axe";
+			this.chkMasteryAxe.UseVisualStyleBackColor = true;
+			this.chkMasteryAxe.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkMasteryMace
+			// 
+			this.chkMasteryMace.AutoSize = true;
+			this.chkMasteryMace.Checked = true;
+			this.chkMasteryMace.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkMasteryMace.Location = new System.Drawing.Point(173, 190);
+			this.chkMasteryMace.Name = "chkMasteryMace";
+			this.chkMasteryMace.Size = new System.Drawing.Size(53, 17);
+			this.chkMasteryMace.TabIndex = 68;
+			this.chkMasteryMace.Text = "Mace";
+			this.chkMasteryMace.UseVisualStyleBackColor = true;
+			this.chkMasteryMace.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkMasterySpear
+			// 
+			this.chkMasterySpear.AutoSize = true;
+			this.chkMasterySpear.Checked = true;
+			this.chkMasterySpear.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkMasterySpear.Location = new System.Drawing.Point(232, 190);
+			this.chkMasterySpear.Name = "chkMasterySpear";
+			this.chkMasterySpear.Size = new System.Drawing.Size(54, 17);
+			this.chkMasterySpear.TabIndex = 69;
+			this.chkMasterySpear.Text = "Spear";
+			this.chkMasterySpear.UseVisualStyleBackColor = true;
+			this.chkMasterySpear.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkMasteryDagger
+			// 
+			this.chkMasteryDagger.AutoSize = true;
+			this.chkMasteryDagger.Checked = true;
+			this.chkMasteryDagger.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkMasteryDagger.Location = new System.Drawing.Point(292, 190);
+			this.chkMasteryDagger.Name = "chkMasteryDagger";
+			this.chkMasteryDagger.Size = new System.Drawing.Size(61, 17);
+			this.chkMasteryDagger.TabIndex = 70;
+			this.chkMasteryDagger.Text = "Dagger";
+			this.chkMasteryDagger.UseVisualStyleBackColor = true;
+			this.chkMasteryDagger.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkMasteryStaff
+			// 
+			this.chkMasteryStaff.AutoSize = true;
+			this.chkMasteryStaff.Checked = true;
+			this.chkMasteryStaff.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkMasteryStaff.Location = new System.Drawing.Point(359, 190);
+			this.chkMasteryStaff.Name = "chkMasteryStaff";
+			this.chkMasteryStaff.Size = new System.Drawing.Size(48, 17);
+			this.chkMasteryStaff.TabIndex = 71;
+			this.chkMasteryStaff.Text = "Staff";
+			this.chkMasteryStaff.UseVisualStyleBackColor = true;
+			this.chkMasteryStaff.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkMeleeHeavy
+			// 
+			this.chkMeleeHeavy.AutoSize = true;
+			this.chkMeleeHeavy.Checked = true;
+			this.chkMeleeHeavy.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkMeleeHeavy.Location = new System.Drawing.Point(14, 167);
+			this.chkMeleeHeavy.Name = "chkMeleeHeavy";
+			this.chkMeleeHeavy.Size = new System.Drawing.Size(57, 17);
+			this.chkMeleeHeavy.TabIndex = 72;
+			this.chkMeleeHeavy.Text = "Heavy";
+			this.chkMeleeHeavy.UseVisualStyleBackColor = true;
+			this.chkMeleeHeavy.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkMeleeLight
+			// 
+			this.chkMeleeLight.AutoSize = true;
+			this.chkMeleeLight.Checked = true;
+			this.chkMeleeLight.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkMeleeLight.Location = new System.Drawing.Point(77, 167);
+			this.chkMeleeLight.Name = "chkMeleeLight";
+			this.chkMeleeLight.Size = new System.Drawing.Size(49, 17);
+			this.chkMeleeLight.TabIndex = 73;
+			this.chkMeleeLight.Text = "Light";
+			this.chkMeleeLight.UseVisualStyleBackColor = true;
+			this.chkMeleeLight.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkMeleeFinesse
+			// 
+			this.chkMeleeFinesse.AutoSize = true;
+			this.chkMeleeFinesse.Checked = true;
+			this.chkMeleeFinesse.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkMeleeFinesse.Location = new System.Drawing.Point(132, 167);
+			this.chkMeleeFinesse.Name = "chkMeleeFinesse";
+			this.chkMeleeFinesse.Size = new System.Drawing.Size(62, 17);
+			this.chkMeleeFinesse.TabIndex = 74;
+			this.chkMeleeFinesse.Text = "Finesse";
+			this.chkMeleeFinesse.UseVisualStyleBackColor = true;
+			this.chkMeleeFinesse.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkMelee2H
+			// 
+			this.chkMelee2H.AutoSize = true;
+			this.chkMelee2H.Checked = true;
+			this.chkMelee2H.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkMelee2H.Location = new System.Drawing.Point(200, 167);
+			this.chkMelee2H.Name = "chkMelee2H";
+			this.chkMelee2H.Size = new System.Drawing.Size(40, 17);
+			this.chkMelee2H.TabIndex = 75;
+			this.chkMelee2H.Text = "2H";
+			this.chkMelee2H.UseVisualStyleBackColor = true;
+			this.chkMelee2H.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
 			// cantripSelectorControl1
 			// 
 			this.cantripSelectorControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.cantripSelectorControl1.Location = new System.Drawing.Point(0, 329);
+			this.cantripSelectorControl1.Location = new System.Drawing.Point(0, 569);
 			this.cantripSelectorControl1.Name = "cantripSelectorControl1";
 			this.cantripSelectorControl1.Size = new System.Drawing.Size(528, 182);
 			this.cantripSelectorControl1.TabIndex = 51;
+			// 
+			// chkWandStaffOrbWar
+			// 
+			this.chkWandStaffOrbWar.AutoSize = true;
+			this.chkWandStaffOrbWar.Checked = true;
+			this.chkWandStaffOrbWar.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkWandStaffOrbWar.Location = new System.Drawing.Point(9, 282);
+			this.chkWandStaffOrbWar.Name = "chkWandStaffOrbWar";
+			this.chkWandStaffOrbWar.Size = new System.Drawing.Size(46, 17);
+			this.chkWandStaffOrbWar.TabIndex = 76;
+			this.chkWandStaffOrbWar.Text = "War";
+			this.chkWandStaffOrbWar.UseVisualStyleBackColor = true;
+			this.chkWandStaffOrbWar.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkWandStaffOrbVoid
+			// 
+			this.chkWandStaffOrbVoid.AutoSize = true;
+			this.chkWandStaffOrbVoid.Checked = true;
+			this.chkWandStaffOrbVoid.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkWandStaffOrbVoid.Location = new System.Drawing.Point(55, 282);
+			this.chkWandStaffOrbVoid.Name = "chkWandStaffOrbVoid";
+			this.chkWandStaffOrbVoid.Size = new System.Drawing.Size(47, 17);
+			this.chkWandStaffOrbVoid.TabIndex = 77;
+			this.chkWandStaffOrbVoid.Text = "Void";
+			this.chkWandStaffOrbVoid.UseVisualStyleBackColor = true;
+			this.chkWandStaffOrbVoid.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
 			// 
 			// FiltersControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.chkWandStaffOrbVoid);
+			this.Controls.Add(this.chkWandStaffOrbWar);
+			this.Controls.Add(this.chkMelee2H);
+			this.Controls.Add(this.chkMeleeFinesse);
+			this.Controls.Add(this.chkMeleeLight);
+			this.Controls.Add(this.chkMeleeHeavy);
+			this.Controls.Add(this.chkMasteryStaff);
+			this.Controls.Add(this.chkMasteryDagger);
+			this.Controls.Add(this.chkMasterySpear);
+			this.Controls.Add(this.chkMasteryMace);
+			this.Controls.Add(this.chkMasteryAxe);
+			this.Controls.Add(this.chkMasterySword);
+			this.Controls.Add(this.chkMasteryUA);
+			this.Controls.Add(this.chkMasteryThrown);
+			this.Controls.Add(this.chkMasteryCrossbow);
+			this.Controls.Add(this.chkMasteryBow);
 			this.Controls.Add(this.chkCompsKitsFoodManaStones);
 			this.Controls.Add(this.chkMoneyNotesKeys);
 			this.Controls.Add(this.chkContainersFoci);
@@ -296,7 +536,7 @@
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.checkRemoveEquipped);
 			this.Name = "FiltersControl";
-			this.Size = new System.Drawing.Size(530, 511);
+			this.Size = new System.Drawing.Size(530, 751);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -324,5 +564,21 @@
 		private System.Windows.Forms.CheckBox chkContainersFoci;
 		private System.Windows.Forms.CheckBox chkMoneyNotesKeys;
 		private System.Windows.Forms.CheckBox chkCompsKitsFoodManaStones;
+		private System.Windows.Forms.CheckBox chkMasteryBow;
+		private System.Windows.Forms.CheckBox chkMasteryCrossbow;
+		private System.Windows.Forms.CheckBox chkMasteryThrown;
+		private System.Windows.Forms.CheckBox chkMasteryUA;
+		private System.Windows.Forms.CheckBox chkMasterySword;
+		private System.Windows.Forms.CheckBox chkMasteryAxe;
+		private System.Windows.Forms.CheckBox chkMasteryMace;
+		private System.Windows.Forms.CheckBox chkMasterySpear;
+		private System.Windows.Forms.CheckBox chkMasteryDagger;
+		private System.Windows.Forms.CheckBox chkMasteryStaff;
+		private System.Windows.Forms.CheckBox chkMeleeHeavy;
+		private System.Windows.Forms.CheckBox chkMeleeLight;
+		private System.Windows.Forms.CheckBox chkMeleeFinesse;
+		private System.Windows.Forms.CheckBox chkMelee2H;
+		private System.Windows.Forms.CheckBox chkWandStaffOrbWar;
+		private System.Windows.Forms.CheckBox chkWandStaffOrbVoid;
 	}
 }

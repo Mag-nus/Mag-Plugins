@@ -68,6 +68,7 @@ namespace Mag_SuitBuilder
 			this.coveragePiece8 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece10 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece9 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.cmdResizeColumns = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			this.panel1.SuspendLayout();
@@ -88,6 +89,7 @@ namespace Mag_SuitBuilder
 			// 
 			// tabPage3
 			// 
+			this.tabPage3.Controls.Add(this.cmdResizeColumns);
 			this.tabPage3.Controls.Add(this.panel1);
 			this.tabPage3.Controls.Add(this.chkFilters);
 			this.tabPage3.Controls.Add(this.chkTree);
@@ -183,7 +185,7 @@ namespace Mag_SuitBuilder
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtInventoryRootPath.Location = new System.Drawing.Point(216, 9);
 			this.txtInventoryRootPath.Name = "txtInventoryRootPath";
-			this.txtInventoryRootPath.Size = new System.Drawing.Size(1136, 20);
+			this.txtInventoryRootPath.Size = new System.Drawing.Size(1033, 20);
 			this.txtInventoryRootPath.TabIndex = 34;
 			// 
 			// btnHelp
@@ -268,7 +270,7 @@ namespace Mag_SuitBuilder
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.treeView1.Location = new System.Drawing.Point(962, 8);
 			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(471, 731);
+			this.treeView1.Size = new System.Drawing.Size(0, 60);
 			this.treeView1.TabIndex = 35;
 			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
 			// 
@@ -461,6 +463,17 @@ namespace Mag_SuitBuilder
 			this.coveragePiece9.Size = new System.Drawing.Size(153, 133);
 			this.coveragePiece9.TabIndex = 8;
 			// 
+			// cmdResizeColumns
+			// 
+			this.cmdResizeColumns.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.cmdResizeColumns.Location = new System.Drawing.Point(1255, 7);
+			this.cmdResizeColumns.Name = "cmdResizeColumns";
+			this.cmdResizeColumns.Size = new System.Drawing.Size(97, 23);
+			this.cmdResizeColumns.TabIndex = 38;
+			this.cmdResizeColumns.Text = "Resize Columns";
+			this.cmdResizeColumns.UseVisualStyleBackColor = true;
+			this.cmdResizeColumns.Click += new System.EventHandler(this.cmdResizeColumns_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -520,6 +533,7 @@ namespace Mag_SuitBuilder
 		private System.Windows.Forms.CheckBox chkTree;
 		private System.Windows.Forms.Panel panel1;
 		private FiltersControl filtersControl1;
+		private System.Windows.Forms.Button cmdResizeColumns;
 	}
 }
 
