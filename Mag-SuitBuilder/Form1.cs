@@ -149,8 +149,8 @@ namespace Mag_SuitBuilder
 
 			inventoryTreeView.ExpandAll();
 
-			if (inventoryTreeView.Nodes.Count > 0)
-				inventoryTreeView.Nodes[0].Checked = true;
+			foreach (TreeNode node in inventoryTreeView.Nodes)
+				node.Checked = true;
 
 			if (!autoSizedColumns)
 			{
@@ -213,6 +213,14 @@ namespace Mag_SuitBuilder
 				boundList.RaiseListChangedEvents = true;
 				boundList.ResetBindings();
 			}
+		}
+
+		private void cmdResizeColumns_Click(object sender, EventArgs e)
+		{
+			this.Enabled = false;
+			autoSizedColumns = true;
+			equipmentGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
+			this.Enabled = true;
 		}
 
 		private void btnHelp_Click(object sender, EventArgs e)

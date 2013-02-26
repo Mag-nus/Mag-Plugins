@@ -86,14 +86,34 @@ namespace Mag_SuitBuilder.Equipment
 			else if (mwo.ObjectClass == (int)ObjectClass.MeleeWeapon)
 			{
 				if (!chkMeleeWeapon.Checked) return false;
+
+				if (!chkMeleeHeavy.Checked && mwo.EquipSkill == "Heavy Weapons") return false;
+				if (!chkMeleeLight.Checked && mwo.EquipSkill == "Light Weapons") return false;
+				if (!chkMeleeFinesse.Checked && mwo.EquipSkill == "Finesse Weapons") return false;
+				if (!chkMelee2H.Checked && mwo.EquipSkill == "Two Handed Combat") return false;
+
+				if (!chkMasteryUA.Checked && mwo.Mastery == "Unarmed Weapon") return false;
+				if (!chkMasterySword.Checked && mwo.Mastery == "Sword") return false;
+				if (!chkMasteryAxe.Checked && mwo.Mastery == "Axe") return false;
+				if (!chkMasteryMace.Checked && mwo.Mastery == "Mace") return false;
+				if (!chkMasterySpear.Checked && mwo.Mastery == "Spear") return false;
+				if (!chkMasteryDagger.Checked && mwo.Mastery == "Dagger") return false;
+				if (!chkMasteryStaff.Checked && mwo.Mastery == "Staff") return false;
 			}
 			else if (mwo.ObjectClass == (int)ObjectClass.MissileWeapon)
 			{
 				if (!chkMissileWeapon.Checked) return false;
+
+				if (!chkMasteryBow.Checked && mwo.Mastery == "Bow") return false;
+				if (!chkMasteryCrossbow.Checked && mwo.Mastery == "Crossbow") return false;
+				if (!chkMasteryThrown.Checked && mwo.Mastery == "Thrown") return false;
 			}
 			else if (mwo.ObjectClass == (int)ObjectClass.WandStaffOrb)
 			{
 				if (!chkWandStaffOrb.Checked) return false;
+
+				if (!chkWandStaffOrbWar.Checked && mwo.IntValues.ContainsKey(158) && mwo.IntValues[158] == 2 && mwo.IntValues.ContainsKey(159) && mwo.IntValues[159] == 0x22) return false;
+				if (!chkWandStaffOrbVoid.Checked && mwo.IntValues.ContainsKey(158) && mwo.IntValues[158] == 2 && mwo.IntValues.ContainsKey(159) && mwo.IntValues[159] == 0x2B) return false;
 			}
 			else if (mwo.ObjectClass == (int)ObjectClass.Salvage)
 			{
