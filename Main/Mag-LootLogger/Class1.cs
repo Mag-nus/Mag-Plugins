@@ -168,10 +168,10 @@ namespace Mag_LootLogger
 				output.Append('"' + item.Name + '"' + ",");
 				output.Append(item.ObjectClass.ToString() + ",");
 
-				string skillName = Constants.SkillInfo.ContainsKey((int)LongValueKey.EquipSkill) ? Constants.SkillInfo[(int)LongValueKey.EquipSkill] : null;
+				string skillName = Constants.SkillInfo.ContainsKey(item.Values(LongValueKey.EquipSkill)) ? Constants.SkillInfo[item.Values(LongValueKey.EquipSkill)] : null;
 				output.Append((item.Values(LongValueKey.EquipSkill) > 0 ? skillName : String.Empty) + ",");
 
-				string masteryName = Constants.SkillInfo.ContainsKey(353) ? Constants.SkillInfo[353] : null;
+				string masteryName = Constants.MasteryInfo.ContainsKey(item.Values((LongValueKey)353)) ? Constants.MasteryInfo[item.Values((LongValueKey)353)] : null;
 				output.Append((item.Values((LongValueKey)353) > 0 ? masteryName : String.Empty) + ",");
 
 				if (item.Values(LongValueKey.DamageType) > 0)
