@@ -34,6 +34,7 @@ namespace Mag_SuitBuilder
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.cmdResizeColumns = new System.Windows.Forms.Button();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.equipmentGrid = new System.Windows.Forms.DataGridView();
 			this.filtersControl1 = new Mag_SuitBuilder.Equipment.FiltersControl();
@@ -68,7 +69,6 @@ namespace Mag_SuitBuilder
 			this.coveragePiece8 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece10 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece9 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.cmdResizeColumns = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			this.panel1.SuspendLayout();
@@ -103,6 +103,17 @@ namespace Mag_SuitBuilder
 			this.tabPage3.TabIndex = 2;
 			this.tabPage3.Text = "Step 1. Add Inventory";
 			this.tabPage3.UseVisualStyleBackColor = true;
+			// 
+			// cmdResizeColumns
+			// 
+			this.cmdResizeColumns.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.cmdResizeColumns.Location = new System.Drawing.Point(1255, 7);
+			this.cmdResizeColumns.Name = "cmdResizeColumns";
+			this.cmdResizeColumns.Size = new System.Drawing.Size(97, 23);
+			this.cmdResizeColumns.TabIndex = 38;
+			this.cmdResizeColumns.Text = "Resize Columns";
+			this.cmdResizeColumns.UseVisualStyleBackColor = true;
+			this.cmdResizeColumns.Click += new System.EventHandler(this.cmdResizeColumns_Click);
 			// 
 			// panel1
 			// 
@@ -270,7 +281,7 @@ namespace Mag_SuitBuilder
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.treeView1.Location = new System.Drawing.Point(962, 8);
 			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(0, 60);
+			this.treeView1.Size = new System.Drawing.Size(473, 729);
 			this.treeView1.TabIndex = 35;
 			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
 			// 
@@ -462,17 +473,6 @@ namespace Mag_SuitBuilder
 			this.coveragePiece9.Name = "coveragePiece9";
 			this.coveragePiece9.Size = new System.Drawing.Size(153, 133);
 			this.coveragePiece9.TabIndex = 8;
-			// 
-			// cmdResizeColumns
-			// 
-			this.cmdResizeColumns.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.cmdResizeColumns.Location = new System.Drawing.Point(1255, 7);
-			this.cmdResizeColumns.Name = "cmdResizeColumns";
-			this.cmdResizeColumns.Size = new System.Drawing.Size(97, 23);
-			this.cmdResizeColumns.TabIndex = 38;
-			this.cmdResizeColumns.Text = "Resize Columns";
-			this.cmdResizeColumns.UseVisualStyleBackColor = true;
-			this.cmdResizeColumns.Click += new System.EventHandler(this.cmdResizeColumns_Click);
 			// 
 			// Form1
 			// 
