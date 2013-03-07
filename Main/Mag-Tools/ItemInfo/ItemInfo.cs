@@ -116,25 +116,25 @@ namespace MagTools.ItemInfo
 
 				// (Damage)
 				if (wo.ObjectClass == ObjectClass.MeleeWeapon)
-					sb.Append(CalcedBuffedTinkedDamage.ToString("N1") + "/" + GetBuffedLogValueKey(LongValueKey.MaxDamage));
+					sb.Append(mwo.CalcedBuffedTinkedDoT.ToString("N1") + "/" + mwo.GetBuffedIntValueKey((int)LongValueKey.MaxDamage));
 
 				if (wo.ObjectClass == ObjectClass.MissileWeapon)
-					sb.Append(BuffedMissileDamage.ToString("N1"));
+					sb.Append(mwo.CalcedBuffedMissileDamage.ToString("N1"));
 
 				if (wo.ObjectClass == ObjectClass.WandStaffOrb)
-					sb.Append(((GetBuffedDoubleValueKey(DoubleValueKey.ElementalDamageVersusMonsters) - 1) * 100).ToString("N1"));
+					sb.Append(((mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.ElementalDamageVersusMonsters) - 1) * 100).ToString("N1"));
 
 				// (AttackBonus/MeleeDefenseBonus/ManaCBonus)
 				sb.Append(" ");
 
 				if (wo.Values(DoubleValueKey.AttackBonus, 1) != 1)
-					sb.Append(Math.Round(((GetBuffedDoubleValueKey(DoubleValueKey.AttackBonus) - 1) * 100)).ToString("N1") + "/");
+					sb.Append(Math.Round(((mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.AttackBonus) - 1) * 100)).ToString("N1") + "/");
 
 				if (wo.Values(DoubleValueKey.MeleeDefenseBonus, 1) != 1)
-					sb.Append(Math.Round(((GetBuffedDoubleValueKey(DoubleValueKey.MeleeDefenseBonus) - 1) * 100)).ToString("N1"));
+					sb.Append(Math.Round(((mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.MeleeDefenseBonus) - 1) * 100)).ToString("N1"));
 
 				if (wo.Values(DoubleValueKey.ManaCBonus) != 0)
-					sb.Append("/" + Math.Round(GetBuffedDoubleValueKey(DoubleValueKey.ManaCBonus) * 100));
+					sb.Append("/" + Math.Round(mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.ManaCBonus) * 100));
 
 				sb.Append(")");
 			}
@@ -346,132 +346,6 @@ namespace MagTools.ItemInfo
 			}
 
 			return sb.ToString();
-		}
-
-		/*public double BuffedAverageDamage // This is worthless
-		{
-			get
-			{
-				double variance = wo.Values(DoubleValueKey.Variance, 0.0);
-				int maxDamage = GetBuffedLogValueKey(LongValueKey.MaxDamage);
-				double minDamage = maxDamage - (variance * maxDamage);
-
-				return (minDamage + maxDamage) / 2;
-			}
-		}*/
-
-		public double CalcedBuffedTinkedDamage
-		{
-			get
-			{
-				double variance = wo.Values(DoubleValueKey.Variance, 0.0);
-				int maxDamage = GetBuffedLogValueKey(LongValueKey.MaxDamage);
-
-				int numberOfTinksLeft = Math.Max(10 - wo.Values(LongValueKey.NumberTimesTinkered), 0);
-
-				if (wo.Values(LongValueKey.Imbued) == 0)
-					numberOfTinksLeft--; // Factor in an imbue tink
-
-				// If this is not a loot generated item, it can't be tinked
-				if (wo.Values(LongValueKey.Material) == 0)
-					numberOfTinksLeft = 0;
-
-				for (int i = 1 ; i <= numberOfTinksLeft ; i++)
-				{
-					double ironTinkDoT = CalculateDamageOverTime(maxDamage + 22 + 1, variance);
-					double graniteTinkDoT = CalculateDamageOverTime(maxDamage + 22, variance * .8);
-
-					if (ironTinkDoT >= graniteTinkDoT)
-						maxDamage++;
-					else
-						variance *= .8;
-				}
-
-				return CalculateDamageOverTime(maxDamage + 22, variance);
-			}
-		}
-
-		/// <summary>
-		/// maxDamage * ((1 - critChance) * (2 - variance) / 2 + (critChance * critMultiplier));
-		/// </summary>
-		/// <param name="maxDamage"></param>
-		/// <param name="variance"></param>
-		/// <param name="critChance"></param>
-		/// <param name="critMultiplier"></param>
-		/// <returns></returns>
-		public static double CalculateDamageOverTime(int maxDamage, double variance, double critChance = .1, double critMultiplier = 2)
-		{
-			return maxDamage * ((1 - critChance) * (2 - variance) / 2 + (critChance * critMultiplier));
-		}
-
-		public double BuffedMissileDamage
-		{
-			get
-			{
-				return GetBuffedLogValueKey(LongValueKey.MaxDamage) + (((GetBuffedDoubleValueKey(DoubleValueKey.DamageBonus) - 1) * 100) / 3) + GetBuffedLogValueKey(LongValueKey.ElementalDmgBonus);
-			}
-		}
-
-		public int GetBuffedLogValueKey(LongValueKey key, int defaultValue = 0)
-		{
-			if (!wo.Exists(key))
-				return defaultValue;
-
-			int value = wo.Values(key, defaultValue);
-
-			for (int i = 0 ; i < wo.ActiveSpellCount ; i++)
-			{
-				int spellId = wo.ActiveSpell(i);
-
-				if (Constants.LongValueKeySpellEffects.ContainsKey(spellId) && Constants.LongValueKeySpellEffects[spellId].Key == (int)key)
-					value -= (int)Constants.LongValueKeySpellEffects[spellId].Change;
-			}
-
-			for (int i = 0 ; i < wo.SpellCount ; i++)
-			{
-				int spellId = wo.Spell(i);
-
-				if (Constants.LongValueKeySpellEffects.ContainsKey(spellId) && Constants.LongValueKeySpellEffects[spellId].Key == (int)key && Constants.LongValueKeySpellEffects[spellId].Bonus != 0)
-					value += (int)Constants.LongValueKeySpellEffects[spellId].Bonus;
-			}
-
-			return value;
-		}
-
-		public double GetBuffedDoubleValueKey(DoubleValueKey key, double defaultValue = 0)
-		{
-			if (!wo.Exists(key))
-				return defaultValue;
-
-			double value = wo.Values(key, defaultValue);
-
-			for (int i = 0 ; i < wo.ActiveSpellCount ; i++)
-			{
-				int spellId = wo.ActiveSpell(i);
-
-				if (Constants.DoubleValueKeySpellEffects.ContainsKey(spellId) && Constants.DoubleValueKeySpellEffects[spellId].Key == (int)key)
-				{
-					if ((int)Constants.DoubleValueKeySpellEffects[spellId].Change == 1)
-						value /= Constants.DoubleValueKeySpellEffects[spellId].Change;
-					else
-						value -= Constants.DoubleValueKeySpellEffects[spellId].Change;
-				}
-			}
-
-			for (int i = 0 ; i < wo.SpellCount ; i++)
-			{
-				int spellId = wo.Spell(i);
-
-				if (Constants.DoubleValueKeySpellEffects.ContainsKey(spellId) && Constants.DoubleValueKeySpellEffects[spellId].Key == (int)key && Constants.DoubleValueKeySpellEffects[spellId].Bonus != 0)
-				{
-					if ((int)Constants.DoubleValueKeySpellEffects[spellId].Change == 1)
-						value *= Constants.DoubleValueKeySpellEffects[spellId].Bonus;
-					else
-						value += Constants.DoubleValueKeySpellEffects[spellId].Bonus;
-				}
-			}
-
-			return value;
 		}
 	}
 }
