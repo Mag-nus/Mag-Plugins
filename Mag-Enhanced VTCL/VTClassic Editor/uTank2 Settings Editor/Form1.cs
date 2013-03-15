@@ -209,14 +209,38 @@ namespace VTClassic
                 RequirementComboEntries.Clear();
 
                 Array arr = Enum.GetValues(typeof(eLootRuleType));
-                foreach (int it in arr)
-                {
-                    eLootRuleType lrt = ((eLootRuleType)it);
-                    iLootRule lr = LootRuleCreator.CreateLootRule(lrt);
-                    if (lr == null) continue;
+				// Mag-nus added, new way, 3/14,2013
+				List<int> sortedRequirements = new List<int>();
+				foreach (int it in arr)
+				{
+					eLootRuleType lrt = ((eLootRuleType)it);
 
-                    AddRequirementComboEntry(lr.FriendlyName(), lrt);
-                }
+					if (lrt == eLootRuleType.MinDamageGE || lrt == eLootRuleType.DamagePercentGE || lrt == eLootRuleType.BuffedMedianDamageGE || lrt == eLootRuleType.CalcdBuffedTinkedDamageGE)
+						continue;
+
+					iLootRule lr = LootRuleCreator.CreateLootRule(lrt);
+					if (lr == null) continue;
+					sortedRequirements.Add(it);
+				}
+				sortedRequirements.Sort((a, b) =>
+				{
+					eLootRuleType alrt = ((eLootRuleType)a);
+					iLootRule alr = LootRuleCreator.CreateLootRule(alrt);
+					eLootRuleType blrt = ((eLootRuleType)b);
+					iLootRule blr = LootRuleCreator.CreateLootRule(blrt);
+					if (blrt == eLootRuleType.DisabledRule) return -1; // Enable/Disable goes at the end
+					return alr.FriendlyName().CompareTo(blr.FriendlyName());
+				});
+				// Mag-nus added end, new way, 3/14,2013
+				// foreach (int it in arr) Mag-nus commented out, 3/14/2013
+				foreach (int it in sortedRequirements)
+				{
+					eLootRuleType lrt = ((eLootRuleType)it);
+					iLootRule lr = LootRuleCreator.CreateLootRule(lrt);
+					if (lr == null) continue;
+
+					AddRequirementComboEntry(lr.FriendlyName(), lrt);
+				}
 
                 cmbReqType.SelectedIndex = GetRequirementComboIndexForRuleType((eLootRuleType)cr.GetRuleType());
 
@@ -305,8 +329,17 @@ namespace VTClassic
 
         string GetVTankProfileDirectory()
         {
-            string s = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Decal\\Plugins\\{642F1F48-16BE-48BF-B1D4-286652C4533E}").GetValue("ProfilePath").ToString();
-            return System.IO.Path.GetFullPath(s);           
+			try
+			{
+				string s = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\\Decal\\Plugins\\{642F1F48-16BE-48BF-B1D4-286652C4533E}").GetValue("ProfilePath").ToString();
+				return System.IO.Path.GetFullPath(s);
+			}
+			catch (NullReferenceException) // Added by Mag-nus, 3/7/2013. This crashes on machines without decal insatlled or perhaps its my win7 x64 box.
+			{
+				
+			}
+
+			return null;
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)

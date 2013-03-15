@@ -151,6 +151,7 @@ namespace VTClassic
 		BuffedDoubleValKeyGE = 2005,
 		CalcdBuffedTinkedDamageGE = 2006,
 		TotalRatingsGE = 2007,
+		CalcedBuffedTinkedTargetMeleeGE = 2008,
 
         DisabledRule = 9999,
     }
@@ -194,6 +195,7 @@ namespace VTClassic
 				case eLootRuleType.BuffedDoubleValKeyGE: return new BuffedDoubleValKeyGE();
 				case eLootRuleType.CalcdBuffedTinkedDamageGE: return new CalcdBuffedTinkedDamageGE();
 				case eLootRuleType.TotalRatingsGE: return new TotalRatingsGE();
+				case eLootRuleType.CalcedBuffedTinkedTargetMeleeGE: return new CalcedBuffedTinkedTargetMeleeGE();
 
                 case eLootRuleType.DisabledRule: return new DisabledRule(true);
 
@@ -1888,6 +1890,44 @@ namespace VTClassic
 			}
 		}
 
+		public bool CanReachTargetValues(double targetCalcedBuffedTinkedDoT, double targetBuffedMeleeDefenseBonus, double targetBuffedAttackBonus)
+		{
+			double buffedMeleeDefenseBonus = GetBuffedDoubleValueKey(DoubleValueKey.MeleeDefenseBonus);
+			double buffedAttackBonus = GetBuffedDoubleValueKey(DoubleValueKey.AttackBonus);
+
+			double variance = gameItemInfo.GetValueDouble(DoubleValueKey.Variance, 0.0);
+			int maxDamage = GetBuffedLogValueKey(IntValueKey.MaxDamage);
+
+			int numberOfTinksLeft = Math.Max(10 - gameItemInfo.GetValueInt(IntValueKey.NumberTimesTinkered, 0), 0);
+
+			if (gameItemInfo.GetValueInt(IntValueKey.Imbued, 0) == 0)
+				numberOfTinksLeft--; // Factor in an imbue tink
+
+			// If this is not a loot generated item, it can't be tinked
+			if (gameItemInfo.GetValueInt(IntValueKey.Material, 0) == 0)
+				numberOfTinksLeft = 0;
+
+			for (int i = 1; i <= numberOfTinksLeft; i++)
+			{
+				if (buffedMeleeDefenseBonus < targetBuffedMeleeDefenseBonus)
+					buffedMeleeDefenseBonus += .01;
+				else if (buffedAttackBonus < targetBuffedAttackBonus)
+					buffedAttackBonus += .01;
+				else
+				{
+					double ironTinkDoT = CalculateDamageOverTime(maxDamage + 24 + 1, variance);
+					double graniteTinkDoT = CalculateDamageOverTime(maxDamage + 24, variance*.8);
+
+					if (ironTinkDoT >= graniteTinkDoT)
+						maxDamage++;
+					else
+						variance *= .8;
+				}
+			}
+
+			return CalculateDamageOverTime(maxDamage + 24, variance) >= targetCalcedBuffedTinkedDoT && buffedMeleeDefenseBonus >= targetBuffedMeleeDefenseBonus && buffedAttackBonus >= targetBuffedAttackBonus;
+		}
+
 		public int TotalRatings
 		{
 			get
@@ -2390,6 +2430,86 @@ namespace VTClassic
 #endif
 	}
 	#endregion TotalRatingsGE
+
+	#region CalcedBuffedTinkedTargetMeleeGE
+	internal class CalcedBuffedTinkedTargetMeleeGE : iLootRule
+	{
+		double targetCalcedBuffedTinkedDoT;
+		double targetBuffedMeleeDefenseBonus;
+		double targetBuffedAttackBonus;
+
+		public override eLootRuleType GetRuleType() { return eLootRuleType.CalcedBuffedTinkedTargetMeleeGE; }
+
+#if VTC_PLUGIN
+		public override bool Match(GameItemInfo id)
+		{
+			MagItemInfo magItemInfo = new MagItemInfo(id);
+
+			return magItemInfo.CanReachTargetValues(targetCalcedBuffedTinkedDoT, targetBuffedMeleeDefenseBonus, targetBuffedAttackBonus);
+		}
+
+		public override void EarlyMatch(GameItemInfo id, out bool hasdecision, out bool ismatch)
+		{
+			if (id.ObjectClass == ObjectClass.MeleeWeapon)
+			{
+				hasdecision = false;
+				ismatch = false;        //Doesn't matter, just have to assign
+			}
+			else
+			{
+				hasdecision = true;
+				ismatch = false;
+			}
+		}
+#endif
+
+		public override void Read(System.IO.StreamReader inf, int profileversion)
+		{
+			targetCalcedBuffedTinkedDoT = double.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
+			targetBuffedMeleeDefenseBonus = double.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
+			targetBuffedAttackBonus = double.Parse(inf.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
+		}
+
+		public override void Write(CountedStreamWriter inf)
+		{
+			inf.WriteLine(targetCalcedBuffedTinkedDoT);
+			inf.WriteLine(targetBuffedMeleeDefenseBonus);
+			inf.WriteLine(targetBuffedAttackBonus);
+		}
+
+		public override string DisplayString()
+		{
+			return String.Format("Melee Target: {0} DoT: {1} md, {2} a", targetCalcedBuffedTinkedDoT, targetBuffedMeleeDefenseBonus, targetBuffedAttackBonus);
+		}
+
+		public override string FriendlyName()
+		{
+			return "Calced Buffed Tinked Target Melee";
+		}
+
+		public override bool MayRequireID()
+		{
+			return true;
+		}
+
+#if VTC_EDITOR
+		public override bool UI_TextValue_Uses() { return true; }
+		public override string UI_TextValue_Label() { return "Target Calced Buffed Tinked DoT"; }
+		public override void UI_TextValue_Set(string value) { double.TryParse(value, out targetCalcedBuffedTinkedDoT); }
+		public override string UI_TextValue_Get() { return targetCalcedBuffedTinkedDoT.ToString(); }
+
+		public override bool UI_TextValue2_Uses() { return true; }
+		public override string UI_TextValue2_Label() { return "Target Buffed Melee Defense Bonus"; }
+		public override void UI_TextValue2_Set(string value) { double.TryParse(value, out targetBuffedMeleeDefenseBonus); }
+		public override string UI_TextValue2_Get() { return targetBuffedMeleeDefenseBonus.ToString(); }
+
+		public override bool UI_TextValue3_Uses() { return true; }
+		public override string UI_TextValue3_Label() { return "Target Buffed Attack Bonus"; }
+		public override void UI_TextValue3_Set(string value) { double.TryParse(value, out targetBuffedAttackBonus); }
+		public override string UI_TextValue3_Get() { return targetBuffedAttackBonus.ToString(); }
+#endif
+	}
+	#endregion CalcedBuffedTinkedTargetMeleeGE
 	// Mag-nus added, end.
 
 	#region DisabledRule

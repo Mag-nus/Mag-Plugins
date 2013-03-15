@@ -162,7 +162,7 @@ namespace VTClassic
             this.combineToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(622, 24);
+			this.menuStrip1.Size = new System.Drawing.Size(652, 24);
 			this.menuStrip1.TabIndex = 0;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -306,7 +306,7 @@ namespace VTClassic
 			this.tabControl1.Location = new System.Drawing.Point(0, 50);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(623, 473);
+			this.tabControl1.Size = new System.Drawing.Size(653, 473);
 			this.tabControl1.TabIndex = 1;
 			this.tabControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tabControl1_KeyDown);
 			this.tabControl1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tabControl1_KeyUp);
@@ -324,7 +324,7 @@ namespace VTClassic
 			this.tabLootRules.Location = new System.Drawing.Point(4, 22);
 			this.tabLootRules.Name = "tabLootRules";
 			this.tabLootRules.Padding = new System.Windows.Forms.Padding(3);
-			this.tabLootRules.Size = new System.Drawing.Size(615, 447);
+			this.tabLootRules.Size = new System.Drawing.Size(645, 447);
 			this.tabLootRules.TabIndex = 0;
 			this.tabLootRules.Text = "Loot Rules";
 			this.tabLootRules.UseVisualStyleBackColor = true;
@@ -474,7 +474,7 @@ namespace VTClassic
 			this.groupRule.Controls.Add(this.cmdNewReq);
 			this.groupRule.Location = new System.Drawing.Point(174, 6);
 			this.groupRule.Name = "groupRule";
-			this.groupRule.Size = new System.Drawing.Size(433, 358);
+			this.groupRule.Size = new System.Drawing.Size(463, 358);
 			this.groupRule.TabIndex = 11;
 			this.groupRule.TabStop = false;
 			this.groupRule.Text = "Rule";
@@ -540,7 +540,7 @@ namespace VTClassic
 			this.groupReqs.Controls.Add(this.cmbReqType);
 			this.groupReqs.Location = new System.Drawing.Point(261, 99);
 			this.groupReqs.Name = "groupReqs";
-			this.groupReqs.Size = new System.Drawing.Size(166, 253);
+			this.groupReqs.Size = new System.Drawing.Size(196, 253);
 			this.groupReqs.TabIndex = 4;
 			this.groupReqs.TabStop = false;
 			this.groupReqs.Text = "Requirements";
@@ -560,7 +560,7 @@ namespace VTClassic
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtValue4.Location = new System.Drawing.Point(6, 112);
 			this.txtValue4.Name = "txtValue4";
-			this.txtValue4.Size = new System.Drawing.Size(155, 20);
+			this.txtValue4.Size = new System.Drawing.Size(185, 20);
 			this.txtValue4.TabIndex = 15;
 			this.txtValue4.TextChanged += new System.EventHandler(this.txtValue4_TextChanged);
 			// 
@@ -570,7 +570,7 @@ namespace VTClassic
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtValue3.Location = new System.Drawing.Point(5, 230);
 			this.txtValue3.Name = "txtValue3";
-			this.txtValue3.Size = new System.Drawing.Size(155, 20);
+			this.txtValue3.Size = new System.Drawing.Size(185, 20);
 			this.txtValue3.TabIndex = 14;
 			this.txtValue3.TextChanged += new System.EventHandler(this.txtValue3_TextChanged);
 			// 
@@ -598,7 +598,7 @@ namespace VTClassic
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtValue2.Location = new System.Drawing.Point(6, 191);
 			this.txtValue2.Name = "txtValue2";
-			this.txtValue2.Size = new System.Drawing.Size(155, 20);
+			this.txtValue2.Size = new System.Drawing.Size(185, 20);
 			this.txtValue2.TabIndex = 11;
 			this.txtValue2.TextChanged += new System.EventHandler(this.txtValue2_TextChanged);
 			// 
@@ -608,7 +608,7 @@ namespace VTClassic
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtValue.Location = new System.Drawing.Point(6, 152);
 			this.txtValue.Name = "txtValue";
-			this.txtValue.Size = new System.Drawing.Size(155, 20);
+			this.txtValue.Size = new System.Drawing.Size(185, 20);
 			this.txtValue.TabIndex = 10;
 			this.txtValue.TextChanged += new System.EventHandler(this.txtValue_TextChanged);
 			// 
@@ -647,7 +647,7 @@ namespace VTClassic
 			this.cmbActsOn.FormattingEnabled = true;
 			this.cmbActsOn.Location = new System.Drawing.Point(6, 72);
 			this.cmbActsOn.Name = "cmbActsOn";
-			this.cmbActsOn.Size = new System.Drawing.Size(154, 21);
+			this.cmbActsOn.Size = new System.Drawing.Size(184, 21);
 			this.cmbActsOn.TabIndex = 6;
 			this.cmbActsOn.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cmbActsOn_DrawItem);
 			this.cmbActsOn.SelectedIndexChanged += new System.EventHandler(this.cmbActsOn_SelectedIndexChanged);
@@ -676,7 +676,7 @@ namespace VTClassic
 			this.cmbReqType.FormattingEnabled = true;
 			this.cmbReqType.Location = new System.Drawing.Point(6, 32);
 			this.cmbReqType.Name = "cmbReqType";
-			this.cmbReqType.Size = new System.Drawing.Size(154, 21);
+			this.cmbReqType.Size = new System.Drawing.Size(184, 21);
 			this.cmbReqType.TabIndex = 3;
 			this.cmbReqType.SelectedIndexChanged += new System.EventHandler(this.cmbReqType_SelectedIndexChanged);
 			// 
@@ -792,7 +792,7 @@ namespace VTClassic
 			this.tabSalvageCombine.Location = new System.Drawing.Point(4, 22);
 			this.tabSalvageCombine.Name = "tabSalvageCombine";
 			this.tabSalvageCombine.Padding = new System.Windows.Forms.Padding(3);
-			this.tabSalvageCombine.Size = new System.Drawing.Size(575, 447);
+			this.tabSalvageCombine.Size = new System.Drawing.Size(631, 447);
 			this.tabSalvageCombine.TabIndex = 1;
 			this.tabSalvageCombine.Text = "Salvage Combination";
 			this.tabSalvageCombine.UseVisualStyleBackColor = true;
@@ -916,7 +916,7 @@ namespace VTClassic
 			this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
 			this.toolStrip1.Location = new System.Drawing.Point(0, 24);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(622, 23);
+			this.toolStrip1.Size = new System.Drawing.Size(652, 23);
 			this.toolStrip1.TabIndex = 2;
 			this.toolStrip1.Text = "toolStrip1";
 			this.toolStrip1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tabControl1_KeyDown);
@@ -976,12 +976,12 @@ namespace VTClassic
 			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(622, 524);
+			this.ClientSize = new System.Drawing.Size(652, 524);
 			this.Controls.Add(this.toolStrip1);
 			this.Controls.Add(this.tabControl1);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
-			this.MinimumSize = new System.Drawing.Size(638, 562);
+			this.MinimumSize = new System.Drawing.Size(668, 562);
 			this.Name = "Form1";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
 			this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
