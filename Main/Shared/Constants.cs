@@ -178,6 +178,8 @@ namespace Mag.Shared
 			{ 86, "Weave of Recklessness" },
 			{ 87, "Weave of Shield" },
 			{ 88, "Weave of Sneak Attack" },
+			// 89
+			{ 90, "Weave of Summoning" },
 		};
 
 		/// <summary>
