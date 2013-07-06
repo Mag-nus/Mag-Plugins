@@ -72,6 +72,8 @@ namespace MagTools.Macros
 
 		bool idsRequested;
 
+		readonly Collection<int> blackLitedItems = new Collection<int>();
+
 		public void Start()
 		{
 			if (started)
@@ -98,6 +100,8 @@ namespace MagTools.Macros
 			((VTClassic.LootCore)lootProfile).LoadProfile(fileInfo.FullName, false);
 
 			idsRequested = false;
+
+			blackLitedItems.Clear();
 
 			CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
 
@@ -134,6 +138,9 @@ namespace MagTools.Macros
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
+
+		int currentWorkingId;
+		DateTime currentWorkingIdFirstAttempt;
 
 		void Think()
 		{
@@ -178,6 +185,9 @@ namespace MagTools.Macros
 		{
 			foreach (WorldObject item in CoreManager.Current.WorldFilter.GetInventory())
 			{
+				if (blackLitedItems.Contains(item.Id))
+					continue;
+
 				// If the item is equipped or wielded, don't process it.
 				if (item.Values(LongValueKey.EquippedSlots, 0) > 0 || item.Values(LongValueKey.Slot, -1) == -1)
 					continue;
@@ -198,6 +208,21 @@ namespace MagTools.Macros
 					// If the item is already max stack, don't process it
 					if (secondItem.Values(LongValueKey.StackCount, 0) == secondItem.Values(LongValueKey.StackMax))
 						continue;
+
+					if (currentWorkingId != item.Id)
+					{
+						currentWorkingId = item.Id;
+						currentWorkingIdFirstAttempt = DateTime.Now;
+					}
+					else
+					{
+						if (DateTime.Now - currentWorkingIdFirstAttempt > TimeSpan.FromSeconds(10))
+						{
+							Debug.WriteToChat("Blacklisting item: " + item.Id + ", " + item.Name);
+							blackLitedItems.Add(item.Id);
+							return true;
+						}
+					}
 
 					CoreManager.Current.Actions.MoveItem(item.Id, secondItem.Id);
 
@@ -245,6 +270,9 @@ namespace MagTools.Macros
 
 			foreach (WorldObject item in CoreManager.Current.WorldFilter.GetInventory())
 			{
+				if (blackLitedItems.Contains(item.Id))
+					continue;
+
 				// If the item is equipped or wielded, don't process it.
 				if (item.Values(LongValueKey.EquippedSlots, 0) > 0 || item.Values(LongValueKey.Slot, -1) == -1)
 					continue;
@@ -344,6 +372,21 @@ namespace MagTools.Macros
 
 					if (Util.GetFreePackSlots(itemToProcess.TargetPackIds[packIndex]) > 0)
 					{
+						if (currentWorkingId != item.Id)
+						{
+							currentWorkingId = item.Id;
+							currentWorkingIdFirstAttempt = DateTime.Now;
+						}
+						else
+						{
+							if (DateTime.Now - currentWorkingIdFirstAttempt > TimeSpan.FromSeconds(10))
+							{
+								Debug.WriteToChat("Blacklisting item: " + item.Id + ", " + item.Name);
+								blackLitedItems.Add(item.Id);
+								return true;
+							}
+						}
+
 						CoreManager.Current.Actions.MoveItem(item.Id, itemToProcess.TargetPackIds[packIndex], 0, true);
 
 						return true;
