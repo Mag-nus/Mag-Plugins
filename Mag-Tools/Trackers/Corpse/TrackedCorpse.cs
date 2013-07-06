@@ -8,17 +8,21 @@ namespace MagTools.Trackers.Corpse
 
 		public readonly DateTime TimeStamp;
 
+		public readonly int LandBlock;
+
 		public readonly double LocationX;
 		public readonly double LocationY;
 		public readonly double LocationZ;
 
 		public readonly string Description;
 
-		public TrackedCorpse(int id, DateTime timeStamp, double locationX, double locaitonY, double locationZ, string description)
+		public TrackedCorpse(int id, DateTime timeStamp, int landBlock, double locationX, double locaitonY, double locationZ, string description)
 		{
 			Id = id;
 
 			TimeStamp = timeStamp;
+
+			LandBlock = landBlock;
 
 			LocationX = locationX;
 			LocationY = locaitonY;

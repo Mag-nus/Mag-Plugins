@@ -129,6 +129,7 @@ namespace MagTools.Views
 			{
 				for (int compareRow = row + 1; compareRow < playerList.RowCount; compareRow++)
 				{
+					string rowName = ((HudStaticText)playerList[row][1]).Text;
 					DateTime rowDateTime;
 
 					//if (!DateTime.TryParse(((HudStaticText)playerList[row][0]).Text, out rowDateTime))
@@ -137,6 +138,7 @@ namespace MagTools.Views
 					if (!DateTime.TryParseExact(((HudStaticText)playerList[row][0]).Text, "MM/dd/yy hh:mm tt", CultureInfo.InvariantCulture, DateTimeStyles.None, out rowDateTime))
 						break;
 
+					string compareName = ((HudStaticText)playerList[compareRow][1]).Text;
 					DateTime compareDateTime;
 
 					//if (!DateTime.TryParse(((HudStaticText)playerList[compareRow][0]).Text, out compareDateTime))
@@ -145,9 +147,8 @@ namespace MagTools.Views
 					if (!DateTime.TryParseExact(((HudStaticText)playerList[compareRow][0]).Text, "MM/dd/yy hh:mm tt", CultureInfo.InvariantCulture, DateTimeStyles.None, out compareDateTime))
 						break;
 
-					if (rowDateTime <= compareDateTime)
+					if (rowDateTime < compareDateTime || (rowDateTime == compareDateTime && String.Compare(rowName, compareName, StringComparison.Ordinal) > 0))
 					{
-
 						string obj1 = ((HudStaticText)playerList[row][0]).Text;
 						((HudStaticText)playerList[row][0]).Text = ((HudStaticText)playerList[compareRow][0]).Text;
 						((HudStaticText)playerList[compareRow][0]).Text = obj1;
