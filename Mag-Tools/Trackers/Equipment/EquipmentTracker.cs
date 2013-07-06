@@ -226,6 +226,26 @@ namespace MagTools.Trackers.Equipment
 			}
 		}
 
+		public TimeSpan RemainingTimeBeforeNextEmptyItem
+		{
+			get
+			{
+				TimeSpan timeSpan = TimeSpan.MaxValue;
+
+
+				foreach (EquipmentTrackedItem trackedItem in trackedItems)
+				{
+					if (trackedItem.ManaTimeRemaining <= TimeSpan.Zero)
+						continue;
+
+					if (trackedItem.ManaTimeRemaining < timeSpan)
+						timeSpan = trackedItem.ManaTimeRemaining;
+				}
+
+				return timeSpan;
+			}
+		}
+
 		public int ManaNeededToRefillItems
 		{
 			get

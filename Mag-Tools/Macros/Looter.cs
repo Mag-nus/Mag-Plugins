@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 

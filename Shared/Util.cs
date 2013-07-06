@@ -11,6 +11,17 @@ namespace Mag.Shared
 {
 	public static class Util
 	{
+		public static CoordsObject GetCoords(int landBlock, double x, double y)
+		{
+			int ilbLng = (int)(Math.Floor(landBlock / (double)(0x1000000))) & 0xFF;
+			int ilbLat = (int)(Math.Floor(landBlock / (double)(0x10000))) & 0xFF;
+
+			double latOut = ((double)(ilbLat - 0x7F) * 192 + y - 84) / 240;
+			double lngOut = ((double)(ilbLng - 0x7F) * 192 + x - 84) / 240;
+
+			return new CoordsObject(latOut, lngOut);
+		}
+
 		/// <summary>
 		/// This function will return the distance in meters.
 		/// The manual distance units are in map compass units, while the distance units used in the UI are meters.

@@ -110,6 +110,11 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> SortAlphabetically = new Setting<bool>("CombatTracker/SortAlphabetically", "Sort Alphabetically");
 		}
 
+		public static class PlayerTracker
+		{
+			public static readonly Setting<bool> Persistent = new Setting<bool>("PlayerTracker/Persistent", "Keep Stats Persistent");
+		}
+
 		public static class Misc
 		{
 			public static readonly Setting<bool> OpenMainPackOnLogin = new Setting<bool>("Misc/OpenMainPackOnLogin", "Open Main Pack On Login");
@@ -119,6 +124,8 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> RemoveWindowFrame = new Setting<bool>("Misc/RemoveWindowFrame", "Remove Window Frame");
 
 			public static readonly Setting<bool> DebuggingEnabled = new Setting<bool>("Misc/DebuggingEnabled", "Debugging Enabled", true);
+
+			public static readonly Setting<int> OutputTargetWindow = new Setting<int>("Misc/OutputTargetWindow", "Output Window", 1);
 
 			public static Collection<Client.WindowPosition> WindowPositions
 			{

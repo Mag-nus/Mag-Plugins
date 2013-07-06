@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Mag.Shared;
+
 using MagTools.Trackers.Combat;
 using MagTools.Trackers.Combat.Standard;
+
+using Mag.Shared;
 
 using VirindiViewService.Controls;
 
@@ -10,7 +12,7 @@ using Decal.Adapter;
 
 namespace MagTools.Views
 {
-	class CombatTrackerGUI
+	class CombatTrackerGUI : IDisposable
 	{
 		readonly CombatTracker combatTracker;
 		readonly HudList monsterList;

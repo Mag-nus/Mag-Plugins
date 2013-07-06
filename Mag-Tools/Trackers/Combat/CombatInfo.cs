@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using MagTools.Trackers.Combat.Standard;
 
 namespace MagTools.Trackers.Combat

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 using Decal.Filters;

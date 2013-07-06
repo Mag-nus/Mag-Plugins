@@ -91,7 +91,7 @@ namespace MagTools.ItemInfo
 			{
 				ItemInfo itemInfo = new ItemInfo(e.IdentifiedItem);
 
-				CoreManager.Current.Actions.AddChatText(itemInfo.ToString(), 14, 1);
+				CoreManager.Current.Actions.AddChatText(itemInfo.ToString(), 14, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 
 				if (allowAutoClipboard && Settings.SettingsManager.ItemInfoOnIdent.AutoClipboard.Value)
 				{
@@ -143,7 +143,7 @@ namespace MagTools.ItemInfo
 
 			sb.Append(itemInfo.ToString());
 
-			CoreManager.Current.Actions.AddChatText(sb.ToString(), 14, 1);
+			CoreManager.Current.Actions.AddChatText(sb.ToString(), 14, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 
 			if (clipboardInfo && Settings.SettingsManager.ItemInfoOnIdent.AutoClipboard.Value)
 			{
