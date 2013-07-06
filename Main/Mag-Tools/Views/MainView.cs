@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+
 using VirindiViewService.Controls;
 
 namespace MagTools.Views
@@ -31,9 +32,27 @@ namespace MagTools.Views
 		HudCheckBox CombatTrackerExportOnLogOff { get; set; }
 		HudCheckBox CombatTrackerPersistent { get; set; }
 		HudCheckBox CombatTrackerSortAlphabetically { get; set; }
-		
+
+		// Corpse Tracker
+		public HudList CorpseTrackerList { get; private set; }
+
+		// Player Tracker
+		public HudList PlayerTrackerListCurrent { get; private set; }
+		public HudList PlayerTrackerListPersistent { get; private set; }
+
+		// Player Tracker - Options
+		public HudButton PlayerTrackerClearCurrentStats { get; private set; }
+		public HudButton PlayerTrackerClearPersistentStats { get; private set; }
+
+		HudCheckBox PlayerTrackerPersistent { get; set; }
+
+		// Consumable Tracker
+		public HudList ConsumableTrackerList { get; private set; }
+
 		// Misc - Options
 		HudList OptionList { get; set; }
+
+		public HudTextBox OutputWindow { get; private set; }
 
 		// Misc - Filters
 		HudList FiltersList { get; set; }
@@ -90,8 +109,26 @@ namespace MagTools.Views
 				CombatTrackerPersistent = view != null ? (HudCheckBox)view["CombatTrackerPersistent"] : new HudCheckBox();
 				CombatTrackerSortAlphabetically = view != null ? (HudCheckBox)view["CombatTrackerSortAlphabetically"] : new HudCheckBox();
 
+				// Corpse Tracker
+				CorpseTrackerList = view != null ? (HudList)view["CorpseTrackerList"] : new HudList();
+
+				// Player Tracker
+				PlayerTrackerListCurrent = view != null ? (HudList)view["PlayerTrackerListCurrent"] : new HudList();
+				PlayerTrackerListPersistent = view != null ? (HudList)view["PlayerTrackerListPersistent"] : new HudList();
+
+				// Player Tracker - Options
+				PlayerTrackerClearCurrentStats = view != null ? (HudButton)view["PlayerTrackerClearCurrentStats"] : new HudButton();
+				PlayerTrackerClearPersistentStats = view != null ? (HudButton)view["PlayerTrackerClearPersistentStats"] : new HudButton();
+
+				PlayerTrackerPersistent = view != null ? (HudCheckBox)view["PlayerTrackerPersistent"] : new HudCheckBox();
+
+				// Consumable Tracker
+				ConsumableTrackerList = view != null ? (HudList)view["ConsumableTrackerList"] : new HudList();
+
 				// Misc - Options
 				OptionList = view != null ? (HudList)view["OptionList"] : new HudList();
+
+				OutputWindow = view != null ? (HudTextBox)view["OutputWindow"] : new HudTextBox();
 
 				// Misc - Filters
 				FiltersList = view != null ? (HudList)view["FiltersList"] : new HudList();
@@ -163,6 +200,18 @@ namespace MagTools.Views
 					catch (Exception ex) { Debug.LogException(ex); }
 				};
 
+				// Player Tracker
+				PlayerTrackerPersistent.Checked = Settings.SettingsManager.PlayerTracker.Persistent.Value;
+				Settings.SettingsManager.PlayerTracker.Persistent.Changed += obj => { PlayerTrackerPersistent.Checked = obj.Value; };
+				PlayerTrackerPersistent.Change += (s, e) =>
+				{
+					try
+					{
+						Settings.SettingsManager.PlayerTracker.Persistent.Value = ((HudCheckBox)s).Checked;
+					}
+					catch (Exception ex) { Debug.LogException(ex); }
+				};
+
 				// Misc.Options
 				AddOption(OptionList, Settings.SettingsManager.ItemInfoOnIdent.Enabled);
 				AddOption(OptionList, Settings.SettingsManager.ItemInfoOnIdent.ShowBuffedValues);
@@ -187,6 +236,19 @@ namespace MagTools.Views
 				AddOption(OptionList, Settings.SettingsManager.Misc.OpenMainPackOnLogin);
 				AddOption(OptionList, Settings.SettingsManager.Misc.MaximizeChatOnLogin);
 				AddOption(OptionList, Settings.SettingsManager.Misc.DebuggingEnabled);
+
+				OutputWindow.Text = Settings.SettingsManager.Misc.OutputTargetWindow.Value.ToString(CultureInfo.InvariantCulture);
+				OutputWindow.Change += (s, e) =>
+				{
+					try
+					{
+						int value;
+						if (!int.TryParse(OutputWindow.Text, out value))
+							value = Settings.SettingsManager.Misc.OutputTargetWindow.DefaultValue;
+						Settings.SettingsManager.Misc.OutputTargetWindow.Value = value;
+					}
+					catch (Exception ex) { Debug.LogException(ex); }
+				};
 
 				// Misc.Filters
 				AddOption(FiltersList, Settings.SettingsManager.Filters.AttackEvades);
@@ -225,7 +287,7 @@ namespace MagTools.Views
 
 				// Misc.Client
 				ClientRemoveFrame.Checked = Settings.SettingsManager.Misc.RemoveWindowFrame.Value;
-				Settings.SettingsManager.Misc.RemoveWindowFrame.Changed += (obj) => { ClientRemoveFrame.Checked = obj.Value; };
+				Settings.SettingsManager.Misc.RemoveWindowFrame.Changed += obj => { ClientRemoveFrame.Checked = obj.Value; };
 				ClientRemoveFrame.Change += (s, e) =>
 				{
 					try
@@ -259,8 +321,9 @@ namespace MagTools.Views
 				{
 					try
 					{
-						int value = Settings.SettingsManager.Misc.NoFocusFPS.DefaultValue;
-						int.TryParse(NoFocusFPS.Text, out value);
+						int value;
+						if (!int.TryParse(NoFocusFPS.Text, out value))
+							value = Settings.SettingsManager.Misc.NoFocusFPS.DefaultValue;
 						Settings.SettingsManager.Misc.NoFocusFPS.Value = value;
 					}
 					catch (Exception ex) { Debug.LogException(ex); }
@@ -313,7 +376,7 @@ namespace MagTools.Views
 			HudList.HudListRowAccessor newRow = hudList.AddRow();
 
 			((HudCheckBox)newRow[0]).Checked = setting.Value;
-			setting.Changed += (obj) => { ((HudCheckBox)newRow[0]).Checked = obj.Value; };
+			setting.Changed += obj => { ((HudCheckBox)newRow[0]).Checked = obj.Value; };
 			((HudCheckBox)newRow[0]).Change += (s, e) =>
 			{
 				try
@@ -325,20 +388,5 @@ namespace MagTools.Views
 			((HudStaticText)newRow[1]).Text = setting.Description;
 
 		}
-
-		/*
-		<page label="Comp Tracker">
-		<control progid="DecalControls.FixedLayout" clipped="">
-		<control progid="DecalControls.List" name="lstStats" left="0" top="0" width="320" height="380">
-		  <column progid="DecalControls.TextColumn" fixedwidth="60" />
-		  <column progid="DecalControls.TextColumn" fixedwidth="34" justify="right" />
-		  <column progid="DecalControls.TextColumn" fixedwidth="82" justify="right" />
-		  <column progid="DecalControls.TextColumn" fixedwidth="82" justify="right" />
-		  <column progid="DecalControls.TextColumn" fixedwidth="42" justify="right" />
-		</control>
-		<control progid="DecalControls.PushButton" name="pbResetStats" left="5" top="380" width="60" height="20" text="Reset" />
-		</control>
-		</page>
-		*/
 	}
 }

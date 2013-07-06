@@ -92,7 +92,7 @@ namespace MagTools.Macros
 					return;
 			}
 
-			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Started.", 5);
+			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Started.", 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 
 			// Load our loot profile
 			((VTClassic.LootCore)lootProfile).LoadProfile(fileInfo.FullName, false);
@@ -115,7 +115,7 @@ namespace MagTools.Macros
 
 			started = false;
 
-			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Completed.", 5);
+			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Completed.", 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 		}
 
 		DateTime lastThought = DateTime.MinValue;
@@ -308,11 +308,7 @@ namespace MagTools.Macros
 				}
 
 				if (item.Container == itemToProcess.TargetPackIds[0])
-				{
 					itemsToProcess.RemoveAt(i);
-
-					continue;
-				}
 			}
 
 			Collection<int> itemsToSkip = new Collection<int>();

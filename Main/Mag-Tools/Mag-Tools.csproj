@@ -86,6 +86,17 @@
     <Compile Include="ChatFilter.cs" />
     <Compile Include="Client\NoFocusFPSManager.cs" />
     <Compile Include="Client\WindowPosition.cs" />
+    <Compile Include="Trackers\Consumable\ConsumableTracker.cs" />
+    <Compile Include="Trackers\Corpse\CorpseTracker.cs" />
+    <Compile Include="Trackers\Corpse\TrackedCorpse.cs" />
+    <Compile Include="Trackers\Player\PlayerTracker.cs" />
+    <Compile Include="Trackers\Player\PlayerTrackerExporter.cs" />
+    <Compile Include="Trackers\Player\PlayerTrackerImporter.cs" />
+    <Compile Include="Trackers\Player\PlayerType.cs" />
+    <Compile Include="Trackers\Player\TrackedPlayer.cs" />
+    <Compile Include="Views\ConsumableTrackerGUI.cs" />
+    <Compile Include="Views\CorpseTrackerGUI.cs" />
+    <Compile Include="Views\HUD.cs" />
     <Compile Include="Inventory\InventoryExporter.cs" />
     <Compile Include="Inventory\InventoryLogger.cs" />
     <Compile Include="IPluginCore.cs" />
@@ -146,6 +157,7 @@
     <Compile Include="Incomplete\VHS_Connector.cs" />
     <Compile Include="Client\WindowFrameRemover.cs" />
     <Compile Include="Client\WindowMover.cs" />
+    <Compile Include="Views\PlayerTrackerGUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\mainView.xml">

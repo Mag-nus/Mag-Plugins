@@ -227,7 +227,7 @@ namespace MagTools.Macros
 			if (waitingForIds)
 				return;
 
-			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Add To Trade - Inventory scan complete.", 5);
+			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Add To Trade - Inventory scan complete.", 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 
 			Stop();
 		}

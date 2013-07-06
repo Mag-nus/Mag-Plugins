@@ -45,7 +45,7 @@ namespace MagTools.Settings
 			{
 				TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
 
-				if (converter != null && converter.CanConvertFrom(typeof(string)))
+				if (converter.CanConvertFrom(typeof(string)))
 					return (T)converter.ConvertFromString(xmlNode.InnerText);
 			}
 
@@ -64,7 +64,7 @@ namespace MagTools.Settings
 
 			TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
 
-			if (converter != null && converter.CanConvertTo(typeof(string)))
+			if (converter.CanConvertTo(typeof(string)))
 			{
 				string result = converter.ConvertToString(value);
 

@@ -25,7 +25,6 @@ namespace MagTools.Inventory
 
 		bool isRunning;
 		ExportGroups exportGroups;
-		DateTime timeStarted;
 		bool idsRequested;
 
 		void Start(ExportGroups groups)
@@ -35,10 +34,9 @@ namespace MagTools.Inventory
 
 			isRunning = true;
 			exportGroups = groups;
-			timeStarted = DateTime.Now;
 			idsRequested = false;
 
-			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Copying all inventory item info to clipboard...", 5);
+			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Copying all inventory item info to clipboard...", 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 
 			CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
 		}
@@ -52,7 +50,7 @@ namespace MagTools.Inventory
 
 			CoreManager.Current.RenderFrame -= new EventHandler<EventArgs>(Current_RenderFrame);
 
-			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "All inventory item info has been copied to the clipboard.", 5);
+			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "All inventory item info has been copied to the clipboard.", 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 		}
 
 		DateTime lastThought = DateTime.MinValue;

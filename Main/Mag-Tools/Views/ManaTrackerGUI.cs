@@ -1,5 +1,7 @@
 ﻿using System;
+
 using MagTools.Trackers.Equipment;
+
 using VirindiViewService.Controls;
 
 using Decal.Adapter;

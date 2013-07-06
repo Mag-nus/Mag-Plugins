@@ -8,6 +8,7 @@ using Decal.Adapter.Wrappers;
 using MagTools.Client;
 using MagTools.Inventory;
 using MagTools.Trackers.Equipment;
+using MagTools.Views;
 
 /*
  * Created by Mag-nus. 8/19/2011
@@ -100,11 +101,15 @@ namespace MagTools
 		public IEquipmentTracker EquipmentTracker { get { return equipmentTracker; } }
 		Trackers.Combat.CombatTracker combatTrackerCurrent;
 		Trackers.Combat.CombatTracker combatTrackerPersistent;
+		Trackers.Corpse.CorpseTracker corpseTracker;
+		Trackers.Player.PlayerTracker playerTrackerCurrent;
+		Trackers.Player.PlayerTracker playerTrackerPersistent;
+		Trackers.Consumable.ConsumableTracker consumableTracker;
 
 		// Misc
-		Client.WindowFrameRemover windowFrameRemover;
-		Client.WindowMover windowMover;
-		Client.NoFocusFPSManager noFocusFPSManager;
+		WindowFrameRemover windowFrameRemover;
+		WindowMover windowMover;
+		NoFocusFPSManager noFocusFPSManager;
 
 		// These objects may reference other plugins
 		ItemInfo.ItemInfoPrinter itemInfoPrinter;
@@ -120,10 +125,16 @@ namespace MagTools
 		public Macros.ILooter Looter { get { return looter; } }
 
 		// Views, depends on VirindiViewService.dll
-		Views.MainView mainView;
-		Views.ManaTrackerGUI manaTrackerGUI;
-		Views.CombatTrackerGUI combatTrackerGUICurrent;
-		Views.CombatTrackerGUI combatTrackerGUIPersistent;
+		MainView mainView;
+		ManaTrackerGUI manaTrackerGUI;
+		CombatTrackerGUI combatTrackerGUICurrent;
+		CombatTrackerGUI combatTrackerGUIPersistent;
+		CorpseTrackerGUI corpseTrackerGUI;
+		PlayerTrackerGUI playerTrackerGUICurrent;
+		PlayerTrackerGUI playerTrackerGUIPersistent;
+		ConsumableTrackerGUI consumableTrackerGUI;
+
+		HUD hud;
 
 		readonly Collection<string> startupErrors = new Collection<string>();
 
@@ -157,11 +168,16 @@ namespace MagTools
 				equipmentTracker = new EquipmentTracker();
 				combatTrackerCurrent = new Trackers.Combat.CombatTracker();
 				combatTrackerPersistent = new Trackers.Combat.CombatTracker();
+				corpseTracker = new Trackers.Corpse.CorpseTracker();
+				playerTrackerCurrent = new Trackers.Player.PlayerTracker();
+				playerTrackerPersistent = new Trackers.Player.PlayerTracker();
+				consumableTracker = new Trackers.Consumable.ConsumableTracker();
+
 
 				// Misc
-				windowFrameRemover = new Client.WindowFrameRemover();
-				windowMover = new Client.WindowMover();
-				noFocusFPSManager = new Client.NoFocusFPSManager();
+				windowFrameRemover = new WindowFrameRemover();
+				windowMover = new WindowMover();
+				noFocusFPSManager = new NoFocusFPSManager();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -218,14 +234,21 @@ namespace MagTools
 				// Views, depends on VirindiViewService.dll
 				try
 				{
-					mainView = new Views.MainView();
-					manaTrackerGUI = new Views.ManaTrackerGUI(equipmentTracker, mainView);
-					combatTrackerGUICurrent = new Views.CombatTrackerGUI(combatTrackerCurrent, mainView.CombatTrackerMonsterListCurrent, mainView.CombatTrackerDamageListCurrent);
-					combatTrackerGUIPersistent = new Views.CombatTrackerGUI(combatTrackerPersistent, mainView.CombatTrackerMonsterListPersistent, mainView.CombatTrackerDamageListPersistent);
+					mainView = new MainView();
+					manaTrackerGUI = new ManaTrackerGUI(equipmentTracker, mainView);
+					combatTrackerGUICurrent = new CombatTrackerGUI(combatTrackerCurrent, mainView.CombatTrackerMonsterListCurrent, mainView.CombatTrackerDamageListCurrent);
+					combatTrackerGUIPersistent = new CombatTrackerGUI(combatTrackerPersistent, mainView.CombatTrackerMonsterListPersistent, mainView.CombatTrackerDamageListPersistent);
+					corpseTrackerGUI = new CorpseTrackerGUI(corpseTracker, mainView.CorpseTrackerList);
+					playerTrackerGUICurrent = new PlayerTrackerGUI(playerTrackerCurrent, mainView.PlayerTrackerListCurrent);
+					playerTrackerGUIPersistent = new PlayerTrackerGUI(playerTrackerPersistent, mainView.PlayerTrackerListPersistent);
+					consumableTrackerGUI = new ConsumableTrackerGUI(consumableTracker, mainView.ConsumableTrackerList);
 
 					mainView.CombatTrackerClearCurrentStats.Hit += new EventHandler(CombatTrackerClearCurrentStats_Hit);
 					mainView.CombatTrackerExportCurrentStats.Hit += new EventHandler(CombatTrackerExportCurrentStats_Hit);
 					mainView.CombatTrackerClearPersistentStats.Hit += new EventHandler(CombatTrackerClearPersistentStats_Hit);
+
+					mainView.PlayerTrackerClearCurrentStats.Hit += new EventHandler(PlayerTrackerClearCurrentStats_Hit);
+					mainView.PlayerTrackerClearPersistentStats.Hit += new EventHandler(PlayerTrackerClearPersistentStats_Hit);
 
 					mainView.ClipboardWornEquipment.Hit += new EventHandler(ClipboardWornEquipment_Hit);
 					mainView.ClipboardInventoryInfo.Hit += new EventHandler(ClipboardInventoryInfo_Hit);
@@ -233,6 +256,8 @@ namespace MagTools
 					System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
 					System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
 					mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
+
+					hud = new HUD(equipmentTracker);
 				}
 				catch (FileNotFoundException ex) { startupErrors.Add("Views failed to load: " + ex.Message + Environment.NewLine + "Is Virindi View Service Running?"); }
 				catch (Exception ex) { Debug.LogException(ex); }
@@ -253,6 +278,12 @@ namespace MagTools
 
 				// Views, depends on VirindiViewService.dll
 				// We dispose these before our other objects (Trackers/Macros) as these probably reference those other objects.
+				if (hud != null) hud.Dispose();
+
+				if (consumableTrackerGUI != null) consumableTrackerGUI.Dispose();
+				if (playerTrackerGUIPersistent != null) playerTrackerGUIPersistent.Dispose();
+				if (playerTrackerGUICurrent != null) playerTrackerGUICurrent.Dispose();
+				if (corpseTrackerGUI != null) corpseTrackerGUI.Dispose();
 				if (combatTrackerGUIPersistent != null) combatTrackerGUIPersistent.Dispose();
 				if (combatTrackerGUICurrent != null) combatTrackerGUICurrent.Dispose();
 				if (manaTrackerGUI != null) manaTrackerGUI.Dispose();
@@ -278,6 +309,10 @@ namespace MagTools
 				if (equipmentTracker != null) equipmentTracker.Dispose();
 				if (combatTrackerCurrent != null) combatTrackerCurrent.Dispose();
 				if (combatTrackerPersistent != null) combatTrackerPersistent.Dispose();
+				if (corpseTracker != null) corpseTracker.Dispose();
+				if (playerTrackerCurrent != null) playerTrackerCurrent.Dispose();
+				if (playerTrackerPersistent != null) playerTrackerPersistent.Dispose();
+				if (consumableTracker != null) consumableTracker.Dispose();
 
 				// Macros
 				if (openMainPackOnLogin != null) openMainPackOnLogin.Dispose();
@@ -303,6 +338,13 @@ namespace MagTools
 				{
 					if (Settings.SettingsManager.CombatTracker.Persistent.Value)
 						combatTrackerPersistent.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
+				}
+				catch (Exception ex) { Debug.LogException(ex); }
+
+				try
+				{
+					if (Settings.SettingsManager.PlayerTracker.Persistent.Value)
+						playerTrackerPersistent.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".PlayerTracker.xml");
 				}
 				catch (Exception ex) { Debug.LogException(ex); }
 
@@ -413,6 +455,9 @@ namespace MagTools
 
 				if (Settings.SettingsManager.CombatTracker.Persistent.Value)
 					combatTrackerPersistent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
+
+				if (Settings.SettingsManager.PlayerTracker.Persistent.Value)
+					playerTrackerPersistent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".PlayerTracker.xml");
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -442,6 +487,33 @@ namespace MagTools
 				combatTrackerPersistent.ClearStats();
 
 				FileInfo fileInfo = new FileInfo(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
+
+				if (fileInfo.Exists)
+				{
+					fileInfo.Delete();
+
+					CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "File deleted: " + fileInfo.FullName, 5);
+				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void PlayerTrackerClearCurrentStats_Hit(object sender, EventArgs e)
+		{
+			try
+			{
+				playerTrackerCurrent.ClearStats();
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void PlayerTrackerClearPersistentStats_Hit(object sender, EventArgs e)
+		{
+			try
+			{
+				playerTrackerPersistent.ClearStats();
+
+				FileInfo fileInfo = new FileInfo(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".PlayerTracker.xml");
 
 				if (fileInfo.Exists)
 				{

@@ -1,13 +1,13 @@
 ﻿using System;
+
 using Mag.Shared;
+
 using VirindiViewService.Controls;
 
 namespace MagTools.Views
 {
 	class CombatTrackerGUIInfo
 	{
-		readonly HudList hudList;
-
 		readonly HudStaticText typelessMeleeMissileText;
 		readonly HudStaticText typelessMagicText;
 		readonly HudStaticText slashMeleeMissileText;
@@ -44,8 +44,6 @@ namespace MagTools.Views
 		{
 			try
 			{
-				this.hudList = hudList;
-
 				hudList.ClearColumnsAndRows();
 
 				// Each character is a max of 6 pixels wide
@@ -143,7 +141,7 @@ namespace MagTools.Views
 				critsAvgMaxText = ((HudStaticText)newRow[4]);
 				critsAvgMaxText.TextAlignment = VirindiViewService.WriteTextFormats.Right;
 
-				newRow = hudList.AddRow();
+				hudList.AddRow();
 
 				newRow = hudList.AddRow();
 				((HudStaticText)newRow[0]).Text = "Total";

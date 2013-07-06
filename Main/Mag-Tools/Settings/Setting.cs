@@ -48,7 +48,7 @@ namespace MagTools.Settings
 
 		void LoadValueFromConfig(T defaultValue)
 		{
-			value = SettingsFile.GetSetting<T>(Xpath, defaultValue);
+			value = SettingsFile.GetSetting(Xpath, defaultValue);
 		}
 
 		void StoreValueInConfigFile()
