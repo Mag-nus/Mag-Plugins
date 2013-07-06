@@ -29,6 +29,9 @@ namespace MagTools.Trackers.Player
 		public TrackedPlayer(string name)
 		{
 			Name = name;
+
+			CoreManager.Current.WorldFilter.CreateObject += new EventHandler<Decal.Adapter.Wrappers.CreateObjectEventArgs>(WorldFilter_CreateObject);
+			CoreManager.Current.WorldFilter.MoveObject += new EventHandler<Decal.Adapter.Wrappers.MoveObjectEventArgs>(WorldFilter_MoveObject);
 		}
 
 		public TrackedPlayer(string name, DateTime lastSeen, int landBlock, double locationX, double locaitonY, double locationZ, int id, PlayerType playerType = PlayerType.Unknown) : this(name)
@@ -44,9 +47,6 @@ namespace MagTools.Trackers.Player
 			Id = id;
 
 			PlayerType = playerType;
-
-			CoreManager.Current.WorldFilter.CreateObject += new EventHandler<Decal.Adapter.Wrappers.CreateObjectEventArgs>(WorldFilter_CreateObject);
-			CoreManager.Current.WorldFilter.MoveObject += new EventHandler<Decal.Adapter.Wrappers.MoveObjectEventArgs>(WorldFilter_MoveObject);
 		}
 
 		private bool disposed;
