@@ -5,7 +5,7 @@ namespace MagTools.Trackers.Consumable
 	class ConsumableTracker : IDisposable
 	{
 		//public event Action<TrackedCorpse> ItemAdded;
-		//public event Action<TrackedCorpse> ItemUpdated;
+		//public event Action<TrackedCorpse> ItemChanged;
 		//public event Action<TrackedCorpse> ItemRemoved;
 
 		public ConsumableTracker()

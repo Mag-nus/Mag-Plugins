@@ -33,6 +33,7 @@ namespace MagTools.Views
 				((HudStaticText)newRow[2]).Text = "Coords";
 
 				playerTracker.ItemAdded += new Action<TrackedPlayer>(playerTracker_ItemAdded);
+				playerTracker.ItemChanged += new Action<TrackedPlayer>(playerTracker_ItemChanged);
 				playerTracker.ItemRemoved += new Action<TrackedPlayer>(playerTracker_ItemRemoved);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -58,6 +59,7 @@ namespace MagTools.Views
 				if (disposing)
 				{
 					playerTracker.ItemAdded -= new Action<TrackedPlayer>(playerTracker_ItemAdded);
+					playerTracker.ItemChanged -= new Action<TrackedPlayer>(playerTracker_ItemChanged);
 					playerTracker.ItemRemoved -= new Action<TrackedPlayer>(playerTracker_ItemRemoved);
 				}
 
@@ -70,37 +72,16 @@ namespace MagTools.Views
 		{
 			try
 			{
-				HudList.HudListRowAccessor newRow = playerList.AddRow();
+				HudList.HudListRowAccessor newRow = playerList.InsertRow(1);
 
 				((HudStaticText)newRow[1]).Text = trackedPlayer.Name;
 
-				trackedPlayer_Changed(trackedPlayer);
-
-				trackedPlayer.Changed += new Action<TrackedPlayer>(trackedPlayer_Changed);
+				playerTracker_ItemChanged(trackedPlayer);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void playerTracker_ItemRemoved(TrackedPlayer trackedPlayer)
-		{
-			try
-			{
-				trackedPlayer.Changed -= new Action<TrackedPlayer>(trackedPlayer_Changed);
-
-				for (int row = 1; row <= playerList.RowCount; row++)
-				{
-					if (((HudStaticText)playerList[row - 1][1]).Text == trackedPlayer.Name)
-					{
-						playerList.RemoveRow(row - 1);
-
-						row--;
-					}
-				}
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		void trackedPlayer_Changed(TrackedPlayer trackedPlayer)
+		void playerTracker_ItemChanged(TrackedPlayer trackedPlayer)
 		{
 			try
 			{
@@ -114,6 +95,23 @@ namespace MagTools.Views
 						((HudStaticText)playerList[row - 1][2]).Text = newCords.ToString();
 
 						SortList();
+					}
+				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void playerTracker_ItemRemoved(TrackedPlayer trackedPlayer)
+		{
+			try
+			{
+				for (int row = 1; row <= playerList.RowCount; row++)
+				{
+					if (((HudStaticText)playerList[row - 1][1]).Text == trackedPlayer.Name)
+					{
+						playerList.RemoveRow(row - 1);
+
+						row--;
 					}
 				}
 			}

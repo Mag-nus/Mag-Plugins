@@ -1,22 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Globalization;
 
 using MagTools.Trackers.Corpse;
 
 using VirindiViewService.Controls;
+
+using Decal.Adapter.Wrappers;
 
 namespace MagTools.Views
 {
 	class CorpseTrackerGUI : IDisposable
 	{
 		readonly CorpseTracker corpseTracker;
-		readonly List<TrackedCorpse> trackedCorpses = new List<TrackedCorpse>();
+		readonly HudList corpseList;
 
 		public CorpseTrackerGUI(CorpseTracker corpseTracker, HudList corpseList)
 		{
 			try
 			{
 				this.corpseTracker = corpseTracker;
+				this.corpseList = corpseList;
+
+				corpseList.ClearColumnsAndRows();
+
+				corpseList.AddColumn(typeof(HudStaticText), 70, null);
+				corpseList.AddColumn(typeof(HudStaticText), 145, null);
+				corpseList.AddColumn(typeof(HudStaticText), 100, null);
+				corpseList.AddColumn(typeof(HudStaticText), 0, null);
+
+				HudList.HudListRowAccessor newRow = corpseList.AddRow();
+				((HudStaticText)newRow[0]).Text = "Time";
+				((HudStaticText)newRow[1]).Text = "Name";
+				((HudStaticText)newRow[2]).Text = "Coords";
+				((HudStaticText)newRow[3]).Text = "Id";
 
 				corpseTracker.ItemAdded += new Action<TrackedCorpse>(corpseTracker_ItemAdded);
 				corpseTracker.ItemRemoved += new Action<TrackedCorpse>(corpseTracker_ItemRemoved);
@@ -52,11 +68,24 @@ namespace MagTools.Views
 			}
 		}
 
-		void corpseTracker_ItemAdded(TrackedCorpse obj)
+		void corpseTracker_ItemAdded(TrackedCorpse trackedCorpse)
 		{
 			try
 			{
-				trackedCorpses.Add(obj);
+				try
+				{
+					HudList.HudListRowAccessor newRow = corpseList.InsertRow(1);
+
+					((HudStaticText)newRow[0]).Text = trackedCorpse.TimeStamp.ToString("ddd hh:mm tt");
+
+					((HudStaticText)newRow[1]).Text = trackedCorpse.Description;
+
+					CoordsObject newCords = Mag.Shared.Util.GetCoords(trackedCorpse.LandBlock, trackedCorpse.LocationX, trackedCorpse.LocationY);
+					((HudStaticText)newRow[2]).Text = newCords.ToString();
+
+					((HudStaticText)newRow[3]).Text = trackedCorpse.Id.ToString(CultureInfo.InvariantCulture);
+				}
+				catch (Exception ex) { Debug.LogException(ex); }
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -65,7 +94,15 @@ namespace MagTools.Views
 		{
 			try
 			{
-				trackedCorpses.Remove(obj);
+				for (int row = 1; row <= corpseList.RowCount; row++)
+				{
+					if (((HudStaticText)corpseList[row - 1][3]).Text == obj.Id.ToString(CultureInfo.InvariantCulture))
+					{
+						corpseList.RemoveRow(row - 1);
+
+						row--;
+					}
+				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}

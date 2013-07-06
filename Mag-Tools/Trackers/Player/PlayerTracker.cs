@@ -14,7 +14,12 @@ namespace MagTools.Trackers.Player
 		public event Action<TrackedPlayer> ItemAdded;
 
 		/// <summary>
-		/// This is raised when we have stopped tracking an item. After this is raised the ManaTrackedItem is disposed.
+		/// This is raised when an item we're tracking has been changed.
+		/// </summary>
+		public event Action<TrackedPlayer> ItemChanged;
+
+		/// <summary>
+		/// This is raised when we have stopped tracking an item.
 		/// </summary>
 		public event Action<TrackedPlayer> ItemRemoved;
 
@@ -62,7 +67,7 @@ namespace MagTools.Trackers.Player
 		{
 			try
 			{
-				ProcessPlayerWorldObject(e.New);
+				ProcessWorldObject(e.New);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -71,27 +76,44 @@ namespace MagTools.Trackers.Player
 		{
 			try
 			{
-				ProcessPlayerWorldObject(e.Moved);
+				ProcessWorldObject(e.Moved);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void ProcessPlayerWorldObject(WorldObject playerWO)
+		void ProcessWorldObject(WorldObject wo)
 		{
-			if (playerWO.ObjectClass != ObjectClass.Player)
+			if (wo.ObjectClass != ObjectClass.Player)
 				return;
 
-			if (playerWO.Name == CoreManager.Current.CharacterFilter.Name)
+			if (wo.Name == CoreManager.Current.CharacterFilter.Name)
 				return;
 
-			if (!trackedPlayers.ContainsKey(playerWO.Name))
+			if (!trackedPlayers.ContainsKey(wo.Name))
 			{
-				TrackedPlayer trackedPlayer = new TrackedPlayer(playerWO.Name, DateTime.Now, playerWO.Values(LongValueKey.Landblock), playerWO.RawCoordinates().X, playerWO.RawCoordinates().Y, playerWO.RawCoordinates().Z, playerWO.Id);
+				TrackedPlayer trackedPlayer = new TrackedPlayer(wo.Name, DateTime.Now, wo.Values(LongValueKey.Landblock), wo.RawCoordinates().X, wo.RawCoordinates().Y, wo.RawCoordinates().Z, wo.Id);
 
 				trackedPlayers.Add(trackedPlayer.Name, trackedPlayer);
 
 				if (ItemAdded != null)
 					ItemAdded(trackedPlayer);
+			}
+			else
+			{
+				TrackedPlayer trackedPlayer = trackedPlayers[wo.Name];
+
+				trackedPlayer.LastSeen = DateTime.Now;
+
+				trackedPlayer.LandBlock = wo.Values(LongValueKey.Landblock);
+
+				trackedPlayer.LocationX = wo.RawCoordinates().X;
+				trackedPlayer.LocationY = wo.RawCoordinates().Y;
+				trackedPlayer.LocationZ = wo.RawCoordinates().Z;
+
+				trackedPlayer.Id = wo.Id;
+
+				if (ItemChanged != null)
+					ItemChanged(trackedPlayer);
 			}
 		}
 
@@ -101,8 +123,6 @@ namespace MagTools.Trackers.Player
 			{
 				if (ItemRemoved != null)
 					ItemRemoved(kvp.Value);
-
-				kvp.Value.Dispose();
 			}
 
 			trackedPlayers.Clear();
