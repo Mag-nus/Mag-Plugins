@@ -103,16 +103,65 @@ namespace MagTools.Settings
 
 		public static class CombatTracker
 		{
-			public static readonly Setting<bool> Persistent = new Setting<bool>("CombatTracker/Persistent", "Keep Stats Persistent");
+			public static readonly Setting<bool> Persistent = new Setting<bool>("CombatTracker/Persistent", "Keep Stats Persistent", true);
 
 			public static readonly Setting<bool> ExportOnLogOff = new Setting<bool>("CombatTracker/ExportOnLogOff", "Export Stats on LogOff");
 
 			public static readonly Setting<bool> SortAlphabetically = new Setting<bool>("CombatTracker/SortAlphabetically", "Sort Alphabetically");
 		}
 
+		public static class CorpseTracker
+		{
+			public static readonly Setting<bool> Enabled = new Setting<bool>("CorpseTracker/Enabled", "Corpse Tracker Enabled", true);
+
+			public static readonly Setting<bool> Persistent = new Setting<bool>("CorpseTracker/Persistent", "Keep Stats Persistent", true);
+
+			public static readonly Setting<bool> TrackAllCorpses = new Setting<bool>("CorpseTracker/TrackAllCorpses", "Track All Corpses");
+
+			public static readonly Setting<bool> TrackFellowCorpses = new Setting<bool>("CorpseTracker/TrackFellowCorpses", "Track Fellow Corpses");
+
+			public static readonly Setting<bool> TrackPermittedCorpses = new Setting<bool>("CorpseTracker/TrackPermittedCorpses", "Track Permitted Corpses", true);
+		}
+
 		public static class PlayerTracker
 		{
+			public static readonly Setting<bool> Enabled = new Setting<bool>("PlayerTracker/Enabled", "Player Tracker Enabled");
+
 			public static readonly Setting<bool> Persistent = new Setting<bool>("PlayerTracker/Persistent", "Keep Stats Persistent");
+		}
+
+		public static class TellsLogger
+		{
+			public static readonly Setting<bool> Enabled = new Setting<bool>("TellsLogger/Enabled", "Tells Logger Enabled", true);
+
+			public static readonly Setting<bool> Persistent = new Setting<bool>("TellsLogger/Persistent", "Keep Logs Persistent", true);
+		}
+
+		public static class LocalLogger
+		{
+			public static readonly Setting<bool> Enabled = new Setting<bool>("LocalLogger/Enabled", "Local Logger Enabled");
+
+			public static readonly Setting<bool> Persistent = new Setting<bool>("LocalLogger/Persistent", "Keep Logs Persistent");
+		}
+
+		public static class FellowLogger
+		{
+			public static readonly Setting<bool> Enabled = new Setting<bool>("FellowLogger/Enabled", "Fellow Logger Enabled");
+
+			public static readonly Setting<bool> Persistent = new Setting<bool>("FellowLogger/Persistent", "Keep Logs Persistent");
+		}
+
+		public static class ChannelsLogger
+		{
+			public static readonly Setting<bool> Enabled = new Setting<bool>("ChannelsLogger/Enabled", "Channels Logger Enabled");
+
+			public static readonly Setting<bool> Persistent = new Setting<bool>("ChannelsLogger/Persistent", "Keep Logs Persistent");
+
+			public static readonly Setting<bool> General = new Setting<bool>("ChannelsLogger/General", "Log General Channel");
+
+			public static readonly Setting<bool> Trade = new Setting<bool>("ChannelsLogger/Trade", "Log Trade Channel");
+
+			public static readonly Setting<bool> Allegiance = new Setting<bool>("ChannelsLogger/Allegiance", "Log Allegiance Channel");
 		}
 
 		public static class Misc

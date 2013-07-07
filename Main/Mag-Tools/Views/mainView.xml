@@ -57,7 +57,27 @@
         </page>
 
         <page label=" Corpse ">
-          <control progid="DecalControls.List" name="CorpseTrackerList" left="0" top="0" width="320" height="460" />
+          <control progid="DecalControls.Notebook" left="0" top="0" width="320" height="460">
+            <page label=" Current Session Stats ">
+              <control progid="DecalControls.List" name="CorpseTrackerListCurrent" left="0" top="0" width="320" height="460" />
+            </page>
+            <page label="  Persistent Stats  ">
+              <control progid="DecalControls.List" name="CorpseTrackerListPersistent" left="0" top="0" width="320" height="460" />
+            </page>
+            <page label="    Options    ">
+              <control progid="DecalControls.FixedLayout" clipped="">
+                <control progid="DecalControls.PushButton" name="CorpseTrackerClearCurrentStats" left="10" top="10" width="120" height="20" text="Clear Current Stats" />
+
+                <control progid="DecalControls.PushButton" name="CorpseTrackerClearPersistentStats" left="150" top="10" width="120" height="20" text="Clear Persistent Stats" />
+
+                <control progid="DecalControls.CheckBox" name="CorpseTrackerEnabled" left="10" top="80" width="140" height="18" text="Corpse Tracker Enabled" />
+                <control progid="DecalControls.CheckBox" name="CorpseTrackerPersistent" left="10" top="100" width="140" height="18" text="Keep Persistent Stats" />
+                <control progid="DecalControls.CheckBox" name="CorpseTrackerTrackAllCorpses" left="10" top="120" width="140" height="18" text="Track All Corpses" />
+                <control progid="DecalControls.CheckBox" name="CorpseTrackerTrackFellowCorpses" left="10" top="140" width="140" height="18" text="Track Fellow Corpses" />
+                <control progid="DecalControls.CheckBox" name="CorpseTrackerTrackPermittedCorpses" left="10" top="160" width="140" height="18" text="Track Permitted Corpses" />
+              </control>
+            </page>
+          </control>
         </page>
 
         <page label=" Player ">
@@ -74,6 +94,7 @@
 
                 <control progid="DecalControls.PushButton" name="PlayerTrackerClearPersistentStats" left="150" top="10" width="120" height="20" text="Clear Persistent Stats" />
 
+                <control progid="DecalControls.CheckBox" name="PlayerTrackerEnabled" left="10" top="80" width="140" height="18" text="Player Tracker Enabled" />
                 <control progid="DecalControls.CheckBox" name="PlayerTrackerPersistent" left="10" top="100" width="140" height="18" text="Keep Persistent Stats" />
               </control>
             </page>
@@ -87,6 +108,99 @@
       </control>
     </page>
 
+    <page label=" Loggers ">
+      <control progid="DecalControls.Notebook">
+
+        <page label="  Tells  ">
+          <control progid="DecalControls.Notebook" left="0" top="0" width="320" height="460">
+            <page label=" Current Session Logs ">
+              <control progid="DecalControls.List" name="TellsLoggerListCurrent" left="0" top="0" width="320" height="460" />
+            </page>
+            <page label="  Persistent Logs  ">
+              <control progid="DecalControls.List" name="TellsLoggerListPersistent" left="0" top="0" width="320" height="460" />
+            </page>
+            <page label="    Options    ">
+              <control progid="DecalControls.FixedLayout" clipped="">
+                <control progid="DecalControls.PushButton" name="TellsLoggerClearCurrentLogs" left="10" top="10" width="120" height="20" text="Clear Current Logs" />
+
+                <control progid="DecalControls.PushButton" name="TellsLoggerClearPersistentLogs" left="150" top="10" width="120" height="20" text="Clear Persistent Logs" />
+
+                <control progid="DecalControls.CheckBox" name="TellsLoggerEnabled" left="10" top="80" width="140" height="18" text="Tell Logger Enabled" />
+                <control progid="DecalControls.CheckBox" name="TellsLoggerPersistent" left="10" top="100" width="140" height="18" text="Keep Persistent Logs" />
+              </control>
+            </page>
+          </control>
+        </page>
+
+        <page label=" Local ">
+          <control progid="DecalControls.Notebook" left="0" top="0" width="320" height="460">
+            <page label=" Current Session Logs ">
+              <control progid="DecalControls.List" name="LocalLoggerListCurrent" left="0" top="0" width="320" height="460" />
+            </page>
+            <page label="  Persistent Logs  ">
+              <control progid="DecalControls.List" name="LocalLoggerListPersistent" left="0" top="0" width="320" height="460" />
+            </page>
+            <page label="    Options    ">
+              <control progid="DecalControls.FixedLayout" clipped="">
+                <control progid="DecalControls.PushButton" name="LocalLoggerClearCurrentLogs" left="10" top="10" width="120" height="20" text="Clear Current Logs" />
+
+                <control progid="DecalControls.PushButton" name="LocalLoggerClearPersistentLogs" left="150" top="10" width="120" height="20" text="Clear Persistent Logs" />
+
+                <control progid="DecalControls.CheckBox" name="LocalLoggerEnabled" left="10" top="80" width="170" height="18" text="Local Chat Logger Enabled" />
+                <control progid="DecalControls.CheckBox" name="LocalLoggerPersistent" left="10" top="100" width="140" height="18" text="Keep Persistent Logs" />
+              </control>
+            </page>
+          </control>
+        </page>
+
+        <page label=" Fellow ">
+          <control progid="DecalControls.Notebook" left="0" top="0" width="320" height="460">
+            <page label=" Current Session Logs ">
+              <control progid="DecalControls.List" name="FellowLoggerListCurrent" left="0" top="0" width="320" height="460" />
+            </page>
+            <page label="  Persistent Logs  ">
+              <control progid="DecalControls.List" name="FellowLoggerListPersistent" left="0" top="0" width="320" height="460" />
+            </page>
+            <page label="    Options    ">
+              <control progid="DecalControls.FixedLayout" clipped="">
+                <control progid="DecalControls.PushButton" name="FellowLoggerClearCurrentLogs" left="10" top="10" width="120" height="20" text="Clear Current Logs" />
+
+                <control progid="DecalControls.PushButton" name="FellowLoggerClearPersistentLogs" left="150" top="10" width="120" height="20" text="Clear Persistent Logs" />
+
+                <control progid="DecalControls.CheckBox" name="FellowLoggerEnabled" left="10" top="80" width="170" height="18" text="Fellow Chat Logger Enabled" />
+                <control progid="DecalControls.CheckBox" name="FellowLoggerPersistent" left="10" top="100" width="140" height="18" text="Keep Persistent Logs" />
+              </control>
+            </page>
+          </control>
+        </page>
+        
+        <page label=" Channels ">
+          <control progid="DecalControls.Notebook" left="0" top="0" width="320" height="460">
+            <page label=" Current Session Logs ">
+              <control progid="DecalControls.List" name="ChannelsLoggerListCurrent" left="0" top="0" width="320" height="460" />
+            </page>
+            <page label="  Persistent Logs  ">
+              <control progid="DecalControls.List" name="ChannelsLoggerListPersistent" left="0" top="0" width="320" height="460" />
+            </page>
+            <page label="    Options    ">
+              <control progid="DecalControls.FixedLayout" clipped="">
+                <control progid="DecalControls.PushButton" name="ChannelsLoggerClearCurrentLogs" left="10" top="10" width="120" height="20" text="Clear Current Logs" />
+
+                <control progid="DecalControls.PushButton" name="ChannelsLoggerClearPersistentLogs" left="150" top="10" width="120" height="20" text="Clear Persistent Logs" />
+
+                <control progid="DecalControls.CheckBox" name="ChannelsLoggerEnabled" left="10" top="80" width="170" height="18" text="Channel Chat Logger Enabled" />
+                <control progid="DecalControls.CheckBox" name="ChannelsLoggerPersistent" left="10" top="100" width="140" height="18" text="Keep Persistent Stats" />
+                <control progid="DecalControls.CheckBox" name="ChannelsLoggerGeneral" left="10" top="120" width="140" height="18" text="General Channel" />
+                <control progid="DecalControls.CheckBox" name="ChannelsLoggerTrade" left="10" top="140" width="140" height="18" text="Trade Channel" />
+                <control progid="DecalControls.CheckBox" name="ChannelsLoggerAllegiance" left="10" top="160" width="140" height="18" text="Allegiance Channel" />
+              </control>
+            </page>
+          </control>
+        </page>
+
+      </control>
+    </page>
+    
     <page label="   Misc   ">
       <control progid="DecalControls.Notebook" left="0" top="0" width="320" height="460">
 

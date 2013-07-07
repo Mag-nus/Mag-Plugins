@@ -2,7 +2,7 @@
 
 namespace MagTools.Trackers.Player
 {
-	class TrackedPlayer
+	public class TrackedPlayer
 	{
 		public readonly string Name;
 

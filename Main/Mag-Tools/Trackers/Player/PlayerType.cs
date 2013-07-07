@@ -1,7 +1,7 @@
 ﻿
 namespace MagTools.Trackers.Player
 {
-	enum PlayerType
+	public enum PlayerType
 	{
 		Unknown				= 0,
 

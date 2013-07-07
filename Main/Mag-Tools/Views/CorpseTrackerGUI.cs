@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
+using MagTools.Trackers;
 using MagTools.Trackers.Corpse;
 
 using VirindiViewService.Controls;
@@ -11,10 +12,10 @@ namespace MagTools.Views
 {
 	class CorpseTrackerGUI : IDisposable
 	{
-		readonly CorpseTracker corpseTracker;
+		readonly ITracker<TrackedCorpse> corpseTracker;
 		readonly HudList corpseList;
 
-		public CorpseTrackerGUI(CorpseTracker corpseTracker, HudList corpseList)
+		public CorpseTrackerGUI(ITracker<TrackedCorpse> corpseTracker, HudList corpseList)
 		{
 			try
 			{
@@ -23,8 +24,8 @@ namespace MagTools.Views
 
 				corpseList.ClearColumnsAndRows();
 
-				corpseList.AddColumn(typeof(HudStaticText), 70, null);
-				corpseList.AddColumn(typeof(HudStaticText), 145, null);
+				corpseList.AddColumn(typeof(HudStaticText), 73, null);
+				corpseList.AddColumn(typeof(HudStaticText), 142, null);
 				corpseList.AddColumn(typeof(HudStaticText), 100, null);
 				corpseList.AddColumn(typeof(HudStaticText), 0, null);
 
@@ -35,6 +36,7 @@ namespace MagTools.Views
 				((HudStaticText)newRow[3]).Text = "Id";
 
 				corpseTracker.ItemAdded += new Action<TrackedCorpse>(corpseTracker_ItemAdded);
+				corpseTracker.ItemChanged += new Action<TrackedCorpse>(corpseTracker_ItemChanged);
 				corpseTracker.ItemRemoved += new Action<TrackedCorpse>(corpseTracker_ItemRemoved);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -60,6 +62,7 @@ namespace MagTools.Views
 				if (disposing)
 				{
 					corpseTracker.ItemAdded -= new Action<TrackedCorpse>(corpseTracker_ItemAdded);
+					corpseTracker.ItemChanged -= new Action<TrackedCorpse>(corpseTracker_ItemChanged);
 					corpseTracker.ItemRemoved -= new Action<TrackedCorpse>(corpseTracker_ItemRemoved);
 				}
 
@@ -72,39 +75,53 @@ namespace MagTools.Views
 		{
 			try
 			{
-				try
-				{
-					HudList.HudListRowAccessor newRow = corpseList.InsertRow(1);
+				if (trackedCorpse.Opened)
+					return;
 
-					((HudStaticText)newRow[0]).Text = trackedCorpse.TimeStamp.ToString("ddd hh:mm tt");
+				HudList.HudListRowAccessor newRow = corpseList.InsertRow(1);
 
-					((HudStaticText)newRow[1]).Text = trackedCorpse.Description;
+				((HudStaticText)newRow[0]).Text = trackedCorpse.TimeStamp.ToString("ddd hh:mm tt");
 
-					CoordsObject newCords = Mag.Shared.Util.GetCoords(trackedCorpse.LandBlock, trackedCorpse.LocationX, trackedCorpse.LocationY);
-					((HudStaticText)newRow[2]).Text = newCords.ToString();
+				((HudStaticText)newRow[1]).Text = trackedCorpse.Description;
 
-					((HudStaticText)newRow[3]).Text = trackedCorpse.Id.ToString(CultureInfo.InvariantCulture);
-				}
-				catch (Exception ex) { Debug.LogException(ex); }
+				CoordsObject newCords = Mag.Shared.Util.GetCoords(trackedCorpse.LandBlock, trackedCorpse.LocationX, trackedCorpse.LocationY);
+				((HudStaticText)newRow[2]).Text = newCords.ToString();
+
+				((HudStaticText)newRow[3]).Text = trackedCorpse.Id.ToString(CultureInfo.InvariantCulture);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void corpseTracker_ItemRemoved(TrackedCorpse obj)
+		void corpseTracker_ItemChanged(TrackedCorpse trackedCorpse)
 		{
 			try
 			{
-				for (int row = 1; row <= corpseList.RowCount; row++)
-				{
-					if (((HudStaticText)corpseList[row - 1][3]).Text == obj.Id.ToString(CultureInfo.InvariantCulture))
-					{
-						corpseList.RemoveRow(row - 1);
-
-						row--;
-					}
-				}
+				if (trackedCorpse.Opened)
+					RemoveCorpse(trackedCorpse);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void corpseTracker_ItemRemoved(TrackedCorpse trackedCorpse)
+		{
+			try
+			{
+				RemoveCorpse(trackedCorpse);
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void RemoveCorpse(TrackedCorpse trackedCorpse)
+		{
+			for (int row = 1; row <= corpseList.RowCount; row++)
+			{
+				if (((HudStaticText)corpseList[row - 1][3]).Text == trackedCorpse.Id.ToString(CultureInfo.InvariantCulture))
+				{
+					corpseList.RemoveRow(row - 1);
+
+					row--;
+				}
+			}			
 		}
 	}
 }

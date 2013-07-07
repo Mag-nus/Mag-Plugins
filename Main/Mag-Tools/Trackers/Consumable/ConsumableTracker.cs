@@ -1,12 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MagTools.Trackers.Consumable
 {
-	class ConsumableTracker : IDisposable
+	class ConsumableTracker : ITracker<TrackedConsumable>, IDisposable
 	{
-		//public event Action<TrackedCorpse> ItemAdded;
-		//public event Action<TrackedCorpse> ItemChanged;
-		//public event Action<TrackedCorpse> ItemRemoved;
+		/// <summary>
+		/// This is raised when an item has been added to the tracker.
+		/// </summary>
+		public event Action<TrackedConsumable> ItemAdded;
+
+		/// <summary>
+		/// This is raised when an item we're tracking has been changed.
+		/// </summary>
+		public event Action<TrackedConsumable> ItemChanged;
+
+		/// <summary>
+		/// This is raised when we have stopped tracking an item. After this is raised the ManaTrackedItem is disposed.
+		/// </summary>
+		public event Action<TrackedConsumable> ItemRemoved;
+
+		readonly Dictionary<int, TrackedConsumable> trackedItems = new Dictionary<int, TrackedConsumable>();
 
 		public ConsumableTracker()
 		{

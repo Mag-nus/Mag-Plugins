@@ -87,8 +87,12 @@
     <Compile Include="Client\NoFocusFPSManager.cs" />
     <Compile Include="Client\WindowPosition.cs" />
     <Compile Include="Trackers\Consumable\ConsumableTracker.cs" />
+    <Compile Include="Trackers\Consumable\TrackedConsumable.cs" />
     <Compile Include="Trackers\Corpse\CorpseTracker.cs" />
+    <Compile Include="Trackers\Corpse\CorpseTrackerExporter.cs" />
+    <Compile Include="Trackers\Corpse\CorpseTrackerImporter.cs" />
     <Compile Include="Trackers\Corpse\TrackedCorpse.cs" />
+    <Compile Include="Trackers\ITracker.cs" />
     <Compile Include="Trackers\Player\PlayerTracker.cs" />
     <Compile Include="Trackers\Player\PlayerTrackerExporter.cs" />
     <Compile Include="Trackers\Player\PlayerTrackerImporter.cs" />
@@ -164,7 +168,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Trackers\Chat\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

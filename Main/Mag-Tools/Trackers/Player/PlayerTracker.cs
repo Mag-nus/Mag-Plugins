@@ -6,7 +6,7 @@ using Decal.Adapter.Wrappers;
 
 namespace MagTools.Trackers.Player
 {
-	class PlayerTracker : IDisposable
+	class PlayerTracker : ITracker<TrackedPlayer>, IDisposable
 	{
 		/// <summary>
 		/// This is raised when an item has been added to the tracker.
@@ -23,7 +23,7 @@ namespace MagTools.Trackers.Player
 		/// </summary>
 		public event Action<TrackedPlayer> ItemRemoved;
 
-		readonly Dictionary<string, TrackedPlayer> trackedPlayers = new Dictionary<string, TrackedPlayer>();
+		readonly Dictionary<string, TrackedPlayer> trackedItems = new Dictionary<string, TrackedPlayer>();
 
 		public PlayerTracker()
 		{
@@ -67,6 +67,9 @@ namespace MagTools.Trackers.Player
 		{
 			try
 			{
+				if (!Settings.SettingsManager.PlayerTracker.Enabled.Value)
+					return;
+
 				ProcessWorldObject(e.New);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -76,6 +79,9 @@ namespace MagTools.Trackers.Player
 		{
 			try
 			{
+				if (!Settings.SettingsManager.PlayerTracker.Enabled.Value)
+					return;
+
 				ProcessWorldObject(e.Moved);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -89,43 +95,43 @@ namespace MagTools.Trackers.Player
 			if (wo.Name == CoreManager.Current.CharacterFilter.Name)
 				return;
 
-			if (!trackedPlayers.ContainsKey(wo.Name))
+			if (!trackedItems.ContainsKey(wo.Name))
 			{
-				TrackedPlayer trackedPlayer = new TrackedPlayer(wo.Name, DateTime.Now, wo.Values(LongValueKey.Landblock), wo.RawCoordinates().X, wo.RawCoordinates().Y, wo.RawCoordinates().Z, wo.Id);
+				TrackedPlayer trackedItem = new TrackedPlayer(wo.Name, DateTime.Now, wo.Values(LongValueKey.Landblock), wo.RawCoordinates().X, wo.RawCoordinates().Y, wo.RawCoordinates().Z, wo.Id);
 
-				trackedPlayers.Add(trackedPlayer.Name, trackedPlayer);
+				trackedItems.Add(trackedItem.Name, trackedItem);
 
 				if (ItemAdded != null)
-					ItemAdded(trackedPlayer);
+					ItemAdded(trackedItem);
 			}
 			else
 			{
-				TrackedPlayer trackedPlayer = trackedPlayers[wo.Name];
+				TrackedPlayer trackedItem = trackedItems[wo.Name];
 
-				trackedPlayer.LastSeen = DateTime.Now;
+				trackedItem.LastSeen = DateTime.Now;
 
-				trackedPlayer.LandBlock = wo.Values(LongValueKey.Landblock);
+				trackedItem.LandBlock = wo.Values(LongValueKey.Landblock);
 
-				trackedPlayer.LocationX = wo.RawCoordinates().X;
-				trackedPlayer.LocationY = wo.RawCoordinates().Y;
-				trackedPlayer.LocationZ = wo.RawCoordinates().Z;
+				trackedItem.LocationX = wo.RawCoordinates().X;
+				trackedItem.LocationY = wo.RawCoordinates().Y;
+				trackedItem.LocationZ = wo.RawCoordinates().Z;
 
-				trackedPlayer.Id = wo.Id;
+				trackedItem.Id = wo.Id;
 
 				if (ItemChanged != null)
-					ItemChanged(trackedPlayer);
+					ItemChanged(trackedItem);
 			}
 		}
 
 		public void ClearStats()
 		{
-			foreach (var kvp in trackedPlayers)
+			foreach (var kvp in trackedItems)
 			{
 				if (ItemRemoved != null)
 					ItemRemoved(kvp.Value);
 			}
 
-			trackedPlayers.Clear();
+			trackedItems.Clear();
 		}
 
 		public void ImportStats(string xmlFileName)
@@ -138,10 +144,10 @@ namespace MagTools.Trackers.Player
 
 			foreach (var item in importedList)
 			{
-				if (trackedPlayers.ContainsKey(item.Name))
+				if (trackedItems.ContainsKey(item.Name))
 					continue;
 
-				trackedPlayers.Add(item.Name, item);
+				trackedItems.Add(item.Name, item);
 
 				if (ItemAdded != null)
 					ItemAdded(item);
@@ -150,12 +156,12 @@ namespace MagTools.Trackers.Player
 
 		public void ExportStats(string xmlFileName, bool showMessage = false)
 		{
-			if (trackedPlayers.Count == 0)
+			if (trackedItems.Count == 0)
 				return;
 
 			List<TrackedPlayer> exportedList = new List<TrackedPlayer>();
 
-			foreach (var kvp in trackedPlayers)
+			foreach (var kvp in trackedItems)
 				exportedList.Add(kvp.Value);
 
 			PlayerTrackerExporter exporter = new PlayerTrackerExporter(exportedList);
