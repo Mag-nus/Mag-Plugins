@@ -11,6 +11,7 @@ namespace MagTools.Views
 		readonly VirindiViewService.ControlGroup controls;
 		readonly VirindiViewService.HudView view;
 
+
 		// Mana Tracker
 		public HudList ManaList { get; private set; }
 
@@ -18,7 +19,7 @@ namespace MagTools.Views
 		HudCheckBox ManaRecharge { get; set; }
 		public HudStaticText UnretainedTotal { get; private set; }
 
-		// Combat Tracker - Tracker
+		// Combat Tracker
 		public HudList CombatTrackerMonsterListCurrent { get; private set; }
 		public HudList CombatTrackerDamageListCurrent { get; private set; }
 		public HudList CombatTrackerMonsterListPersistent { get; private set; }
@@ -34,7 +35,18 @@ namespace MagTools.Views
 		HudCheckBox CombatTrackerSortAlphabetically { get; set; }
 
 		// Corpse Tracker
-		public HudList CorpseTrackerList { get; private set; }
+		public HudList CorpseTrackerListCurrent { get; private set; }
+		public HudList CorpseTrackerListPersistent { get; private set; }
+
+		// Corpse Tracker - Options
+		public HudButton CorpseTrackerClearCurrentStats { get; private set; }
+		public HudButton CorpseTrackerClearPersistentStats { get; private set; }
+
+		HudCheckBox CorpseTrackerEnabled { get; set; }
+		HudCheckBox CorpseTrackerPersistent { get; set; }
+		HudCheckBox CorpseTrackerTrackAllCorpses { get; set; }
+		HudCheckBox CorpseTrackerTrackFellowCorpses { get; set; }
+		HudCheckBox CorpseTrackerTrackPermittedCorpses { get; set; }
 
 		// Player Tracker
 		public HudList PlayerTrackerListCurrent { get; private set; }
@@ -44,10 +56,60 @@ namespace MagTools.Views
 		public HudButton PlayerTrackerClearCurrentStats { get; private set; }
 		public HudButton PlayerTrackerClearPersistentStats { get; private set; }
 
+		HudCheckBox PlayerTrackerEnabled { get; set; }
 		HudCheckBox PlayerTrackerPersistent { get; set; }
 
 		// Consumable Tracker
 		public HudList ConsumableTrackerList { get; private set; }
+
+
+		// Tells Logger
+		public HudList TellsLoggerListCurrent { get; private set; }
+		public HudList TellsLoggerListPersistent { get; private set; }
+
+		// Tells Logger - Options
+		public HudButton TellsLoggerClearCurrentLogs { get; private set; }
+		public HudButton TellsLoggerClearPersistentLogs { get; private set; }
+
+		HudCheckBox TellsLoggerEnabled { get; set; }
+		HudCheckBox TellsLoggerPersistent { get; set; }
+
+		// Local Logger
+		public HudList LocalLoggerListCurrent { get; private set; }
+		public HudList LocalLoggerListPersistent { get; private set; }
+
+		// Local Logger - Options
+		public HudButton LocalLoggerClearCurrentLogs { get; private set; }
+		public HudButton LocalLoggerClearPersistentLogs { get; private set; }
+
+		HudCheckBox LocalLoggerEnabled { get; set; }
+		HudCheckBox LocalLoggerPersistent { get; set; }
+
+		// Fellow Logger
+		public HudList FellowLoggerListCurrent { get; private set; }
+		public HudList FellowLoggerListPersistent { get; private set; }
+
+		// Fellow Logger - Options
+		public HudButton FellowLoggerClearCurrentLogs { get; private set; }
+		public HudButton FellowLoggerClearPersistentLogs { get; private set; }
+
+		HudCheckBox FellowLoggerEnabled { get; set; }
+		HudCheckBox FellowLoggerPersistent { get; set; }
+
+		// Channels Logger
+		public HudList ChannelsLoggerListCurrent { get; private set; }
+		public HudList ChannelsLoggerListPersistent { get; private set; }
+
+		// Channels Logger - Options
+		public HudButton ChannelsLoggerClearCurrentLogs { get; private set; }
+		public HudButton ChannelsLoggerClearPersistentLogs { get; private set; }
+
+		HudCheckBox ChannelsLoggerEnabled { get; set; }
+		HudCheckBox ChannelsLoggerPersistent { get; set; }
+		HudCheckBox ChannelsLoggerGeneral { get; set; }
+		HudCheckBox ChannelsLoggerTrade { get; set; }
+		HudCheckBox ChannelsLoggerAllegiance { get; set; }
+
 
 		// Misc - Options
 		HudList OptionList { get; set; }
@@ -94,7 +156,7 @@ namespace MagTools.Views
 				ManaRecharge = view != null ? (HudCheckBox)view["ManaRecharge"] : new HudCheckBox();
 				UnretainedTotal = view != null ? (HudStaticText)view["UnretainedTotal"] : new HudStaticText();
 
-				// Combat Tracker - Tracker
+				// Combat Tracker
 				CombatTrackerMonsterListCurrent = view != null ? (HudList)view["CombatTrackerMonsterListCurrent"] : new HudList();
 				CombatTrackerDamageListCurrent = view != null ? (HudList)view["CombatTrackerDamageListCurrent"] : new HudList();
 				CombatTrackerMonsterListPersistent = view != null ? (HudList)view["CombatTrackerMonsterListPersistent"] : new HudList();
@@ -110,7 +172,18 @@ namespace MagTools.Views
 				CombatTrackerSortAlphabetically = view != null ? (HudCheckBox)view["CombatTrackerSortAlphabetically"] : new HudCheckBox();
 
 				// Corpse Tracker
-				CorpseTrackerList = view != null ? (HudList)view["CorpseTrackerList"] : new HudList();
+				CorpseTrackerListCurrent = view != null ? (HudList)view["CorpseTrackerListCurrent"] : new HudList();
+				CorpseTrackerListPersistent = view != null ? (HudList)view["CorpseTrackerListPersistent"] : new HudList();
+
+				// Corpse Tracker - Options
+				CorpseTrackerClearCurrentStats = view != null ? (HudButton)view["CorpseTrackerClearCurrentStats"] : new HudButton();
+				CorpseTrackerClearPersistentStats = view != null ? (HudButton)view["CorpseTrackerClearPersistentStats"] : new HudButton();
+
+				CorpseTrackerEnabled = view != null ? (HudCheckBox)view["CorpseTrackerEnabled"] : new HudCheckBox();
+				CorpseTrackerPersistent = view != null ? (HudCheckBox)view["CorpseTrackerPersistent"] : new HudCheckBox();
+				CorpseTrackerTrackAllCorpses = view != null ? (HudCheckBox)view["CorpseTrackerTrackAllCorpses"] : new HudCheckBox();
+				CorpseTrackerTrackFellowCorpses = view != null ? (HudCheckBox)view["CorpseTrackerTrackFellowCorpses"] : new HudCheckBox();
+				CorpseTrackerTrackPermittedCorpses = view != null ? (HudCheckBox)view["CorpseTrackerTrackPermittedCorpses"] : new HudCheckBox();
 
 				// Player Tracker
 				PlayerTrackerListCurrent = view != null ? (HudList)view["PlayerTrackerListCurrent"] : new HudList();
@@ -120,10 +193,60 @@ namespace MagTools.Views
 				PlayerTrackerClearCurrentStats = view != null ? (HudButton)view["PlayerTrackerClearCurrentStats"] : new HudButton();
 				PlayerTrackerClearPersistentStats = view != null ? (HudButton)view["PlayerTrackerClearPersistentStats"] : new HudButton();
 
+				PlayerTrackerEnabled = view != null ? (HudCheckBox)view["PlayerTrackerEnabled"] : new HudCheckBox();
 				PlayerTrackerPersistent = view != null ? (HudCheckBox)view["PlayerTrackerPersistent"] : new HudCheckBox();
 
 				// Consumable Tracker
 				ConsumableTrackerList = view != null ? (HudList)view["ConsumableTrackerList"] : new HudList();
+
+
+				// Tells Logger
+				TellsLoggerListCurrent = view != null ? (HudList)view["TellsLoggerListCurrent"] : new HudList();
+				TellsLoggerListPersistent = view != null ? (HudList)view["TellsLoggerListPersistent"] : new HudList();
+
+				// Tells Logger - Options
+				TellsLoggerClearCurrentLogs = view != null ? (HudButton)view["TellsLoggerClearCurrentLogs"] : new HudButton();
+				TellsLoggerClearPersistentLogs = view != null ? (HudButton)view["TellsLoggerClearPersistentLogs"] : new HudButton();
+
+				TellsLoggerEnabled = view != null ? (HudCheckBox)view["TellsLoggerEnabled"] : new HudCheckBox();
+				TellsLoggerPersistent = view != null ? (HudCheckBox)view["TellsLoggerPersistent"] : new HudCheckBox();
+
+				// Local Logger
+				LocalLoggerListCurrent = view != null ? (HudList)view["LocalLoggerListCurrent"] : new HudList();
+				LocalLoggerListPersistent = view != null ? (HudList)view["LocalLoggerListPersistent"] : new HudList();
+
+				// Local Logger - Options
+				LocalLoggerClearCurrentLogs = view != null ? (HudButton)view["LocalLoggerClearCurrentLogs"] : new HudButton();
+				LocalLoggerClearPersistentLogs = view != null ? (HudButton)view["LocalLoggerClearPersistentLogs"] : new HudButton();
+
+				LocalLoggerEnabled = view != null ? (HudCheckBox)view["LocalLoggerEnabled"] : new HudCheckBox();
+				LocalLoggerPersistent = view != null ? (HudCheckBox)view["LocalLoggerPersistent"] : new HudCheckBox();
+
+				// Fellow Logger
+				FellowLoggerListCurrent = view != null ? (HudList)view["FellowLoggerListCurrent"] : new HudList();
+				FellowLoggerListPersistent = view != null ? (HudList)view["FellowLoggerListPersistent"] : new HudList();
+
+				// Fellow Logger - Options
+				FellowLoggerClearCurrentLogs = view != null ? (HudButton)view["FellowLoggerClearCurrentLogs"] : new HudButton();
+				FellowLoggerClearPersistentLogs = view != null ? (HudButton)view["FellowLoggerClearPersistentLogs"] : new HudButton();
+
+				FellowLoggerEnabled = view != null ? (HudCheckBox)view["FellowLoggerEnabled"] : new HudCheckBox();
+				FellowLoggerPersistent = view != null ? (HudCheckBox)view["FellowLoggerPersistent"] : new HudCheckBox();
+
+				// Channels Logger
+				ChannelsLoggerListCurrent = view != null ? (HudList)view["ChannelsLoggerListCurrent"] : new HudList();
+				ChannelsLoggerListPersistent = view != null ? (HudList)view["ChannelsLoggerListPersistent"] : new HudList();
+
+				// Channels Logger - Options
+				ChannelsLoggerClearCurrentLogs = view != null ? (HudButton)view["ChannelsLoggerClearCurrentLogs"] : new HudButton();
+				ChannelsLoggerClearPersistentLogs = view != null ? (HudButton)view["ChannelsLoggerClearPersistentLogs"] : new HudButton();
+
+				ChannelsLoggerEnabled = view != null ? (HudCheckBox)view["ChannelsLoggerEnabled"] : new HudCheckBox();
+				ChannelsLoggerPersistent = view != null ? (HudCheckBox)view["ChannelsLoggerPersistent"] : new HudCheckBox();
+				ChannelsLoggerGeneral = view != null ? (HudCheckBox)view["ChannelsLoggerGeneral"] : new HudCheckBox();
+				ChannelsLoggerTrade = view != null ? (HudCheckBox)view["ChannelsLoggerTrade"] : new HudCheckBox();
+				ChannelsLoggerAllegiance = view != null ? (HudCheckBox)view["ChannelsLoggerAllegiance"] : new HudCheckBox();
+
 
 				// Misc - Options
 				OptionList = view != null ? (HudList)view["OptionList"] : new HudList();
@@ -157,60 +280,100 @@ namespace MagTools.Views
 				// Mana Tracker
 				ManaRecharge.Checked = Settings.SettingsManager.ManaManagement.AutoRecharge.Value;
 				Settings.SettingsManager.ManaManagement.AutoRecharge.Changed += obj => { ManaRecharge.Checked = obj.Value; };
-				ManaRecharge.Change += (s, e) => 
-				{
-					try
-					{
-						Settings.SettingsManager.ManaManagement.AutoRecharge.Value = ((HudCheckBox)s).Checked;
-					}
-					catch (Exception ex) { Debug.LogException(ex); }
-				};
+				ManaRecharge.Change += (s, e) => { try { Settings.SettingsManager.ManaManagement.AutoRecharge.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
 
 				// Combat Tracker
 				CombatTrackerExportOnLogOff.Checked = Settings.SettingsManager.CombatTracker.ExportOnLogOff.Value;
 				Settings.SettingsManager.CombatTracker.ExportOnLogOff.Changed += obj => { CombatTrackerExportOnLogOff.Checked = obj.Value; };
-				CombatTrackerExportOnLogOff.Change += (s, e) =>
-				{
-					try
-					{
-						Settings.SettingsManager.CombatTracker.ExportOnLogOff.Value = ((HudCheckBox)s).Checked;
-					}
-					catch (Exception ex) { Debug.LogException(ex); }
-				};
+				CombatTrackerExportOnLogOff.Change += (s, e) => { try { Settings.SettingsManager.CombatTracker.ExportOnLogOff.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
 
 				CombatTrackerPersistent.Checked = Settings.SettingsManager.CombatTracker.Persistent.Value;
 				Settings.SettingsManager.CombatTracker.Persistent.Changed += obj => { CombatTrackerPersistent.Checked = obj.Value; };
-				CombatTrackerPersistent.Change += (s, e) =>
-				{
-					try
-					{
-						Settings.SettingsManager.CombatTracker.Persistent.Value = ((HudCheckBox)s).Checked;
-					}
-					catch (Exception ex) { Debug.LogException(ex); }
-				};
+				CombatTrackerPersistent.Change += (s, e) => { try { Settings.SettingsManager.CombatTracker.Persistent.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
 
 				CombatTrackerSortAlphabetically.Checked = Settings.SettingsManager.CombatTracker.SortAlphabetically.Value;
 				Settings.SettingsManager.CombatTracker.SortAlphabetically.Changed += obj => { CombatTrackerSortAlphabetically.Checked = obj.Value; };
-				CombatTrackerSortAlphabetically.Change += (s, e) =>
-				{
-					try
-					{
-						Settings.SettingsManager.CombatTracker.SortAlphabetically.Value = ((HudCheckBox)s).Checked;
-					}
-					catch (Exception ex) { Debug.LogException(ex); }
-				};
+				CombatTrackerSortAlphabetically.Change += (s, e) => { try { Settings.SettingsManager.CombatTracker.SortAlphabetically.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+				// Corpse Tracker
+				CorpseTrackerEnabled.Checked = Settings.SettingsManager.CorpseTracker.Enabled.Value;
+				Settings.SettingsManager.CorpseTracker.Enabled.Changed += obj => { CorpseTrackerEnabled.Checked = obj.Value; };
+				CorpseTrackerEnabled.Change += (s, e) => { try { Settings.SettingsManager.CorpseTracker.Enabled.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+				CorpseTrackerPersistent.Checked = Settings.SettingsManager.CorpseTracker.Persistent.Value;
+				Settings.SettingsManager.CorpseTracker.Persistent.Changed += obj => { CorpseTrackerPersistent.Checked = obj.Value; };
+				CorpseTrackerPersistent.Change += (s, e) => { try { Settings.SettingsManager.CorpseTracker.Persistent.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+				CorpseTrackerTrackAllCorpses.Checked = Settings.SettingsManager.CorpseTracker.TrackAllCorpses.Value;
+				Settings.SettingsManager.CorpseTracker.TrackAllCorpses.Changed += obj => { CorpseTrackerTrackAllCorpses.Checked = obj.Value; };
+				CorpseTrackerTrackAllCorpses.Change += (s, e) => { try { Settings.SettingsManager.CorpseTracker.TrackAllCorpses.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+				CorpseTrackerTrackFellowCorpses.Checked = Settings.SettingsManager.CorpseTracker.TrackFellowCorpses.Value;
+				Settings.SettingsManager.CorpseTracker.TrackFellowCorpses.Changed += obj => { CorpseTrackerTrackFellowCorpses.Checked = obj.Value; };
+				CorpseTrackerTrackFellowCorpses.Change += (s, e) => { try { Settings.SettingsManager.CorpseTracker.TrackFellowCorpses.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+				CorpseTrackerTrackPermittedCorpses.Checked = Settings.SettingsManager.CorpseTracker.TrackPermittedCorpses.Value;
+				Settings.SettingsManager.CorpseTracker.TrackPermittedCorpses.Changed += obj => { CorpseTrackerTrackPermittedCorpses.Checked = obj.Value; };
+				CorpseTrackerTrackPermittedCorpses.Change += (s, e) => { try { Settings.SettingsManager.CorpseTracker.TrackPermittedCorpses.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
 
 				// Player Tracker
+				PlayerTrackerEnabled.Checked = Settings.SettingsManager.PlayerTracker.Enabled.Value;
+				Settings.SettingsManager.PlayerTracker.Enabled.Changed += obj => { PlayerTrackerEnabled.Checked = obj.Value; };
+				PlayerTrackerEnabled.Change += (s, e) => { try { Settings.SettingsManager.PlayerTracker.Enabled.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
 				PlayerTrackerPersistent.Checked = Settings.SettingsManager.PlayerTracker.Persistent.Value;
 				Settings.SettingsManager.PlayerTracker.Persistent.Changed += obj => { PlayerTrackerPersistent.Checked = obj.Value; };
-				PlayerTrackerPersistent.Change += (s, e) =>
-				{
-					try
-					{
-						Settings.SettingsManager.PlayerTracker.Persistent.Value = ((HudCheckBox)s).Checked;
-					}
-					catch (Exception ex) { Debug.LogException(ex); }
-				};
+				PlayerTrackerPersistent.Change += (s, e) => { try { Settings.SettingsManager.PlayerTracker.Persistent.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+
+				// Tells Logger
+				TellsLoggerEnabled.Checked = Settings.SettingsManager.TellsLogger.Enabled.Value;
+				Settings.SettingsManager.TellsLogger.Enabled.Changed += obj => { TellsLoggerEnabled.Checked = obj.Value; };
+				TellsLoggerEnabled.Change += (s, e) => { try { Settings.SettingsManager.TellsLogger.Enabled.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+				TellsLoggerPersistent.Checked = Settings.SettingsManager.TellsLogger.Persistent.Value;
+				Settings.SettingsManager.TellsLogger.Persistent.Changed += obj => { TellsLoggerPersistent.Checked = obj.Value; };
+				TellsLoggerPersistent.Change += (s, e) => { try { Settings.SettingsManager.TellsLogger.Persistent.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+				// Local Logger
+				LocalLoggerEnabled.Checked = Settings.SettingsManager.LocalLogger.Enabled.Value;
+				Settings.SettingsManager.LocalLogger.Enabled.Changed += obj => { LocalLoggerEnabled.Checked = obj.Value; };
+				LocalLoggerEnabled.Change += (s, e) => { try { Settings.SettingsManager.LocalLogger.Enabled.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+				LocalLoggerPersistent.Checked = Settings.SettingsManager.LocalLogger.Persistent.Value;
+				Settings.SettingsManager.LocalLogger.Persistent.Changed += obj => { LocalLoggerPersistent.Checked = obj.Value; };
+				LocalLoggerPersistent.Change += (s, e) => { try { Settings.SettingsManager.LocalLogger.Persistent.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+				// Fellow Logger
+				FellowLoggerEnabled.Checked = Settings.SettingsManager.FellowLogger.Enabled.Value;
+				Settings.SettingsManager.FellowLogger.Enabled.Changed += obj => { FellowLoggerEnabled.Checked = obj.Value; };
+				FellowLoggerEnabled.Change += (s, e) => { try { Settings.SettingsManager.FellowLogger.Enabled.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+				FellowLoggerPersistent.Checked = Settings.SettingsManager.FellowLogger.Persistent.Value;
+				Settings.SettingsManager.FellowLogger.Persistent.Changed += obj => { FellowLoggerPersistent.Checked = obj.Value; };
+				FellowLoggerPersistent.Change += (s, e) => { try { Settings.SettingsManager.FellowLogger.Persistent.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+				// Channels Logger
+				ChannelsLoggerEnabled.Checked = Settings.SettingsManager.ChannelsLogger.Enabled.Value;
+				Settings.SettingsManager.ChannelsLogger.Enabled.Changed += obj => { ChannelsLoggerEnabled.Checked = obj.Value; };
+				ChannelsLoggerEnabled.Change += (s, e) => { try { Settings.SettingsManager.ChannelsLogger.Enabled.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+				ChannelsLoggerPersistent.Checked = Settings.SettingsManager.ChannelsLogger.Persistent.Value;
+				Settings.SettingsManager.ChannelsLogger.Persistent.Changed += obj => { ChannelsLoggerPersistent.Checked = obj.Value; };
+				ChannelsLoggerPersistent.Change += (s, e) => { try { Settings.SettingsManager.ChannelsLogger.Persistent.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+				ChannelsLoggerGeneral.Checked = Settings.SettingsManager.ChannelsLogger.General.Value;
+				Settings.SettingsManager.ChannelsLogger.General.Changed += obj => { ChannelsLoggerGeneral.Checked = obj.Value; };
+				ChannelsLoggerGeneral.Change += (s, e) => { try { Settings.SettingsManager.ChannelsLogger.General.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+				ChannelsLoggerTrade.Checked = Settings.SettingsManager.ChannelsLogger.Trade.Value;
+				Settings.SettingsManager.ChannelsLogger.Trade.Changed += obj => { ChannelsLoggerTrade.Checked = obj.Value; };
+				ChannelsLoggerTrade.Change += (s, e) => { try { Settings.SettingsManager.ChannelsLogger.Trade.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
+				ChannelsLoggerAllegiance.Checked = Settings.SettingsManager.ChannelsLogger.Allegiance.Value;
+				Settings.SettingsManager.ChannelsLogger.Allegiance.Changed += obj => { ChannelsLoggerAllegiance.Checked = obj.Value; };
+				ChannelsLoggerAllegiance.Change += (s, e) => { try { Settings.SettingsManager.ChannelsLogger.Allegiance.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
+
 
 				// Misc.Options
 				AddOption(OptionList, Settings.SettingsManager.ItemInfoOnIdent.Enabled);
@@ -288,32 +451,10 @@ namespace MagTools.Views
 				// Misc.Client
 				ClientRemoveFrame.Checked = Settings.SettingsManager.Misc.RemoveWindowFrame.Value;
 				Settings.SettingsManager.Misc.RemoveWindowFrame.Changed += obj => { ClientRemoveFrame.Checked = obj.Value; };
-				ClientRemoveFrame.Change += (s, e) =>
-				{
-					try
-					{
-						Settings.SettingsManager.Misc.RemoveWindowFrame.Value = ((HudCheckBox)s).Checked;
-					}
-					catch (Exception ex) { Debug.LogException(ex); }
-				};
+				ClientRemoveFrame.Change += (s, e) => { try { Settings.SettingsManager.Misc.RemoveWindowFrame.Value = ((HudCheckBox)s).Checked; } catch (Exception ex) { Debug.LogException(ex); } };
 
-				ClientSetWindowPosition.Hit += (s, e) =>
-				{
-					try
-					{
-						Client.WindowMover.SetWindowPosition();
-						UpdateClientWindowPositionLabel();
-					}
-					catch (Exception ex) { Debug.LogException(ex); }
-				};
-				ClientDelWindowPosition.Hit += (s, e) => 
-				{
-					try
-					{
-						Client.WindowMover.DeleteWindowPosition();
-						UpdateClientWindowPositionLabel();
-					} catch (Exception ex) { Debug.LogException(ex); }
-				};
+				ClientSetWindowPosition.Hit += (s, e) => { try { Client.WindowMover.SetWindowPosition(); UpdateClientWindowPositionLabel(); } catch (Exception ex) { Debug.LogException(ex); } };
+				ClientDelWindowPosition.Hit += (s, e) =>  { try { Client.WindowMover.DeleteWindowPosition(); UpdateClientWindowPositionLabel(); } catch (Exception ex) { Debug.LogException(ex); } };
 				UpdateClientWindowPositionLabel();
 
 				NoFocusFPS.Text = Settings.SettingsManager.Misc.NoFocusFPS.Value.ToString(CultureInfo.InvariantCulture);

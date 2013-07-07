@@ -101,7 +101,8 @@ namespace MagTools
 		public IEquipmentTracker EquipmentTracker { get { return equipmentTracker; } }
 		Trackers.Combat.CombatTracker combatTrackerCurrent;
 		Trackers.Combat.CombatTracker combatTrackerPersistent;
-		Trackers.Corpse.CorpseTracker corpseTracker;
+		Trackers.Corpse.CorpseTracker corpseTrackerCurrent;
+		Trackers.Corpse.CorpseTracker corpseTrackerPersistent;
 		Trackers.Player.PlayerTracker playerTrackerCurrent;
 		Trackers.Player.PlayerTracker playerTrackerPersistent;
 		Trackers.Consumable.ConsumableTracker consumableTracker;
@@ -129,7 +130,8 @@ namespace MagTools
 		ManaTrackerGUI manaTrackerGUI;
 		CombatTrackerGUI combatTrackerGUICurrent;
 		CombatTrackerGUI combatTrackerGUIPersistent;
-		CorpseTrackerGUI corpseTrackerGUI;
+		CorpseTrackerGUI corpseTrackerGUICurrent;
+		CorpseTrackerGUI corpseTrackerGUIPersistent;
 		PlayerTrackerGUI playerTrackerGUICurrent;
 		PlayerTrackerGUI playerTrackerGUIPersistent;
 		ConsumableTrackerGUI consumableTrackerGUI;
@@ -137,6 +139,7 @@ namespace MagTools
 		HUD hud;
 
 		readonly Collection<string> startupErrors = new Collection<string>();
+		readonly System.Windows.Forms.Timer savePersistentStatsTimer = new System.Windows.Forms.Timer();
 
 		/// <summary>
 		/// This is called when the plugin is started up. This happens only once.
@@ -168,7 +171,8 @@ namespace MagTools
 				equipmentTracker = new EquipmentTracker();
 				combatTrackerCurrent = new Trackers.Combat.CombatTracker();
 				combatTrackerPersistent = new Trackers.Combat.CombatTracker();
-				corpseTracker = new Trackers.Corpse.CorpseTracker();
+				corpseTrackerCurrent = new Trackers.Corpse.CorpseTracker();
+				corpseTrackerPersistent = new Trackers.Corpse.CorpseTracker(true);
 				playerTrackerCurrent = new Trackers.Player.PlayerTracker();
 				playerTrackerPersistent = new Trackers.Player.PlayerTracker();
 				consumableTracker = new Trackers.Consumable.ConsumableTracker();
@@ -178,6 +182,9 @@ namespace MagTools
 				windowFrameRemover = new WindowFrameRemover();
 				windowMover = new WindowMover();
 				noFocusFPSManager = new NoFocusFPSManager();
+
+				savePersistentStatsTimer.Interval = 60000; // Set the timer to run once every hour
+				savePersistentStatsTimer.Tick += new EventHandler(SavePersistentStatsTimer_Tick);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -238,20 +245,24 @@ namespace MagTools
 					manaTrackerGUI = new ManaTrackerGUI(equipmentTracker, mainView);
 					combatTrackerGUICurrent = new CombatTrackerGUI(combatTrackerCurrent, mainView.CombatTrackerMonsterListCurrent, mainView.CombatTrackerDamageListCurrent);
 					combatTrackerGUIPersistent = new CombatTrackerGUI(combatTrackerPersistent, mainView.CombatTrackerMonsterListPersistent, mainView.CombatTrackerDamageListPersistent);
-					corpseTrackerGUI = new CorpseTrackerGUI(corpseTracker, mainView.CorpseTrackerList);
+					corpseTrackerGUICurrent = new CorpseTrackerGUI(corpseTrackerCurrent, mainView.CorpseTrackerListCurrent);
+					corpseTrackerGUIPersistent = new CorpseTrackerGUI(corpseTrackerPersistent, mainView.CorpseTrackerListPersistent);
 					playerTrackerGUICurrent = new PlayerTrackerGUI(playerTrackerCurrent, mainView.PlayerTrackerListCurrent);
 					playerTrackerGUIPersistent = new PlayerTrackerGUI(playerTrackerPersistent, mainView.PlayerTrackerListPersistent);
 					consumableTrackerGUI = new ConsumableTrackerGUI(consumableTracker, mainView.ConsumableTrackerList);
 
-					mainView.CombatTrackerClearCurrentStats.Hit += new EventHandler(CombatTrackerClearCurrentStats_Hit);
-					mainView.CombatTrackerExportCurrentStats.Hit += new EventHandler(CombatTrackerExportCurrentStats_Hit);
+					mainView.CombatTrackerClearCurrentStats.Hit += (s2, e2) => { try { combatTrackerCurrent.ClearStats(); } catch (Exception ex) { Debug.LogException(ex); } };
+					mainView.CombatTrackerExportCurrentStats.Hit += (s2, e2) => { try { combatTrackerCurrent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker." + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ".xml", true); } catch (Exception ex) { Debug.LogException(ex); } };
 					mainView.CombatTrackerClearPersistentStats.Hit += new EventHandler(CombatTrackerClearPersistentStats_Hit);
 
-					mainView.PlayerTrackerClearCurrentStats.Hit += new EventHandler(PlayerTrackerClearCurrentStats_Hit);
+					mainView.CorpseTrackerClearCurrentStats.Hit += (s2, e2) => { try { corpseTrackerCurrent.ClearStats(); } catch (Exception ex) { Debug.LogException(ex); } };
+					mainView.CorpseTrackerClearPersistentStats.Hit += new EventHandler(CorpseTrackerClearPersistentStats_Hit);
+
+					mainView.PlayerTrackerClearCurrentStats.Hit += (s2, e2) => { try { playerTrackerCurrent.ClearStats(); } catch (Exception ex) { Debug.LogException(ex); } };
 					mainView.PlayerTrackerClearPersistentStats.Hit += new EventHandler(PlayerTrackerClearPersistentStats_Hit);
 
-					mainView.ClipboardWornEquipment.Hit += new EventHandler(ClipboardWornEquipment_Hit);
-					mainView.ClipboardInventoryInfo.Hit += new EventHandler(ClipboardInventoryInfo_Hit);
+					mainView.ClipboardWornEquipment.Hit += (s2, e2) => { try { inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.WornEquipment); } catch (Exception ex) { Debug.LogException(ex); } };
+					mainView.ClipboardInventoryInfo.Hit += (s2, e2) => { try { inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.Inventory); } catch (Exception ex) { Debug.LogException(ex); } };
 					
 					System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
 					System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
@@ -272,6 +283,8 @@ namespace MagTools
 		{
 			try
 			{
+				savePersistentStatsTimer.Tick -= new EventHandler(SavePersistentStatsTimer_Tick);
+
 				CoreManager.Current.PluginInitComplete -= new EventHandler<EventArgs>(Current_PluginInitComplete);
 				CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
@@ -283,7 +296,8 @@ namespace MagTools
 				if (consumableTrackerGUI != null) consumableTrackerGUI.Dispose();
 				if (playerTrackerGUIPersistent != null) playerTrackerGUIPersistent.Dispose();
 				if (playerTrackerGUICurrent != null) playerTrackerGUICurrent.Dispose();
-				if (corpseTrackerGUI != null) corpseTrackerGUI.Dispose();
+				if (corpseTrackerGUICurrent != null) corpseTrackerGUICurrent.Dispose();
+				if (corpseTrackerGUIPersistent != null) corpseTrackerGUIPersistent.Dispose();
 				if (combatTrackerGUIPersistent != null) combatTrackerGUIPersistent.Dispose();
 				if (combatTrackerGUICurrent != null) combatTrackerGUICurrent.Dispose();
 				if (manaTrackerGUI != null) manaTrackerGUI.Dispose();
@@ -309,7 +323,8 @@ namespace MagTools
 				if (equipmentTracker != null) equipmentTracker.Dispose();
 				if (combatTrackerCurrent != null) combatTrackerCurrent.Dispose();
 				if (combatTrackerPersistent != null) combatTrackerPersistent.Dispose();
-				if (corpseTracker != null) corpseTracker.Dispose();
+				if (corpseTrackerCurrent != null) corpseTrackerCurrent.Dispose();
+				if (corpseTrackerPersistent != null) corpseTrackerPersistent.Dispose();
 				if (playerTrackerCurrent != null) playerTrackerCurrent.Dispose();
 				if (playerTrackerPersistent != null) playerTrackerPersistent.Dispose();
 				if (consumableTracker != null) consumableTracker.Dispose();
@@ -334,10 +349,18 @@ namespace MagTools
 		{
 			try
 			{
+				// Load Persistent Stats
 				try
 				{
 					if (Settings.SettingsManager.CombatTracker.Persistent.Value)
 						combatTrackerPersistent.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
+				}
+				catch (Exception ex) { Debug.LogException(ex); }
+
+				try
+				{
+					if (Settings.SettingsManager.CorpseTracker.Persistent.Value)
+						corpseTrackerPersistent.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CorpseTracker.xml");
 				}
 				catch (Exception ex) { Debug.LogException(ex); }
 
@@ -348,6 +371,7 @@ namespace MagTools
 				}
 				catch (Exception ex) { Debug.LogException(ex); }
 
+				// Wire up Inventory Packer Hotkey
 				try
 				{
 					if (InventoryPacker != null)
@@ -374,6 +398,7 @@ namespace MagTools
 				catch (FileNotFoundException ex) { startupErrors.Add("Pack Inventory hot key failed to bind: " + ex.Message + ". Is Virindi Hotkey System running?"); }
 				catch (Exception ex) { Debug.LogException(ex); }
 
+				// Wire up One Touch Heal Hotkey
 				try
 				{
 					if (oneTouchHeal != null)
@@ -399,6 +424,7 @@ namespace MagTools
 				catch (FileNotFoundException ex) { startupErrors.Add("One Touch Heal hot key failed to bind: " + ex.Message + ". Is Virindi Hotkey System running?"); }
 				catch (Exception ex) { Debug.LogException(ex); }
 
+				// Wire up Maximize/Minimize Chat Hotkey
 				try
 				{
 						// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
@@ -441,6 +467,8 @@ namespace MagTools
 
 				CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
 
+				savePersistentStatsTimer.Start();
+
 				//Util.ExportSpells(PluginPersonalFolder.FullName + @"\spells.csv");
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -450,32 +478,12 @@ namespace MagTools
 		{
 			try
 			{
+				savePersistentStatsTimer.Stop();
+
+				ExportPersistentStats();
+
 				if (Settings.SettingsManager.CombatTracker.ExportOnLogOff.Value)
 					combatTrackerCurrent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker." + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ".xml");
-
-				if (Settings.SettingsManager.CombatTracker.Persistent.Value)
-					combatTrackerPersistent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
-
-				if (Settings.SettingsManager.PlayerTracker.Persistent.Value)
-					playerTrackerPersistent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".PlayerTracker.xml");
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		void CombatTrackerClearCurrentStats_Hit(object sender, EventArgs e)
-		{
-			try
-			{
-				combatTrackerCurrent.ClearStats();
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		void CombatTrackerExportCurrentStats_Hit(object sender, EventArgs e)
-		{
-			try
-			{
-				combatTrackerCurrent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker." + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ".xml", true);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -498,11 +506,20 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void PlayerTrackerClearCurrentStats_Hit(object sender, EventArgs e)
+		void CorpseTrackerClearPersistentStats_Hit(object sender, EventArgs e)
 		{
 			try
 			{
-				playerTrackerCurrent.ClearStats();
+				corpseTrackerPersistent.ClearStats();
+
+				FileInfo fileInfo = new FileInfo(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CorpseTracker.xml");
+
+				if (fileInfo.Exists)
+				{
+					fileInfo.Delete();
+
+					CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "File deleted: " + fileInfo.FullName, 5);
+				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -525,22 +542,25 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void ClipboardWornEquipment_Hit(object sender, EventArgs e)
+		void SavePersistentStatsTimer_Tick(object sender, EventArgs e)
 		{
 			try
 			{
-				inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.WornEquipment);
+				ExportPersistentStats();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void ClipboardInventoryInfo_Hit(object sender, EventArgs e)
+		void ExportPersistentStats()
 		{
-			try
-			{
-				inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.Inventory);
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
+			if (Settings.SettingsManager.CombatTracker.Persistent.Value)
+				combatTrackerPersistent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
+
+			if (Settings.SettingsManager.CorpseTracker.Persistent.Value)
+				corpseTrackerPersistent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CorpseTracker.xml");
+
+			if (Settings.SettingsManager.PlayerTracker.Persistent.Value)
+				playerTrackerPersistent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".PlayerTracker.xml");
 		}
 	}
 }

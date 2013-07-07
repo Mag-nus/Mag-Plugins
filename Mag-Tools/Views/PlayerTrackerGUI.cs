@@ -3,6 +3,7 @@ using System.Globalization;
 
 using Decal.Adapter.Wrappers;
 
+using MagTools.Trackers;
 using MagTools.Trackers.Player;
 
 using VirindiViewService.Controls;
@@ -11,10 +12,10 @@ namespace MagTools.Views
 {
 	class PlayerTrackerGUI : IDisposable
 	{
-		readonly PlayerTracker playerTracker;
+		readonly ITracker<TrackedPlayer> playerTracker;
 		readonly HudList playerList;
 
-		public PlayerTrackerGUI(PlayerTracker playerTracker, HudList playerList)
+		public PlayerTrackerGUI(ITracker<TrackedPlayer> playerTracker, HudList playerList)
 		{
 			try
 			{

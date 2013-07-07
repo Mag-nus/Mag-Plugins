@@ -2,24 +2,29 @@
 
 namespace MagTools.Trackers.Corpse
 {
-	class TrackedCorpse
+	public class TrackedCorpse
 	{
 		public readonly int Id;
 
-		public readonly DateTime TimeStamp;
+		public DateTime TimeStamp;
 
-		public readonly int LandBlock;
+		public int LandBlock;
 
-		public readonly double LocationX;
-		public readonly double LocationY;
-		public readonly double LocationZ;
+		public double LocationX;
+		public double LocationY;
+		public double LocationZ;
 
-		public readonly string Description;
+		public string Description;
 
-		public TrackedCorpse(int id, DateTime timeStamp, int landBlock, double locationX, double locaitonY, double locationZ, string description)
+		public bool Opened;
+
+		public TrackedCorpse(int id)
 		{
 			Id = id;
+		}
 
+		public TrackedCorpse(int id, DateTime timeStamp, int landBlock, double locationX, double locaitonY, double locationZ, string description, bool opened = false) : this(id)
+		{
 			TimeStamp = timeStamp;
 
 			LandBlock = landBlock;
@@ -29,6 +34,8 @@ namespace MagTools.Trackers.Corpse
 			LocationZ = locationZ;
 
 			Description = description;
+
+			Opened = opened;
 		}
 	}
 }
