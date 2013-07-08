@@ -1,12 +1,14 @@
-﻿
+﻿using System;
+
 namespace MagTools.Trackers.Player
 {
+	[Flags]
 	public enum PlayerType
 	{
-		Unknown				= 0,
+		None				= 0x00,
 
-		NonPlayerKiller		= 1,
-		PlayerKillerLight	= 2,
-		PlayerKiller		= 3,
+		NonPlayerKiller		= 0x01,
+		PlayerKillerLight	= 0x02,
+		PlayerKiller		= 0x04,
 	}
 }

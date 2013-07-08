@@ -9,17 +9,17 @@ namespace MagTools.Views
 {
 	class ConsumableTrackerGUI : IDisposable
 	{
-		readonly ITracker<TrackedConsumable> consumableTracker;
-		readonly HudList consumableList;
+		readonly ITracker<TrackedConsumable> tracker;
+		readonly HudList hudList;
 
-		public ConsumableTrackerGUI(ITracker<TrackedConsumable> consumableTracker, HudList consumableList)
+		public ConsumableTrackerGUI(ITracker<TrackedConsumable> tracker, HudList hudList)
 		{
 			try
 			{
-				this.consumableTracker = consumableTracker;
-				this.consumableList = consumableList;
+				this.tracker = tracker;
+				this.hudList = hudList;
 
-				consumableList.ClearColumnsAndRows();
+				hudList.ClearColumnsAndRows();
 
 				/*consumableList.AddColumn(typeof(HudStaticText), 100, null);
 				consumableList.AddColumn(typeof(HudStaticText), 115, null);
@@ -30,9 +30,9 @@ namespace MagTools.Views
 				((HudStaticText)newRow[1]).Text = "Name";
 				((HudStaticText)newRow[2]).Text = "Coords";*/
 
-				consumableTracker.ItemAdded += new Action<TrackedConsumable>(consumableTracker_ItemAdded);
-				consumableTracker.ItemChanged += new Action<TrackedConsumable>(consumableTracker_ItemChanged);
-				consumableTracker.ItemRemoved += new Action<TrackedConsumable>(consumableTracker_ItemRemoved);
+				tracker.ItemAdded += new Action<TrackedConsumable>(consumableTracker_ItemAdded);
+				tracker.ItemChanged += new Action<TrackedConsumable>(consumableTracker_ItemChanged);
+				tracker.ItemRemoved += new Action<TrackedConsumable>(consumableTracker_ItemRemoved);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -56,9 +56,9 @@ namespace MagTools.Views
 			{
 				if (disposing)
 				{
-					consumableTracker.ItemAdded -= new Action<TrackedConsumable>(consumableTracker_ItemAdded);
-					consumableTracker.ItemChanged -= new Action<TrackedConsumable>(consumableTracker_ItemChanged);
-					consumableTracker.ItemRemoved -= new Action<TrackedConsumable>(consumableTracker_ItemRemoved);
+					tracker.ItemAdded -= new Action<TrackedConsumable>(consumableTracker_ItemAdded);
+					tracker.ItemChanged -= new Action<TrackedConsumable>(consumableTracker_ItemChanged);
+					tracker.ItemRemoved -= new Action<TrackedConsumable>(consumableTracker_ItemRemoved);
 				}
 
 				// Indicate that the instance has been disposed.
@@ -66,7 +66,7 @@ namespace MagTools.Views
 			}
 		}
 
-		void consumableTracker_ItemAdded(TrackedConsumable obj)
+		void consumableTracker_ItemAdded(TrackedConsumable item)
 		{
 			try
 			{
@@ -74,7 +74,7 @@ namespace MagTools.Views
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void consumableTracker_ItemChanged(TrackedConsumable obj)
+		void consumableTracker_ItemChanged(TrackedConsumable item)
 		{
 			try
 			{
@@ -82,7 +82,7 @@ namespace MagTools.Views
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void consumableTracker_ItemRemoved(TrackedConsumable obj)
+		void consumableTracker_ItemRemoved(TrackedConsumable item)
 		{
 			try
 			{

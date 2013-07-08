@@ -12,30 +12,30 @@ namespace MagTools.Views
 {
 	class PlayerTrackerGUI : IDisposable
 	{
-		readonly ITracker<TrackedPlayer> playerTracker;
-		readonly HudList playerList;
+		readonly ITracker<TrackedPlayer> tracker;
+		readonly HudList hudList;
 
-		public PlayerTrackerGUI(ITracker<TrackedPlayer> playerTracker, HudList playerList)
+		public PlayerTrackerGUI(ITracker<TrackedPlayer> tracker, HudList hudList)
 		{
 			try
 			{
-				this.playerTracker = playerTracker;
-				this.playerList = playerList;
+				this.tracker = tracker;
+				this.hudList = hudList;
 
-				playerList.ClearColumnsAndRows();
+				hudList.ClearColumnsAndRows();
 
-				playerList.AddColumn(typeof(HudStaticText), 100, null);
-				playerList.AddColumn(typeof(HudStaticText), 115, null);
-				playerList.AddColumn(typeof(HudStaticText), 100, null);
+				hudList.AddColumn(typeof(HudStaticText), 75, null);
+				hudList.AddColumn(typeof(HudStaticText), 140, null);
+				hudList.AddColumn(typeof(HudStaticText), 100, null);
 
-				HudList.HudListRowAccessor newRow = playerList.AddRow();
+				HudList.HudListRowAccessor newRow = hudList.AddRow();
 				((HudStaticText)newRow[0]).Text = "Time";
 				((HudStaticText)newRow[1]).Text = "Name";
 				((HudStaticText)newRow[2]).Text = "Coords";
 
-				playerTracker.ItemAdded += new Action<TrackedPlayer>(playerTracker_ItemAdded);
-				playerTracker.ItemChanged += new Action<TrackedPlayer>(playerTracker_ItemChanged);
-				playerTracker.ItemRemoved += new Action<TrackedPlayer>(playerTracker_ItemRemoved);
+				tracker.ItemAdded += new Action<TrackedPlayer>(playerTracker_ItemAdded);
+				tracker.ItemChanged += new Action<TrackedPlayer>(playerTracker_ItemChanged);
+				tracker.ItemRemoved += new Action<TrackedPlayer>(playerTracker_ItemRemoved);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -59,9 +59,9 @@ namespace MagTools.Views
 			{
 				if (disposing)
 				{
-					playerTracker.ItemAdded -= new Action<TrackedPlayer>(playerTracker_ItemAdded);
-					playerTracker.ItemChanged -= new Action<TrackedPlayer>(playerTracker_ItemChanged);
-					playerTracker.ItemRemoved -= new Action<TrackedPlayer>(playerTracker_ItemRemoved);
+					tracker.ItemAdded -= new Action<TrackedPlayer>(playerTracker_ItemAdded);
+					tracker.ItemChanged -= new Action<TrackedPlayer>(playerTracker_ItemChanged);
+					tracker.ItemRemoved -= new Action<TrackedPlayer>(playerTracker_ItemRemoved);
 				}
 
 				// Indicate that the instance has been disposed.
@@ -69,31 +69,31 @@ namespace MagTools.Views
 			}
 		}
 
-		void playerTracker_ItemAdded(TrackedPlayer trackedPlayer)
+		void playerTracker_ItemAdded(TrackedPlayer item)
 		{
 			try
 			{
-				HudList.HudListRowAccessor newRow = playerList.InsertRow(1);
+				HudList.HudListRowAccessor newRow = hudList.InsertRow(1);
 
-				((HudStaticText)newRow[1]).Text = trackedPlayer.Name;
+				((HudStaticText)newRow[1]).Text = item.Name;
 
-				playerTracker_ItemChanged(trackedPlayer);
+				playerTracker_ItemChanged(item);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void playerTracker_ItemChanged(TrackedPlayer trackedPlayer)
+		void playerTracker_ItemChanged(TrackedPlayer item)
 		{
 			try
 			{
-				for (int row = 1; row <= playerList.RowCount; row++)
+				for (int row = 1; row <= hudList.RowCount; row++)
 				{
-					if (((HudStaticText)playerList[row - 1][1]).Text == trackedPlayer.Name)
+					if (((HudStaticText)hudList[row - 1][1]).Text == item.Name)
 					{
-						((HudStaticText)playerList[row - 1][0]).Text = trackedPlayer.LastSeen.ToString("MM/dd/yy hh:mm tt");
+						((HudStaticText)hudList[row - 1][0]).Text = item.LastSeen.ToString("MM/dd/yy HH:mm");
 
-						CoordsObject newCords = Mag.Shared.Util.GetCoords(trackedPlayer.LandBlock, trackedPlayer.LocationX, trackedPlayer.LocationY);
-						((HudStaticText)playerList[row - 1][2]).Text = newCords.ToString();
+						CoordsObject newCords = Mag.Shared.Util.GetCoords(item.LandBlock, item.LocationX, item.LocationY);
+						((HudStaticText)hudList[row - 1][2]).Text = newCords.ToString();
 
 						SortList();
 					}
@@ -102,15 +102,15 @@ namespace MagTools.Views
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void playerTracker_ItemRemoved(TrackedPlayer trackedPlayer)
+		void playerTracker_ItemRemoved(TrackedPlayer item)
 		{
 			try
 			{
-				for (int row = 1; row <= playerList.RowCount; row++)
+				for (int row = 1; row <= hudList.RowCount; row++)
 				{
-					if (((HudStaticText)playerList[row - 1][1]).Text == trackedPlayer.Name)
+					if (((HudStaticText)hudList[row - 1][1]).Text == item.Name)
 					{
-						playerList.RemoveRow(row - 1);
+						hudList.RemoveRow(row - 1);
 
 						row--;
 					}
@@ -121,44 +121,44 @@ namespace MagTools.Views
 
 		private void SortList()
 		{
-			if (playerList.RowCount < 1)
+			if (hudList.RowCount < 1)
 				return;
 
-			for (int row = 1; row < playerList.RowCount - 1; row++)
+			for (int row = 1; row < hudList.RowCount - 1; row++)
 			{
-				for (int compareRow = row + 1; compareRow < playerList.RowCount; compareRow++)
+				for (int compareRow = row + 1; compareRow < hudList.RowCount; compareRow++)
 				{
-					string rowName = ((HudStaticText)playerList[row][1]).Text;
+					string rowName = ((HudStaticText)hudList[row][1]).Text;
 					DateTime rowDateTime;
 
 					//if (!DateTime.TryParse(((HudStaticText)playerList[row][0]).Text, out rowDateTime))
 					//	break;
 
-					if (!DateTime.TryParseExact(((HudStaticText)playerList[row][0]).Text, "MM/dd/yy hh:mm tt", CultureInfo.InvariantCulture, DateTimeStyles.None, out rowDateTime))
+					if (!DateTime.TryParseExact(((HudStaticText)hudList[row][0]).Text, "MM/dd/yy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out rowDateTime))
 						break;
 
-					string compareName = ((HudStaticText)playerList[compareRow][1]).Text;
+					string compareName = ((HudStaticText)hudList[compareRow][1]).Text;
 					DateTime compareDateTime;
 
 					//if (!DateTime.TryParse(((HudStaticText)playerList[compareRow][0]).Text, out compareDateTime))
 					//	continue;
 
-					if (!DateTime.TryParseExact(((HudStaticText)playerList[compareRow][0]).Text, "MM/dd/yy hh:mm tt", CultureInfo.InvariantCulture, DateTimeStyles.None, out compareDateTime))
+					if (!DateTime.TryParseExact(((HudStaticText)hudList[compareRow][0]).Text, "MM/dd/yy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out compareDateTime))
 						break;
 
 					if (rowDateTime < compareDateTime || (rowDateTime == compareDateTime && String.Compare(rowName, compareName, StringComparison.Ordinal) > 0))
 					{
-						string obj1 = ((HudStaticText)playerList[row][0]).Text;
-						((HudStaticText)playerList[row][0]).Text = ((HudStaticText)playerList[compareRow][0]).Text;
-						((HudStaticText)playerList[compareRow][0]).Text = obj1;
+						string obj1 = ((HudStaticText)hudList[row][0]).Text;
+						((HudStaticText)hudList[row][0]).Text = ((HudStaticText)hudList[compareRow][0]).Text;
+						((HudStaticText)hudList[compareRow][0]).Text = obj1;
 
-						string obj2 = ((HudStaticText)playerList[row][1]).Text;
-						((HudStaticText)playerList[row][1]).Text = ((HudStaticText)playerList[compareRow][1]).Text;
-						((HudStaticText)playerList[compareRow][1]).Text = obj2;
+						string obj2 = ((HudStaticText)hudList[row][1]).Text;
+						((HudStaticText)hudList[row][1]).Text = ((HudStaticText)hudList[compareRow][1]).Text;
+						((HudStaticText)hudList[compareRow][1]).Text = obj2;
 
-						string obj3 = ((HudStaticText)playerList[row][2]).Text;
-						((HudStaticText)playerList[row][2]).Text = ((HudStaticText)playerList[compareRow][2]).Text;
-						((HudStaticText)playerList[compareRow][2]).Text = obj3;
+						string obj3 = ((HudStaticText)hudList[row][2]).Text;
+						((HudStaticText)hudList[row][2]).Text = ((HudStaticText)hudList[compareRow][2]).Text;
+						((HudStaticText)hudList[compareRow][2]).Text = obj3;
 					}
 				}
 			}

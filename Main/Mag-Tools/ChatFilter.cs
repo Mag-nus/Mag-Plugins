@@ -9,13 +9,17 @@ namespace MagTools
 {
 	class ChatFilter : IDisposable
 	{
-		public ChatFilter()
+		readonly PluginHost host;
+
+		public ChatFilter(PluginHost host)
 		{
 			try
 			{
+				this.host = host;
+
 				CoreManager.Current.ChatBoxMessage += new EventHandler<ChatTextInterceptEventArgs>(Current_ChatBoxMessage);
 
-				PluginCore.Host.Underlying.Hooks.StatusTextIntercept += new Decal.Interop.Core.IACHooksEvents_StatusTextInterceptEventHandler(Hooks_StatusTextIntercept);
+				host.Underlying.Hooks.StatusTextIntercept += new Decal.Interop.Core.IACHooksEvents_StatusTextInterceptEventHandler(Hooks_StatusTextIntercept);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -41,7 +45,7 @@ namespace MagTools
 				{
 					CoreManager.Current.ChatBoxMessage -= new EventHandler<ChatTextInterceptEventArgs>(Current_ChatBoxMessage);
 
-					PluginCore.Host.Underlying.Hooks.StatusTextIntercept -= new Decal.Interop.Core.IACHooksEvents_StatusTextInterceptEventHandler(Hooks_StatusTextIntercept);
+					host.Underlying.Hooks.StatusTextIntercept -= new Decal.Interop.Core.IACHooksEvents_StatusTextInterceptEventHandler(Hooks_StatusTextIntercept);
 				}
 
 				// Indicate that the instance has been disposed.
