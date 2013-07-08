@@ -23,7 +23,7 @@ namespace MagTools.Trackers.Player
 			Name = name;
 		}
 
-		public TrackedPlayer(string name, DateTime lastSeen, int landBlock, double locationX, double locaitonY, double locationZ, int id, PlayerType playerType = PlayerType.Unknown) : this(name)
+		public TrackedPlayer(string name, DateTime lastSeen, int landBlock, double locationX, double locaitonY, double locationZ, int id, PlayerType playerType = PlayerType.None) : this(name)
 		{
 			LastSeen = lastSeen;
 

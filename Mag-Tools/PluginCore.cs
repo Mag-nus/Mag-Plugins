@@ -3,12 +3,13 @@ using System.IO;
 using System.Collections.ObjectModel;
 
 using Decal.Adapter;
-using Decal.Adapter.Wrappers;
 
 using MagTools.Client;
 using MagTools.Inventory;
 using MagTools.Trackers.Equipment;
 using MagTools.Views;
+
+using Mag.Shared;
 
 /*
  * Created by Mag-nus. 8/19/2011
@@ -63,8 +64,6 @@ namespace MagTools
 		/// </summary>
 		public static IPluginCore Current { get; private set; }
 
-		internal new static PluginHost Host { get; private set; }
-
 		internal static string PluginName = "Mag-Tools";
 
 		internal static DirectoryInfo PluginPersonalFolder
@@ -107,6 +106,9 @@ namespace MagTools
 		Trackers.Player.PlayerTracker playerTrackerPersistent;
 		Trackers.Consumable.ConsumableTracker consumableTracker;
 
+		// Loggers
+		Loggers.Chat.ChatLogger chatLogger;
+
 		// Misc
 		WindowFrameRemover windowFrameRemover;
 		WindowMover windowMover;
@@ -127,6 +129,7 @@ namespace MagTools
 
 		// Views, depends on VirindiViewService.dll
 		MainView mainView;
+
 		ManaTrackerGUI manaTrackerGUI;
 		CombatTrackerGUI combatTrackerGUICurrent;
 		CombatTrackerGUI combatTrackerGUIPersistent;
@@ -135,6 +138,15 @@ namespace MagTools
 		PlayerTrackerGUI playerTrackerGUICurrent;
 		PlayerTrackerGUI playerTrackerGUIPersistent;
 		ConsumableTrackerGUI consumableTrackerGUI;
+
+		ChatLoggerGUI chatLoggerTellsGUICurrent;
+		ChatLoggerGUI chatLoggerTellsGUIPersistent;
+		ChatLoggerGUI chatLoggerLocalGUICurrent;
+		ChatLoggerGUI chatLoggerLocalGUIPersistent;
+		ChatLoggerGUI chatLoggerFellowGUICurrent;
+		ChatLoggerGUI chatLoggerFellowGUIPersistent;
+		ChatLoggerGUI chatLoggerChannelsGUICurrent;
+		ChatLoggerGUI chatLoggerChannelsGUIPersistent;
 
 		HUD hud;
 
@@ -150,7 +162,6 @@ namespace MagTools
 			try
 			{
 				Current = this;
-				Host = base.Host;
 
 				CoreManager.Current.PluginInitComplete += new EventHandler<EventArgs>(Current_PluginInitComplete);
 				CoreManager.Current.CharacterFilter.LoginComplete +=new EventHandler(CharacterFilter_LoginComplete);
@@ -177,6 +188,8 @@ namespace MagTools
 				playerTrackerPersistent = new Trackers.Player.PlayerTracker();
 				consumableTracker = new Trackers.Consumable.ConsumableTracker();
 
+				// Loggers
+				chatLogger = new Loggers.Chat.ChatLogger();
 
 				// Misc
 				windowFrameRemover = new WindowFrameRemover();
@@ -203,7 +216,7 @@ namespace MagTools
 				// Relies on other decal assemblies
 				try
 				{
-					chatFilter = new ChatFilter(); // Decal.Interop.Core
+					chatFilter = new ChatFilter(Host); // Decal.Interop.Core
 				}
 				catch (FileNotFoundException ex) { startupErrors.Add("chatFilter failed to load: " + ex.Message); }
 				catch (Exception ex) { Debug.LogException(ex); }
@@ -242,6 +255,7 @@ namespace MagTools
 				try
 				{
 					mainView = new MainView();
+
 					manaTrackerGUI = new ManaTrackerGUI(equipmentTracker, mainView);
 					combatTrackerGUICurrent = new CombatTrackerGUI(combatTrackerCurrent, mainView.CombatTrackerMonsterListCurrent, mainView.CombatTrackerDamageListCurrent);
 					combatTrackerGUIPersistent = new CombatTrackerGUI(combatTrackerPersistent, mainView.CombatTrackerMonsterListPersistent, mainView.CombatTrackerDamageListPersistent);
@@ -250,6 +264,15 @@ namespace MagTools
 					playerTrackerGUICurrent = new PlayerTrackerGUI(playerTrackerCurrent, mainView.PlayerTrackerListCurrent);
 					playerTrackerGUIPersistent = new PlayerTrackerGUI(playerTrackerPersistent, mainView.PlayerTrackerListPersistent);
 					consumableTrackerGUI = new ConsumableTrackerGUI(consumableTracker, mainView.ConsumableTrackerList);
+
+					chatLoggerTellsGUICurrent = new ChatLoggerGUI(chatLogger, Util.ChatChannels.Tells, mainView.TellsLoggerListCurrent);
+					chatLoggerTellsGUIPersistent = new ChatLoggerGUI(chatLogger, Util.ChatChannels.Tells, mainView.TellsLoggerListPersistent);
+					chatLoggerLocalGUICurrent = new ChatLoggerGUI(chatLogger, Util.ChatChannels.Area, mainView.LocalLoggerListCurrent);
+					chatLoggerLocalGUIPersistent = new ChatLoggerGUI(chatLogger, Util.ChatChannels.Area, mainView.LocalLoggerListPersistent);
+					chatLoggerFellowGUICurrent = new ChatLoggerGUI(chatLogger, Util.ChatChannels.Fellowship, mainView.FellowLoggerListCurrent);
+					chatLoggerFellowGUIPersistent = new ChatLoggerGUI(chatLogger, Util.ChatChannels.Fellowship, mainView.FellowLoggerListPersistent);
+					chatLoggerChannelsGUICurrent = new ChatLoggerGUI(chatLogger, Util.ChatChannels.General | Util.ChatChannels.Trade | Util.ChatChannels.Allegiance, mainView.ChannelsLoggerListCurrent);
+					chatLoggerChannelsGUIPersistent = new ChatLoggerGUI(chatLogger, Util.ChatChannels.General | Util.ChatChannels.Trade | Util.ChatChannels.Allegiance, mainView.ChannelsLoggerListPersistent);
 
 					mainView.CombatTrackerClearCurrentStats.Hit += (s2, e2) => { try { combatTrackerCurrent.ClearStats(); } catch (Exception ex) { Debug.LogException(ex); } };
 					mainView.CombatTrackerExportCurrentStats.Hit += (s2, e2) => { try { combatTrackerCurrent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker." + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ".xml", true); } catch (Exception ex) { Debug.LogException(ex); } };
@@ -260,6 +283,18 @@ namespace MagTools
 
 					mainView.PlayerTrackerClearCurrentStats.Hit += (s2, e2) => { try { playerTrackerCurrent.ClearStats(); } catch (Exception ex) { Debug.LogException(ex); } };
 					mainView.PlayerTrackerClearPersistentStats.Hit += new EventHandler(PlayerTrackerClearPersistentStats_Hit);
+
+					//mainView.TellsLoggerClearCurrentLogs.Hit += (s2, e2) => { try { chatLoggerTellsCurrent.clea(); } catch (Exception ex) { Debug.LogException(ex); } };
+					mainView.TellsLoggerClearPersistentLogs.Hit += new EventHandler(TellsLoggerClearPersistentLogs_Hit);
+
+					//mainView.TellsLoggerClearCurrentLogs.Hit += (s2, e2) => { try { chatLoggerTellsCurrent.clea(); } catch (Exception ex) { Debug.LogException(ex); } };
+					mainView.LocalLoggerClearPersistentLogs.Hit += new EventHandler(LocalLoggerClearPersistentLogs_Hit);
+
+					//mainView.TellsLoggerClearCurrentLogs.Hit += (s2, e2) => { try { chatLoggerTellsCurrent.clea(); } catch (Exception ex) { Debug.LogException(ex); } };
+					mainView.FellowLoggerClearPersistentLogs.Hit += new EventHandler(FellowLoggerClearPersistentLogs_Hit);
+
+					//mainView.TellsLoggerClearCurrentLogs.Hit += (s2, e2) => { try { chatLoggerTellsCurrent.clea(); } catch (Exception ex) { Debug.LogException(ex); } };
+					mainView.ChannelsLoggerClearPersistentLogs.Hit += new EventHandler(ChannelsLoggerClearPersistentLogs_Hit);
 
 					mainView.ClipboardWornEquipment.Hit += (s2, e2) => { try { inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.WornEquipment); } catch (Exception ex) { Debug.LogException(ex); } };
 					mainView.ClipboardInventoryInfo.Hit += (s2, e2) => { try { inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.Inventory); } catch (Exception ex) { Debug.LogException(ex); } };
@@ -293,6 +328,15 @@ namespace MagTools
 				// We dispose these before our other objects (Trackers/Macros) as these probably reference those other objects.
 				if (hud != null) hud.Dispose();
 
+				if (chatLoggerTellsGUICurrent != null) chatLoggerTellsGUICurrent.Dispose();
+				if (chatLoggerTellsGUIPersistent != null) chatLoggerTellsGUIPersistent.Dispose();
+				if (chatLoggerLocalGUICurrent != null) chatLoggerLocalGUICurrent.Dispose();
+				if (chatLoggerLocalGUIPersistent != null) chatLoggerLocalGUIPersistent.Dispose();
+				if (chatLoggerFellowGUICurrent != null) chatLoggerFellowGUICurrent.Dispose();
+				if (chatLoggerFellowGUIPersistent != null) chatLoggerFellowGUIPersistent.Dispose();
+				if (chatLoggerChannelsGUICurrent != null) chatLoggerChannelsGUICurrent.Dispose();
+				if (chatLoggerChannelsGUIPersistent != null) chatLoggerChannelsGUIPersistent.Dispose();
+
 				if (consumableTrackerGUI != null) consumableTrackerGUI.Dispose();
 				if (playerTrackerGUIPersistent != null) playerTrackerGUIPersistent.Dispose();
 				if (playerTrackerGUICurrent != null) playerTrackerGUICurrent.Dispose();
@@ -319,6 +363,9 @@ namespace MagTools
 				if (windowMover != null) windowMover.Dispose();
 				if (noFocusFPSManager != null) noFocusFPSManager.Dispose();
 
+				// Loggers
+				if (chatLogger != null) chatLogger.Dispose();
+
 				// Trackers
 				if (equipmentTracker != null) equipmentTracker.Dispose();
 				if (combatTrackerCurrent != null) combatTrackerCurrent.Dispose();
@@ -339,7 +386,6 @@ namespace MagTools
 				if (chatFilter != null) chatFilter.Dispose();
 				if (inventoryLogger != null) inventoryLogger.Dispose();
 
-				Host = null;
 				Current = null;
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -370,6 +416,37 @@ namespace MagTools
 						playerTrackerPersistent.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".PlayerTracker.xml");
 				}
 				catch (Exception ex) { Debug.LogException(ex); }
+
+
+				// Load Persistent Logs
+				/*try
+				{
+					if (Settings.SettingsManager.TellsLogger.Persistent.Value)
+						chatLoggerTellsPersistent.ImportLogs(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".TellsLogger.xml");
+				}
+				catch (Exception ex) { Debug.LogException(ex); }
+
+				try
+				{
+					if (Settings.SettingsManager.LocalLogger.Persistent.Value)
+						chatLoggerLocalPersistent.ImportLogs(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".LocalLogger.xml");
+				}
+				catch (Exception ex) { Debug.LogException(ex); }
+
+				try
+				{
+					if (Settings.SettingsManager.FellowLogger.Persistent.Value)
+						chatLoggerFellowPersistent.ImportLogs(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".FellowLogger.xml");
+				}
+				catch (Exception ex) { Debug.LogException(ex); }
+
+				try
+				{
+					if (Settings.SettingsManager.ChannelsLogger.Persistent.Value)
+						chatLoggerChannelsPersistent.ImportLogs(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChannelsLogger.xml");
+				}
+				catch (Exception ex) { Debug.LogException(ex); }*/
+
 
 				// Wire up Inventory Packer Hotkey
 				try
@@ -482,11 +559,15 @@ namespace MagTools
 
 				ExportPersistentStats();
 
+				ExportPersistentLogs();
+
 				if (Settings.SettingsManager.CombatTracker.ExportOnLogOff.Value)
 					combatTrackerCurrent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker." + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ".xml");
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
+
+		#region ' Clear Persistent Stats Buttons '
 
 		void CombatTrackerClearPersistentStats_Hit(object sender, EventArgs e)
 		{
@@ -542,11 +623,39 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		#endregion
+
+		#region ' Clear Persistent Logs Buttons '
+
+		void TellsLoggerClearPersistentLogs_Hit(object sender, EventArgs e)
+		{
+
+		}
+
+		void LocalLoggerClearPersistentLogs_Hit(object sender, EventArgs e)
+		{
+
+		}
+
+		void FellowLoggerClearPersistentLogs_Hit(object sender, EventArgs e)
+		{
+
+		}
+
+		void ChannelsLoggerClearPersistentLogs_Hit(object sender, EventArgs e)
+		{
+
+		}
+
+		#endregion
+
 		void SavePersistentStatsTimer_Tick(object sender, EventArgs e)
 		{
 			try
 			{
 				ExportPersistentStats();
+
+				ExportPersistentLogs();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -561,6 +670,21 @@ namespace MagTools
 
 			if (Settings.SettingsManager.PlayerTracker.Persistent.Value)
 				playerTrackerPersistent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".PlayerTracker.xml");
+		}
+
+		void ExportPersistentLogs()
+		{
+			/*if (Settings.SettingsManager.TellsLogger.Persistent.Value)
+				chatLoggerTellsPersistent.ExportLogs(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".TellsLogger.xml");
+
+			if (Settings.SettingsManager.LocalLogger.Persistent.Value)
+				chatLoggerLocalPersistent.ExportLogs(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".LocalLogger.xml");
+
+			if (Settings.SettingsManager.FellowLogger.Persistent.Value)
+				chatLoggerFellowPersistent.ExportLogs(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".FellowLogger.xml");
+
+			if (Settings.SettingsManager.ChannelsLogger.Persistent.Value)
+				chatLoggerChannelsPersistent.ExportLogs(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChannelsLogger.xml");*/
 		}
 	}
 }

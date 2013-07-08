@@ -143,6 +143,8 @@ namespace Mag.Shared
 		[Flags]
 		public enum ChatFlags : byte
 		{
+			None				= 0x00,
+
 			PlayerSaysLocal		= 0x01,
 			PlayerSaysChannel	= 0x02,
 			YouSay				= 0x04,
@@ -202,8 +204,8 @@ namespace Mag.Shared
 
 			if (isSays && isTell)
 			{
-				int indexOfSays = text.IndexOf(" says, \"");
-				int indexOfTell = text.IndexOf(" tells you");
+				int indexOfSays = text.IndexOf(" says, \"", StringComparison.Ordinal);
+				int indexOfTell = text.IndexOf(" tells you", StringComparison.Ordinal);
 
 				if (indexOfSays <= indexOfTell)
 					isTell = false;
@@ -214,9 +216,9 @@ namespace Mag.Shared
 			string source = string.Empty;
 
 			if (isSays)
-				source = text.Substring(0, text.IndexOf(" says, \""));
+				source = text.Substring(0, text.IndexOf(" says, \"", StringComparison.Ordinal));
 			else if (isTell)
-				source = text.Substring(0, text.IndexOf(" tells you"));
+				source = text.Substring(0, text.IndexOf(" tells you", StringComparison.Ordinal));
 			else
 				return source;
 
@@ -230,6 +232,83 @@ namespace Mag.Shared
 			}
 
 			return source;
+		}
+
+		[Flags]
+		public enum ChatChannels : ushort
+		{
+			None		= 0x0000,
+
+			Area		= 0x0001,
+			Tells		= 0x0002,
+
+			Fellowship	= 0x0004,
+			Allegiance	= 0x0008,
+			General		= 0x0010,
+			Trade		= 0x0020,
+			LFG			= 0x0040,
+			Roleplay	= 0x0080,
+			Society		= 0x0100,
+
+			All			= 0xFFFF,
+		}
+
+		public static ChatChannels GetChatChannel(string text)
+		{
+			if (IsChat(text, ChatFlags.PlayerSaysLocal | ChatFlags.YouSay | ChatFlags.NpcSays))
+				return ChatChannels.Area;
+
+			if (IsChat(text, ChatFlags.PlayerTellsYou | ChatFlags.YouTell | ChatFlags.NpcTellsYou))
+				return ChatChannels.Tells;
+
+			if (IsChat(text, ChatFlags.PlayerSaysChannel))
+			{
+				Match match = PlayerSaysChannel.Match(text);
+
+				if (match.Success)
+				{
+					string channel = match.Groups["channel"].Value;
+
+					if (channel == "Fellowship") return ChatChannels.Fellowship;
+					if (channel == "Allegiance") return ChatChannels.Allegiance;
+					if (channel == "General") return ChatChannels.General;
+					if (channel == "Trade") return ChatChannels.Trade;
+					if (channel == "LFG") return ChatChannels.LFG;
+					if (channel == "Roleplay") return ChatChannels.Roleplay;
+					if (channel == "Society") return ChatChannels.Society;
+				}
+			}
+
+			return ChatChannels.None;
+		}
+
+		/// <summary>
+		/// Converts a message of:
+		/// [Allegiance] &lt;Tell:IIDString:0:PlayerName>PlayerName&lt;\Tell> says, "kk"
+		/// to:
+		/// [Allegiance] PlayerName says, "kk"
+		/// </summary>
+		/// <param name="text"></param>
+		/// <returns></returns>
+		public static string CleanMessage(string text)
+		{
+			string output = text;
+
+			int ltIndex = output.IndexOf('<');
+			int gtIndex = output.IndexOf('>');
+			int cIndex = output.IndexOf(',');
+
+			if (ltIndex != -1 && ltIndex < gtIndex && gtIndex < cIndex)
+				output = output.Substring(0, ltIndex) + output.Substring(gtIndex + 1, output.Length - gtIndex - 1);
+
+			ltIndex = output.IndexOf('<');
+			gtIndex = output.IndexOf('>');
+			cIndex = output.IndexOf(',');
+
+			if (ltIndex != -1 && ltIndex < gtIndex && gtIndex < cIndex)
+				output = output.Substring(0, ltIndex) + output.Substring(gtIndex + 1, output.Length - gtIndex - 1);
+	
+			return output;
 		}
 
 		public static void ExportSpells(string targetFileName)
