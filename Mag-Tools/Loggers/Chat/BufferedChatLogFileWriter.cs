@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 
+using Mag.Shared;
+
 namespace MagTools.Loggers.Chat
 {
 	class BufferedChatLogFileWriter : IDisposable
@@ -60,7 +62,20 @@ namespace MagTools.Loggers.Chat
 			if (!Settings.SettingsManager.ChatLogger.Persistent.Value)
 				return;
 
-			items.Add(item);
+			Util.ChatChannels chatChannels = Util.ChatChannels.None;
+
+			foreach (var group in Settings.SettingsManager.ChatLogger.Groups)
+			{
+				if (group.Area.Value) chatChannels |= Util.ChatChannels.Area;
+				if (group.Tells.Value) chatChannels |= Util.ChatChannels.Tells;
+				if (group.Fellowship.Value) chatChannels |= Util.ChatChannels.Fellowship;
+				if (group.General.Value) chatChannels |= Util.ChatChannels.General;
+				if (group.Trade.Value) chatChannels |= Util.ChatChannels.Trade;
+				if (group.Allegiance.Value) chatChannels |= Util.ChatChannels.Allegiance;
+			}
+
+			if ((chatChannels & item.ChatType) != 0)
+				items.Add(item);
 		}
 
 		void saveTimer_Tick(object sender, EventArgs e)

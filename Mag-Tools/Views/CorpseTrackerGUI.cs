@@ -6,6 +6,7 @@ using MagTools.Trackers.Corpse;
 
 using VirindiViewService.Controls;
 
+using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
 namespace MagTools.Views
@@ -38,6 +39,8 @@ namespace MagTools.Views
 				tracker.ItemAdded += new Action<TrackedCorpse>(corpseTracker_ItemAdded);
 				tracker.ItemChanged += new Action<TrackedCorpse>(corpseTracker_ItemChanged);
 				tracker.ItemRemoved += new Action<TrackedCorpse>(corpseTracker_ItemRemoved);
+
+				hudList.Click += new HudList.delClickedControl(hudList_Click);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -64,6 +67,8 @@ namespace MagTools.Views
 					tracker.ItemAdded -= new Action<TrackedCorpse>(corpseTracker_ItemAdded);
 					tracker.ItemChanged -= new Action<TrackedCorpse>(corpseTracker_ItemChanged);
 					tracker.ItemRemoved -= new Action<TrackedCorpse>(corpseTracker_ItemRemoved);
+
+					hudList.Click -= new HudList.delClickedControl(hudList_Click);
 				}
 
 				// Indicate that the instance has been disposed.
@@ -122,6 +127,18 @@ namespace MagTools.Views
 					row--;
 				}
 			}			
+		}
+
+		void hudList_Click(object sender, int row, int col)
+		{
+			try
+			{
+				int id;
+
+				if (int.TryParse(((HudStaticText)hudList[row][3]).Text, out id))
+					CoreManager.Current.Actions.SelectItem(id);
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 	}
 }

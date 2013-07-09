@@ -26,6 +26,20 @@ namespace MagTools.Trackers.Corpse
 
 		readonly List<TrackedCorpse> trackedItems = new List<TrackedCorpse>();
 
+		class TimeStampedID
+		{
+			public readonly DateTime TimeStamp;
+			public readonly int Id;
+
+			public TimeStampedID(DateTime timeStamp, int id)
+			{
+				TimeStamp = timeStamp;
+				Id =id;
+			}
+		}
+
+		readonly List<TimeStampedID> nullOpenedContainers = new List<TimeStampedID>();
+
 		System.Windows.Forms.Timer maintenanceTimer = new System.Windows.Forms.Timer();
 
 		public CorpseTracker()
@@ -142,7 +156,10 @@ namespace MagTools.Trackers.Corpse
 						WorldObject wo = CoreManager.Current.WorldFilter[e.ItemGuid];
 
 						if (wo == null)
+						{
+							nullOpenedContainers.Add(new TimeStampedID(DateTime.Now, e.ItemGuid));
 							return;
+						}
 
 						ProcessWorldObject(wo, true);
 
@@ -208,6 +225,16 @@ namespace MagTools.Trackers.Corpse
 					return;
 			}
 
+			// This is a fix for vtank opening containers before WorldFilter has a valid WorldObject for the id
+			for (int i = 0; i < nullOpenedContainers.Count; i++)
+			{
+				if (nullOpenedContainers[i].Id == wo.Id)
+				{
+					opened = true;
+					break;
+				}
+			}
+
 			// This is a new item, should we track it?
 			bool trackCorpse = false;
 
@@ -256,7 +283,7 @@ namespace MagTools.Trackers.Corpse
 					return;
 
 				// Move items from trackedItems to expiredItems if they no longer pass the active tracking filter
-				for (int i = 0 ; i < trackedItems.Count ; i++)
+				for (int i = trackedItems.Count - 1 ; i >= 0 ; i--)
 				{
 					TrackedCorpse trackedItem = trackedItems[i];
 
@@ -266,8 +293,13 @@ namespace MagTools.Trackers.Corpse
 							ItemRemoved(trackedItem);
 
 						trackedItems.RemoveAt(i);
-						i--;
 					}
+				}
+
+				for (int i = nullOpenedContainers.Count - 1 ; i >= 0 ; i--)
+				{
+					if (DateTime.Now - nullOpenedContainers[i].TimeStamp > TimeSpan.FromMinutes(1))
+						nullOpenedContainers.RemoveAt(i);
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
