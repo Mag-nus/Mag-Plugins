@@ -206,7 +206,7 @@ namespace MagTools.Trackers.Corpse
 			{
 				if (trackedItems[i].Id == wo.Id)
 				{
-					if (trackedItems[i].LandBlock == wo.Values(LongValueKey.Landblock) && Math.Abs(trackedItems[i].LocationX - wo.RawCoordinates().X) < 1 && Math.Abs(trackedItems[i].LocationY - wo.RawCoordinates().Y) < 1)
+					if (trackedItems[i].LandBlock != wo.Values(LongValueKey.Landblock) || Math.Abs(trackedItems[i].LocationX - wo.RawCoordinates().X) > 1 || Math.Abs(trackedItems[i].LocationY - wo.RawCoordinates().Y) > 1)
 					{
 						if (ItemRemoved != null)
 							ItemRemoved(trackedItems[i]);
