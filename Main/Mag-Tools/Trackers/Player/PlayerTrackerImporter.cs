@@ -5,21 +5,18 @@ using System.Xml;
 
 namespace MagTools.Trackers.Player
 {
-	class PlayerTrackerImporter
+	static class PlayerTrackerImporter
 	{
-		readonly string fileName;
-
-		public PlayerTrackerImporter(string fileName)
+		public static bool Import(string fileName, out List<TrackedPlayer> items)
 		{
-			this.fileName = fileName;
-		}
+			items = new List<TrackedPlayer>();
 
-		public bool Import(List<TrackedPlayer> trackedPlayers)
-		{
+
 			FileInfo fileInfo = new FileInfo(fileName);
 
 			if (!fileInfo.Exists)
 				return false;
+
 
 			XmlDocument xmlDocument = new XmlDocument();
 
@@ -30,7 +27,6 @@ namespace MagTools.Trackers.Player
 			if (playersNode == null)
 				return false;
 
-			trackedPlayers.Clear();
 
 			// Import the Players
 			if (playersNode.HasChildNodes)
@@ -84,7 +80,7 @@ namespace MagTools.Trackers.Player
 							item.LocationZ = value;
 					}
 
-					trackedPlayers.Add(item);
+					items.Add(item);
 				}
 			}
 

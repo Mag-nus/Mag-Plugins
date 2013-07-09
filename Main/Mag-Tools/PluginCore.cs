@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Collections.ObjectModel;
 
@@ -6,6 +7,8 @@ using Decal.Adapter;
 
 using MagTools.Client;
 using MagTools.Inventory;
+using MagTools.Loggers;
+using MagTools.Loggers.Chat;
 using MagTools.Trackers.Equipment;
 using MagTools.Views;
 
@@ -104,6 +107,7 @@ namespace MagTools
 
 		// Loggers
 		Loggers.Chat.ChatLogger chatLogger;
+		BufferedChatLogFileWriter chatLogFileWriter;
 
 		// Misc
 		WindowFrameRemover windowFrameRemover;
@@ -176,6 +180,7 @@ namespace MagTools
 
 				// Loggers
 				chatLogger = new Loggers.Chat.ChatLogger();
+				chatLogFileWriter = new BufferedChatLogFileWriter(null, chatLogger, TimeSpan.FromMinutes(10));
 
 				// Misc
 				windowFrameRemover = new WindowFrameRemover();
@@ -323,6 +328,7 @@ namespace MagTools
 
 				// Loggers
 				if (chatLogger != null) chatLogger.Dispose();
+				if (chatLogFileWriter != null) chatLogFileWriter.Dispose();
 
 				// Trackers
 				if (equipmentTracker != null) equipmentTracker.Dispose();
@@ -375,12 +381,19 @@ namespace MagTools
 
 
 				// Load Persistent Logs
-				/*try
+				try
 				{
-					if (Settings.SettingsManager.TellsLogger.Persistent.Value)
-						chatLoggerTellsPersistent.ImportLogs(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChatLogger.xml");
+					if (Settings.SettingsManager.ChatLogger.Persistent.Value)
+					{
+						chatLogFileWriter.FileName = PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChatLogger.txt";
+
+						List<ILoggerTarget<LoggedChat>> chatLoggers = new List<ILoggerTarget<LoggedChat>>();
+						chatLoggers.Add(chatLoggerGroup1GUI);
+						chatLoggers.Add(chatLoggerGroup2GUI);
+						ChatLogImporter.Import(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChatLogger.txt", chatLoggers);					
+					}
 				}
-				catch (Exception ex) { Debug.LogException(ex); }*/
+				catch (Exception ex) { Debug.LogException(ex); }
 
 
 				// Wire up Inventory Packer Hotkey
@@ -494,7 +507,8 @@ namespace MagTools
 
 				ExportPersistentStats();
 
-				ExportPersistentLogs();
+				if (Settings.SettingsManager.ChatLogger.Persistent.Value)
+					chatLogFileWriter.Flush();
 
 				if (Settings.SettingsManager.CombatTracker.ExportOnLogOff.Value)
 					combatTrackerCurrent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker." + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ".xml");
@@ -571,7 +585,7 @@ namespace MagTools
 				chatLoggerGroup2GUI.Clear();
 
 				if (Settings.SettingsManager.CombatTracker.Persistent.Value)
-					combatTrackerPersistent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChatLogger.xml");
+					combatTrackerPersistent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChatLogger.txt");
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -583,8 +597,6 @@ namespace MagTools
 			try
 			{
 				ExportPersistentStats();
-
-				ExportPersistentLogs();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -599,22 +611,6 @@ namespace MagTools
 
 			if (Settings.SettingsManager.PlayerTracker.Persistent.Value)
 				playerTracker.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".PlayerTracker.xml");
-		}
-
-		void ExportPersistentLogs()
-		{
-			Debug.WriteToChat("ExportPersistentLogs Not implemented yet.");
-			/*if (Settings.SettingsManager.TellsLogger.Persistent.Value)
-				chatLoggerTellsPersistent.ExportLogs(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".TellsLogger.xml");
-
-			if (Settings.SettingsManager.LocalLogger.Persistent.Value)
-				chatLoggerLocalPersistent.ExportLogs(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".LocalLogger.xml");
-
-			if (Settings.SettingsManager.FellowLogger.Persistent.Value)
-				chatLoggerFellowPersistent.ExportLogs(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".FellowLogger.xml");
-
-			if (Settings.SettingsManager.ChannelsLogger.Persistent.Value)
-				chatLoggerChannelsPersistent.ExportLogs(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChannelsLogger.xml");*/
 		}
 	}
 }

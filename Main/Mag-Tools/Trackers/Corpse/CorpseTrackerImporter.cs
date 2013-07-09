@@ -5,21 +5,18 @@ using System.Xml;
 
 namespace MagTools.Trackers.Corpse
 {
-	class CorpseTrackerImporter
+	static class CorpseTrackerImporter
 	{
-		readonly string fileName;
-
-		public CorpseTrackerImporter(string fileName)
+		public static bool Import(string fileName, out List<TrackedCorpse> items)
 		{
-			this.fileName = fileName;
-		}
+			items = new List<TrackedCorpse>();
 
-		public bool Import(List<TrackedCorpse> trackedCorpses)
-		{
+
 			FileInfo fileInfo = new FileInfo(fileName);
 
 			if (!fileInfo.Exists)
 				return false;
+
 
 			XmlDocument xmlDocument = new XmlDocument();
 
@@ -30,7 +27,6 @@ namespace MagTools.Trackers.Corpse
 			if (corpsesNode == null)
 				return false;
 
-			trackedCorpses.Clear();
 
 			// Import the Items
 			if (corpsesNode.HasChildNodes)
@@ -100,7 +96,7 @@ namespace MagTools.Trackers.Corpse
 							item.Opened = value;
 					}
 
-					trackedCorpses.Add(item);
+					items.Add(item);
 				}
 			}
 

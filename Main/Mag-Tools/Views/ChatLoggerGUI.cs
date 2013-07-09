@@ -82,9 +82,6 @@ namespace MagTools.Views
 
 			if ((chatChannels & item.ChatType) != 0)
 			{
-				if (Util.IsSpellCastingMessage(item.Message))
-					return;
-
 				// Limit the list to no more than 10,000 rows
 				if (hudList.RowCount >= 10000)
 				{
@@ -94,7 +91,7 @@ namespace MagTools.Views
 
 				HudList.HudListRowAccessor newRow = hudList.InsertRow(1);
 
-				((HudStaticText)newRow[0]).Text = item.TimeStamp.ToString("MM/dd/yy HH:mm");
+				((HudStaticText)newRow[0]).Text = item.TimeStamp.ToString("yy/MM/dd HH:mm");
 				((HudStaticText)newRow[1]).Text = Util.CleanMessage(item.Message);
 			}
 		}

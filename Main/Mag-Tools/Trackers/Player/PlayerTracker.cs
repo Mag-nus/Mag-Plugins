@@ -120,15 +120,10 @@ namespace MagTools.Trackers.Player
 
 			TrackedPlayer newItem = new TrackedPlayer(wo.Name, DateTime.Now, wo.Values(LongValueKey.Landblock), wo.RawCoordinates().X, wo.RawCoordinates().Y, wo.RawCoordinates().Z, wo.Id);
 
-			DoAddItem(newItem);
-		}
-
-		void DoAddItem(TrackedPlayer item)
-		{
-			trackedItems.Add(item);
+			trackedItems.Add(newItem);
 
 			if (ItemAdded != null)
-				ItemAdded(item);
+				ItemAdded(newItem);
 		}
 
 		public void ClearStats()
@@ -144,23 +139,25 @@ namespace MagTools.Trackers.Player
 
 		public void ImportStats(string xmlFileName)
 		{
-			PlayerTrackerImporter importer = new PlayerTrackerImporter(xmlFileName);
+			List<TrackedPlayer> importedItems;
 
-			List<TrackedPlayer> importedList = new List<TrackedPlayer>();
-
-			importer.Import(importedList);
-
-			foreach (var newItem in importedList)
+			if (PlayerTrackerImporter.Import(xmlFileName, out importedItems))
 			{
-				foreach (var item in trackedItems)
+				foreach (var newItem in importedItems)
 				{
-					if (newItem.Name == item.Name)
-						goto next;
+					foreach (var item in trackedItems)
+					{
+						if (newItem.Name == item.Name)
+							goto next;
+					}
+
+					trackedItems.Add(newItem);
+
+					if (ItemAdded != null)
+						ItemAdded(newItem);
+
+					next:;
 				}
-
-				DoAddItem(newItem);
-
-				next: ;
 			}
 		}
 
@@ -169,9 +166,7 @@ namespace MagTools.Trackers.Player
 			if (trackedItems.Count == 0)
 				return;
 
-			PlayerTrackerExporter exporter = new PlayerTrackerExporter(trackedItems);
-
-			exporter.Export(xmlFileName);
+			PlayerTrackerExporter.Export(xmlFileName, trackedItems);
 
 			if (showMessage)
 				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Stats exported to: " + xmlFileName, 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);

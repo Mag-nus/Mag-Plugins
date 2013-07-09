@@ -60,6 +60,9 @@ namespace MagTools.Loggers.Chat
 				if (Util.IsChat(e.Text, Util.ChatFlags.NpcSays | Util.ChatFlags.NpcTellsYou))
 					return;
 
+				if (Util.IsSpellCastingMessage(e.Text))
+					return;
+
 				LoggedChat item;
 
 				if (Util.IsChat(e.Text, Util.ChatFlags.PlayerTellsYou | Util.ChatFlags.YouTell))
@@ -70,53 +73,19 @@ namespace MagTools.Loggers.Chat
 				{
 					Util.ChatChannels channel = Util.GetChatChannel(e.Text);
 
+					if (channel == Util.ChatChannels.None)
+						return;
+
 					item = new LoggedChat(DateTime.Now, channel, e.Text);
 				}
 				else
-					item = new LoggedChat(DateTime.Now, Util.ChatChannels.None, e.Text);
+					//item = new LoggedChat(DateTime.Now, Util.ChatChannels.None, e.Text);
+					return;
 
 				if (LogItem != null)
 					LogItem(item);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		public void ImportLogs(string xmlFileName)
-		{
-			/*CorpseTrackerImporter importer = new CorpseTrackerImporter(xmlFileName);
-
-			List<TrackedCorpse> importedList = new List<TrackedCorpse>();
-
-			importer.Import(importedList);
-
-			foreach (var item in importedList)
-			{
-				if (trackedItems.ContainsKey(item.Id))
-					continue;
-
-				trackedItems.Add(item.Id, item);
-
-				if (ItemAdded != null)
-					ItemAdded(item);
-			}*/
-		}
-
-		public void ExportLogs(string xmlFileName, bool showMessage = false)
-		{
-			/*if (trackedItems.Count == 0)
-				return;
-
-			List<TrackedCorpse> exportedList = new List<TrackedCorpse>();
-
-			foreach (var kvp in trackedItems)
-				exportedList.Add(kvp.Value);
-
-			CorpseTrackerExporter exporter = new CorpseTrackerExporter(exportedList);
-
-			exporter.Export(xmlFileName);
-
-			if (showMessage)
-				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Stats exported to: " + xmlFileName, 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);*/
 		}
 	}
 }

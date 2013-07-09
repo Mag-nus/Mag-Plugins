@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
+using Mag.Shared;
 
 namespace MagTools.Trackers.Corpse
 {
@@ -25,13 +26,20 @@ namespace MagTools.Trackers.Corpse
 
 		readonly List<TrackedCorpse> trackedItems = new List<TrackedCorpse>();
 
+		System.Windows.Forms.Timer maintenanceTimer = new System.Windows.Forms.Timer();
+
 		public CorpseTracker()
 		{
 			try
 			{
 				CoreManager.Current.WorldFilter.CreateObject += new EventHandler<Decal.Adapter.Wrappers.CreateObjectEventArgs>(WorldFilter_CreateObject);
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+				CoreManager.Current.WorldFilter.ReleaseObject += new EventHandler<ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
 				CoreManager.Current.ContainerOpened += new EventHandler<ContainerOpenedEventArgs>(Current_ContainerOpened);
+
+				maintenanceTimer.Interval = 60000;
+				maintenanceTimer.Tick += new EventHandler(maintenanceTimer_Tick);
+				maintenanceTimer.Start();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -55,8 +63,11 @@ namespace MagTools.Trackers.Corpse
 			{
 				if (disposing)
 				{
+					maintenanceTimer.Tick -= new EventHandler(maintenanceTimer_Tick);
+
 					CoreManager.Current.WorldFilter.CreateObject -= new EventHandler<Decal.Adapter.Wrappers.CreateObjectEventArgs>(WorldFilter_CreateObject);
 					CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+					CoreManager.Current.WorldFilter.ReleaseObject -= new EventHandler<ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
 					CoreManager.Current.ContainerOpened -= new EventHandler<ContainerOpenedEventArgs>(Current_ContainerOpened);
 				}
 
@@ -86,6 +97,33 @@ namespace MagTools.Trackers.Corpse
 
 				if (e.Change == WorldChangeType.IdentReceived)
 					ProcessWorldObject(e.Changed);
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void WorldFilter_ReleaseObject(object sender, ReleaseObjectEventArgs e)
+		{
+			try
+			{
+				if (!Settings.SettingsManager.CorpseTracker.Enabled.Value)
+					return;
+
+				// Check if its a corpse decay in range of player
+				if (e.Released.ObjectClass == ObjectClass.Corpse && Util.GetDistanceFromPlayer(e.Released) <= 90)
+				{
+					for (int i = 0; i < trackedItems.Count; i++)
+					{
+						if (trackedItems[i].Id == e.Released.Id)
+						{
+							if (ItemRemoved != null)
+								ItemRemoved(trackedItems[i]);
+
+							trackedItems.RemoveAt(i);
+
+							break;
+						}
+					}
+				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -130,31 +168,47 @@ namespace MagTools.Trackers.Corpse
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		bool CorpsePassesActiveTrackingFilter(TrackedCorpse item)
+		{
+			if (item.Description.Contains(CoreManager.Current.CharacterFilter.Name))
+				return DateTime.Now - item.TimeStamp < TimeSpan.FromDays(7);
+
+			// Maybe keep corpses that have generated a rare longer...
+			// todo
+
+			return DateTime.Now - item.TimeStamp < TimeSpan.FromHours(2);
+		}
+
 		void ProcessWorldObject(WorldObject wo, bool opened = false)
 		{
 			if (wo.ObjectClass != ObjectClass.Corpse)
 				return;
 
-			for (int i = 0 ; i < trackedItems.Count ; i++)
+			// First, lets see if this world object id exists in our lists, but at different coordinates (means the id was reused)
+			for (int i = 0; i < trackedItems.Count; i++)
 			{
 				if (trackedItems[i].Id == wo.Id)
 				{
-					TrackedCorpse trackedItem = trackedItems[wo.Id];
+					if (trackedItems[i].LandBlock == wo.Values(LongValueKey.Landblock) && Math.Abs(trackedItems[i].LocationX - wo.RawCoordinates().X) < 1 && Math.Abs(trackedItems[i].LocationY - wo.RawCoordinates().Y) < 1)
+					{
+						if (ItemRemoved != null)
+							ItemRemoved(trackedItems[i]);
 
-					// Is this the same corpse as one we've already opened?
-					if (trackedItem.LandBlock == wo.Values(LongValueKey.Landblock) && Math.Abs(trackedItem.LocationX - wo.RawCoordinates().X) < 1 && Math.Abs(trackedItem.LocationY - wo.RawCoordinates().Y) < 1)
-						return;
+						trackedItems.RemoveAt(i);
 
-					// New corpse with same id
-					if (ItemRemoved != null)
-						ItemRemoved(trackedItem);
-
-					trackedItems.RemoveAt(i);
-
-					break;
+						break;
+					}
 				}
 			}
 
+			// Lets see if we're already tracking this item
+			for (int i = 0 ; i < trackedItems.Count ; i++)
+			{
+				if (trackedItems[i].Id == wo.Id)
+					return;
+			}
+
+			// This is a new item, should we track it?
 			bool trackCorpse = false;
 
 			// My own corpses
@@ -164,12 +218,12 @@ namespace MagTools.Trackers.Corpse
 			if (Settings.SettingsManager.CorpseTracker.TrackAllCorpses.Value)
 				trackCorpse = true;
 
-			if (Settings.SettingsManager.CorpseTracker.TrackFellowCorpses.Value)
+			if (!trackCorpse && Settings.SettingsManager.CorpseTracker.TrackFellowCorpses.Value)
 			{
 				// fix
 			}
 
-			if (Settings.SettingsManager.CorpseTracker.TrackPermittedCorpses.Value)
+			if (!trackCorpse && Settings.SettingsManager.CorpseTracker.TrackPermittedCorpses.Value)
 			{
 				// fix
 			}
@@ -187,20 +241,36 @@ namespace MagTools.Trackers.Corpse
 			{
 				TrackedCorpse trackedItem = new TrackedCorpse(wo.Id, DateTime.Now, wo.Values(LongValueKey.Landblock), wo.RawCoordinates().X, wo.RawCoordinates().Y, wo.RawCoordinates().Z, wo.Name, opened);
 
-				DoAddItem(trackedItem);
+				trackedItems.Add(trackedItem);
+
+				if (ItemAdded != null)
+					ItemAdded(trackedItem);
 			}
 		}
 
-		void DoAddItem(TrackedCorpse item)
+		void maintenanceTimer_Tick(object sender, EventArgs e)
 		{
-			// Limit the tracker to only the 1000 most recent items
-			if (trackedItems.Count > 1000)
-				trackedItems.RemoveRange(0, trackedItems.Count - 1000);
+			try
+			{
+				if (!Settings.SettingsManager.CorpseTracker.Enabled.Value)
+					return;
 
-			trackedItems.Add(item);
+				// Move items from trackedItems to expiredItems if they no longer pass the active tracking filter
+				for (int i = 0 ; i < trackedItems.Count ; i++)
+				{
+					TrackedCorpse trackedItem = trackedItems[i];
 
-			if (ItemAdded != null)
-				ItemAdded(item);
+					if (!CorpsePassesActiveTrackingFilter(trackedItem))
+					{
+						if (ItemRemoved != null)
+							ItemRemoved(trackedItem);
+
+						trackedItems.RemoveAt(i);
+						i--;
+					}
+				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		public void ClearStats()
@@ -216,23 +286,28 @@ namespace MagTools.Trackers.Corpse
 
 		public void ImportStats(string xmlFileName)
 		{
-			CorpseTrackerImporter importer = new CorpseTrackerImporter(xmlFileName);
+			List<TrackedCorpse> importedItems;
 
-			List<TrackedCorpse> importedList = new List<TrackedCorpse>();
-
-			importer.Import(importedList);
-
-			foreach (var newItem in importedList)
+			if (CorpseTrackerImporter.Import(xmlFileName, out importedItems))
 			{
-				foreach (var item in trackedItems)
+				foreach (var newItem in importedItems)
 				{
-					if (newItem.Id == item.Id)
-						goto next;
+					if (CorpsePassesActiveTrackingFilter(newItem))
+					{
+						foreach (var item in trackedItems)
+						{
+							if (newItem.Id == item.Id)
+								goto next;
+						}
+
+						trackedItems.Add(newItem);
+
+						if (ItemAdded != null)
+							ItemAdded(newItem);
+					}
+
+					next:;
 				}
-
-				DoAddItem(newItem);
-
-				next:;
 			}
 		}
 
@@ -245,13 +320,11 @@ namespace MagTools.Trackers.Corpse
 
 			foreach (var item in trackedItems)
 			{
-				if (item.Description.Contains(CoreManager.Current.CharacterFilter.Name))
+				if (CorpsePassesActiveTrackingFilter(item))
 					exportList.Add(item);
 			}
 
-			CorpseTrackerExporter exporter = new CorpseTrackerExporter(exportList);
-
-			exporter.Export(xmlFileName);
+			CorpseTrackerExporter.Export(xmlFileName, exportList);
 
 			if (showMessage)
 				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Stats exported to: " + xmlFileName, 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
