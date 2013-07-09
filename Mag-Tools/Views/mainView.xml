@@ -111,14 +111,14 @@
             
             <control progid="DecalControls.CheckBox" name="ChatLoggerPersistent" left="10" top="60" width="140" height="18" text="Keep Persistent Logs" />
 
-            <control progid="DecalControls.StaticText" name="ChatGroup1" left="10" top="70" width="170" height="18" text="Chat Group 1"/>
-            <control progid="DecalControls.List" name="ChatGroup1OptionsList" left="10" top="90" width="140" height="120">
+            <control progid="DecalControls.StaticText" name="ChatGroup1" left="10" top="80" width="170" height="18" text="Chat Group 1"/>
+            <control progid="DecalControls.List" name="ChatGroup1OptionsList" left="10" top="100" width="140" height="120">
               <column progid="DecalControls.CheckColumn" name="Enabled" />
               <column progid="DecalControls.TextColumn" name="Option" />
             </control>
               
-            <control progid="DecalControls.StaticText" name="ChatGroup2" left="10" top="220" width="170" height="18" text="Chat Group 2"/>
-            <control progid="DecalControls.List" name="ChatGroup2OptionsList" left="10" top="240" width="140" height="120">
+            <control progid="DecalControls.StaticText" name="ChatGroup2" left="10" top="230" width="170" height="18" text="Chat Group 2"/>
+            <control progid="DecalControls.List" name="ChatGroup2OptionsList" left="10" top="250" width="140" height="120">
               <column progid="DecalControls.CheckColumn" name="Enabled" />
               <column progid="DecalControls.TextColumn" name="Option" />
             </control>

@@ -90,7 +90,7 @@ namespace MagTools.Views
 				{
 					if (((HudStaticText)hudList[row - 1][1]).Text == item.Name)
 					{
-						((HudStaticText)hudList[row - 1][0]).Text = item.LastSeen.ToString("MM/dd/yy HH:mm");
+						((HudStaticText)hudList[row - 1][0]).Text = item.LastSeen.ToString("yy/MM/dd HH:mm");
 
 						CoordsObject newCords = Mag.Shared.Util.GetCoords(item.LandBlock, item.LocationX, item.LocationY);
 						((HudStaticText)hudList[row - 1][2]).Text = newCords.ToString();
@@ -134,7 +134,7 @@ namespace MagTools.Views
 					//if (!DateTime.TryParse(((HudStaticText)playerList[row][0]).Text, out rowDateTime))
 					//	break;
 
-					if (!DateTime.TryParseExact(((HudStaticText)hudList[row][0]).Text, "MM/dd/yy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out rowDateTime))
+					if (!DateTime.TryParseExact(((HudStaticText)hudList[row][0]).Text, "yy/MM/dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out rowDateTime))
 						break;
 
 					string compareName = ((HudStaticText)hudList[compareRow][1]).Text;
@@ -143,7 +143,7 @@ namespace MagTools.Views
 					//if (!DateTime.TryParse(((HudStaticText)playerList[compareRow][0]).Text, out compareDateTime))
 					//	continue;
 
-					if (!DateTime.TryParseExact(((HudStaticText)hudList[compareRow][0]).Text, "MM/dd/yy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out compareDateTime))
+					if (!DateTime.TryParseExact(((HudStaticText)hudList[compareRow][0]).Text, "yy/MM/dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out compareDateTime))
 						break;
 
 					if (rowDateTime < compareDateTime || (rowDateTime == compareDateTime && String.Compare(rowName, compareName, StringComparison.Ordinal) > 0))
