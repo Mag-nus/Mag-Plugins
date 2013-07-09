@@ -6,6 +6,7 @@ using MagTools.Trackers.Player;
 
 using VirindiViewService.Controls;
 
+using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
 namespace MagTools.Views
@@ -27,15 +28,19 @@ namespace MagTools.Views
 				hudList.AddColumn(typeof(HudStaticText), 75, null);
 				hudList.AddColumn(typeof(HudStaticText), 140, null);
 				hudList.AddColumn(typeof(HudStaticText), 100, null);
+				hudList.AddColumn(typeof(HudStaticText), 0, null);
 
 				HudList.HudListRowAccessor newRow = hudList.AddRow();
 				((HudStaticText)newRow[0]).Text = "Time";
 				((HudStaticText)newRow[1]).Text = "Name";
 				((HudStaticText)newRow[2]).Text = "Coords";
+				((HudStaticText)newRow[3]).Text = "Id";
 
 				tracker.ItemAdded += new Action<TrackedPlayer>(playerTracker_ItemAdded);
 				tracker.ItemChanged += new Action<TrackedPlayer>(playerTracker_ItemChanged);
 				tracker.ItemRemoved += new Action<TrackedPlayer>(playerTracker_ItemRemoved);
+
+				hudList.Click += new HudList.delClickedControl(hudList_Click);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -62,6 +67,8 @@ namespace MagTools.Views
 					tracker.ItemAdded -= new Action<TrackedPlayer>(playerTracker_ItemAdded);
 					tracker.ItemChanged -= new Action<TrackedPlayer>(playerTracker_ItemChanged);
 					tracker.ItemRemoved -= new Action<TrackedPlayer>(playerTracker_ItemRemoved);
+
+					hudList.Click -= new HudList.delClickedControl(hudList_Click);
 				}
 
 				// Indicate that the instance has been disposed.
@@ -94,6 +101,8 @@ namespace MagTools.Views
 
 						CoordsObject newCords = Mag.Shared.Util.GetCoords(item.LandBlock, item.LocationX, item.LocationY);
 						((HudStaticText)hudList[row - 1][2]).Text = newCords.ToString();
+
+						((HudStaticText)hudList[row - 1][3]).Text = item.Id.ToString(CultureInfo.InvariantCulture);
 
 						SortList();
 					}
@@ -162,6 +171,18 @@ namespace MagTools.Views
 					}
 				}
 			}
+		}
+
+		void hudList_Click(object sender, int row, int col)
+		{
+			try
+			{
+				int id;
+
+				if (int.TryParse(((HudStaticText)hudList[row][3]).Text, out id))
+					CoreManager.Current.Actions.SelectItem(id);
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 	}
 }
