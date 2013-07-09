@@ -7,9 +7,9 @@ namespace MagTools.Trackers.Corpse
 {
 	class CorpseTrackerExporter
 	{
-		readonly List<TrackedCorpse> trackedCorpses;
+		readonly IList<TrackedCorpse> trackedCorpses;
 
-		public CorpseTrackerExporter(List<TrackedCorpse> trackedCorpses)
+		public CorpseTrackerExporter(IList<TrackedCorpse> trackedCorpses)
 		{
 			this.trackedCorpses = trackedCorpses;
 		}

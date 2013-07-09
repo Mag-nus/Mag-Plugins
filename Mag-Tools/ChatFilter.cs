@@ -132,59 +132,15 @@ namespace MagTools
 				if (e.Eat == false && Settings.SettingsManager.Filters.SpellCastingMine.Value)
 				{
 					// You say, "Zojak 
-					if (e.Text.StartsWith("You say, "))
-					{
-						if (e.Text.StartsWith("You say, \"Zojak") ||
-							e.Text.StartsWith("You say, \"Malar") ||
-							e.Text.StartsWith("You say, \"Puish") ||
-							e.Text.StartsWith("You say, \"Cruath") ||
-							e.Text.StartsWith("You say, \"Volae") ||
-							e.Text.StartsWith("You say, \"Quavosh") ||
-							e.Text.StartsWith("You say, \"Shurov") ||
-							e.Text.StartsWith("You say, \"Boquar") ||
-							e.Text.StartsWith("You say, \"Helkas") ||
-							e.Text.StartsWith("You say, \"Equin") ||
-							e.Text.StartsWith("You say, \"Roiga") ||
-							e.Text.StartsWith("You say, \"Malar") ||
-							e.Text.StartsWith("You say, \"Jevak") ||
-							e.Text.StartsWith("You say, \"Tugak") ||
-							e.Text.StartsWith("You say, \"Slavu") ||
-							e.Text.StartsWith("You say, \"Drostu") ||
-							e.Text.StartsWith("You say, \"Traku") ||
-							e.Text.StartsWith("You say, \"Yanoi") ||
-							e.Text.StartsWith("You say, \"Drosta") ||
-							e.Text.StartsWith("You say, \"Feazh"))
-							e.Eat = true;
-					}
+					if (Util.IsSpellCastingMessage(e.Text, true, false))
+						e.Eat = true;
 				}
 
 				if (e.Eat == false && Settings.SettingsManager.Filters.SpellCastingOthers.Value)
 				{
 					// Fat Guy In A Little Coat says, "Zojak
-					if (Util.IsChat(e.Text, Util.ChatFlags.PlayerSaysLocal))
-					{
-						if (e.Text.Contains("says, \"Zojak") ||
-							e.Text.Contains("says, \"Malar") ||
-							e.Text.Contains("says, \"Puish") ||
-							e.Text.Contains("says, \"Cruath") ||
-							e.Text.Contains("says, \"Volae") ||
-							e.Text.Contains("says, \"Quavosh") ||
-							e.Text.Contains("says, \"Shurov") ||
-							e.Text.Contains("says, \"Boquar") ||
-							e.Text.Contains("says, \"Helkas") ||
-							e.Text.Contains("says, \"Equin") ||
-							e.Text.Contains("says, \"Roiga") ||
-							e.Text.Contains("says, \"Malar") ||
-							e.Text.Contains("says, \"Jevak") ||
-							e.Text.Contains("says, \"Tugak") ||
-							e.Text.Contains("says, \"Slavu") ||
-							e.Text.Contains("says, \"Drostu") ||
-							e.Text.Contains("says, \"Traku") ||
-							e.Text.Contains("says, \"Yanoi") ||
-							e.Text.Contains("says, \"Drosta") ||
-							e.Text.Contains("says, \"Feazh"))
-							e.Eat = true;
-					}
+					if (Util.IsSpellCastingMessage(e.Text, false))
+						e.Eat = true;
 				}
 
 				if (e.Eat == false && Settings.SettingsManager.Filters.SpellCastFizzles.Value)

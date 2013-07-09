@@ -60,13 +60,13 @@ namespace MagTools.Settings
 
 		public static class Looting
 		{
-			public static readonly Setting<bool> AutoLootChests = new Setting<bool>("Looting/AutoLootChests", "Auto Loot Chests");
+			public static readonly Setting<bool> AutoLootChests = new Setting<bool>("Looting/AutoLootChests", "Auto Loot Chests", true);
 
-			public static readonly Setting<bool> AutoLootCorpses = new Setting<bool>("Looting/AutoLootCorpses", "Auto Loot Corpses");
+			public static readonly Setting<bool> AutoLootCorpses = new Setting<bool>("Looting/AutoLootCorpses", "Auto Loot Corpses", true);
 
-			public static readonly Setting<bool> AutoLootMyCorpses = new Setting<bool>("Looting/AutoLootMyCorpse", "Auto Loot My Corpses");
+			public static readonly Setting<bool> AutoLootMyCorpses = new Setting<bool>("Looting/AutoLootMyCorpse", "Auto Loot My Corpses", true);
 
-			public static readonly Setting<bool> LootSalvage = new Setting<bool>("Looting/LootSalvage", "Auto Loot Salvage");
+			public static readonly Setting<bool> LootSalvage = new Setting<bool>("Looting/LootSalvage", "Auto Loot Salvage", true);
 		}
 
 		public static class InventoryManagement
@@ -130,43 +130,45 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> Persistent = new Setting<bool>("PlayerTracker/Persistent", "Keep Stats Persistent");
 		}
 
-		public static class TellsLogger
+		public static class ChatLogger
 		{
-			public static readonly Setting<bool> Enabled = new Setting<bool>("TellsLogger/Enabled", "Tells Logger Enabled", true);
+			public static readonly Setting<bool> Persistent = new Setting<bool>("ChatLogger/Persistent", "Keep Logs Persistent", true);
 
-			public static readonly Setting<bool> Persistent = new Setting<bool>("TellsLogger/Persistent", "Keep Logs Persistent", true);
+			public class Group
+			{
+				public Group(int groupNumber)
+				{
+					Area = new Setting<bool>("ChatLogger/Group" + groupNumber.ToString(CultureInfo.InvariantCulture) + "/Area", "Area");
+					if (groupNumber == 1)
+						Tells = new Setting<bool>("ChatLogger/Group" + groupNumber.ToString(CultureInfo.InvariantCulture) + "/Tells", "Tells", true);
+					else
+						Tells = new Setting<bool>("ChatLogger/Group" + groupNumber.ToString(CultureInfo.InvariantCulture) + "/Tells", "Tells");
+					Fellowship = new Setting<bool>("ChatLogger/Group" + groupNumber.ToString(CultureInfo.InvariantCulture) + "/Fellowship", "Fellowship");
+					General = new Setting<bool>("ChatLogger/Group" + groupNumber.ToString(CultureInfo.InvariantCulture) + "/General", "General");
+					Trade = new Setting<bool>("ChatLogger/Group" + groupNumber.ToString(CultureInfo.InvariantCulture) + "/Trade", "Trade");
+					Allegiance = new Setting<bool>("ChatLogger/Group" + groupNumber.ToString(CultureInfo.InvariantCulture) + "/Allegiance", "Allegiance");
+				}
+
+				public readonly Setting<bool> Area;
+				public readonly Setting<bool> Tells;
+				public readonly Setting<bool> Fellowship;
+				public readonly Setting<bool> General;
+				public readonly Setting<bool> Trade;
+				public readonly Setting<bool> Allegiance;
+			}
+
+			public static readonly Group[] Groups = new Group[2];
+
+			static ChatLogger()
+			{
+				Groups[0] = new Group(1);
+				Groups[1] = new Group(2);
+			}
 		}
-
-		public static class LocalLogger
-		{
-			public static readonly Setting<bool> Enabled = new Setting<bool>("LocalLogger/Enabled", "Local Logger Enabled");
-
-			public static readonly Setting<bool> Persistent = new Setting<bool>("LocalLogger/Persistent", "Keep Logs Persistent");
-		}
-
-		public static class FellowLogger
-		{
-			public static readonly Setting<bool> Enabled = new Setting<bool>("FellowLogger/Enabled", "Fellow Logger Enabled");
-
-			public static readonly Setting<bool> Persistent = new Setting<bool>("FellowLogger/Persistent", "Keep Logs Persistent");
-		}
-
-		public static class ChannelsLogger
-		{
-			public static readonly Setting<bool> Enabled = new Setting<bool>("ChannelsLogger/Enabled", "Channels Logger Enabled");
-
-			public static readonly Setting<bool> Persistent = new Setting<bool>("ChannelsLogger/Persistent", "Keep Logs Persistent");
-
-			public static readonly Setting<bool> General = new Setting<bool>("ChannelsLogger/General", "Log General Channel");
-
-			public static readonly Setting<bool> Trade = new Setting<bool>("ChannelsLogger/Trade", "Log Trade Channel");
-
-			public static readonly Setting<bool> Allegiance = new Setting<bool>("ChannelsLogger/Allegiance", "Log Allegiance Channel");
-		}
-
+		
 		public static class Misc
 		{
-			public static readonly Setting<bool> OpenMainPackOnLogin = new Setting<bool>("Misc/OpenMainPackOnLogin", "Open Main Pack On Login");
+			public static readonly Setting<bool> OpenMainPackOnLogin = new Setting<bool>("Misc/OpenMainPackOnLogin", "Open Main Pack On Login", true);
 
 			public static readonly Setting<bool> MaximizeChatOnLogin = new Setting<bool>("Misc/MaximizeChatOnLogin", "Maximize Chat On Login");
 

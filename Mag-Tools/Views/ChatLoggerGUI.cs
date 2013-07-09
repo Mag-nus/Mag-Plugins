@@ -12,15 +12,15 @@ namespace MagTools.Views
 	class ChatLoggerGUI : ILoggerTarget<LoggedChat>, IDisposable
 	{
 		readonly ILogger<LoggedChat> logger;
-		readonly Util.ChatChannels chatChannels;
+		readonly Settings.SettingsManager.ChatLogger.Group settings;
 		readonly HudList hudList;
 
-		public ChatLoggerGUI(ILogger<LoggedChat> logger, Util.ChatChannels chatChannels, HudList hudList)
+		public ChatLoggerGUI(ILogger<LoggedChat> logger, Settings.SettingsManager.ChatLogger.Group settings, HudList hudList)
 		{
 			try
 			{
 				this.logger = logger;
-				this.chatChannels = chatChannels;
+				this.settings = settings;
 				this.hudList = hudList;
 
 				hudList.ClearColumnsAndRows();
@@ -71,8 +71,27 @@ namespace MagTools.Views
 
 		public void AddItem(LoggedChat item)
 		{
+			Util.ChatChannels chatChannels = Util.ChatChannels.None;
+
+			if (settings.Area.Value) chatChannels |= Util.ChatChannels.Area;
+			if (settings.Tells.Value) chatChannels |= Util.ChatChannels.Tells;
+			if (settings.Fellowship.Value) chatChannels |= Util.ChatChannels.Fellowship;
+			if (settings.General.Value) chatChannels |= Util.ChatChannels.General;
+			if (settings.Trade.Value) chatChannels |= Util.ChatChannels.Trade;
+			if (settings.Allegiance.Value) chatChannels |= Util.ChatChannels.Allegiance;
+
 			if ((chatChannels & item.ChatType) != 0)
 			{
+				if (Util.IsSpellCastingMessage(item.Message))
+					return;
+
+				// Limit the list to no more than 10,000 rows
+				if (hudList.RowCount >= 10000)
+				{
+					for (int i = hudList.RowCount - 1; i > 9000; i--)
+						hudList.RemoveRow(i);
+				}
+
 				HudList.HudListRowAccessor newRow = hudList.InsertRow(1);
 
 				((HudStaticText)newRow[0]).Text = item.TimeStamp.ToString("MM/dd/yy HH:mm");

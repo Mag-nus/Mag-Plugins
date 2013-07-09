@@ -70,6 +70,9 @@
     <Compile Include="..\Shared\Constants.cs">
       <Link>Shared\Constants.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\DecalProxy.cs">
+      <Link>Settings\DecalProxy.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\MyWorldObject.cs">
       <Link>Shared\MyWorldObject.cs</Link>
     </Compile>

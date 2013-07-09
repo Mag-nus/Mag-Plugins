@@ -23,16 +23,12 @@ namespace MagTools.Trackers.Corpse
 		/// </summary>
 		public event Action<TrackedCorpse> ItemRemoved;
 
-		readonly Dictionary<int, TrackedCorpse> trackedItems = new Dictionary<int, TrackedCorpse>();
+		readonly List<TrackedCorpse> trackedItems = new List<TrackedCorpse>();
 
-		readonly bool trackOnlyPersistentStats;
-
-		public CorpseTracker(bool trackOnlyPersistentStats = false)
+		public CorpseTracker()
 		{
 			try
 			{
-				this.trackOnlyPersistentStats = trackOnlyPersistentStats;
-
 				CoreManager.Current.WorldFilter.CreateObject += new EventHandler<Decal.Adapter.Wrappers.CreateObjectEventArgs>(WorldFilter_CreateObject);
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 				CoreManager.Current.ContainerOpened += new EventHandler<ContainerOpenedEventArgs>(Current_ContainerOpened);
@@ -101,26 +97,34 @@ namespace MagTools.Trackers.Corpse
 				if (!Settings.SettingsManager.CorpseTracker.Enabled.Value)
 					return;
 
-				if (trackedItems.ContainsKey(e.ItemGuid))
+				for (int i = 0 ; i <= trackedItems.Count ; i++)
 				{
-					TrackedCorpse trackedItem = trackedItems[e.ItemGuid];
+					if (i == trackedItems.Count)
+					{
+						WorldObject wo = CoreManager.Current.WorldFilter[e.ItemGuid];
 
-					if (trackedItem.Opened)
-						return;
+						if (wo == null)
+							return;
 
-					trackedItem.Opened = true;
+						ProcessWorldObject(wo, true);
 
-					if (ItemChanged != null)
-						ItemChanged(trackedItem);
-				}
-				else
-				{
-					WorldObject wo = CoreManager.Current.WorldFilter[e.ItemGuid];
+						break;
+					}
 
-					if (wo == null)
-						return;
+					if (trackedItems[i].Id == e.ItemGuid)
+					{
+						TrackedCorpse trackedItem = trackedItems[i];
 
-					ProcessWorldObject(wo, true);
+						if (trackedItem.Opened)
+							return;
+
+						trackedItem.Opened = true;
+
+						if (ItemChanged != null)
+							ItemChanged(trackedItem);
+
+						break;
+					}
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -131,19 +135,24 @@ namespace MagTools.Trackers.Corpse
 			if (wo.ObjectClass != ObjectClass.Corpse)
 				return;
 
-			if (trackedItems.ContainsKey(wo.Id))
+			for (int i = 0 ; i < trackedItems.Count ; i++)
 			{
-				TrackedCorpse trackedItem = trackedItems[wo.Id];
+				if (trackedItems[i].Id == wo.Id)
+				{
+					TrackedCorpse trackedItem = trackedItems[wo.Id];
 
-				// Is this the same corpse as one we've already opened?
-				if (trackedItem.LandBlock == wo.Values(LongValueKey.Landblock) && Math.Abs(trackedItem.LocationX - wo.RawCoordinates().X) < 1 && Math.Abs(trackedItem.LocationY - wo.RawCoordinates().Y) < 1)
-					return;
+					// Is this the same corpse as one we've already opened?
+					if (trackedItem.LandBlock == wo.Values(LongValueKey.Landblock) && Math.Abs(trackedItem.LocationX - wo.RawCoordinates().X) < 1 && Math.Abs(trackedItem.LocationY - wo.RawCoordinates().Y) < 1)
+						return;
 
-				// New corpse with same id
-				if (ItemRemoved != null)
-					ItemRemoved(trackedItem);
+					// New corpse with same id
+					if (ItemRemoved != null)
+						ItemRemoved(trackedItem);
 
-				trackedItems.Remove(trackedItem.Id);
+					trackedItems.RemoveAt(i);
+
+					break;
+				}
 			}
 
 			bool trackCorpse = false;
@@ -152,21 +161,21 @@ namespace MagTools.Trackers.Corpse
 			if (wo.Name.Contains(CoreManager.Current.CharacterFilter.Name))
 				trackCorpse = true;
 
-			if (Settings.SettingsManager.CorpseTracker.TrackAllCorpses.Value && !trackOnlyPersistentStats)
+			if (Settings.SettingsManager.CorpseTracker.TrackAllCorpses.Value)
 				trackCorpse = true;
 
-			if (Settings.SettingsManager.CorpseTracker.TrackFellowCorpses.Value && !trackOnlyPersistentStats)
+			if (Settings.SettingsManager.CorpseTracker.TrackFellowCorpses.Value)
 			{
 				// fix
 			}
 
-			if (Settings.SettingsManager.CorpseTracker.TrackPermittedCorpses.Value && !trackOnlyPersistentStats)
+			if (Settings.SettingsManager.CorpseTracker.TrackPermittedCorpses.Value)
 			{
 				// fix
 			}
 
 			// Corpses killed by me
-			if (!trackCorpse && wo.Values(LongValueKey.Burden) > 6000 && !trackOnlyPersistentStats)
+			if (!trackCorpse && wo.Values(LongValueKey.Burden) > 6000)
 			{
 				if (!wo.HasIdData)
 					CoreManager.Current.Actions.RequestId(wo.Id);
@@ -178,19 +187,28 @@ namespace MagTools.Trackers.Corpse
 			{
 				TrackedCorpse trackedItem = new TrackedCorpse(wo.Id, DateTime.Now, wo.Values(LongValueKey.Landblock), wo.RawCoordinates().X, wo.RawCoordinates().Y, wo.RawCoordinates().Z, wo.Name, opened);
 
-				trackedItems.Add(trackedItem.Id, trackedItem);
-
-				if (ItemAdded != null)
-					ItemAdded(trackedItem);
+				DoAddItem(trackedItem);
 			}
+		}
+
+		void DoAddItem(TrackedCorpse item)
+		{
+			// Limit the tracker to only the 1000 most recent items
+			if (trackedItems.Count > 1000)
+				trackedItems.RemoveRange(0, trackedItems.Count - 1000);
+
+			trackedItems.Add(item);
+
+			if (ItemAdded != null)
+				ItemAdded(item);
 		}
 
 		public void ClearStats()
 		{
-			foreach (var kvp in trackedItems)
+			foreach (var item in trackedItems)
 			{
 				if (ItemRemoved != null)
-					ItemRemoved(kvp.Value);
+					ItemRemoved(item);
 			}
 
 			trackedItems.Clear();
@@ -204,15 +222,17 @@ namespace MagTools.Trackers.Corpse
 
 			importer.Import(importedList);
 
-			foreach (var item in importedList)
+			foreach (var newItem in importedList)
 			{
-				if (trackedItems.ContainsKey(item.Id))
-					continue;
+				foreach (var item in trackedItems)
+				{
+					if (newItem.Id == item.Id)
+						goto next;
+				}
 
-				trackedItems.Add(item.Id, item);
+				DoAddItem(newItem);
 
-				if (ItemAdded != null)
-					ItemAdded(item);
+				next:;
 			}
 		}
 
@@ -221,12 +241,15 @@ namespace MagTools.Trackers.Corpse
 			if (trackedItems.Count == 0)
 				return;
 
-			List<TrackedCorpse> exportedList = new List<TrackedCorpse>();
+			List<TrackedCorpse> exportList = new List<TrackedCorpse>();
 
-			foreach (var kvp in trackedItems)
-				exportedList.Add(kvp.Value);
+			foreach (var item in trackedItems)
+			{
+				if (item.Description.Contains(CoreManager.Current.CharacterFilter.Name))
+					exportList.Add(item);
+			}
 
-			CorpseTrackerExporter exporter = new CorpseTrackerExporter(exportedList);
+			CorpseTrackerExporter exporter = new CorpseTrackerExporter(exportList);
 
 			exporter.Export(xmlFileName);
 

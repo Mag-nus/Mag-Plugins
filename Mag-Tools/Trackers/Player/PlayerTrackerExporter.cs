@@ -7,9 +7,9 @@ namespace MagTools.Trackers.Player
 {
 	class PlayerTrackerExporter
 	{
-		readonly List<TrackedPlayer> trackedPlayers;
+		readonly IList<TrackedPlayer> trackedPlayers;
 
-		public PlayerTrackerExporter(List<TrackedPlayer> trackedPlayers)
+		public PlayerTrackerExporter(IList<TrackedPlayer> trackedPlayers)
 		{
 			this.trackedPlayers = trackedPlayers;
 		}

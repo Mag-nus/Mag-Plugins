@@ -23,7 +23,7 @@ namespace MagTools.Trackers.Player
 		/// </summary>
 		public event Action<TrackedPlayer> ItemRemoved;
 
-		readonly Dictionary<string, TrackedPlayer> trackedItems = new Dictionary<string, TrackedPlayer>();
+		readonly List<TrackedPlayer> trackedItems = new List<TrackedPlayer>();
 
 		public PlayerTracker()
 		{
@@ -95,40 +95,48 @@ namespace MagTools.Trackers.Player
 			if (wo.Name == CoreManager.Current.CharacterFilter.Name)
 				return;
 
-			if (!trackedItems.ContainsKey(wo.Name))
+			for (int i = 0 ; i < trackedItems.Count ; i++)
 			{
-				TrackedPlayer trackedItem = new TrackedPlayer(wo.Name, DateTime.Now, wo.Values(LongValueKey.Landblock), wo.RawCoordinates().X, wo.RawCoordinates().Y, wo.RawCoordinates().Z, wo.Id);
+				if (trackedItems[i].Name == wo.Name)
+				{
+					TrackedPlayer trackedItem = trackedItems[i];
 
-				trackedItems.Add(trackedItem.Name, trackedItem);
+					trackedItem.LastSeen = DateTime.Now;
 
-				if (ItemAdded != null)
-					ItemAdded(trackedItem);
+					trackedItem.LandBlock = wo.Values(LongValueKey.Landblock);
+
+					trackedItem.LocationX = wo.RawCoordinates().X;
+					trackedItem.LocationY = wo.RawCoordinates().Y;
+					trackedItem.LocationZ = wo.RawCoordinates().Z;
+
+					trackedItem.Id = wo.Id;
+
+					if (ItemChanged != null)
+						ItemChanged(trackedItem);
+
+					return;
+				}
 			}
-			else
-			{
-				TrackedPlayer trackedItem = trackedItems[wo.Name];
 
-				trackedItem.LastSeen = DateTime.Now;
+			TrackedPlayer newItem = new TrackedPlayer(wo.Name, DateTime.Now, wo.Values(LongValueKey.Landblock), wo.RawCoordinates().X, wo.RawCoordinates().Y, wo.RawCoordinates().Z, wo.Id);
 
-				trackedItem.LandBlock = wo.Values(LongValueKey.Landblock);
+			DoAddItem(newItem);
+		}
 
-				trackedItem.LocationX = wo.RawCoordinates().X;
-				trackedItem.LocationY = wo.RawCoordinates().Y;
-				trackedItem.LocationZ = wo.RawCoordinates().Z;
+		void DoAddItem(TrackedPlayer item)
+		{
+			trackedItems.Add(item);
 
-				trackedItem.Id = wo.Id;
-
-				if (ItemChanged != null)
-					ItemChanged(trackedItem);
-			}
+			if (ItemAdded != null)
+				ItemAdded(item);
 		}
 
 		public void ClearStats()
 		{
-			foreach (var kvp in trackedItems)
+			foreach (var item in trackedItems)
 			{
 				if (ItemRemoved != null)
-					ItemRemoved(kvp.Value);
+					ItemRemoved(item);
 			}
 
 			trackedItems.Clear();
@@ -142,15 +150,17 @@ namespace MagTools.Trackers.Player
 
 			importer.Import(importedList);
 
-			foreach (var item in importedList)
+			foreach (var newItem in importedList)
 			{
-				if (trackedItems.ContainsKey(item.Name))
-					continue;
+				foreach (var item in trackedItems)
+				{
+					if (newItem.Name == item.Name)
+						goto next;
+				}
 
-				trackedItems.Add(item.Name, item);
+				DoAddItem(newItem);
 
-				if (ItemAdded != null)
-					ItemAdded(item);
+				next: ;
 			}
 		}
 
@@ -159,12 +169,7 @@ namespace MagTools.Trackers.Player
 			if (trackedItems.Count == 0)
 				return;
 
-			List<TrackedPlayer> exportedList = new List<TrackedPlayer>();
-
-			foreach (var kvp in trackedItems)
-				exportedList.Add(kvp.Value);
-
-			PlayerTrackerExporter exporter = new PlayerTrackerExporter(exportedList);
+			PlayerTrackerExporter exporter = new PlayerTrackerExporter(trackedItems);
 
 			exporter.Export(xmlFileName);
 
