@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Globalization;
 
-using Decal.Adapter.Wrappers;
-
 using MagTools.Trackers;
 using MagTools.Trackers.Player;
 
 using VirindiViewService.Controls;
+
+using Decal.Adapter.Wrappers;
 
 namespace MagTools.Views
 {

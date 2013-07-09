@@ -311,6 +311,32 @@ namespace Mag.Shared
 			return output;
 		}
 
+		// You say, "Zojak ...."
+		private static readonly Regex YouSaySpellCast = new Regex("^You say, \"(Zojak|Malar|Puish|Cruath|Volae|Quavosh|Shurov|Boquar|Helkas|Equin|Roiga|Malar|Jevak|Tugak|Slavu|Drostu|Traku|Yanoi|Drosta|Feazh) .*\"$");
+		// Player says, "Zojak ...."
+		private static readonly Regex PlayerSaysSpellCast = new Regex("^<Tell:IIDString:[0-9]+:(?<name>[\\w\\s'-]+)>[\\w\\s'-]+<\\\\Tell> says, \"(Zojak|Malar|Puish|Cruath|Volae|Quavosh|Shurov|Boquar|Helkas|Equin|Roiga|Malar|Jevak|Tugak|Slavu|Drostu|Traku|Yanoi|Drosta|Feazh) .*\"$");
+
+		/// <summary>
+		/// Returns true for messages that are like:
+		/// You say, "Zojak....
+		/// or
+		/// Somebody says, "Zojak...
+		/// </summary>
+		/// <param name="text"></param>
+		/// <param name="isMine"> </param>
+		/// <param name="isPlayer"> </param>
+		/// <returns></returns>
+		public static bool IsSpellCastingMessage(string text, bool isMine = true, bool isPlayer = true)
+		{
+			if (isMine && YouSaySpellCast.IsMatch(text))
+				return true;
+
+			if (isPlayer && PlayerSaysSpellCast.IsMatch(text))
+				return true;
+
+			return false;
+		}
+
 		public static void ExportSpells(string targetFileName)
 		{
 			using (StreamWriter writer = new StreamWriter(targetFileName, true))
