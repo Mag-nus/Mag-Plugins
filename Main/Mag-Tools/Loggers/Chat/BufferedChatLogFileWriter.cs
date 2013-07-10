@@ -98,7 +98,8 @@ namespace MagTools.Loggers.Chat
 			using (StreamWriter sw = File.AppendText(FileName))
 			{
 				foreach (var item in items)
-					sw.WriteLine(item.TimeStamp.ToString("yy/MM/dd HH:mm:ss") + "," + item.ChatType.ToString() + "," + item.Message);
+					//sw.WriteLine(item.TimeStamp.ToString("yy/MM/dd HH:mm:ss") + "," + item.ChatType.ToString() + "," + item.Message);
+					sw.WriteLine(item.TimeStamp.ToString("yyMMddHHmmss") + "," + (int)item.ChatType + "," + Util.CleanMessage(item.Message));
 			}
 
 			items.Clear();
