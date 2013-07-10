@@ -9,16 +9,16 @@ namespace MagTools.Loggers.Chat
 {
 	static class ChatLogImporter
 	{
-		public static bool Import(string fileName, ILoggerTarget<LoggedChat> target)
+		public static bool Import(string fileName, ILoggerTarget<LoggedChat> target, int limitEndOfStreamImportToNumberOfBytes = 1048576)
 		{
 			List<ILoggerTarget<LoggedChat>> list = new List<ILoggerTarget<LoggedChat>>();
 
 			list.Add(target);
 
-			return Import(fileName, list);
+			return Import(fileName, list, limitEndOfStreamImportToNumberOfBytes);
 		}
 
-		public static bool Import(string fileName, IList<ILoggerTarget<LoggedChat>> targets)
+		public static bool Import(string fileName, IList<ILoggerTarget<LoggedChat>> targets, int limitEndOfStreamImportToNumberOfBytes = 1048576)
 		{
 			FileInfo fileInfo = new FileInfo(fileName);
 
@@ -28,6 +28,9 @@ namespace MagTools.Loggers.Chat
 
 			using (StreamReader sr = new StreamReader(fileName))
 			{
+				if (limitEndOfStreamImportToNumberOfBytes >= 0 && sr.BaseStream.Length > limitEndOfStreamImportToNumberOfBytes)
+					sr.BaseStream.Position = sr.BaseStream.Length - limitEndOfStreamImportToNumberOfBytes;
+
 				string line;
 
 				while ((line = sr.ReadLine()) != null)
@@ -56,14 +59,28 @@ namespace MagTools.Loggers.Chat
 
 			DateTime timeStamp;
 			Util.ChatChannels chatType;
-			string message;
 
-			if (!DateTime.TryParseExact(split[0], "yy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out timeStamp))
-				return false;
+			if (split[0].Contains("/"))
+			{
+				if (!DateTime.TryParseExact(split[0], "yy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out timeStamp))
+					return false;
 
-			chatType = (Util.ChatChannels)Enum.Parse(typeof(Util.ChatChannels), split[1]);
+				chatType = (Util.ChatChannels) Enum.Parse(typeof (Util.ChatChannels), split[1]);
+			}
+			else
+			{
+				if (!DateTime.TryParseExact(split[0], "yyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out timeStamp))
+					return false;
 
-			message = line.Substring(split[0].Length + 1 + split[1].Length + 1, line.Length - (split[0].Length + 1 + split[1].Length + 1));
+				int chatTypeInt;
+
+				if (!int.TryParse(split[1], out chatTypeInt))
+					return false;
+
+				chatType = (Util.ChatChannels)chatTypeInt;
+			}
+
+			string message = line.Substring(split[0].Length + 1 + split[1].Length + 1, line.Length - (split[0].Length + 1 + split[1].Length + 1));
 
 			convertedLine = new LoggedChat(timeStamp, chatType, message);
 
