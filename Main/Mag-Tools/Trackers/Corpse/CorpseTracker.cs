@@ -26,20 +26,6 @@ namespace MagTools.Trackers.Corpse
 
 		readonly List<TrackedCorpse> trackedItems = new List<TrackedCorpse>();
 
-		class TimeStampedID
-		{
-			public readonly DateTime TimeStamp;
-			public readonly int Id;
-
-			public TimeStampedID(DateTime timeStamp, int id)
-			{
-				TimeStamp = timeStamp;
-				Id =id;
-			}
-		}
-
-		readonly List<TimeStampedID> nullOpenedContainers = new List<TimeStampedID>();
-
 		System.Windows.Forms.Timer maintenanceTimer = new System.Windows.Forms.Timer();
 
 		public CorpseTracker()
@@ -123,7 +109,7 @@ namespace MagTools.Trackers.Corpse
 					return;
 
 				// Check if its a corpse decay in range of player
-				if (e.Released.ObjectClass == ObjectClass.Corpse && Util.GetDistanceFromPlayer(e.Released) <= 90)
+				if (e.Released.ObjectClass == ObjectClass.Corpse && Util.GetDistanceFromPlayer(e.Released) <= 10)
 				{
 					for (int i = 0; i < trackedItems.Count; i++)
 					{
@@ -133,7 +119,6 @@ namespace MagTools.Trackers.Corpse
 								ItemRemoved(trackedItems[i]);
 
 							trackedItems.RemoveAt(i);
-
 							break;
 						}
 					}
@@ -149,23 +134,11 @@ namespace MagTools.Trackers.Corpse
 				if (!Settings.SettingsManager.CorpseTracker.Enabled.Value)
 					return;
 
-				for (int i = 0 ; i <= trackedItems.Count ; i++)
+				if (e.ItemGuid == 0)
+					return;
+
+				for (int i = 0 ; i < trackedItems.Count ; i++)
 				{
-					if (i == trackedItems.Count)
-					{
-						WorldObject wo = CoreManager.Current.WorldFilter[e.ItemGuid];
-
-						if (wo == null)
-						{
-							nullOpenedContainers.Add(new TimeStampedID(DateTime.Now, e.ItemGuid));
-							return;
-						}
-
-						ProcessWorldObject(wo, true);
-
-						break;
-					}
-
 					if (trackedItems[i].Id == e.ItemGuid)
 					{
 						TrackedCorpse trackedItem = trackedItems[i];
@@ -223,16 +196,6 @@ namespace MagTools.Trackers.Corpse
 			{
 				if (trackedItems[i].Id == wo.Id)
 					return;
-			}
-
-			// This is a fix for vtank opening containers before WorldFilter has a valid WorldObject for the id
-			for (int i = 0; i < nullOpenedContainers.Count; i++)
-			{
-				if (nullOpenedContainers[i].Id == wo.Id)
-				{
-					opened = true;
-					break;
-				}
 			}
 
 			// This is a new item, should we track it?
@@ -294,12 +257,6 @@ namespace MagTools.Trackers.Corpse
 
 						trackedItems.RemoveAt(i);
 					}
-				}
-
-				for (int i = nullOpenedContainers.Count - 1 ; i >= 0 ; i--)
-				{
-					if (DateTime.Now - nullOpenedContainers[i].TimeStamp > TimeSpan.FromMinutes(1))
-						nullOpenedContainers.RemoveAt(i);
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
