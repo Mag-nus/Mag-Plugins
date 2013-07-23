@@ -51,6 +51,7 @@ namespace Mag_SuitBuilder.Spells
 			dataGridView1[4, 2].Value = "Dirty Fighting";	dataGridView1[4, 2].Tag = new [] { Spell.GetSpell(6049), Spell.GetSpell(5893), Spell.GetSpell(5888), Spell.GetSpell(5883) };
 			dataGridView1[4, 3].Value = "Recklessness";		dataGridView1[4, 3].Tag = new [] { Spell.GetSpell(6067), Spell.GetSpell(5895), Spell.GetSpell(5890), Spell.GetSpell(5885) };
 			dataGridView1[4, 4].Value = "Sneak Attack";		dataGridView1[4, 4].Tag = new [] { Spell.GetSpell(6070), Spell.GetSpell(5897), Spell.GetSpell(5892), Spell.GetSpell(5887) };
+			dataGridView1[4, 5].Value = "Summoning";		dataGridView1[4, 5].Tag = new [] { Spell.GetSpell(6125), Spell.GetSpell(6124), Spell.GetSpell(6126), Spell.GetSpell(6127) };
 			//
 			//
 

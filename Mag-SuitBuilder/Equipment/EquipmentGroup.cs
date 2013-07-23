@@ -1,5 +1,4 @@
-﻿
-using Mag_SuitBuilder.Spells;
+﻿using System.Collections.Generic;
 
 using Mag.Shared;
 
@@ -26,64 +25,32 @@ namespace Mag_SuitBuilder.Equipment
 					break;
 				}
 
-				if (compareItem.Exclude)
-					continue;
-
-				// Items must be of the same armor set
-				if (compareItem.ItemSetId != item.ItemSetId)
-					continue;
-
-				// This checks to see that the compare item covers at least all the slots that the passed item does
-				if (compareItem.Coverage.IsBodyArmor() && item.Coverage.IsBodyArmor())
-				{
-					if ((compareItem.Coverage & item.Coverage) != item.Coverage)
-						continue;
-				}
-				else if ((compareItem.EquippableSlots & item.EquippableSlots) != item.EquippableSlots)
-					continue;
-
-				// Does this item have a spell that the compare item does not?
-				{
-					bool itemHasSpellSurpasingPreviousItem = false;
-
-					foreach (Spell itemSpell in item.CachedSpells)
-					{
-						if (itemSpell.CantripLevel < Spell.CantripLevels.Epic)
-							continue;
-
-						bool itemSpellSurpasesPreviousItemSpells = false;
-						bool spellOfSameFamilyAndGroupFound = false;
-
-						foreach (Spell previousSpell in compareItem.CachedSpells)
-						{
-							if (itemSpell.Surpasses(previousSpell))
-							{
-								itemSpellSurpasesPreviousItemSpells = true;
-								spellOfSameFamilyAndGroupFound = true;
-							}
-							else if (itemSpell.IsOfSameFamilyAndGroup(previousSpell))
-								spellOfSameFamilyAndGroupFound = true;
-						}
-
-						if (itemSpellSurpasesPreviousItemSpells || !spellOfSameFamilyAndGroupFound)
-						{
-							itemHasSpellSurpasingPreviousItem = true;
-							break;
-						}
-					}
-
-					if (itemHasSpellSurpasingPreviousItem)
-						continue;
-				}
-
-				// If this item has higher AL, it's not surpassed
-				if (compareItem.CalcedStartingArmorLevel < item.CalcedStartingArmorLevel)
-					continue;
-
-				return true;
+				if (item.IsSurpassedBy(compareItem))
+					return true;
 			}
 
 			return false;
+		}
+
+		public Dictionary<SuitBuildableMyWorldObject, List<SuitBuildableMyWorldObject>> GetUpgradeOptions(EquipmentGroup muleItems)
+		{
+			Dictionary<SuitBuildableMyWorldObject, List<SuitBuildableMyWorldObject>> upgrades = new Dictionary<SuitBuildableMyWorldObject, List<SuitBuildableMyWorldObject>>();
+
+			foreach (var item in this)
+			{
+				List<SuitBuildableMyWorldObject> muleItemUpgrades = new List<SuitBuildableMyWorldObject>();
+
+				foreach (var muleItem in muleItems)
+				{
+					if (item.IsSurpassedBy(muleItem))
+						muleItemUpgrades.Add(muleItem);
+				}
+
+				if (muleItemUpgrades.Count > 0)
+					upgrades.Add(item, muleItemUpgrades);
+			}
+
+			return upgrades;
 		}
 	}
 }
