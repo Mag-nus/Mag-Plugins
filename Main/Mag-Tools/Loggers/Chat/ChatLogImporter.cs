@@ -20,6 +20,9 @@ namespace MagTools.Loggers.Chat
 
 		public static bool Import(string fileName, IList<ILoggerTarget<LoggedChat>> targets, int limitEndOfStreamImportToNumberOfBytes = 1048576)
 		{
+			if (targets == null || targets.Count == 0)
+				return false;
+
 			FileInfo fileInfo = new FileInfo(fileName);
 
 			if (!fileInfo.Exists)
@@ -40,7 +43,12 @@ namespace MagTools.Loggers.Chat
 					if (ConvertLine(line, out convertedLine))
 					{
 						foreach (var target in targets)
+						{
+							if (target == null)
+								continue;
+
 							target.AddItem(convertedLine);
+						}
 					}
 				}
 			}
@@ -65,7 +73,7 @@ namespace MagTools.Loggers.Chat
 				if (!DateTime.TryParseExact(split[0], "yy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out timeStamp))
 					return false;
 
-				chatType = (Util.ChatChannels) Enum.Parse(typeof (Util.ChatChannels), split[1]);
+				chatType = (Util.ChatChannels)Enum.Parse(typeof(Util.ChatChannels), split[1]);
 			}
 			else
 			{
