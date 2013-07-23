@@ -50,7 +50,7 @@ namespace Mag_SuitBuilder
 					col.DefaultCellStyle = style;
 			}
 
-			filtersControl1.FiltersChanged += () => UpdateBoundListFromTreeViewNodes(inventoryTreeView.Nodes);
+			filtersControl1.FiltersChanged += () => UpdateBoundListFromTreeViewNodes(CharactersTreeView.Nodes);
 
 			boundList.ListChanged += (s, e2) =>
 			{
@@ -70,7 +70,7 @@ namespace Mag_SuitBuilder
 
 		private void chkTree_CheckedChanged(object sender, EventArgs e)
 		{
-			inventoryTreeView.Visible = chkTree.Checked;
+			CharactersTreeView.Visible = chkTree.Checked;
 			filtersControl1.Visible = chkFilters.Checked;
 
 		}
@@ -83,7 +83,7 @@ namespace Mag_SuitBuilder
 
 			XmlSerializer serializer = new XmlSerializer(typeof(List<SuitBuildableMyWorldObject>));
 
-			inventoryTreeView.Nodes.Clear();
+			CharactersTreeView.Nodes.Clear();
 			boundList.Clear();
 
 			Dictionary<string, int> armorSets = new Dictionary<string, int>();
@@ -96,7 +96,7 @@ namespace Mag_SuitBuilder
 			{
 				string serverName = serverFolderPaths[i].Substring(serverFolderPaths[i].LastIndexOf(Path.DirectorySeparatorChar) + 1, serverFolderPaths[i].Length - serverFolderPaths[i].LastIndexOf(Path.DirectorySeparatorChar) - 1);
 
-				TreeNode serverNode = inventoryTreeView.Nodes.Add(serverName);
+				TreeNode serverNode = CharactersTreeView.Nodes.Add(serverName);
 
 				string[] characterFilePaths = Directory.GetFiles(serverFolderPaths[i], "*.Inventory.xml", SearchOption.AllDirectories);
 
@@ -147,9 +147,9 @@ namespace Mag_SuitBuilder
 			txtInventoryRootPath.Text = txtInventoryRootPathOrig + "    Selecting all nodes...";
 			txtInventoryRootPath.Refresh();
 
-			inventoryTreeView.ExpandAll();
+			CharactersTreeView.ExpandAll();
 
-			foreach (TreeNode node in inventoryTreeView.Nodes)
+			foreach (TreeNode node in CharactersTreeView.Nodes)
 				node.Checked = true;
 
 			if (!autoSizedColumns)
@@ -174,7 +174,7 @@ namespace Mag_SuitBuilder
 			CheckAllChildNodes(e.Node.Nodes, e.Node.Checked);
 
 			if ((--count) == 0)
-				UpdateBoundListFromTreeViewNodes(inventoryTreeView.Nodes);
+				UpdateBoundListFromTreeViewNodes(CharactersTreeView.Nodes);
 		}
 
 		void CheckAllChildNodes(TreeNodeCollection nodes, bool checkedState)
@@ -261,8 +261,39 @@ namespace Mag_SuitBuilder
 			}
 		}
 
+		private void CharactersTreeViewContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			bool characterSelected = CharactersTreeView.SelectedNode != null && CharactersTreeView.SelectedNode.Level >= 1;
 
+			ShowEquipmentUpgradesMenuItem.Enabled = characterSelected;
+		}
 
+		private void ShowEquipmentUpgradesMenuItem_Click(object sender, EventArgs e)
+		{
+			if (CharactersTreeView.SelectedNode == null)
+				return;
+
+			EquipmentGroup characterEquipment = new EquipmentGroup();
+			EquipmentGroup muleEquipment = new EquipmentGroup();
+
+			foreach (var item in boundList)
+			{
+				if (item.Owner == CharactersTreeView.SelectedNode.Text && item.EquippedSlot != 0)
+					characterEquipment.Add(item);
+
+				if (item.Owner != CharactersTreeView.SelectedNode.Text && item.EquippedSlot == 0)
+					muleEquipment.Add(item);
+			}
+
+			var upgrades = characterEquipment.GetUpgradeOptions(muleEquipment);
+
+			EquipmentUpgradesForm equipmentUpgradesForm = new EquipmentUpgradesForm();
+			equipmentUpgradesForm.Owner = this;
+
+			equipmentUpgradesForm.Update(upgrades);
+
+			equipmentUpgradesForm.Show();
+		}
 
 
 

@@ -31,6 +31,7 @@ namespace Mag_SuitBuilder
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -38,7 +39,9 @@ namespace Mag_SuitBuilder
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.equipmentGrid = new System.Windows.Forms.DataGridView();
 			this.filtersControl1 = new Mag_SuitBuilder.Equipment.FiltersControl();
-			this.inventoryTreeView = new System.Windows.Forms.TreeView();
+			this.CharactersTreeView = new System.Windows.Forms.TreeView();
+			this.CharactersTreeViewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.ShowEquipmentUpgradesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.chkFilters = new System.Windows.Forms.CheckBox();
 			this.chkTree = new System.Windows.Forms.CheckBox();
 			this.txtInventoryRootPath = new System.Windows.Forms.TextBox();
@@ -73,6 +76,7 @@ namespace Mag_SuitBuilder
 			this.tabPage3.SuspendLayout();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.equipmentGrid)).BeginInit();
+			this.CharactersTreeViewContextMenu.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -122,7 +126,7 @@ namespace Mag_SuitBuilder
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panel1.Controls.Add(this.equipmentGrid);
 			this.panel1.Controls.Add(this.filtersControl1);
-			this.panel1.Controls.Add(this.inventoryTreeView);
+			this.panel1.Controls.Add(this.CharactersTreeView);
 			this.panel1.Location = new System.Drawing.Point(1, 32);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(1437, 711);
@@ -154,15 +158,32 @@ namespace Mag_SuitBuilder
 			this.filtersControl1.Size = new System.Drawing.Size(530, 711);
 			this.filtersControl1.TabIndex = 0;
 			// 
-			// inventoryTreeView
+			// CharactersTreeView
 			// 
-			this.inventoryTreeView.CheckBoxes = true;
-			this.inventoryTreeView.Dock = System.Windows.Forms.DockStyle.Left;
-			this.inventoryTreeView.Location = new System.Drawing.Point(0, 0);
-			this.inventoryTreeView.Name = "inventoryTreeView";
-			this.inventoryTreeView.Size = new System.Drawing.Size(206, 711);
-			this.inventoryTreeView.TabIndex = 33;
-			this.inventoryTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.inventoryTreeView_AfterCheck);
+			this.CharactersTreeView.CheckBoxes = true;
+			this.CharactersTreeView.ContextMenuStrip = this.CharactersTreeViewContextMenu;
+			this.CharactersTreeView.Dock = System.Windows.Forms.DockStyle.Left;
+			this.CharactersTreeView.Location = new System.Drawing.Point(0, 0);
+			this.CharactersTreeView.Name = "CharactersTreeView";
+			this.CharactersTreeView.Size = new System.Drawing.Size(206, 711);
+			this.CharactersTreeView.TabIndex = 33;
+			this.CharactersTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.inventoryTreeView_AfterCheck);
+			// 
+			// CharactersTreeViewContextMenu
+			// 
+			this.CharactersTreeViewContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ShowEquipmentUpgradesMenuItem});
+			this.CharactersTreeViewContextMenu.Name = "ShowEquipmentUpgradesMenuItem";
+			this.CharactersTreeViewContextMenu.Size = new System.Drawing.Size(218, 26);
+			this.CharactersTreeViewContextMenu.Text = "Show Equipment Upgrades";
+			this.CharactersTreeViewContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.CharactersTreeViewContextMenu_Opening);
+			// 
+			// ShowEquipmentUpgradesMenuItem
+			// 
+			this.ShowEquipmentUpgradesMenuItem.Name = "ShowEquipmentUpgradesMenuItem";
+			this.ShowEquipmentUpgradesMenuItem.Size = new System.Drawing.Size(217, 22);
+			this.ShowEquipmentUpgradesMenuItem.Text = "Show Equipment Upgrades";
+			this.ShowEquipmentUpgradesMenuItem.Click += new System.EventHandler(this.ShowEquipmentUpgradesMenuItem_Click);
 			// 
 			// chkFilters
 			// 
@@ -281,7 +302,7 @@ namespace Mag_SuitBuilder
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.treeView1.Location = new System.Drawing.Point(962, 8);
 			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(473, 729);
+			this.treeView1.Size = new System.Drawing.Size(0, 0);
 			this.treeView1.TabIndex = 35;
 			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
 			// 
@@ -490,6 +511,7 @@ namespace Mag_SuitBuilder
 			this.tabPage3.PerformLayout();
 			this.panel1.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.equipmentGrid)).EndInit();
+			this.CharactersTreeViewContextMenu.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
@@ -527,13 +549,15 @@ namespace Mag_SuitBuilder
 		private System.Windows.Forms.TreeView treeView1;
 		private System.Windows.Forms.Button cmdCollapseAll;
 		private System.Windows.Forms.Button cmdExpandAll;
-		private System.Windows.Forms.TreeView inventoryTreeView;
+		private System.Windows.Forms.TreeView CharactersTreeView;
 		private System.Windows.Forms.TextBox txtInventoryRootPath;
 		private System.Windows.Forms.CheckBox chkFilters;
 		private System.Windows.Forms.CheckBox chkTree;
 		private System.Windows.Forms.Panel panel1;
 		private FiltersControl filtersControl1;
 		private System.Windows.Forms.Button cmdResizeColumns;
+		private System.Windows.Forms.ContextMenuStrip CharactersTreeViewContextMenu;
+		private System.Windows.Forms.ToolStripMenuItem ShowEquipmentUpgradesMenuItem;
 	}
 }
 
