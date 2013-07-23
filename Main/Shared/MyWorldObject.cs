@@ -176,10 +176,15 @@ namespace Mag.Shared
 		/// Returns the sum of all the ratings found on this item, or -1 if no ratings exist.
 		/// </summary>
 		public int TotalRating
-		{ get {
-			if (DamRating == -1 && DamResistRating == -1 && CritRating == -1 && CritResistRating == -1 && CritDamRating == -1 && CritDamResistRating == -1 && HealBoostRating == -1 && VitalityRating == -1) return -1;
-			return Math.Max(DamRating, 0) + Math.Max(DamResistRating, 0) + Math.Max(CritRating, 0) + Math.Max(CritResistRating, 0) + Math.Max(CritDamRating, 0) + Math.Max(CritDamResistRating, 0) + Math.Max(HealBoostRating, 0) + Math.Max(VitalityRating, 0);
-		} }
+		{ 
+			get
+			{
+				if (DamRating == -1 && DamResistRating == -1 && CritRating == -1 && CritResistRating == -1 && CritDamRating == -1 && CritDamResistRating == -1 && HealBoostRating == -1 && VitalityRating == -1)
+					return -1;
+
+				return Math.Max(DamRating, 0) + Math.Max(DamResistRating, 0) + Math.Max(CritRating, 0) + Math.Max(CritResistRating, 0) + Math.Max(CritDamRating, 0) + Math.Max(CritDamResistRating, 0) + Math.Max(HealBoostRating, 0) + Math.Max(VitalityRating, 0);
+			}
+		}
 
 
 		/// <summary>

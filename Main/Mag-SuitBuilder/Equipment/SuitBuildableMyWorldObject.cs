@@ -154,6 +154,9 @@ namespace Mag_SuitBuilder.Equipment
 
 		public bool IsSurpassedBy(SuitBuildableMyWorldObject compareItem)
 		{
+			BuiltItemSearchCache();
+			compareItem.BuiltItemSearchCache();
+
 			if (compareItem.Exclude)
 				return false;
 
@@ -187,8 +190,8 @@ namespace Mag_SuitBuilder.Equipment
 
 				foreach (Spell compareSpell in compareItem.cachedSpells)
 				{
-					if (compareSpell.CantripLevel < highestCantrip)
-						continue;
+					if (compareSpell.Surpasses(itemSpell))
+						return true;
 
 					if (compareSpell.IsSameOrSurpasses(itemSpell))
 						goto next;
@@ -199,54 +202,19 @@ namespace Mag_SuitBuilder.Equipment
 				next:;
 			}
 
-			/*// Does this item have a spell that the compare item does not?
-			{
-				bool itemHasSpellSurpasingPreviousItem = false;
+			if (compareItem.CalcedStartingArmorLevel > CalcedStartingArmorLevel)
+				return true;
 
-				foreach (Spell itemSpell in CachedSpells)
-				{
-					if (itemSpell.CantripLevel < Spell.CantripLevels.Epic)
-						return false;
+			if (compareItem.DamRating > DamRating && DamRating > 0) return true;
+			if (compareItem.DamResistRating > DamResistRating && DamResistRating > 0) return true;
+			if (compareItem.CritRating > CritRating && CritRating > 0) return true;
+			if (compareItem.CritResistRating > CritResistRating && CritResistRating > 0) return true;
+			if (compareItem.CritDamRating > CritDamRating && CritDamRating > 0) return true;
+			if (compareItem.CritDamResistRating > CritDamResistRating && CritDamResistRating > 0) return true;
+			if (compareItem.HealBoostRating > HealBoostRating && HealBoostRating > 0) return true;
+			if (compareItem.VitalityRating > VitalityRating && VitalityRating > 0) return true;
 
-					bool itemSpellSurpasesPreviousItemSpells = false;
-					bool spellOfSameFamilyAndGroupFound = false;
-
-					foreach (Spell previousSpell in compareItem.CachedSpells)
-					{
-						if (itemSpell.Surpasses(previousSpell))
-						{
-							itemSpellSurpasesPreviousItemSpells = true;
-							spellOfSameFamilyAndGroupFound = true;
-						}
-						else if (itemSpell.IsOfSameFamilyAndGroup(previousSpell))
-							spellOfSameFamilyAndGroupFound = true;
-					}
-
-					if (itemSpellSurpasesPreviousItemSpells || !spellOfSameFamilyAndGroupFound)
-					{
-						itemHasSpellSurpasingPreviousItem = true;
-						break;
-					}
-				}
-
-				if (itemHasSpellSurpasingPreviousItem)
-					return false;
-			}*/
-
-			// If this item has higher AL, it's not surpassed
-			if (compareItem.CalcedStartingArmorLevel < CalcedStartingArmorLevel)
-				return false;
-
-			if (compareItem.TotalRating < TotalRating)
-				return false;
-			if (Owner == "Mag-one" && Name == "Heavy Bracelet" && compareItem.Owner == "Mag-z bling" && compareItem.Name == "Heavy Bracelet" && compareItem.Id == -2104201881) System.Console.WriteLine("9: " + Id + " " + this + ", " + compareItem.Id + " " + compareItem);
-			if (compareItem.DamRating <= DamRating && compareItem.DamResistRating <= DamResistRating &&
-				compareItem.CritRating <= CritRating && compareItem.CritResistRating <= CritResistRating &&
-				compareItem.CritDamRating <= CritDamRating && compareItem.CritDamResistRating <= CritDamResistRating &&
-				compareItem.HealBoostRating <= HealBoostRating && compareItem.VitalityRating <= VitalityRating)
-				return false;
-
-			return true;
+			return false;
 		}
 	}
 }

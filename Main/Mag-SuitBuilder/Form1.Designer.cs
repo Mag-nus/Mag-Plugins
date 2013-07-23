@@ -88,7 +88,7 @@ namespace Mag_SuitBuilder
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(1449, 771);
+			this.tabControl1.Size = new System.Drawing.Size(1454, 775);
 			this.tabControl1.TabIndex = 17;
 			// 
 			// tabPage3
@@ -103,7 +103,7 @@ namespace Mag_SuitBuilder
 			this.tabPage3.Location = new System.Drawing.Point(4, 22);
 			this.tabPage3.Name = "tabPage3";
 			this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage3.Size = new System.Drawing.Size(1441, 745);
+			this.tabPage3.Size = new System.Drawing.Size(1446, 749);
 			this.tabPage3.TabIndex = 2;
 			this.tabPage3.Text = "Step 1. Add Inventory";
 			this.tabPage3.UseVisualStyleBackColor = true;
@@ -111,7 +111,7 @@ namespace Mag_SuitBuilder
 			// cmdResizeColumns
 			// 
 			this.cmdResizeColumns.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.cmdResizeColumns.Location = new System.Drawing.Point(1255, 7);
+			this.cmdResizeColumns.Location = new System.Drawing.Point(1260, 7);
 			this.cmdResizeColumns.Name = "cmdResizeColumns";
 			this.cmdResizeColumns.Size = new System.Drawing.Size(97, 23);
 			this.cmdResizeColumns.TabIndex = 38;
@@ -129,7 +129,7 @@ namespace Mag_SuitBuilder
 			this.panel1.Controls.Add(this.CharactersTreeView);
 			this.panel1.Location = new System.Drawing.Point(1, 32);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(1437, 711);
+			this.panel1.Size = new System.Drawing.Size(1442, 715);
 			this.panel1.TabIndex = 37;
 			// 
 			// equipmentGrid
@@ -143,7 +143,7 @@ namespace Mag_SuitBuilder
 			this.equipmentGrid.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.equipmentGrid.Location = new System.Drawing.Point(736, 0);
 			this.equipmentGrid.Name = "equipmentGrid";
-			this.equipmentGrid.Size = new System.Drawing.Size(701, 711);
+			this.equipmentGrid.Size = new System.Drawing.Size(706, 715);
 			this.equipmentGrid.TabIndex = 28;
 			this.equipmentGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.equipmentGrid_CellEndEdit);
 			this.equipmentGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.equipmentGrid_CellFormatting);
@@ -155,7 +155,7 @@ namespace Mag_SuitBuilder
 			this.filtersControl1.Dock = System.Windows.Forms.DockStyle.Left;
 			this.filtersControl1.Location = new System.Drawing.Point(206, 0);
 			this.filtersControl1.Name = "filtersControl1";
-			this.filtersControl1.Size = new System.Drawing.Size(530, 711);
+			this.filtersControl1.Size = new System.Drawing.Size(530, 715);
 			this.filtersControl1.TabIndex = 0;
 			// 
 			// CharactersTreeView
@@ -165,7 +165,7 @@ namespace Mag_SuitBuilder
 			this.CharactersTreeView.Dock = System.Windows.Forms.DockStyle.Left;
 			this.CharactersTreeView.Location = new System.Drawing.Point(0, 0);
 			this.CharactersTreeView.Name = "CharactersTreeView";
-			this.CharactersTreeView.Size = new System.Drawing.Size(206, 711);
+			this.CharactersTreeView.Size = new System.Drawing.Size(206, 715);
 			this.CharactersTreeView.TabIndex = 33;
 			this.CharactersTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.inventoryTreeView_AfterCheck);
 			// 
@@ -217,13 +217,13 @@ namespace Mag_SuitBuilder
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtInventoryRootPath.Location = new System.Drawing.Point(216, 9);
 			this.txtInventoryRootPath.Name = "txtInventoryRootPath";
-			this.txtInventoryRootPath.Size = new System.Drawing.Size(1033, 20);
+			this.txtInventoryRootPath.Size = new System.Drawing.Size(1038, 20);
 			this.txtInventoryRootPath.TabIndex = 34;
 			// 
 			// btnHelp
 			// 
 			this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnHelp.Location = new System.Drawing.Point(1358, 6);
+			this.btnHelp.Location = new System.Drawing.Point(1363, 6);
 			this.btnHelp.Name = "btnHelp";
 			this.btnHelp.Size = new System.Drawing.Size(75, 23);
 			this.btnHelp.TabIndex = 32;
@@ -270,7 +270,7 @@ namespace Mag_SuitBuilder
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(1441, 745);
+			this.tabPage1.Size = new System.Drawing.Size(1446, 749);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Step 2. Generate Suits";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -302,7 +302,7 @@ namespace Mag_SuitBuilder
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.treeView1.Location = new System.Drawing.Point(962, 8);
 			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(0, 0);
+			this.treeView1.Size = new System.Drawing.Size(481, 735);
 			this.treeView1.TabIndex = 35;
 			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
 			// 
@@ -499,7 +499,7 @@ namespace Mag_SuitBuilder
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1449, 771);
+			this.ClientSize = new System.Drawing.Size(1454, 775);
 			this.Controls.Add(this.tabControl1);
 			this.DoubleBuffered = true;
 			this.MinimumSize = new System.Drawing.Size(1100, 779);
