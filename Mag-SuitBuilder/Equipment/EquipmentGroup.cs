@@ -14,16 +14,7 @@ namespace Mag_SuitBuilder.Equipment
 			foreach (SuitBuildableMyWorldObject compareItem in this)
 			{
 				if (compareItem == item)
-				{
-					// For armor pieces, we can through through the entire list and find the piece with the highest AL.
-					if (item.EquippableSlots.IsBodyArmor())
-						continue;
-					
-					// For non-armor pieces, we cannot compare an item against the entire list or we may end up removing
-					// the item itself, and then the items it matches.
-					// To prevent that, we just do a top down approach
-					break;
-				}
+					continue;
 
 				if (item.IsSurpassedBy(compareItem))
 					return true;
