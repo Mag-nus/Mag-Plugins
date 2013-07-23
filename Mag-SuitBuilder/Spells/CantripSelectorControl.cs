@@ -20,7 +20,7 @@ namespace Mag_SuitBuilder.Spells
 			dataGridView1[0, 2].Value = "Coordination";		dataGridView1[0, 2].Tag = new [] { Spell.GetSpell(6103), Spell.GetSpell(3963), Spell.GetSpell(2572), Spell.GetSpell(2579) };
 			dataGridView1[0, 3].Value = "Quickness";		dataGridView1[0, 3].Tag = new [] { Spell.GetSpell(6106), Spell.GetSpell(4019), Spell.GetSpell(2575), Spell.GetSpell(2582) };
 			dataGridView1[0, 4].Value = "Focus";			dataGridView1[0, 4].Tag = new [] { Spell.GetSpell(6105), Spell.GetSpell(3964), Spell.GetSpell(2574), Spell.GetSpell(2581) };
-			dataGridView1[0, 5].Value = "Willpower";		dataGridView1[0, 5].Tag = new [] { Spell.GetSpell(6101), Spell.GetSpell(4227), Spell.GetSpell(2577), Spell.GetSpell(2584) };
+			dataGridView1[0, 5].Value = "Willpower";		dataGridView1[0, 5].Tag = new [] { Spell.GetSpell(6101), Spell.GetSpell(6101), Spell.GetSpell(2577), Spell.GetSpell(2584) };
 			//
 
 			dataGridView1[1, 0].Value = "Slashing Ward";	dataGridView1[1, 0].Tag = new [] { Spell.GetSpell(6085), Spell.GetSpell(3957), Spell.GetSpell(2614), Spell.GetSpell(2621) }; // 4678,Epic Slashing Ward
@@ -223,11 +223,11 @@ namespace Mag_SuitBuilder.Spells
 			{
 				case "War":
 				case "Void":
-					Add(Spell.GetSpell(4226));
-					Add(Spell.GetSpell(3963));
-					Add(Spell.GetSpell(4019));
-					Add(Spell.GetSpell(3964));
-					Add(Spell.GetSpell(4227));
+					Add(Spell.GetSpell(6104));
+					Add(Spell.GetSpell(6103));
+					Add(Spell.GetSpell(6106));
+					Add(Spell.GetSpell(6105));
+					Add(Spell.GetSpell(6101));
 					break;
 
 				case "Missile":
@@ -236,19 +236,19 @@ namespace Mag_SuitBuilder.Spells
 				case "Finesse":
 				case "Two Hand":
 				case "Dual Wield":
-					Add(Spell.GetSpell(3965));
-					Add(Spell.GetSpell(4226));
-					Add(Spell.GetSpell(3963));
-					Add(Spell.GetSpell(4019));
-					Add(Spell.GetSpell(3964));
-					Add(Spell.GetSpell(4227));
+					Add(Spell.GetSpell(6107));
+					Add(Spell.GetSpell(6104));
+					Add(Spell.GetSpell(6103));
+					Add(Spell.GetSpell(6106));
+					Add(Spell.GetSpell(6105));
+					Add(Spell.GetSpell(6101));
 					break;
 
 				case "Tinker":
-					Add(Spell.GetSpell(3965));
-					Add(Spell.GetSpell(4226));
-					Add(Spell.GetSpell(3963));
-					Add(Spell.GetSpell(3964));
+					Add(Spell.GetSpell(6107));
+					Add(Spell.GetSpell(6104));
+					Add(Spell.GetSpell(6103));
+					Add(Spell.GetSpell(6105));
 					break;
 			}
 
@@ -263,13 +263,13 @@ namespace Mag_SuitBuilder.Spells
 				case "Finesse":
 				case "Two Hand":
 				case "Dual Wield":
-					Add(Spell.GetSpell(3957));
-					Add(Spell.GetSpell(3956));
-					Add(Spell.GetSpell(4674));
-					Add(Spell.GetSpell(4675));
-					Add(Spell.GetSpell(4676));
-					Add(Spell.GetSpell(4673));
-					Add(Spell.GetSpell(4679));
+					Add(Spell.GetSpell(6085));
+					Add(Spell.GetSpell(6084));
+					Add(Spell.GetSpell(6081));
+					Add(Spell.GetSpell(6082));
+					Add(Spell.GetSpell(6083));
+					Add(Spell.GetSpell(6080));
+					Add(Spell.GetSpell(6079));
 					break;
 
 				case "Tinker":
@@ -287,9 +287,9 @@ namespace Mag_SuitBuilder.Spells
 				case "Finesse":
 				case "Two Hand":
 				case "Dual Wield":
-					Add(Spell.GetSpell(4696));
-					Add(Spell.GetSpell(4704));
-					Add(Spell.GetSpell(4911));
+					Add(Spell.GetSpell(6055));
+					Add(Spell.GetSpell(6063));
+					Add(Spell.GetSpell(6102));
 					break;
 
 				case "Tinker":
@@ -300,44 +300,44 @@ namespace Mag_SuitBuilder.Spells
 			switch (skill)
 			{
 				case "War":
-					Add(Spell.GetSpell(4715));
+					Add(Spell.GetSpell(6075));
 					break;
 				case "Void":
-					Add(Spell.GetSpell(5429));
+					Add(Spell.GetSpell(6074));
 					break;
 				case "Missile":
-					Add(Spell.GetSpell(4687));
-					Add(Spell.GetSpell(4694)); // Healing
-					Add(Spell.GetSpell(4693)); // Fletching
+					Add(Spell.GetSpell(6044));
+					Add(Spell.GetSpell(6053)); // Healing
+					Add(Spell.GetSpell(6052)); // Fletching
 					break;
 				case "Heavy":
-					Add(Spell.GetSpell(4712));
-					Add(Spell.GetSpell(4694)); // Healing
+					Add(Spell.GetSpell(6072));
+					Add(Spell.GetSpell(6053)); // Healing
 					break;
 				case "Light":
-					Add(Spell.GetSpell(4686));
-					Add(Spell.GetSpell(4694)); // Healing
+					Add(Spell.GetSpell(6043));
+					Add(Spell.GetSpell(6053)); // Healing
 					break;
 				case "Finesse":
-					Add(Spell.GetSpell(4691));
-					Add(Spell.GetSpell(4694)); // Healing
+					Add(Spell.GetSpell(6047));
+					Add(Spell.GetSpell(6053)); // Healing
 					break;
 				case "Two Hand":
-					Add(Spell.GetSpell(5034));
-					Add(Spell.GetSpell(4694)); // Healing
+					Add(Spell.GetSpell(6073));
+					Add(Spell.GetSpell(6053)); // Healing
 					break;
 				case "Dual Wield":
-					Add(Spell.GetSpell(5894));
-					Add(Spell.GetSpell(4694)); // Healing
+					Add(Spell.GetSpell(6050));
+					Add(Spell.GetSpell(6053)); // Healing
 					break;
 
 				case "Tinker":
-					Add(Spell.GetSpell(4698));
-					Add(Spell.GetSpell(4685));
-					Add(Spell.GetSpell(4912));
-					Add(Spell.GetSpell(4703));
-					Add(Spell.GetSpell(4688));
-					Add(Spell.GetSpell(4683));
+					Add(Spell.GetSpell(6057));
+					Add(Spell.GetSpell(6042));
+					Add(Spell.GetSpell(6039));
+					Add(Spell.GetSpell(6062));
+					Add(Spell.GetSpell(6045));
+					Add(Spell.GetSpell(6040));
 					break;
 			}
 		}
