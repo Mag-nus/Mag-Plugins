@@ -8,8 +8,6 @@ using Decal.Adapter;
 using MagTools.Client;
 using MagTools.Inventory;
 using MagTools.Loggers;
-using MagTools.Loggers.Chat;
-using MagTools.Trackers.Equipment;
 using MagTools.Views;
 
 /*
@@ -84,8 +82,8 @@ namespace MagTools
 			}
 		}
 
+
 		// General
-		ChatFilter chatFilter;
 		InventoryExporter inventoryExporter;
 		InventoryLogger inventoryLogger;
 
@@ -97,8 +95,8 @@ namespace MagTools
 		Macros.OneTouchHeal oneTouchHeal;
 	
 		// Trackers
-		EquipmentTracker equipmentTracker;
-		public IEquipmentTracker EquipmentTracker { get { return equipmentTracker; } }
+		Trackers.Equipment.EquipmentTracker equipmentTracker;
+		public Trackers.Equipment.IEquipmentTracker EquipmentTracker { get { return equipmentTracker; } }
 		Trackers.Combat.CombatTracker combatTrackerCurrent;
 		Trackers.Combat.CombatTracker combatTrackerPersistent;
 		Trackers.Corpse.CorpseTracker corpseTracker;
@@ -107,15 +105,17 @@ namespace MagTools
 
 		// Loggers
 		Loggers.Chat.ChatLogger chatLogger;
-		BufferedChatLogFileWriter chatLogFileWriter;
+		Loggers.Chat.BufferedChatLogFileWriter chatLogFileWriter;
 
 		// Misc
 		WindowFrameRemover windowFrameRemover;
 		WindowMover windowMover;
 		NoFocusFPSManager noFocusFPSManager;
 
-		// These objects may reference other plugins
-		ItemInfo.ItemInfoPrinter itemInfoPrinter;
+
+		// Relies on other decal assemblies
+		ChatFilter chatFilter;
+
 
 		// Virindi Classic Looter Extensions, depends on VTClassic.dll
 		Macros.InventoryPacker inventoryPacker;
@@ -123,9 +123,12 @@ namespace MagTools
 		Macros.AutoTradeAdd autoTradeAdd;
 		Macros.AutoBuySell autoBuySell;
 
+
 		// Virindi Tank Extensions, depends on utank2-i.dll
+		ItemInfo.ItemInfoPrinter itemInfoPrinter;
 		Macros.Looter looter;
 		public Macros.ILooter Looter { get { return looter; } }
+
 
 		// Views, depends on VirindiViewService.dll
 		MainView mainView;
@@ -142,8 +145,10 @@ namespace MagTools
 
 		HUD hud;
 
+
 		readonly Collection<string> startupErrors = new Collection<string>();
 		readonly System.Windows.Forms.Timer savePersistentStatsTimer = new System.Windows.Forms.Timer();
+
 
 		/// <summary>
 		/// This is called when the plugin is started up. This happens only once.
@@ -156,8 +161,13 @@ namespace MagTools
 				Current = this;
 
 				CoreManager.Current.PluginInitComplete += new EventHandler<EventArgs>(Current_PluginInitComplete);
-				CoreManager.Current.CharacterFilter.LoginComplete +=new EventHandler(CharacterFilter_LoginComplete);
+				CoreManager.Current.PluginInitComplete += new EventHandler<EventArgs>(Current_PluginInitComplete_VTClassic);
+				CoreManager.Current.PluginInitComplete += new EventHandler<EventArgs>(Current_PluginInitComplete_VTank);
+				CoreManager.Current.PluginInitComplete += new EventHandler<EventArgs>(Current_PluginInitComplete_VVS);
+				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete_VHS);
+				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
+
 
 				// General
 				inventoryExporter = new InventoryExporter();
@@ -171,7 +181,7 @@ namespace MagTools
 				oneTouchHeal = new Macros.OneTouchHeal();
 
 				// Trackers
-				equipmentTracker = new EquipmentTracker();
+				equipmentTracker = new Trackers.Equipment.EquipmentTracker();
 				combatTrackerCurrent = new Trackers.Combat.CombatTracker();
 				combatTrackerPersistent = new Trackers.Combat.CombatTracker();
 				corpseTracker = new Trackers.Corpse.CorpseTracker();
@@ -180,12 +190,13 @@ namespace MagTools
 
 				// Loggers
 				chatLogger = new Loggers.Chat.ChatLogger();
-				chatLogFileWriter = new BufferedChatLogFileWriter(null, chatLogger, TimeSpan.FromMinutes(10));
+				chatLogFileWriter = new Loggers.Chat.BufferedChatLogFileWriter(null, chatLogger, TimeSpan.FromMinutes(10));
 
 				// Misc
 				windowFrameRemover = new WindowFrameRemover();
 				windowMover = new WindowMover();
 				noFocusFPSManager = new NoFocusFPSManager();
+
 
 				savePersistentStatsTimer.Interval = 600000; // Set the timer to run once every 10 minutes
 				savePersistentStatsTimer.Tick += new EventHandler(SavePersistentStatsTimer_Tick);
@@ -211,8 +222,33 @@ namespace MagTools
 				}
 				catch (FileNotFoundException ex) { startupErrors.Add("chatFilter failed to load: " + ex.Message); }
 				catch (Exception ex) { Debug.LogException(ex); }
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
 
-				// These objects may reference other plugins
+		void Current_PluginInitComplete_VTClassic(object sender, EventArgs e)
+		{
+			try
+			{
+				// Virindi Classic Looter Extensions, depends on VTClassic.dll
+				string objectName = null;
+				try
+				{
+					objectName = "inventoryPacker";		inventoryPacker = new Macros.InventoryPacker();
+					objectName = "autoTradeAdd";		autoTradeAdd = new Macros.AutoTradeAdd();
+					objectName = "autoBuySell";			autoBuySell = new Macros.AutoBuySell();
+				}
+				catch (FileNotFoundException ex) { startupErrors.Add(objectName + " failed to load: " + ex.Message + Environment.NewLine + "Is Virindi Tank running?"); }
+				catch (Exception ex) { Debug.LogException(ex); }
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void Current_PluginInitComplete_VTank(object sender, EventArgs e)
+		{
+			try
+			{
+				// Virindi Tank Extensions, depends on utank2-i.dll
 				try
 				{
 					itemInfoPrinter = new ItemInfo.ItemInfoPrinter();
@@ -220,28 +256,20 @@ namespace MagTools
 				catch (FileNotFoundException ex) { startupErrors.Add("itemInfoPrinter failed to load: " + ex.Message); }
 				catch (Exception ex) { Debug.LogException(ex); }
 
-				// Virindi Classic Looter Extensions, depends on VTClassic.dll
-				string objectName = null;
-				try
-				{
-					objectName = "inventoryPacker";
-					inventoryPacker = new Macros.InventoryPacker();
-					objectName = "autoTradeAdd";
-					autoTradeAdd = new Macros.AutoTradeAdd();
-					objectName = "autoBuySell";
-					autoBuySell = new Macros.AutoBuySell();
-				}
-				catch (FileNotFoundException ex) { startupErrors.Add(objectName + " failed to load: " + ex.Message + Environment.NewLine + "Is Virindi Tank running?"); }
-				catch (Exception ex) { Debug.LogException(ex); }
-
-				// Virindi Tank Extensions, depends on utank2-i.dll
 				try
 				{
 					looter = new Macros.Looter();
 				}
 				catch (FileNotFoundException ex) { startupErrors.Add("looter failed to load: " + ex.Message + Environment.NewLine + "Is Virindi Tank running?"); }
 				catch (Exception ex) { Debug.LogException(ex); }
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
 
+		void Current_PluginInitComplete_VVS(object sender, EventArgs e)
+		{
+			try
+			{
 				// Views, depends on VirindiViewService.dll
 				try
 				{
@@ -253,7 +281,6 @@ namespace MagTools
 					corpseTrackerGUI = new CorpseTrackerGUI(corpseTracker, mainView.CorpseTrackerList);
 					playerTrackerGUI = new PlayerTrackerGUI(playerTracker, mainView.PlayerTrackerList);
 					consumableTrackerGUI = new ConsumableTrackerGUI(consumableTracker, mainView.ConsumableTrackerList);
-
 					chatLoggerGroup1GUI = new ChatLoggerGUI(chatLogger, Settings.SettingsManager.ChatLogger.Groups[0], mainView.ChatLogger1List);
 					chatLoggerGroup2GUI = new ChatLoggerGUI(chatLogger, Settings.SettingsManager.ChatLogger.Groups[1], mainView.ChatLogger2List);
 
@@ -269,7 +296,7 @@ namespace MagTools
 
 					mainView.ClipboardWornEquipment.Hit += (s2, e2) => { try { inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.WornEquipment); } catch (Exception ex) { Debug.LogException(ex); } };
 					mainView.ClipboardInventoryInfo.Hit += (s2, e2) => { try { inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.Inventory); } catch (Exception ex) { Debug.LogException(ex); } };
-					
+
 					System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
 					System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
 					mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
@@ -292,8 +319,13 @@ namespace MagTools
 				savePersistentStatsTimer.Tick -= new EventHandler(SavePersistentStatsTimer_Tick);
 
 				CoreManager.Current.PluginInitComplete -= new EventHandler<EventArgs>(Current_PluginInitComplete);
-				CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
+				CoreManager.Current.PluginInitComplete -= new EventHandler<EventArgs>(Current_PluginInitComplete_VTClassic);
+				CoreManager.Current.PluginInitComplete -= new EventHandler<EventArgs>(Current_PluginInitComplete_VTank);
+				CoreManager.Current.PluginInitComplete -= new EventHandler<EventArgs>(Current_PluginInitComplete_VVS);
+				CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete_VHS);
+				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
+
 
 				// Views, depends on VirindiViewService.dll
 				// We dispose these before our other objects (Trackers/Macros) as these probably reference those other objects.
@@ -310,16 +342,21 @@ namespace MagTools
 				if (manaTrackerGUI != null) manaTrackerGUI.Dispose();
 				if (mainView != null) mainView.Dispose(); // We dispose this last in the Views as the other Views reference it.
 
-				// These objects may reference other plugins
+
+				// Virindi Tank Extensions, depends on utank2-i.dll
 				if (itemInfoPrinter != null) itemInfoPrinter.Dispose();
+				if (looter != null) looter.Dispose();
+
 
 				// Virindi Classic Looter Extensions, depends on VTClassic.dll
 				if (inventoryPacker != null) inventoryPacker.Dispose();
 				if (autoTradeAdd != null) autoTradeAdd.Dispose();
 				if (autoBuySell != null) autoBuySell.Dispose();
 
-				// Virindi Tank Extensions, depends on utank2-i.dll
-				if (looter != null) looter.Dispose();
+
+				// Relies on other decal assemblies
+				if (chatFilter != null) chatFilter.Dispose();
+
 
 				// Misc
 				if (windowFrameRemover != null) windowFrameRemover.Dispose();
@@ -345,11 +382,93 @@ namespace MagTools
 				if (autoTradeAccept != null) autoTradeAccept.Dispose();
 
 				// General
-				if (chatFilter != null) chatFilter.Dispose();
 				if (inventoryLogger != null) inventoryLogger.Dispose();
+
 
 				Current = null;
 			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void CharacterFilter_LoginComplete_VHS(object sender, EventArgs e)
+		{
+			try
+			{
+				// Wire up Inventory Packer Hotkey
+				if (InventoryPacker != null)
+				{
+					// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
+					VirindiHotkeySystem.VHotkeyInfo packInventoryHotkey = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "Pack Inventory", "Triggers the Inventory Packer Macro", 0x50, false, true, false);
+
+					VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(packInventoryHotkey);
+
+					packInventoryHotkey.Fired2 += (s, e2) =>
+					{
+						try
+						{
+							VirindiHotkeySystem.VHotkeyInfo keyInfo = (VirindiHotkeySystem.VHotkeyInfo)s;
+
+							if (!CoreManager.Current.Actions.ChatState || keyInfo.AltState || keyInfo.ControlState)
+								InventoryPacker.Start();
+						}
+						catch (FileNotFoundException) { CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Unable to start Inventory Packer. Is Virindi Tank running?", 5); }
+						catch (Exception ex) { Debug.LogException(ex); }
+					};
+				}
+
+
+				// Wire up One Touch Heal Hotkey
+				if (oneTouchHeal != null)
+				{
+					// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
+					VirindiHotkeySystem.VHotkeyInfo oneTouchHealHotkey = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "One Touch Heal", "Triggers the One Touch Healing Macro", 0, false, false, false);
+
+					VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(oneTouchHealHotkey);
+
+					oneTouchHealHotkey.Fired2 += (s, e2) =>
+					{
+						try
+						{
+							VirindiHotkeySystem.VHotkeyInfo keyInfo = (VirindiHotkeySystem.VHotkeyInfo)s;
+
+							if (!CoreManager.Current.Actions.ChatState || keyInfo.AltState || keyInfo.ControlState)
+								oneTouchHeal.Start();
+						}
+						catch (Exception ex) { Debug.LogException(ex); }
+					};
+				}
+
+
+				// Wire up Maximize/Minimize Chat Hotkey
+				// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
+				VirindiHotkeySystem.VHotkeyInfo maximizeChat = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "Maximize Chat", "Maximizes Main Chat", 0, false, false, false);
+
+				VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(maximizeChat);
+
+				maximizeChat.Fired2 += (s, e2) =>
+				{
+					try
+					{
+						ChatSizeManager.Maximize();
+					}
+					catch (Exception ex) { Debug.LogException(ex); }
+				};
+
+				// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
+				VirindiHotkeySystem.VHotkeyInfo minimizeChat = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "Minimize Chat", "Minimizes Main Chat", 0, false, false, false);
+
+				VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(minimizeChat);
+
+				minimizeChat.Fired2 += (s, e2) =>
+				{
+					try
+					{
+						ChatSizeManager.Minimize();
+					}
+					catch (Exception ex) { Debug.LogException(ex); }
+				};
+			}
+			catch (FileNotFoundException ex) { startupErrors.Add("Hotkey failed to bind: " + ex.Message + ". Is Virindi Hotkey System running?"); }
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
@@ -387,108 +506,20 @@ namespace MagTools
 					{
 						chatLogFileWriter.FileName = PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChatLogger.txt";
 
-						List<ILoggerTarget<LoggedChat>> chatLoggers = new List<ILoggerTarget<LoggedChat>>();
+						List<ILoggerTarget<Loggers.Chat.LoggedChat>> chatLoggers = new List<ILoggerTarget<Loggers.Chat.LoggedChat>>();
 						chatLoggers.Add(chatLoggerGroup1GUI);
 						chatLoggers.Add(chatLoggerGroup2GUI);
-						ChatLogImporter.Import(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChatLogger.txt", chatLoggers);					
+						Loggers.Chat.ChatLogImporter.Import(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChatLogger.txt", chatLoggers);					
 					}
 				}
 				catch (Exception ex) { Debug.LogException(ex); }
 
-
-				// Wire up Inventory Packer Hotkey
-				try
-				{
-					if (InventoryPacker != null)
-					{
-						// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
-						VirindiHotkeySystem.VHotkeyInfo packInventoryHotkey = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "Pack Inventory", "Triggers the Inventory Packer Macro", 0x50, false, true, false);
-
-						VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(packInventoryHotkey);
-
-						packInventoryHotkey.Fired2 += (s, e2) =>
-							{
-								try
-								{
-									VirindiHotkeySystem.VHotkeyInfo keyInfo = (VirindiHotkeySystem.VHotkeyInfo)s;
-
-									if (!CoreManager.Current.Actions.ChatState || keyInfo.AltState || keyInfo.ControlState)
-										InventoryPacker.Start();
-								}
-								catch (FileNotFoundException) { CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Unable to start Inventory Packer. Is Virindi Tank running?", 5); }
-								catch (Exception ex) { Debug.LogException(ex); }
-							};
-					} 
-				}
-				catch (FileNotFoundException ex) { startupErrors.Add("Pack Inventory hot key failed to bind: " + ex.Message + ". Is Virindi Hotkey System running?"); }
-				catch (Exception ex) { Debug.LogException(ex); }
-
-				// Wire up One Touch Heal Hotkey
-				try
-				{
-					if (oneTouchHeal != null)
-					{
-						// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
-						VirindiHotkeySystem.VHotkeyInfo oneTouchHealHotkey = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "One Touch Heal", "Triggers the One Touch Healing Macro", 0, false, false, false);
-
-						VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(oneTouchHealHotkey);
-
-						oneTouchHealHotkey.Fired2 += (s, e2) =>
-						{
-							try
-							{
-								VirindiHotkeySystem.VHotkeyInfo keyInfo = (VirindiHotkeySystem.VHotkeyInfo)s;
-
-								if (!CoreManager.Current.Actions.ChatState || keyInfo.AltState || keyInfo.ControlState)
-									oneTouchHeal.Start();
-							}
-							catch (Exception ex) { Debug.LogException(ex); }
-						};
-					}
-				}
-				catch (FileNotFoundException ex) { startupErrors.Add("One Touch Heal hot key failed to bind: " + ex.Message + ". Is Virindi Hotkey System running?"); }
-				catch (Exception ex) { Debug.LogException(ex); }
-
-				// Wire up Maximize/Minimize Chat Hotkey
-				try
-				{
-						// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
-						VirindiHotkeySystem.VHotkeyInfo maximizeChat = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "Maximize Chat", "Maximizes Main Chat", 0, false, false, false);
-
-						VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(maximizeChat);
-
-						maximizeChat.Fired2 += (s, e2) =>
-						{
-							try
-							{
-								ChatSizeManager.Maximize();
-							}
-							catch (Exception ex) { Debug.LogException(ex); }
-						};
-
-						// http://delphi.about.com/od/objectpascalide/l/blvkc.htm
-						VirindiHotkeySystem.VHotkeyInfo minimizeChat = new VirindiHotkeySystem.VHotkeyInfo("Mag-Tools", true, "Minimize Chat", "Minimizes Main Chat", 0, false, false, false);
-
-						VirindiHotkeySystem.VHotkeySystem.InstanceReal.AddHotkey(minimizeChat);
-
-						minimizeChat.Fired2 += (s, e2) =>
-						{
-							try
-							{
-								ChatSizeManager.Minimize();
-							}
-							catch (Exception ex) { Debug.LogException(ex); }
-						};
-				}
-				catch (FileNotFoundException ex) { startupErrors.Add("AC Chat minimize/maximize hot key failed to bind: " + ex.Message + ". Is Virindi Hotkey System running?"); }
-				catch (Exception ex) { Debug.LogException(ex); }
 
 				foreach (string startupError in startupErrors)
-				{
 					CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: Startup Error: " + startupError, 5);
-				}
 
 				startupErrors.Clear();
+
 
 				CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
 

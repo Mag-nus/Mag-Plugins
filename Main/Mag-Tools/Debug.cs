@@ -24,29 +24,17 @@ namespace MagTools
 				else
 					CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Exception caught: " + ex.Message + Environment.NewLine + ex.Source + Environment.NewLine + ex.StackTrace, 5);
 
-				using (StreamWriter writer = new StreamWriter(PluginCore.PluginPersonalFolder.FullName + @"\Exceptions.txt", true))
+				FileInfo fileInfo = new FileInfo(PluginCore.PluginPersonalFolder.FullName + @"\Exceptions.txt");
+
+				// Limit the file to 1MB
+				bool append = !(fileInfo.Exists && fileInfo.Length > 1048576);
+
+				using (StreamWriter writer = new StreamWriter(fileInfo.FullName, append))
 				{
 					writer.WriteLine("============================================================================");
 
 					writer.WriteLine(DateTime.Now.ToString());
 					writer.WriteLine(ex);
-
-					/*
-					writer.WriteLine(DateTime.Now.ToString());
-					writer.WriteLine("Error: " + ex.Message);
-					writer.WriteLine("Source: " + ex.Source);
-					writer.WriteLine("Stack: " + ex.StackTrace);
-
-					Exception innerException = ex.InnerException;
-
-					while (innerException != null)
-					{
-						writer.WriteLine("Inner: " + ex.InnerException.Message);
-						writer.WriteLine("Inner Stack: " + ex.InnerException.StackTrace);
-
-						innerException = innerException.InnerException;
-					}
-					*/
 
 					if (note != null)
 						writer.WriteLine("Note: " + note);
