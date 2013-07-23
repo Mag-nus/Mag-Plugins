@@ -95,6 +95,11 @@ namespace MagTools.Loggers.Chat
 			if (String.IsNullOrEmpty(FileName))
 				return;
 
+			FileInfo fileInfo = new FileInfo(FileName);
+
+			if (fileInfo.Directory != null && !fileInfo.Directory.Exists)
+				fileInfo.Directory.Create();
+
 			using (StreamWriter sw = File.AppendText(FileName))
 			{
 				foreach (var item in items)
