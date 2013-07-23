@@ -28,14 +28,16 @@ namespace Mag_SuitBuilder
 					upgradeEquipment.Add(v);
 			}
 
-			currentEquipmentGrid.DataSource = obsoleteEquipment;
-			upgradeEquipmentGrid.DataSource = upgradeEquipment;
+			Update(obsoleteEquipment, upgradeEquipment);
 		}
 
 		public void Update(EquipmentGroup obsoleteEquipment, EquipmentGroup upgradeEquipment)
 		{
 			currentEquipmentGrid.DataSource = obsoleteEquipment;
+			currentEquipmentGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
+
 			upgradeEquipmentGrid.DataSource = upgradeEquipment;
+			upgradeEquipmentGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
 		}
 
 		private void currentEquipmentGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)

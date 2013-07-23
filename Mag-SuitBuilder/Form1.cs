@@ -290,9 +290,9 @@ namespace Mag_SuitBuilder
 			EquipmentUpgradesForm equipmentUpgradesForm = new EquipmentUpgradesForm();
 			equipmentUpgradesForm.Owner = this;
 
-			equipmentUpgradesForm.Update(upgrades);
-
 			equipmentUpgradesForm.Show();
+
+			equipmentUpgradesForm.Update(upgrades);
 		}
 
 
