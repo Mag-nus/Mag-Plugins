@@ -35,11 +35,6 @@ namespace Mag_SuitBuilder.Search
 
 		readonly List<Spell> effectiveSpells = new List<Spell>();
 
-		/// <summary>
-		/// Gets the effective spells of the suit, meaning, it returns only the best spell for any spell/family covered.
-		/// </summary>
-		public IEnumerable<Spell> EffectiveSpells { get { return effectiveSpells; } }
-
 		public int TotalEffectiveLegendaries { get; private set; }
 		public int TotalEffectiveEpics { get; private set; }
 		public int TotalEffectiveMajors { get; private set; }
@@ -121,7 +116,7 @@ namespace Mag_SuitBuilder.Search
 			TotalEffectiveLegendaries = 0;
 			TotalEffectiveEpics = 0;
 			TotalEffectiveMajors = 0;
-			foreach (Spell spell in EffectiveSpells)
+			foreach (Spell spell in effectiveSpells)
 			{
 				if (spell.CantripLevel >= Spell.CantripLevels.Legendary)
 					TotalEffectiveLegendaries++;
