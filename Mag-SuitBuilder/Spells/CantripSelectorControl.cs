@@ -20,7 +20,7 @@ namespace Mag_SuitBuilder.Spells
 			dataGridView1[0, 2].Value = "Coordination";		dataGridView1[0, 2].Tag = new [] { Spell.GetSpell(6103), Spell.GetSpell(3963), Spell.GetSpell(2572), Spell.GetSpell(2579) };
 			dataGridView1[0, 3].Value = "Quickness";		dataGridView1[0, 3].Tag = new [] { Spell.GetSpell(6106), Spell.GetSpell(4019), Spell.GetSpell(2575), Spell.GetSpell(2582) };
 			dataGridView1[0, 4].Value = "Focus";			dataGridView1[0, 4].Tag = new [] { Spell.GetSpell(6105), Spell.GetSpell(3964), Spell.GetSpell(2574), Spell.GetSpell(2581) };
-			dataGridView1[0, 5].Value = "Willpower";		dataGridView1[0, 5].Tag = new [] { Spell.GetSpell(6101), Spell.GetSpell(6101), Spell.GetSpell(2577), Spell.GetSpell(2584) };
+			dataGridView1[0, 5].Value = "Willpower";		dataGridView1[0, 5].Tag = new [] { Spell.GetSpell(6101), Spell.GetSpell(4227), Spell.GetSpell(2577), Spell.GetSpell(2584) };
 			//
 
 			dataGridView1[1, 0].Value = "Slashing Ward";	dataGridView1[1, 0].Tag = new [] { Spell.GetSpell(6085), Spell.GetSpell(3957), Spell.GetSpell(2614), Spell.GetSpell(2621) }; // 4678,Epic Slashing Ward
