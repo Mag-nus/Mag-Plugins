@@ -113,7 +113,10 @@ namespace Mag_SuitBuilder.Spells
 		{
 			for (int i = items.Count - 1 ; i >= 0 ; i--)
 			{
-				if (items[i].IsOfSameFamilyAndGroup(item))
+				if (items[i].IsSameOrSurpasses(item))
+					return;
+
+				if (item.Surpasses(items[i]))
 					Remove(items[i]);
 			}
 		

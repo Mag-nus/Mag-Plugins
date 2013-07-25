@@ -526,8 +526,16 @@ namespace Mag_SuitBuilder
 
 			cntrlSuitCantrips.Clear();
 
-			foreach (Spell spell in suit.EffectiveSpells)
-				cntrlSuitCantrips.Add(spell);
+			// This method adds every spell for all the items of the suit
+			foreach (var kvp in suit)
+			{
+				foreach (var spell in kvp.Value.CachedSpells)
+					cntrlSuitCantrips.Add(spell);
+			}
+
+			// This method only adds the spells that met our spell filter criteria
+			//foreach (Spell spell in suit.EffectiveSpells)
+			//	cntrlSuitCantrips.Add(spell);
 
 			cntrlSuitCantrips.Refresh();
 		}
