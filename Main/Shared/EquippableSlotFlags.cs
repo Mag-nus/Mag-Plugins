@@ -40,7 +40,7 @@ namespace Mag.Shared
 		MeleeWeapon		= 0x00100000,
 		Shield			= 0x00200000,
 		MissileWeapon	= 0x00400000,
-		//				= 0x00800000, // Ammo?
+		MissileAmmo		= 0x00800000,
 		Wand			= 0x01000000,
 		TwoHandWeapon	= 0x02000000,
 
