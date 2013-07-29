@@ -168,6 +168,7 @@ namespace MagTools
 				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete_VHS);
 				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
+				CoreManager.Current.CommandLineText += new EventHandler<ChatParserInterceptEventArgs>(Current_CommandLineText);
 
 
 				// General
@@ -327,6 +328,7 @@ namespace MagTools
 				CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete_VHS);
 				CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
+				CoreManager.Current.CommandLineText -= new EventHandler<ChatParserInterceptEventArgs>(Current_CommandLineText);
 
 
 				// Views, depends on VirindiViewService.dll
@@ -546,6 +548,21 @@ namespace MagTools
 
 				if (Settings.SettingsManager.CombatTracker.ExportOnLogOff.Value)
 					combatTrackerCurrent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker." + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ".xml");
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void Current_CommandLineText(object sender, ChatParserInterceptEventArgs e)
+		{
+			try
+			{
+				if (e.Text == null)
+					return;
+
+				string lower = e.Text.ToLower();
+
+				if (lower.StartsWith("/mt logoff") || lower.StartsWith("/mt logout"))
+					CoreManager.Current.Actions.Logout();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
