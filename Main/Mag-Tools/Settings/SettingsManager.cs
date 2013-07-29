@@ -174,6 +174,8 @@ namespace MagTools.Settings
 
 			public static readonly Setting<bool> RemoveWindowFrame = new Setting<bool>("Misc/RemoveWindowFrame", "Remove Window Frame");
 
+			public static readonly Setting<bool> LogOutOnDeath = new Setting<bool>("Misc/LogOutOnDeath", "Log Out on Death");
+
 			public static readonly Setting<bool> DebuggingEnabled = new Setting<bool>("Misc/DebuggingEnabled", "Debugging Enabled", true);
 
 			public static readonly Setting<int> OutputTargetWindow = new Setting<int>("Misc/OutputTargetWindow", "Output Window", 1);
