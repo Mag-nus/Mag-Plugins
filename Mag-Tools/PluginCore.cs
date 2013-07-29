@@ -93,6 +93,7 @@ namespace MagTools
 		Macros.AutoRecharge autoRecharge;
 		Macros.AutoTradeAccept autoTradeAccept;
 		Macros.OneTouchHeal oneTouchHeal;
+		Macros.LogOutOnDeath logOutOnDeath;
 	
 		// Trackers
 		Trackers.Equipment.EquipmentTracker equipmentTracker;
@@ -179,6 +180,7 @@ namespace MagTools
 				autoRecharge = new Macros.AutoRecharge();
 				autoTradeAccept = new Macros.AutoTradeAccept();
 				oneTouchHeal = new Macros.OneTouchHeal();
+				logOutOnDeath = new Macros.LogOutOnDeath();
 
 				// Trackers
 				equipmentTracker = new Trackers.Equipment.EquipmentTracker();
@@ -380,6 +382,7 @@ namespace MagTools
 				if (maximizeChatOnLogin != null) maximizeChatOnLogin.Dispose();
 				if (autoRecharge != null) autoRecharge.Dispose();
 				if (autoTradeAccept != null) autoTradeAccept.Dispose();
+				if (logOutOnDeath != null) logOutOnDeath.Dispose();
 
 				// General
 				if (inventoryLogger != null) inventoryLogger.Dispose();
