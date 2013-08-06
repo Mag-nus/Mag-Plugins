@@ -349,6 +349,12 @@ namespace Mag_SuitBuilder
 			{
 				foreach (SuitBuildableMyWorldObject item in boundList)
 				{
+					// Don't add items that we don't care about
+					if (item.EquippableSlots == EquippableSlotFlags.None || item.EquippableSlots == EquippableSlotFlags.MeleeWeapon || item.EquippableSlots == EquippableSlotFlags.MissileWeapon || item.EquippableSlots == EquippableSlotFlags.TwoHandWeapon || item.EquippableSlots == EquippableSlotFlags.Wand || item.EquippableSlots == EquippableSlotFlags.MissileAmmo)
+						continue;
+					if (item.EquippableSlots == EquippableSlotFlags.Cloak || item.EquippableSlots == EquippableSlotFlags.BlueAetheria || item.EquippableSlots == EquippableSlotFlags.YellowAetheria || item.EquippableSlots == EquippableSlotFlags.RedAetheria)
+						continue;
+
 					if (item.Locked && item.EquippableSlots.GetTotalBitsSet() == slotCount)
 					{
 						try

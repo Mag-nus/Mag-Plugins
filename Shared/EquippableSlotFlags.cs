@@ -87,7 +87,7 @@ namespace Mag.Shared
 
 		public static bool IsShirt(this EquippableSlotFlags value)
 		{
-			return ((int)value & 0x0000001E) != 0;
+			return ((int)value & 0x0000001A) != 0;
 		}
 
 		public static bool IsPants(this EquippableSlotFlags value)
