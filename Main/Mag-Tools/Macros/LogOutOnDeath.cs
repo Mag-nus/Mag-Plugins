@@ -46,10 +46,9 @@ namespace MagTools.Macros
 		{
 			try
 			{
-				Debug.WriteToChat("CharacterFilter_Death");
 				if (!Settings.SettingsManager.Misc.LogOutOnDeath.Value)
 					return;
-				Debug.WriteToChat("logging out on death");
+
 				CoreManager.Current.Actions.Logout();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
