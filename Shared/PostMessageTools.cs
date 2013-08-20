@@ -16,6 +16,10 @@ namespace Mag.Shared
 		private const int WM_KEYUP		= 0x0101;
 		private const int WM_CHAR		= 0x0102;
 
+		private const int WM_MOUSEMOVE		= 0x200;
+		private const int WM_LBUTTONDOWN	= 0x201;
+		private const int WM_LBUTTONUP		= 0x202;
+
 		private const byte VK_RETURN	= 0x0D;
 		private const byte VK_CONTROL	= 0x11;
 		private const byte VK_PAUSE		= 0x13;
@@ -145,9 +149,9 @@ namespace Mag.Shared
 		{
 			int loc = (y * 0x10000) + x;
 
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), 0x0200, (IntPtr)0x00000000, (UIntPtr)loc);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), 0x0201, (IntPtr)0x00000001, (UIntPtr)loc);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), 0x0202, (IntPtr)0x00000000, (UIntPtr)loc);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_MOUSEMOVE,		(IntPtr)0x00000000, (UIntPtr)loc);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_LBUTTONDOWN,	(IntPtr)0x00000001, (UIntPtr)loc);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_LBUTTONUP,		(IntPtr)0x00000000, (UIntPtr)loc);
 		}
 	}
 }
