@@ -1,84 +1,16 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Collections;
 
-namespace Mag_Tools
+using Decal.Adapter;
+
+namespace Mag.Shared
 {
 	public static class PostMessageTools
 	{
-		internal class ac : ArrayList
-		{
-			public ac()
-			{
-				GCHandle handle = GCHandle.Alloc(this);
-				ac.a a = new ac.a(ac.af);
-				EnumWindows(a, (IntPtr)handle);
-				handle.Free();
-			}
-
-			private static bool af(int A_0, IntPtr A_1)
-			{
-				GCHandle handle = (GCHandle)A_1;
-				((ac)handle.Target).Add(A_0);
-				return true;
-			}
-
-			[DllImport("user32")]
-			private static extern int EnumWindows(ac.a A_0, IntPtr A_1);
-
-			private delegate bool a(int A_0, IntPtr A_1);
-		}
-
-		[DllImport("kernel32.dll")]
-		public static extern int GetCurrentProcessId();
-		[DllImport("user32.dll", SetLastError = true)]
-		static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		static extern int GetWindowText(IntPtr hWnd, System.Text.StringBuilder lpString, int nMaxCount);
-
-		private static int _AChWnd;
-		private static int AChWnd
-		{
-			get
-			{
-				if (_AChWnd != 0)
-					return _AChWnd;
-
-				int currentProcessId = GetCurrentProcessId();
-				ac ac = new ac();
-				foreach (int ac_hWnd in ac)
-				{
-					IntPtr ac_hWnd_ptr = (IntPtr)ac_hWnd;
-
-					uint ac_ProcessId = 0;
-					GetWindowThreadProcessId(ac_hWnd_ptr, out ac_ProcessId);
-					if (ac_ProcessId == currentProcessId)
-					{
-						System.Text.StringBuilder builder = new System.Text.StringBuilder(0xff);
-						GetWindowText(ac_hWnd_ptr, builder, builder.Capacity);
-						if (builder.ToString() == "Asheron's Call")
-						{
-							_AChWnd = ac_hWnd;
-							return _AChWnd;
-						}
-					}
-				}
-
-				return 0;
-			}
-		}
-
 		[DllImport("user32.dll", CharSet = CharSet.Auto)]
 		private static extern bool PostMessage(int hhwnd, uint msg, IntPtr wparam, UIntPtr lparam);
 
 		// http://msdn.microsoft.com/en-us/library/dd375731%28v=vs.85%29.aspx
-
-		// Captured using spy++
-		// <01856> 001603E6 P WM_KEYDOWN nVirtKey:VK_CONTROL cRepeat:1 ScanCode:1D fExtended:0 fAltDown:0 fRepeat:0 fUp:0	0x00000011	0x001D0001
-		// <01857> 001603E6 P WM_KEYDOWN nVirtKey:'Q' cRepeat:1 ScanCode:10 fExtended:0 fAltDown:0 fRepeat:0 fUp:0			0x00000051	0x00100001
-		// <01858> 001603E6 P WM_CHAR chCharCode:'17' (17) cRepeat:1 ScanCode:10 fExtended:0 fAltDown:0 fRepeat:0 fUp:0		0x00000011	0x00100001
-		// <01859> 001603E6 P WM_KEYUP nVirtKey:'Q' cRepeat:1 ScanCode:10 fExtended:0 fAltDown:0 fRepeat:1 fUp:1			0x00000051	0xC0100001
-		// <01860> 001603E6 P WM_KEYUP nVirtKey:VK_CONTROL cRepeat:1 ScanCode:1D fExtended:0 fAltDown:0 fRepeat:1 fUp:1		0x00000011	0xC01D0001
 
 		private const int WM_KEYDOWN	= 0x0100;
 		private const int WM_KEYUP		= 0x0101;
@@ -162,22 +94,22 @@ namespace Mag_Tools
 
 		public static void SendEnter()
 		{
-			PostMessage(AChWnd, WM_KEYDOWN, (IntPtr)VK_RETURN, (UIntPtr)0x001C0001);
-			PostMessage(AChWnd, WM_KEYUP, (IntPtr)VK_RETURN, (UIntPtr)0xC01C0001);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)VK_RETURN, (UIntPtr)0x001C0001);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)VK_RETURN, (UIntPtr)0xC01C0001);
 		}
 
 		public static void SendPause()
 		{
-			PostMessage(AChWnd, WM_KEYDOWN, (IntPtr)VK_PAUSE, (UIntPtr)0x00450001);
-			PostMessage(AChWnd, WM_KEYUP, (IntPtr)VK_PAUSE, (UIntPtr)0xC0450001);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)VK_PAUSE, (UIntPtr)0x00450001);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)VK_PAUSE, (UIntPtr)0xC0450001);
 		}
 
 		public static void SendCntrl(char ch)
 		{
-			PostMessage(AChWnd, WM_KEYDOWN, (IntPtr)VK_CONTROL, (UIntPtr)0x001D0001);
-			PostMessage(AChWnd, WM_KEYDOWN, (IntPtr)CharCode(ch), (UIntPtr)0x00100001);
-			PostMessage(AChWnd, WM_KEYUP, (IntPtr)CharCode(ch), (UIntPtr)0xC0100001);
-			PostMessage(AChWnd, WM_KEYUP, (IntPtr)VK_CONTROL, (UIntPtr)0xC01D0001);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)VK_CONTROL,		(UIntPtr)0x001D0001);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)CharCode(ch),	(UIntPtr)0x00100001);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)CharCode(ch),	(UIntPtr)0xC0100001);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)VK_CONTROL,		(UIntPtr)0xC01D0001);
 		}
 
 		/// <summary>
@@ -185,8 +117,8 @@ namespace Mag_Tools
 		/// </summary>
 		public static void SendF4()
 		{
-			PostMessage(AChWnd, WM_KEYDOWN, (IntPtr)0x00000073, (UIntPtr)0x003E0001);
-			PostMessage(AChWnd, WM_KEYUP, (IntPtr)0x00000073, (UIntPtr)0xC03E0001);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)0x00000073, (UIntPtr)0x003E0001);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)0x00000073, (UIntPtr)0xC03E0001);
 		}
 
 		/// <summary>
@@ -194,8 +126,8 @@ namespace Mag_Tools
 		/// </summary>
 		public static void SendF12()
 		{
-			PostMessage(AChWnd, WM_KEYDOWN, (IntPtr)0x0000007B, (UIntPtr)0x00580001);
-			PostMessage(AChWnd, WM_KEYUP, (IntPtr)0x0000007B, (UIntPtr)0xC0580001);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)0x0000007B, (UIntPtr)0x00580001);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)0x0000007B, (UIntPtr)0xC0580001);
 		}
 
 		public static void SendMsg(string msg)
@@ -204,9 +136,18 @@ namespace Mag_Tools
 			{
 				byte code = CharCode(ch);
 				uint lparam = (uint)((ScanCode(ch) << 0x10) | 1);
-				PostMessage(AChWnd, WM_KEYDOWN, (IntPtr)code, (UIntPtr)(lparam));
-				PostMessage(AChWnd, WM_KEYUP, (IntPtr)code, (UIntPtr)(0xC0000000 | lparam));
+				PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)code, (UIntPtr)(lparam));
+				PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)code, (UIntPtr)(0xC0000000 | lparam));
 			}
+		}
+
+		public static void SendMouseClick(int x, int y)
+		{
+			int loc = (y * 0x10000) + x;
+
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), 0x0200, (IntPtr)0x00000000, (UIntPtr)loc);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), 0x0201, (IntPtr)0x00000001, (UIntPtr)loc);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), 0x0202, (IntPtr)0x00000000, (UIntPtr)loc);
 		}
 	}
 }
