@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 using Decal.Adapter;
 
@@ -8,9 +7,6 @@ namespace MagFilter
 {
 	class LoginCharacterTools
 	{
-		[DllImport("user32.dll", CharSet = CharSet.Auto)]
-		internal static extern bool PostMessage(int hhwnd, uint msg, IntPtr wparam, UIntPtr lparam);
-
 		int characterSlots;
 
 		readonly List<Character> characters = new List<Character>();
@@ -53,37 +49,31 @@ namespace MagFilter
 		{
 			for (int i = 0; i < characters.Count; i++)
 			{
-				if (characters[i].Name == name)
+				if (String.Compare(characters[i].Name, name, StringComparison.OrdinalIgnoreCase) == 0)
 					return LoginByIndex(i);
 			}
 
 			return false;
 		}
 
-		static int _xPixelOffset = 121;
-		static int _yTopOfBox = 209;
-		static int _yBottomOfBox = 532;
+		private const int XPixelOffset = 121;
+		private const int YTopOfBox = 209;
+		private const int YBottomOfBox = 532;
 
 		public bool LoginByIndex(int index)
 		{
 			if (index >= characters.Count)
 				return false;
 
-			float characterNameSize = (_yBottomOfBox - _yTopOfBox) / (float)characterSlots;
+			float characterNameSize = (YBottomOfBox - YTopOfBox) / (float)characterSlots;
 
-			int yOffset = (int)(_yTopOfBox + (characterNameSize / 2) + (characterNameSize * index));
-
-			int loc = (yOffset * 0x10000) + _xPixelOffset;
+			int yOffset = (int)(YTopOfBox + (characterNameSize / 2) + (characterNameSize * index));
 
 			// Select the character
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), 0x0200, (IntPtr)0x00000000, (UIntPtr)loc);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), 0x0201, (IntPtr)0x00000001, (UIntPtr)loc);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), 0x0202, (IntPtr)0x00000000, (UIntPtr)loc);
+			Mag.Shared.PostMessageTools.SendMouseClick(yOffset * 0x10000, XPixelOffset);
 
 			// Click the Enter button
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), 0x0200, (IntPtr)0x00000000, (UIntPtr)0x0185015C);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), 0x0201, (IntPtr)0x00000001, (UIntPtr)0x0185015C);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), 0x0202, (IntPtr)0x00000000, (UIntPtr)0x0185015C);
+			Mag.Shared.PostMessageTools.SendMouseClick(0x015C, 0x0185);
 
 			return true;
 		}

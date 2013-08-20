@@ -45,6 +45,7 @@
     <Compile Include="..\Shared\PostMessageTools.cs">
       <Link>Shared\PostMessageTools.cs</Link>
     </Compile>
+    <Compile Include="AutoRetryLogin.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="FilterCore.cs" />
