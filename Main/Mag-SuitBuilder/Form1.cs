@@ -62,6 +62,16 @@ namespace Mag_SuitBuilder
 			base.OnLoad(e);
 		}
 
+		bool activated;
+
+		private void Form1_Activated(object sender, EventArgs e)
+		{
+			if (activated) return;
+			activated = true;
+
+			btnLoadFromDB_Click(null, null);
+		}
+
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			if (btnStopCalculating.Enabled)

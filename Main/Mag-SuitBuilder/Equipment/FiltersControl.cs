@@ -66,10 +66,12 @@ namespace Mag_SuitBuilder.Equipment
 			if (chkRemoveUnequipped.Checked && mwo.EquippedSlot == EquippableSlotFlags.None)
 				return false;
 
+
 			int minimumBaseArmorLevel;
 			int.TryParse(txtMinimumBaseArmorLevel.Text, out minimumBaseArmorLevel);
 			if ((mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel < minimumBaseArmorLevel && mwo.EquippableSlots.IsBodyArmor())
 				return false;
+
 
 			if (mwo.ObjectClass == (int)ObjectClass.Armor)
 			{
@@ -136,6 +138,7 @@ namespace Mag_SuitBuilder.Equipment
 				if (!chkAllElseObjectClasses.Checked) return false;
 			}
 
+
 			if (mwo.EquippableSlots.IsBodyArmor())
 			{
 				// Both are No Armor Set and the item has a set
@@ -148,6 +151,29 @@ namespace Mag_SuitBuilder.Equipment
 						return false;
 				}
 			}
+
+
+			int minLegendaries;
+			int.TryParse(txtMinLegendaries.Text, out minLegendaries);
+
+			int minEpics;
+			int.TryParse(txtMinEpics.Text, out minEpics);
+			
+			if (minLegendaries > 0 || minEpics > 0)
+			{
+				int legendaries = 0;
+				int epics = 0;
+
+				foreach (Spell spell in mwo.CachedSpells)
+				{
+					if (spell.CantripLevel >= Spell.CantripLevels.Legendary) legendaries++;
+					if (spell.CantripLevel >= Spell.CantripLevels.Epic) epics++;
+				}
+
+				if ((minLegendaries > 0 && legendaries < minLegendaries) || (minEpics > 0 && epics < minEpics))
+					return false;
+			}
+
 
 			if (cantripSelectorControl1.Count > 0)
 			{

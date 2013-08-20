@@ -82,9 +82,11 @@ namespace Mag_SuitBuilder
 			// 
 			// tabControl1
 			// 
+			this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Controls.Add(this.tabPage1);
-			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
@@ -215,9 +217,9 @@ namespace Mag_SuitBuilder
 			// 
 			this.txtInventoryRootPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.txtInventoryRootPath.Location = new System.Drawing.Point(216, 9);
+			this.txtInventoryRootPath.Location = new System.Drawing.Point(227, 9);
 			this.txtInventoryRootPath.Name = "txtInventoryRootPath";
-			this.txtInventoryRootPath.Size = new System.Drawing.Size(1038, 20);
+			this.txtInventoryRootPath.Size = new System.Drawing.Size(1027, 20);
 			this.txtInventoryRootPath.TabIndex = 34;
 			// 
 			// btnHelp
@@ -233,11 +235,11 @@ namespace Mag_SuitBuilder
 			// 
 			// btnLoadFromDB
 			// 
-			this.btnLoadFromDB.Location = new System.Drawing.Point(123, 6);
+			this.btnLoadFromDB.Location = new System.Drawing.Point(121, 6);
 			this.btnLoadFromDB.Name = "btnLoadFromDB";
-			this.btnLoadFromDB.Size = new System.Drawing.Size(87, 23);
+			this.btnLoadFromDB.Size = new System.Drawing.Size(100, 23);
 			this.btnLoadFromDB.TabIndex = 29;
-			this.btnLoadFromDB.Text = "Load Inventory";
+			this.btnLoadFromDB.Text = "Reload Inventory";
 			this.btnLoadFromDB.UseVisualStyleBackColor = true;
 			this.btnLoadFromDB.Click += new System.EventHandler(this.btnLoadFromDB_Click);
 			// 
@@ -302,7 +304,7 @@ namespace Mag_SuitBuilder
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.treeView1.Location = new System.Drawing.Point(962, 8);
 			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(481, 735);
+			this.treeView1.Size = new System.Drawing.Size(478, 733);
 			this.treeView1.TabIndex = 35;
 			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
 			// 
@@ -505,6 +507,7 @@ namespace Mag_SuitBuilder
 			this.MinimumSize = new System.Drawing.Size(1100, 779);
 			this.Name = "Form1";
 			this.Text = "Mag-Suit Builder";
+			this.Activated += new System.EventHandler(this.Form1_Activated);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage3.ResumeLayout(false);

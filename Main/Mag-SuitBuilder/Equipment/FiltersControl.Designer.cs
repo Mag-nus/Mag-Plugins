@@ -64,6 +64,11 @@
 			this.cantripSelectorControl1 = new Mag_SuitBuilder.Spells.CantripSelectorControl();
 			this.chkWandStaffOrbWar = new System.Windows.Forms.CheckBox();
 			this.chkWandStaffOrbVoid = new System.Windows.Forms.CheckBox();
+			this.label4 = new System.Windows.Forms.Label();
+			this.txtMinEpics = new System.Windows.Forms.TextBox();
+			this.label5 = new System.Windows.Forms.Label();
+			this.txtMinLegendaries = new System.Windows.Forms.TextBox();
+			this.label6 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// txtMinimumBaseArmorLevel
@@ -495,10 +500,62 @@
 			this.chkWandStaffOrbVoid.UseVisualStyleBackColor = true;
 			this.chkWandStaffOrbVoid.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
 			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(266, 282);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(141, 13);
+			this.label4.TabIndex = 82;
+			this.label4.Text = "Spells Equal Or Better Than:";
+			// 
+			// txtMinEpics
+			// 
+			this.txtMinEpics.Location = new System.Drawing.Point(329, 320);
+			this.txtMinEpics.MaxLength = 1;
+			this.txtMinEpics.Name = "txtMinEpics";
+			this.txtMinEpics.Size = new System.Drawing.Size(18, 20);
+			this.txtMinEpics.TabIndex = 81;
+			this.txtMinEpics.Text = "0";
+			this.txtMinEpics.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// label5
+			// 
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(266, 323);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(28, 13);
+			this.label5.TabIndex = 80;
+			this.label5.Text = "Epic";
+			// 
+			// txtMinLegendaries
+			// 
+			this.txtMinLegendaries.Location = new System.Drawing.Point(329, 298);
+			this.txtMinLegendaries.MaxLength = 1;
+			this.txtMinLegendaries.Name = "txtMinLegendaries";
+			this.txtMinLegendaries.Size = new System.Drawing.Size(18, 20);
+			this.txtMinLegendaries.TabIndex = 79;
+			this.txtMinLegendaries.Text = "0";
+			this.txtMinLegendaries.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// label6
+			// 
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(266, 301);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(57, 13);
+			this.label6.TabIndex = 78;
+			this.label6.Text = "Legendary";
+			// 
 			// FiltersControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.label4);
+			this.Controls.Add(this.txtMinEpics);
+			this.Controls.Add(this.label5);
+			this.Controls.Add(this.txtMinLegendaries);
+			this.Controls.Add(this.label6);
 			this.Controls.Add(this.chkWandStaffOrbVoid);
 			this.Controls.Add(this.chkWandStaffOrbWar);
 			this.Controls.Add(this.chkMelee2H);
@@ -580,5 +637,10 @@
 		private System.Windows.Forms.CheckBox chkMelee2H;
 		private System.Windows.Forms.CheckBox chkWandStaffOrbWar;
 		private System.Windows.Forms.CheckBox chkWandStaffOrbVoid;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.TextBox txtMinEpics;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.TextBox txtMinLegendaries;
+		private System.Windows.Forms.Label label6;
 	}
 }
