@@ -31,26 +31,85 @@ namespace MagFilter
 			}
 		}
 
+
+		LoginCharacterTools loginCharacterTools = new LoginCharacterTools();
+
 		System.Windows.Forms.Timer loginRetryTimer = new System.Windows.Forms.Timer();
 
 		protected override void Startup()
 		{
+			ClientDispatch += new EventHandler<NetworkMessageEventArgs>(FilterCore_ClientDispatch);
 			ServerDispatch += new EventHandler<NetworkMessageEventArgs>(FilterCore_ServerDispatch);
 			WindowMessage += new EventHandler<WindowMessageEventArgs>(FilterCore_WindowMessage);
+			//Core.EchoFilter.ServerDispatch += new EventHandler<NetworkMessageEventArgs>(EchoFilter_ServerDispatch);
+			//loginCharacterTools = new LoginCharacterTools(Core);
 
 			loginRetryTimer.Tick += new EventHandler(loginRetryTimer_Tick);
 		}
 
+		void EchoFilter_ServerDispatch(object sender, NetworkMessageEventArgs e)
+		{
+			try
+			{
+				Debug.LogText("EchoFilter_ServerDispatch: " + e.Message.Type.ToString("X4"));
+
+
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
 		protected override void Shutdown()
 		{
+			ClientDispatch -= new EventHandler<NetworkMessageEventArgs>(FilterCore_ClientDispatch);
 			ServerDispatch -= new EventHandler<NetworkMessageEventArgs>(FilterCore_ServerDispatch);
 			WindowMessage -= new EventHandler<WindowMessageEventArgs>(FilterCore_WindowMessage);
+		}
+
+		void FilterCore_ClientDispatch(object sender, NetworkMessageEventArgs e)
+		{
+			try
+			{
+				if (e.Message.Type == 0xF7C8) // Enter Game - Big Login button clicked
+				{
+					loginRetryTimer.Interval = 1;
+					loginRetryTimer.Stop();
+				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		void FilterCore_ServerDispatch(object sender, NetworkMessageEventArgs e)
 		{
 			try
 			{
+
+
+				loginCharacterTools.FilterCore_ServerDispatch(sender, e);
+
+				/*if (e.Message.Type == 0xF658) // Character List
+				{
+					Debug.LogText("e.Message.Count: " + e.Message.Count);
+					Debug.LogText("characterCount: " + Convert.ToInt32(e.Message["characterCount"]));
+					Debug.LogText("slotCount: " + Convert.ToInt32(e.Message["slotCount"]));
+					Debug.LogText("zonename: " + Convert.ToString(e.Message["zonename"]));
+					Debug.LogText("turbineChatEnabled: " + Convert.ToInt32(e.Message["turbineChatEnabled"]));
+
+					MessageStruct characters = e.Message.Struct("characters");
+
+					for (int i =0 ; i < characters.Count ; i++)
+					{
+						Debug.LogText(Convert.ToString(characters.Struct(i)["name"]));
+					}
+
+					Debug.LogText(e.Message.RawData.Length.ToString());
+
+					string output = "";
+					for (int i = 0; i < e.Message.RawData.Length; i++)
+						output += e.Message.RawData[i].ToString("X2") + " ";
+
+					Debug.LogText(output);
+				}*/
+
 				if (e.Message.Type == 0xF659) // One of your characters is still in the world. Please try again in a few minutes.
 				{
 					loginRetryTimer.Interval = 100;
@@ -70,6 +129,8 @@ namespace MagFilter
 				PostMessage(Host.Decal.Hwnd.ToInt32(), 0x0200, (IntPtr)0x00000000, (UIntPtr)0x0185015C);
 				PostMessage(Host.Decal.Hwnd.ToInt32(), 0x0201, (IntPtr)0x00000001, (UIntPtr)0x0185015C);
 				PostMessage(Host.Decal.Hwnd.ToInt32(), 0x0202, (IntPtr)0x00000000, (UIntPtr)0x0185015C);
+
+				loginRetryTimer.Start();
 			}
 
 			if (loginRetryTimer.Interval == 100)
