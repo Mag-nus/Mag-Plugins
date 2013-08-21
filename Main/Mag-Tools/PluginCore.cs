@@ -712,10 +712,8 @@ namespace MagTools
 			{
 				foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
 				{
-					Debug.WriteToChat("'" + name + "', '" + wo.Name + "'");
 					if (wo.Name.ToLower().Contains(name.ToLower()))
 						return wo.Id;
-					Debug.WriteToChat("no match");
 				}
 			}
 
