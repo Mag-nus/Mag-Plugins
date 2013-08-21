@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
+using Mag.Shared;
 using Mag.Shared.Settings;
 
 using VirindiViewService.Controls;

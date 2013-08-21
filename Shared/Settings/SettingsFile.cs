@@ -40,7 +40,7 @@ namespace Mag.Shared.Settings
 			}
 			catch (Exception ex)
 			{
-				//Debug.LogException(ex);
+				Debug.LogException(ex);
 
 				XmlDocument.LoadXml("<" + _rootNodeName + "></" + _rootNodeName + ">");
 			}

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-using Mag.Shared;
-
 using Mag_SuitBuilder.Equipment;
+
+using Mag.Shared.Constants;
 
 namespace Mag_SuitBuilder
 {

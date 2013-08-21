@@ -2,6 +2,8 @@
 using System.IO;
 using System.Collections.ObjectModel;
 
+using Mag.Shared;
+
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 

@@ -2,7 +2,7 @@
 
 namespace Mag.Shared.Constants
 {
-	public static class Constants
+	public static class Dictionaries
 	{
 		/// <summary>
 		/// Returns a dictionary of skill ids vs names

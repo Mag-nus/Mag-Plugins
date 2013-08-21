@@ -67,8 +67,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Shared\Constants\Constants.cs">
-      <Link>Constants.cs</Link>
+    <Compile Include="..\Shared\Constants\Dictionaries.cs">
+      <Link>Shared\Constants\Dictionaries.cs</Link>
     </Compile>
     <Compile Include="..\Shared\DecalProxy.cs">
       <Link>Settings\DecalProxy.cs</Link>
@@ -170,7 +170,6 @@
     <Compile Include="Trackers\Equipment\EquipmentTracker.cs" />
     <Compile Include="PluginCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Debug.cs" />
     <Compile Include="ItemInfo\DetectItemsIdentifiedByUser.cs" />
     <Compile Include="Incomplete\Util.cs" />
     <Compile Include="Incomplete\VHS_Connector.cs" />
@@ -183,9 +182,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Shared\Constants\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

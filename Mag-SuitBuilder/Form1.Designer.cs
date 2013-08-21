@@ -1,6 +1,8 @@
 ﻿using Mag_SuitBuilder.Equipment;
 using Mag_SuitBuilder.Spells;
 
+using Mag.Shared.Constants;
+
 namespace Mag_SuitBuilder
 {
 	partial class Form1
@@ -347,7 +349,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece1
 			// 
 			this.coveragePiece1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece1.EquippableSlots = Mag.Shared.EquippableSlotFlags.Necklace;
+			this.coveragePiece1.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.Necklace;
 			this.coveragePiece1.Location = new System.Drawing.Point(8, 8);
 			this.coveragePiece1.Name = "coveragePiece1";
 			this.coveragePiece1.Size = new System.Drawing.Size(153, 133);
@@ -356,7 +358,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece16
 			// 
 			this.coveragePiece16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece16.EquippableSlots = Mag.Shared.EquippableSlotFlags.PantsUpperLegs;
+			this.coveragePiece16.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.PantsUpperLegs;
 			this.coveragePiece16.Location = new System.Drawing.Point(803, 425);
 			this.coveragePiece16.Name = "coveragePiece16";
 			this.coveragePiece16.Size = new System.Drawing.Size(153, 133);
@@ -365,7 +367,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece2
 			// 
 			this.coveragePiece2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece2.EquippableSlots = Mag.Shared.EquippableSlotFlags.Trinket;
+			this.coveragePiece2.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.Trinket;
 			this.coveragePiece2.Location = new System.Drawing.Point(8, 147);
 			this.coveragePiece2.Name = "coveragePiece2";
 			this.coveragePiece2.Size = new System.Drawing.Size(153, 133);
@@ -374,7 +376,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece17
 			// 
 			this.coveragePiece17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece17.EquippableSlots = Mag.Shared.EquippableSlotFlags.ShirtChest;
+			this.coveragePiece17.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.ShirtChest;
 			this.coveragePiece17.Location = new System.Drawing.Point(803, 286);
 			this.coveragePiece17.Name = "coveragePiece17";
 			this.coveragePiece17.Size = new System.Drawing.Size(153, 133);
@@ -383,7 +385,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece3
 			// 
 			this.coveragePiece3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece3.EquippableSlots = Mag.Shared.EquippableSlotFlags.LeftBracelet;
+			this.coveragePiece3.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.LeftBracelet;
 			this.coveragePiece3.Location = new System.Drawing.Point(8, 286);
 			this.coveragePiece3.Name = "coveragePiece3";
 			this.coveragePiece3.Size = new System.Drawing.Size(153, 133);
@@ -392,7 +394,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece14
 			// 
 			this.coveragePiece14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece14.EquippableSlots = Mag.Shared.EquippableSlotFlags.RightRing;
+			this.coveragePiece14.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.RightRing;
 			this.coveragePiece14.Location = new System.Drawing.Point(644, 425);
 			this.coveragePiece14.Name = "coveragePiece14";
 			this.coveragePiece14.Size = new System.Drawing.Size(153, 133);
@@ -401,7 +403,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece4
 			// 
 			this.coveragePiece4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece4.EquippableSlots = Mag.Shared.EquippableSlotFlags.LeftRing;
+			this.coveragePiece4.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.LeftRing;
 			this.coveragePiece4.Location = new System.Drawing.Point(8, 425);
 			this.coveragePiece4.Name = "coveragePiece4";
 			this.coveragePiece4.Size = new System.Drawing.Size(153, 133);
@@ -410,7 +412,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece15
 			// 
 			this.coveragePiece15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece15.EquippableSlots = Mag.Shared.EquippableSlotFlags.RightBracelet;
+			this.coveragePiece15.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.RightBracelet;
 			this.coveragePiece15.Location = new System.Drawing.Point(644, 286);
 			this.coveragePiece15.Name = "coveragePiece15";
 			this.coveragePiece15.Size = new System.Drawing.Size(153, 133);
@@ -419,7 +421,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece5
 			// 
 			this.coveragePiece5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece5.EquippableSlots = Mag.Shared.EquippableSlotFlags.UpperArms;
+			this.coveragePiece5.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.UpperArms;
 			this.coveragePiece5.Location = new System.Drawing.Point(167, 147);
 			this.coveragePiece5.Name = "coveragePiece5";
 			this.coveragePiece5.Size = new System.Drawing.Size(153, 133);
@@ -428,7 +430,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece13
 			// 
 			this.coveragePiece13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece13.EquippableSlots = Mag.Shared.EquippableSlotFlags.Feet;
+			this.coveragePiece13.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.Feet;
 			this.coveragePiece13.Location = new System.Drawing.Point(542, 564);
 			this.coveragePiece13.Name = "coveragePiece13";
 			this.coveragePiece13.Size = new System.Drawing.Size(153, 133);
@@ -437,7 +439,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece6
 			// 
 			this.coveragePiece6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece6.EquippableSlots = Mag.Shared.EquippableSlotFlags.Chest;
+			this.coveragePiece6.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.Chest;
 			this.coveragePiece6.Location = new System.Drawing.Point(326, 147);
 			this.coveragePiece6.Name = "coveragePiece6";
 			this.coveragePiece6.Size = new System.Drawing.Size(153, 133);
@@ -446,7 +448,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece12
 			// 
 			this.coveragePiece12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece12.EquippableSlots = Mag.Shared.EquippableSlotFlags.LowerLegs;
+			this.coveragePiece12.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.LowerLegs;
 			this.coveragePiece12.Location = new System.Drawing.Point(485, 425);
 			this.coveragePiece12.Name = "coveragePiece12";
 			this.coveragePiece12.Size = new System.Drawing.Size(153, 133);
@@ -455,7 +457,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece7
 			// 
 			this.coveragePiece7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece7.EquippableSlots = Mag.Shared.EquippableSlotFlags.Head;
+			this.coveragePiece7.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.Head;
 			this.coveragePiece7.Location = new System.Drawing.Point(326, 8);
 			this.coveragePiece7.Name = "coveragePiece7";
 			this.coveragePiece7.Size = new System.Drawing.Size(153, 133);
@@ -464,7 +466,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece11
 			// 
 			this.coveragePiece11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece11.EquippableSlots = Mag.Shared.EquippableSlotFlags.Hands;
+			this.coveragePiece11.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.Hands;
 			this.coveragePiece11.Location = new System.Drawing.Point(167, 425);
 			this.coveragePiece11.Name = "coveragePiece11";
 			this.coveragePiece11.Size = new System.Drawing.Size(153, 133);
@@ -473,7 +475,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece8
 			// 
 			this.coveragePiece8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece8.EquippableSlots = Mag.Shared.EquippableSlotFlags.LowerArms;
+			this.coveragePiece8.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.LowerArms;
 			this.coveragePiece8.Location = new System.Drawing.Point(167, 286);
 			this.coveragePiece8.Name = "coveragePiece8";
 			this.coveragePiece8.Size = new System.Drawing.Size(153, 133);
@@ -482,7 +484,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece10
 			// 
 			this.coveragePiece10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece10.EquippableSlots = Mag.Shared.EquippableSlotFlags.UpperLegs;
+			this.coveragePiece10.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.UpperLegs;
 			this.coveragePiece10.Location = new System.Drawing.Point(485, 286);
 			this.coveragePiece10.Name = "coveragePiece10";
 			this.coveragePiece10.Size = new System.Drawing.Size(153, 133);
@@ -491,7 +493,7 @@ namespace Mag_SuitBuilder
 			// coveragePiece9
 			// 
 			this.coveragePiece9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece9.EquippableSlots = Mag.Shared.EquippableSlotFlags.Abdomen;
+			this.coveragePiece9.EquippableSlots = Mag.Shared.Constants.EquippableSlotFlags.Abdomen;
 			this.coveragePiece9.Location = new System.Drawing.Point(326, 286);
 			this.coveragePiece9.Name = "coveragePiece9";
 			this.coveragePiece9.Size = new System.Drawing.Size(153, 133);

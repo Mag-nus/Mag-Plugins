@@ -4,6 +4,8 @@ using System.Globalization;
 using MagTools.Trackers;
 using MagTools.Trackers.Player;
 
+using Mag.Shared;
+
 using VirindiViewService.Controls;
 
 using Decal.Adapter;

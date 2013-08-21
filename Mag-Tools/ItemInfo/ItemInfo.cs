@@ -31,8 +31,8 @@ namespace MagTools.ItemInfo
 
 			if (wo.Values(LongValueKey.Material) > 0)
 			{
-				if (Constants.MaterialInfo.ContainsKey(wo.Values(LongValueKey.Material)))
-					sb.Append(Constants.MaterialInfo[wo.Values(LongValueKey.Material)] + " ");
+				if (Dictionaries.MaterialInfo.ContainsKey(wo.Values(LongValueKey.Material)))
+					sb.Append(Dictionaries.MaterialInfo[wo.Values(LongValueKey.Material)] + " ");
 				else
 					sb.Append("unknown material " + wo.Values(LongValueKey.Material) + " ");
 			}
@@ -41,8 +41,8 @@ namespace MagTools.ItemInfo
 
 			if (wo.Values((LongValueKey)353) > 0)
 			{
-				if (Constants.MasteryInfo.ContainsKey(wo.Values((LongValueKey)353)))
-					sb.Append(" (" + Constants.MasteryInfo[wo.Values((LongValueKey)353)] + ")");
+				if (Dictionaries.MasteryInfo.ContainsKey(wo.Values((LongValueKey)353)))
+					sb.Append(" (" + Dictionaries.MasteryInfo[wo.Values((LongValueKey)353)] + ")");
 				else
 					sb.Append(" (Unknown mastery " + wo.Values((LongValueKey)353) + ")");
 			}
@@ -51,8 +51,8 @@ namespace MagTools.ItemInfo
 			if (set != 0)
 			{
 				sb.Append(", ");
-				if (Constants.AttributeSetInfo.ContainsKey(set))
-					sb.Append(Constants.AttributeSetInfo[set]);
+				if (Dictionaries.AttributeSetInfo.ContainsKey(set))
+					sb.Append(Dictionaries.AttributeSetInfo[set]);
 				else
 					sb.Append("Unknown set " + set);
 			}
@@ -257,8 +257,8 @@ namespace MagTools.ItemInfo
 					sb.Append(", Wield Lvl " + wo.Values(LongValueKey.WieldReqValue));
 				else
 				{
-					if (Constants.SkillInfo.ContainsKey(wo.Values(LongValueKey.WieldReqAttribute)))
-						sb.Append(", " + Constants.SkillInfo[wo.Values(LongValueKey.WieldReqAttribute)] + " " + wo.Values(LongValueKey.WieldReqValue));
+					if (Dictionaries.SkillInfo.ContainsKey(wo.Values(LongValueKey.WieldReqAttribute)))
+						sb.Append(", " + Dictionaries.SkillInfo[wo.Values(LongValueKey.WieldReqAttribute)] + " " + wo.Values(LongValueKey.WieldReqValue));
 					else
 						sb.Append(", Unknown skill: " +wo.Values(LongValueKey.WieldReqAttribute) + " " + wo.Values(LongValueKey.WieldReqValue));
 				}
@@ -272,8 +272,8 @@ namespace MagTools.ItemInfo
 			// If the activation is lower than the wield requirement, don't show it.
 			if (wo.Values(LongValueKey.SkillLevelReq) > 0 && (wo.Values(LongValueKey.WieldReqAttribute) != wo.Values(LongValueKey.ActivationReqSkillId) || wo.Values(LongValueKey.WieldReqValue) < wo.Values(LongValueKey.SkillLevelReq)))
 			{
-				if (Constants.SkillInfo.ContainsKey(wo.Values(LongValueKey.ActivationReqSkillId)))
-					sb.Append(", " + Constants.SkillInfo[wo.Values(LongValueKey.ActivationReqSkillId)] + " " + wo.Values(LongValueKey.SkillLevelReq) + " to Activate");
+				if (Dictionaries.SkillInfo.ContainsKey(wo.Values(LongValueKey.ActivationReqSkillId)))
+					sb.Append(", " + Dictionaries.SkillInfo[wo.Values(LongValueKey.ActivationReqSkillId)] + " " + wo.Values(LongValueKey.SkillLevelReq) + " to Activate");
 				else
 					sb.Append(", Unknown skill: " + wo.Values(LongValueKey.ActivationReqSkillId) + " " + wo.Values(LongValueKey.SkillLevelReq) + " to Activate");
 			}
@@ -281,8 +281,8 @@ namespace MagTools.ItemInfo
 			// Summoning Gem
 			if (wo.Values((LongValueKey)366) > 0 && wo.Values((LongValueKey)367) > 0)
 			{
-				if (Constants.SkillInfo.ContainsKey(wo.Values((LongValueKey)366)))
-					sb.Append(", " + Constants.SkillInfo[wo.Values((LongValueKey)366)] + " " + wo.Values((LongValueKey)367));
+				if (Dictionaries.SkillInfo.ContainsKey(wo.Values((LongValueKey)366)))
+					sb.Append(", " + Dictionaries.SkillInfo[wo.Values((LongValueKey)366)] + " " + wo.Values((LongValueKey)367));
 				else
 					sb.Append(", Unknown skill: " + wo.Values((LongValueKey)366) + " " + wo.Values((LongValueKey)367));
 			}
@@ -290,8 +290,8 @@ namespace MagTools.ItemInfo
 			// Summoning Gem
 			if (wo.Values((LongValueKey)368) > 0 && wo.Values((LongValueKey)367) > 0)
 			{
-				if (Constants.SkillInfo.ContainsKey(wo.Values((LongValueKey)368)))
-					sb.Append(", Spec " + Constants.SkillInfo[wo.Values((LongValueKey)368)] + " " + wo.Values((LongValueKey)367));
+				if (Dictionaries.SkillInfo.ContainsKey(wo.Values((LongValueKey)368)))
+					sb.Append(", Spec " + Dictionaries.SkillInfo[wo.Values((LongValueKey)368)] + " " + wo.Values((LongValueKey)367));
 				else
 					sb.Append(", Unknown skill spec: " + wo.Values((LongValueKey)368) + " " + wo.Values((LongValueKey)367));
 			}

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Mag.Shared;
+
 namespace MagTools.Trackers.Consumable
 {
 	class ConsumableTracker : ITracker<TrackedConsumable>, IDisposable

@@ -2,7 +2,7 @@
 using Mag_SuitBuilder.Equipment;
 using Mag_SuitBuilder.Spells;
 
-using Mag.Shared;
+using Mag.Shared.Constants;
 
 namespace Mag_SuitBuilder.Search
 {

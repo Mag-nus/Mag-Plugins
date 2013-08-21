@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Mag.Shared;
+
 /*
  * me: FLootPluginClassifyCallback and immediate, difference being anything other than the obv?
 	V: immediate should only be called after queryneedsid and then IDing if needed
