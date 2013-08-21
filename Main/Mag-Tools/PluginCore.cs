@@ -698,6 +698,8 @@ namespace MagTools
 					if (state == "missile") CoreManager.Current.Actions.SetCombatMode(CombatState.Missile);
 					if (state == "peace") CoreManager.Current.Actions.SetCombatMode(CombatState.Peace);
 				}
+
+				if (lower.StartsWith("/mt autopack") && inventoryPacker != null) inventoryPacker.Start();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
