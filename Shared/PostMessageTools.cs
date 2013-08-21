@@ -23,6 +23,7 @@ namespace Mag.Shared
 		private const byte VK_RETURN	= 0x0D;
 		private const byte VK_CONTROL	= 0x11;
 		private const byte VK_PAUSE		= 0x13;
+		private const byte VK_SPACE		= 0x20;
 
 		private static byte ScanCode(char Char)
 		{
@@ -106,6 +107,12 @@ namespace Mag.Shared
 		{
 			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)VK_PAUSE, (UIntPtr)0x00450001);
 			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)VK_PAUSE, (UIntPtr)0xC0450001);
+		}
+
+		public static void SendSpace()
+		{
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)VK_SPACE, (UIntPtr)0x00390001);
+			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)VK_SPACE, (UIntPtr)0xC0390001);
 		}
 
 		public static void SendCntrl(char ch)

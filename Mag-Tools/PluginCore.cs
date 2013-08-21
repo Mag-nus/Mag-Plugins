@@ -567,46 +567,84 @@ namespace MagTools
 
 				string lower = e.Text.ToLower();
 
-				if (lower.StartsWith("/mt logoff") || lower.StartsWith("/mt logout")) CoreManager.Current.Actions.Logout();
-
-				if (lower.StartsWith("/mt send enter")) PostMessageTools.SendEnter();
-				if (lower.StartsWith("/mt send pause")) PostMessageTools.SendPause();
-				if (lower.StartsWith("/mt send cntrl+") && lower.Length >= 16) PostMessageTools.SendCntrl(e.Text[15]);
-				if (lower.StartsWith("/mt send f4")) PostMessageTools.SendF4();
-				if (lower.StartsWith("/mt send f12")) PostMessageTools.SendF12();
-				if (lower.StartsWith("/mt send msg ") && lower.Length > 13) PostMessageTools.SendMsg(e.Text.Substring(13, e.Text.Length - 13));
-				if (lower.StartsWith("/mt click ok")) PostMessageTools.ClickOK();
-				if (lower.StartsWith("/mt click yes")) PostMessageTools.ClickYes();
-				if (lower.StartsWith("/mt click no")) PostMessageTools.ClickNo();
-				if (lower.StartsWith("/mt send click "))
+				if (lower.StartsWith("/mt logoff") || lower.StartsWith("/mt logout"))
 				{
-					string[] splits = lower.Split(' ');
-
-					if (splits.Length >= 5)
-					{
-						int x;
-						int y;
-
-						if (!int.TryParse(splits[3], out x)) return;
-						if (!int.TryParse(splits[4], out y)) return;
-
-						PostMessageTools.SendMouseClick(x, y);
-					}
+					CoreManager.Current.Actions.Logout();
+					return;
 				}
 
-				if (lower.StartsWith("/mt fellow create ") && lower.Length > 18)
+				if (lower.StartsWith("/mt send "))
 				{
-					string fellowName = lower.Substring(18, lower.Length - 18);
+					     if (lower.StartsWith("/mt send enter")) PostMessageTools.SendEnter();
+					else if (lower.StartsWith("/mt send pause")) PostMessageTools.SendPause();
+					else if (lower.StartsWith("/mt send space")) PostMessageTools.SendSpace();
+					else if (lower.StartsWith("/mt send cntrl+") && lower.Length >= 16) PostMessageTools.SendCntrl(e.Text[15]);
+					else if (lower.StartsWith("/mt send f4")) PostMessageTools.SendF4();
+					else if (lower.StartsWith("/mt send f12")) PostMessageTools.SendF12();
+					else if (lower.StartsWith("/mt send msg ") && lower.Length > 13) PostMessageTools.SendMsg(e.Text.Substring(13, e.Text.Length - 13));
 
-					PostMessageTools.SendF12();
-					PostMessageTools.SendF4();
+					return;
+				}
 
-					System.Drawing.Rectangle rect = Core.Actions.UIElementRegion(Decal.Adapter.Wrappers.UIElementType.Panels);
+				if (lower.StartsWith("/mt click "))
+				{
+					     if (lower.StartsWith("/mt click ok")) PostMessageTools.ClickOK();
+					else if (lower.StartsWith("/mt click yes")) PostMessageTools.ClickYes();
+					else if (lower.StartsWith("/mt click no")) PostMessageTools.ClickNo();
+					else if (lower.StartsWith("/mt click "))
+					{
+						string[] splits = lower.Split(' ');
 
-					PostMessageTools.SendMouseClick(rect.X + 200, rect.Y + 240);
-					PostMessageTools.SendMsg(fellowName);
+						if (splits.Length >= 4)
+						{
+							int x;
+							int y;
 
-					CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(FellowCreate_Current_RenderFrame);
+							if (!int.TryParse(splits[2], out x)) return;
+							if (!int.TryParse(splits[3], out y)) return;
+
+							PostMessageTools.SendMouseClick(x, y);
+						}
+					}
+
+					return;
+				}
+
+				if (lower.StartsWith("/mt fellow "))
+				{
+					if (lower.StartsWith("/mt fellow create ") && lower.Length > 18)
+					{
+						string fellowName = lower.Substring(18, lower.Length - 18);
+
+						PostMessageTools.SendF12();
+						PostMessageTools.SendF4();
+
+						System.Drawing.Rectangle rect = Core.Actions.UIElementRegion(Decal.Adapter.Wrappers.UIElementType.Panels);
+
+						PostMessageTools.SendMouseClick(rect.X + 200, rect.Y + 240);
+						PostMessageTools.SendMsg(fellowName);
+
+						CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(FellowCreate_Current_RenderFrame);
+					}
+					else if (lower.StartsWith("/mt fellow open"))
+						Core.Actions.FellowshipSetOpen(true);
+					else if (lower.StartsWith("/mt fellow close"))
+						Core.Actions.FellowshipSetOpen(false);
+					else if (lower.StartsWith("/mt fellow disband"))
+						Core.Actions.FellowshipDisband();
+					else if (lower.StartsWith("/mt fellow quit"))
+						Core.Actions.FellowshipQuit();
+					else if (lower.StartsWith("/mt fellow recruit ") && lower.Length > 19)
+					{
+						string player = lower.Substring(19, lower.Length - 19);
+
+						WorldObject closest = Util.GetClosestObject(player);
+
+						if (closest != null)
+							Core.Actions.FellowshipRecruit(closest.Id);
+					}
+
+					return;
 				}
 
 				if (lower.StartsWith("/mt use ") && lower.Length > 9)
@@ -632,6 +670,8 @@ namespace MagTools
 						CoreManager.Current.Actions.UseItem(objectId, 0);
 					else
 						CoreManager.Current.Actions.UseItem(objectId, 1, useMethod);
+
+					return;
 				}
 
 				if (lower.StartsWith("/mt give ") && lower.Contains(" to "))
@@ -649,6 +689,8 @@ namespace MagTools
 						return;
 
 					CoreManager.Current.Actions.GiveItem(objectId, destinationId);
+
+					return;
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
