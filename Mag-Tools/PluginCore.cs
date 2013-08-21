@@ -626,14 +626,10 @@ namespace MagTools
 
 						CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(FellowCreate_Current_RenderFrame);
 					}
-					else if (lower.StartsWith("/mt fellow open"))
-						Core.Actions.FellowshipSetOpen(true);
-					else if (lower.StartsWith("/mt fellow close"))
-						Core.Actions.FellowshipSetOpen(false);
-					else if (lower.StartsWith("/mt fellow disband"))
-						Core.Actions.FellowshipDisband();
-					else if (lower.StartsWith("/mt fellow quit"))
-						Core.Actions.FellowshipQuit();
+					else if (lower.StartsWith("/mt fellow open")) Core.Actions.FellowshipSetOpen(true);
+					else if (lower.StartsWith("/mt fellow close")) Core.Actions.FellowshipSetOpen(false);
+					else if (lower.StartsWith("/mt fellow disband")) Core.Actions.FellowshipDisband();
+					else if (lower.StartsWith("/mt fellow quit")) Core.Actions.FellowshipQuit();
 					else if (lower.StartsWith("/mt fellow recruit ") && lower.Length > 19)
 					{
 						string player = lower.Substring(19, lower.Length - 19);
