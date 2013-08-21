@@ -692,6 +692,16 @@ namespace MagTools
 
 					return;
 				}
+
+				if (lower.StartsWith("/mt combatstate ") && lower.Length > 16)
+				{
+					string state = lower.Substring(16, lower.Length - 16);
+
+					if (state == "magic") CoreManager.Current.Actions.SetCombatMode(CombatState.Magic);
+					if (state == "melee") CoreManager.Current.Actions.SetCombatMode(CombatState.Melee);
+					if (state == "missile") CoreManager.Current.Actions.SetCombatMode(CombatState.Missile);
+					if (state == "peace") CoreManager.Current.Actions.SetCombatMode(CombatState.Peace);
+				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
