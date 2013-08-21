@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 
+using Mag.Shared.Constants;
+
 namespace Mag.Shared
 {
 	/// <summary>

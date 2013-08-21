@@ -48,6 +48,7 @@
     <Compile Include="AutoRetryLogin.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="Debug.cs" />
+    <Compile Include="FastQuit.cs" />
     <Compile Include="FilterCore.cs" />
     <Compile Include="LoginCharacterTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

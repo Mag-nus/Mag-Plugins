@@ -145,6 +145,21 @@ namespace Mag.Shared
 			}
 		}
 
+		public static void ClickOK()
+		{
+			SendMouseClick(0x0190, 0x0146);
+		}
+
+		public static void ClickYes()
+		{
+			SendMouseClick(0x0140, 0x0146);
+		}
+
+		public static void ClickNo()
+		{
+			SendMouseClick(0x01E0, 0x0146);
+		}
+
 		public static void SendMouseClick(int x, int y)
 		{
 			int loc = (y * 0x10000) + x;

@@ -46,7 +46,7 @@ namespace MagFilter
 			if (loginRetryTimer.Interval == 100)
 			{
 				// Click the OK button
-				Mag.Shared.PostMessageTools.SendMouseClick(0x0191, 0x0146);
+				Mag.Shared.PostMessageTools.ClickOK();
 
 				loginRetryTimer.Interval = 200;
 				loginRetryTimer.Start();

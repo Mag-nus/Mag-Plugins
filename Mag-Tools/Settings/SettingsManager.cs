@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml;
 
+using Mag.Shared.Settings;
+
 namespace MagTools.Settings
 {
 	static class SettingsManager

@@ -1,5 +1,5 @@
 ﻿
-namespace Mag.Shared
+namespace Mag.Shared.Constants
 {
 	public enum DoubleValueKey
 	{

@@ -5,18 +5,27 @@ using System.ComponentModel;
 using System.IO;
 using System.Xml;
 
-namespace MagTools.Settings
+namespace Mag.Shared.Settings
 {
 	static class SettingsFile
 	{
 		static readonly XmlDocument XmlDocument = new XmlDocument();
 
-		static readonly string DocumentPath = PluginCore.PluginPersonalFolder.FullName + @"\" + PluginCore.PluginName + ".xml";
+		static string _documentPath;
 
-		static readonly string RootNodeName = PluginCore.PluginName;
+		static string _rootNodeName = "Settings";
 
 		static SettingsFile()
 		{
+			ReloadXmlDocument();
+		}
+
+		public static void Init(string filePath, string rootNode = "Settings")
+		{
+			_documentPath = filePath;
+
+			_rootNodeName = rootNode;
+
 			ReloadXmlDocument();
 		}
 
@@ -24,22 +33,22 @@ namespace MagTools.Settings
 		{
 			try
 			{
-				if (File.Exists(DocumentPath))
-					XmlDocument.Load(DocumentPath);
+				if (!String.IsNullOrEmpty(_documentPath) && File.Exists(_documentPath))
+					XmlDocument.Load(_documentPath);
 				else
-					XmlDocument.LoadXml("<" + RootNodeName + "></" + RootNodeName + ">");
+					XmlDocument.LoadXml("<" + _rootNodeName + "></" + _rootNodeName + ">");
 			}
 			catch (Exception ex)
 			{
-				Debug.LogException(ex);
+				//Debug.LogException(ex);
 
-				XmlDocument.LoadXml("<" + RootNodeName + "></" + RootNodeName + ">");
+				XmlDocument.LoadXml("<" + _rootNodeName + "></" + _rootNodeName + ">");
 			}
 		}
 
 		public static T GetSetting<T>(string xPath, T defaultValue = default(T))
 		{
-			XmlNode xmlNode = XmlDocument.SelectSingleNode(RootNodeName + "/" + xPath);
+			XmlNode xmlNode = XmlDocument.SelectSingleNode(_rootNodeName + "/" + xPath);
 
 			if (xmlNode != null)
 			{
@@ -57,10 +66,10 @@ namespace MagTools.Settings
 			// Before we save a setting, we reload the document to make sure we don't overwrite settings saved from another session.
 			ReloadXmlDocument();
 
-			XmlNode xmlNode = XmlDocument.SelectSingleNode(RootNodeName + "/" + xPath);
+			XmlNode xmlNode = XmlDocument.SelectSingleNode(_rootNodeName + "/" + xPath);
 
 			if (xmlNode == null)
-				xmlNode = createMissingNode(RootNodeName + "/" + xPath);
+				xmlNode = createMissingNode(_rootNodeName + "/" + xPath);
 
 			TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
 
@@ -72,7 +81,7 @@ namespace MagTools.Settings
 				{
 					xmlNode.InnerText = result;
 
-					XmlDocument.Save(DocumentPath);
+					XmlDocument.Save(_documentPath);
 				}
 			}
 		}
@@ -83,7 +92,7 @@ namespace MagTools.Settings
 
 			string currentXPath = "";
 
-			XmlNode currentNode = XmlDocument.SelectSingleNode(RootNodeName);
+			XmlNode currentNode = XmlDocument.SelectSingleNode(_rootNodeName);
 
 			foreach (string xPathSection in xPathSections)
 			{
@@ -107,7 +116,7 @@ namespace MagTools.Settings
 
 		public static IEnumerable<string> GetCollection(string xPath)
 		{
-			XmlNode xmlNode = XmlDocument.SelectSingleNode(RootNodeName + "/" + xPath);
+			XmlNode xmlNode = XmlDocument.SelectSingleNode(_rootNodeName + "/" + xPath);
 
 			Collection<string> collection = new Collection<string>();
 
@@ -124,7 +133,7 @@ namespace MagTools.Settings
 
 		public static XmlNode GetNode(string xPath)
 		{
-			return XmlDocument.SelectSingleNode(RootNodeName + "/" + xPath);
+			return XmlDocument.SelectSingleNode(_rootNodeName + "/" + xPath);
 		}
 
 		public static void SetNodeChilderen(string xPath, string childNodeName, Collection<Dictionary<string, string>> childNodeAttributes)
@@ -132,10 +141,10 @@ namespace MagTools.Settings
 			// Before we save a setting, we reload the document to make sure we don't overwrite settings saved from another session.
 			ReloadXmlDocument();
 
-			XmlNode parentNode = XmlDocument.SelectSingleNode(RootNodeName + "/" + xPath);
+			XmlNode parentNode = XmlDocument.SelectSingleNode(_rootNodeName + "/" + xPath);
 
 			if (parentNode == null)
-				parentNode = createMissingNode(RootNodeName + "/" + xPath);
+				parentNode = createMissingNode(_rootNodeName + "/" + xPath);
 
 			if (parentNode.HasChildNodes)
 				parentNode.RemoveAll();
@@ -154,7 +163,7 @@ namespace MagTools.Settings
 				}
 			}
 
-			XmlDocument.Save(DocumentPath);
+			XmlDocument.Save(_documentPath);
 		}
 	}
 }
