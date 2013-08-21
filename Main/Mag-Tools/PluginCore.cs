@@ -647,7 +647,7 @@ namespace MagTools
 				{
 					int objectId;
 					int useMethod = 0;
-					
+
 					if (!lower.Contains(" on "))
 						objectId = FindIdForName(lower.Substring(8, lower.Length - 8));
 					else
@@ -655,7 +655,7 @@ namespace MagTools
 						string command = lower.Substring(8, lower.Length - 8);
 						string first = command.Substring(0, command.IndexOf(" on ", StringComparison.Ordinal));
 						string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
-
+						Debug.WriteToChat("command: " + command.Length + " '" + command + "', first: " + first.Length + " '" + first + "', second: " + second.Length + " '" + second + "'");
 						objectId = FindIdForName(first);
 						useMethod = FindIdForName(second);
 					}
@@ -712,8 +712,10 @@ namespace MagTools
 			{
 				foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
 				{
+					Debug.WriteToChat("'" + name + "', '" + wo.Name + "'");
 					if (wo.Name.ToLower().Contains(name.ToLower()))
 						return wo.Id;
+					Debug.WriteToChat("no match");
 				}
 			}
 
