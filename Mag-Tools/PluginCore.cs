@@ -643,21 +643,24 @@ namespace MagTools
 					return;
 				}
 
-				if (lower.StartsWith("/mt use ") && lower.Length > 8)
+				if ((lower.StartsWith("/mt use ") && lower.Length > 8) || (lower.StartsWith("/mt usep ") && lower.Length > 9))
 				{
+					bool partialMatch = lower.StartsWith("/mt usep ");
+					int offset = partialMatch ? 9 : 8;
+
 					int objectId;
 					int useMethod = 0;
 
 					if (!lower.Contains(" on "))
-						objectId = FindIdForName(lower.Substring(8, lower.Length - 8));
+						objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, true, partialMatch);
 					else
 					{
-						string command = lower.Substring(8, lower.Length - 8);
+						string command = lower.Substring(offset, lower.Length - offset);
 						string first = command.Substring(0, command.IndexOf(" on ", StringComparison.Ordinal));
 						string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
 
-						objectId = FindIdForName(first);
-						useMethod = FindIdForName(second);
+						objectId = FindIdForName(first, true, true, partialMatch);
+						useMethod = FindIdForName(second, true, true, partialMatch);
 					}
 
 					if (objectId == -1 || useMethod == -1)
@@ -671,17 +674,20 @@ namespace MagTools
 					return;
 				}
 
-				if (lower.StartsWith("/mt give ") && lower.Contains(" to "))
+				if ((lower.StartsWith("/mt give ") && lower.Contains(" to ")) || (lower.StartsWith("/mt givep ") && lower.Contains(" to ")))
 				{
+					bool partialMatch = lower.StartsWith("/mt givep ");
+					int offset = partialMatch ? 10 : 9;
+
 					int objectId;
 					int destinationId;
 
-					string command = lower.Substring(9, lower.Length - 9);
+					string command = lower.Substring(offset, lower.Length - offset);
 					string first = command.Substring(0, command.IndexOf(" to ", StringComparison.Ordinal));
 					string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
 
-					objectId = FindIdForName(first, true, false);
-					destinationId = FindIdForName(second, false);
+					objectId = FindIdForName(first, true, false, partialMatch);
+					destinationId = FindIdForName(second, false, true, partialMatch);
 
 					if (objectId == -1 || destinationId == -1)
 						return;
@@ -706,13 +712,14 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		int FindIdForName(string name, bool searchInInventory = true, bool searchEnvironment = true)
+		int FindIdForName(string name, bool searchInInventory, bool searchEnvironment, bool partialMatch)
 		{
+			// Exact match attempt first
 			if (searchInInventory)
 			{
 				foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
 				{
-					if (wo.Name.ToLower().Contains(name.ToLower()))
+					if (!partialMatch && String.Compare(wo.Name, name, StringComparison.OrdinalIgnoreCase) == 0)
 						return wo.Id;
 				}
 			}
@@ -723,6 +730,27 @@ namespace MagTools
 
 				if (closestObject != null)
 					return closestObject.Id;
+			}
+
+			// Partial match attempt second
+			if (partialMatch)
+			{
+				if (searchInInventory)
+				{
+					foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
+					{
+						if (partialMatch && wo.Name.ToLower().Contains(name.ToLower()))
+							return wo.Id;
+					}
+				}
+
+				if (searchEnvironment)
+				{
+					WorldObject closestObject = Util.GetClosestObject(name, true);
+
+					if (closestObject != null)
+						return closestObject.Id;
+				}	
 			}
 
 			return -1;
