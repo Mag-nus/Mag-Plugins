@@ -70,7 +70,7 @@ namespace MagFilter
 			int yOffset = (int)(YTopOfBox + (characterNameSize / 2) + (characterNameSize * index));
 
 			// Select the character
-			Mag.Shared.PostMessageTools.SendMouseClick(yOffset * 0x10000, XPixelOffset);
+			Mag.Shared.PostMessageTools.SendMouseClick(XPixelOffset, yOffset);
 
 			// Click the Enter button
 			Mag.Shared.PostMessageTools.SendMouseClick(0x015C, 0x0185);
