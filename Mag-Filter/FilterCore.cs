@@ -38,6 +38,7 @@ namespace MagFilter
 		readonly AutoRetryLogin autoRetryLogin = new AutoRetryLogin();
 		readonly LoginCharacterTools loginCharacterTools = new LoginCharacterTools();
 		readonly FastQuit fastQuit = new FastQuit();
+		readonly LoginMessageQueueManager loginMessageQueueManager = new LoginMessageQueueManager();
 
 		DefaultFirstCharacterManager defaultFirstCharacterManager;
 		LoginNextCharacterManager loginNextCharacterManager;
@@ -71,6 +72,7 @@ namespace MagFilter
 			try
 			{
 				autoRetryLogin.FilterCore_ClientDispatch(sender, e);
+				loginMessageQueueManager.FilterCore_ClientDispatch(sender, e);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -88,7 +90,6 @@ namespace MagFilter
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-
 		void FilterCore_WindowMessage(object sender, WindowMessageEventArgs e)
 		{
 			try
@@ -102,6 +103,8 @@ namespace MagFilter
 		{
 			try
 			{
+				loginMessageQueueManager.FilterCore_CommandLineText(sender, e);
+
 				defaultFirstCharacterManager.FilterCore_CommandLineText(sender, e);
 				loginNextCharacterManager.FilterCore_CommandLineText(sender, e);
 			}
