@@ -83,6 +83,22 @@ namespace Mag.Shared
 			return closest;
 		}
 
+		public static WorldObject GetClosestObject(string objectName)
+		{
+			WorldObject closest = null;
+
+			foreach (WorldObject obj in CoreManager.Current.WorldFilter.GetLandscape())
+			{
+				if (!obj.Name.ToLower().Contains(objectName.ToLower()))
+					continue;
+
+				if (closest == null || GetDistanceFromPlayer(obj) < GetDistanceFromPlayer(closest))
+					closest = obj;
+			}
+
+			return closest;
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
