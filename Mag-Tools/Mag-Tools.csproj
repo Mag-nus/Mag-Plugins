@@ -70,6 +70,9 @@
     <Compile Include="..\Shared\Constants\Dictionaries.cs">
       <Link>Shared\Constants\Dictionaries.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\Debug.cs">
+      <Link>Shared\Debug.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\DecalProxy.cs">
       <Link>Settings\DecalProxy.cs</Link>
     </Compile>
@@ -83,10 +86,10 @@
       <Link>Shared\SerializableDictionary.cs</Link>
     </Compile>
     <Compile Include="..\Shared\Settings\Setting.cs">
-      <Link>Settings\Setting.cs</Link>
+      <Link>Shared\Settings\Setting.cs</Link>
     </Compile>
     <Compile Include="..\Shared\Settings\SettingsFile.cs">
-      <Link>Settings\SettingsFile.cs</Link>
+      <Link>Shared\Settings\SettingsFile.cs</Link>
     </Compile>
     <Compile Include="..\Shared\Util.cs">
       <Link>Shared\Util.cs</Link>
