@@ -68,7 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Shared\Constants\Constants.cs">
-      <Link>Shared\Constants\Constants.cs</Link>
+      <Link>Constants.cs</Link>
     </Compile>
     <Compile Include="..\Shared\DecalProxy.cs">
       <Link>Settings\DecalProxy.cs</Link>
@@ -183,7 +183,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Shared\Constants\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
