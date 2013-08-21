@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mag.Shared
+namespace Mag.Shared.Constants
 {
 	/// <summary>
 	/// This is the mapping for LongValueKey.EquippableSlots.

@@ -7,6 +7,8 @@ namespace MagTools
 {
 	static class Debug
 	{
+		public delegate void ExceptionLogger(Exception ex, string note = null);
+
 		/// <summary>
 		/// This will only write the exception to the errors.txt file if DebugEnabled is true.
 		/// </summary>

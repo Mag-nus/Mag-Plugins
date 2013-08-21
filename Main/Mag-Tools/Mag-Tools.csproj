@@ -67,8 +67,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Shared\Constants.cs">
-      <Link>Shared\Constants.cs</Link>
+    <Compile Include="..\Shared\Constants\Constants.cs">
+      <Link>Shared\Constants\Constants.cs</Link>
     </Compile>
     <Compile Include="..\Shared\DecalProxy.cs">
       <Link>Settings\DecalProxy.cs</Link>
@@ -81,6 +81,12 @@
     </Compile>
     <Compile Include="..\Shared\SerializableDictionary.cs">
       <Link>Shared\SerializableDictionary.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Settings\Setting.cs">
+      <Link>Settings\Setting.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Settings\SettingsFile.cs">
+      <Link>Settings\SettingsFile.cs</Link>
     </Compile>
     <Compile Include="..\Shared\Util.cs">
       <Link>Shared\Util.cs</Link>
@@ -133,8 +139,6 @@
     <Compile Include="Macros\MaximizeChatOnLogin.cs" />
     <Compile Include="Macros\OneTouchHeal.cs" />
     <Compile Include="Macros\OpenMainPackOnLogin.cs" />
-    <Compile Include="Settings\Setting.cs" />
-    <Compile Include="Settings\SettingsFile.cs" />
     <Compile Include="Settings\SettingsManager.cs" />
     <Compile Include="ItemInfo\ItemInfoPrinter.cs" />
     <Compile Include="ItemInfo\DetectItemsInContainers.cs" />

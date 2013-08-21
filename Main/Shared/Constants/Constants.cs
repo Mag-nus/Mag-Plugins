@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Mag.Shared
+namespace Mag.Shared.Constants
 {
 	public static class Constants
 	{

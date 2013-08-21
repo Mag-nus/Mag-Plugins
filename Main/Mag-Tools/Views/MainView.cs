@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Globalization;
 
+using Mag.Shared.Settings;
+
 using VirindiViewService.Controls;
 
 namespace MagTools.Views
@@ -404,7 +406,7 @@ namespace MagTools.Views
 				ClientSetPosition.Text = "Current Set Position: not set.";
 		}
 
-		void AddOption(HudList hudList, Settings.Setting<bool> setting)
+		void AddOption(HudList hudList, Setting<bool> setting)
 		{
 			HudList.HudListRowAccessor newRow = hudList.AddRow();
 

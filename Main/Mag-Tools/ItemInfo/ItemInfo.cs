@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Mag.Shared;
+using Mag.Shared.Constants;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
