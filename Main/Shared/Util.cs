@@ -83,13 +83,15 @@ namespace Mag.Shared
 			return closest;
 		}
 
-		public static WorldObject GetClosestObject(string objectName)
+		public static WorldObject GetClosestObject(string objectName, bool partialMatch = false)
 		{
 			WorldObject closest = null;
 
 			foreach (WorldObject obj in CoreManager.Current.WorldFilter.GetLandscape())
 			{
-				if (!obj.Name.ToLower().Contains(objectName.ToLower()))
+				if (!partialMatch && String.Compare(obj.Name, objectName, StringComparison.OrdinalIgnoreCase) != 0)
+					continue;
+				 if (partialMatch && !obj.Name.ToLower().Contains(objectName.ToLower()))
 					continue;
 
 				if (closest == null || GetDistanceFromPlayer(obj) < GetDistanceFromPlayer(closest))
