@@ -655,7 +655,7 @@ namespace MagTools
 						string command = lower.Substring(8, lower.Length - 8);
 						string first = command.Substring(0, command.IndexOf(" on ", StringComparison.Ordinal));
 						string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
-						Debug.WriteToChat("command: " + command.Length + " '" + command + "', first: " + first.Length + " '" + first + "', second: " + second.Length + " '" + second + "'");
+
 						objectId = FindIdForName(first);
 						useMethod = FindIdForName(second);
 					}
