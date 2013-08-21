@@ -10,6 +10,8 @@ using MagTools.Inventory;
 using MagTools.Loggers;
 using MagTools.Views;
 
+using Mag.Shared;
+
 /*
  * Created by Mag-nus. 8/19/2011
  * 
@@ -161,6 +163,7 @@ namespace MagTools
 			{
 				Current = this;
 
+				Mag.Shared.Debug.Init(PluginPersonalFolder.FullName + @"\Exceptions.txt", PluginName);
 				Mag.Shared.Settings.SettingsFile.Init(PluginPersonalFolder.FullName + @"\" + PluginName + ".xml", PluginName);
 
 				CoreManager.Current.PluginInitComplete += new EventHandler<EventArgs>(Current_PluginInitComplete);

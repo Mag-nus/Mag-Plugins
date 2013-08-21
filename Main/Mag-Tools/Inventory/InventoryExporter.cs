@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using Mag.Shared;
+
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 

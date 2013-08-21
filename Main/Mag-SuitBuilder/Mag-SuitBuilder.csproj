@@ -45,23 +45,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Shared\BoolValueKey.cs">
-      <Link>Shared\BoolValueKey.cs</Link>
+    <Compile Include="..\Shared\Constants\BoolValueKey.cs">
+      <Link>Shared\Constants\BoolValueKey.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Constants.cs">
-      <Link>Shared\Constants.cs</Link>
+    <Compile Include="..\Shared\Constants\CoverageFlags.cs">
+      <Link>Shared\Constants\CoverageFlags.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\CoverageFlags.cs">
-      <Link>Shared\CoverageFlags.cs</Link>
+    <Compile Include="..\Shared\Constants\Dictionaries.cs">
+      <Link>Shared\Constants\Dictionaries.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\DoubleValueKey.cs">
-      <Link>Shared\DoubleValueKey.cs</Link>
+    <Compile Include="..\Shared\Constants\DoubleValueKey.cs">
+      <Link>Shared\Constants\DoubleValueKey.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\EquippableSlotFlags.cs">
-      <Link>Shared\EquippableSlotFlags.cs</Link>
+    <Compile Include="..\Shared\Constants\EquippableSlotFlags.cs">
+      <Link>Shared\Constants\EquippableSlotFlags.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\IntValueKey.cs">
-      <Link>Shared\IntValueKey.cs</Link>
+    <Compile Include="..\Shared\Constants\IntValueKey.cs">
+      <Link>Shared\Constants\IntValueKey.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Constants\StringValueKey.cs">
+      <Link>Shared\Constants\StringValueKey.cs</Link>
     </Compile>
     <Compile Include="..\Shared\MyWorldObject.cs">
       <Link>Shared\MyWorldObject.cs</Link>
@@ -74,9 +77,6 @@
     </Compile>
     <Compile Include="..\Shared\SortableBindingList.cs">
       <Link>Shared\SortableBindingList.cs</Link>
-    </Compile>
-    <Compile Include="..\Shared\StringValueKey.cs">
-      <Link>Shared\StringValueKey.cs</Link>
     </Compile>
     <Compile Include="EquipmentUpgradesForm.cs">
       <SubType>Form</SubType>

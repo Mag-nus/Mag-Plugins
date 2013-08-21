@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 
+using Mag.Shared;
+
 using Decal.Adapter;
 
 namespace MagTools.ItemInfo

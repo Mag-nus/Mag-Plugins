@@ -2,6 +2,8 @@
 
 using Decal.Adapter;
 
+using Mag.Shared;
+
 namespace MagTools.Macros
 {
 	class AutoRecharge : IDisposable

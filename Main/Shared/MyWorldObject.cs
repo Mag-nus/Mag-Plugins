@@ -80,16 +80,16 @@ namespace Mag.Shared
 		}
 
 
-		public string Material { get { if (IntValues.ContainsKey(131)) return Constants.MaterialInfo.ContainsKey(IntValues[131]) ? Constants.MaterialInfo[IntValues[131]] : IntValues[131].ToString(CultureInfo.InvariantCulture); return null; } }
+		public string Material { get { if (IntValues.ContainsKey(131)) return Dictionaries.MaterialInfo.ContainsKey(IntValues[131]) ? Dictionaries.MaterialInfo[IntValues[131]] : IntValues[131].ToString(CultureInfo.InvariantCulture); return null; } }
 		
 		public string Name { get { return StringValues.ContainsKey(1) ? StringValues[1] : null; } }
 
 
-		public string EquipSkill { get { if (IntValues.ContainsKey(218103840)) return Constants.SkillInfo.ContainsKey(IntValues[218103840]) ? Constants.SkillInfo[IntValues[218103840]] : IntValues[218103840].ToString(CultureInfo.InvariantCulture); return null; } }
+		public string EquipSkill { get { if (IntValues.ContainsKey(218103840)) return Dictionaries.SkillInfo.ContainsKey(IntValues[218103840]) ? Dictionaries.SkillInfo[IntValues[218103840]] : IntValues[218103840].ToString(CultureInfo.InvariantCulture); return null; } }
 
-		public string Mastery { get { if (IntValues.ContainsKey(353)) return Constants.MasteryInfo.ContainsKey(IntValues[353]) ? Constants.MasteryInfo[IntValues[353]] : IntValues[353].ToString(CultureInfo.InvariantCulture); return null; } }
+		public string Mastery { get { if (IntValues.ContainsKey(353)) return Dictionaries.MasteryInfo.ContainsKey(IntValues[353]) ? Dictionaries.MasteryInfo[IntValues[353]] : IntValues[353].ToString(CultureInfo.InvariantCulture); return null; } }
 
-		public string ItemSet { get { if (IntValues.ContainsKey(265)) return Constants.AttributeSetInfo.ContainsKey(IntValues[265]) ? Constants.AttributeSetInfo[IntValues[265]] : IntValues[265].ToString(CultureInfo.InvariantCulture); return null; } }
+		public string ItemSet { get { if (IntValues.ContainsKey(265)) return Dictionaries.AttributeSetInfo.ContainsKey(IntValues[265]) ? Dictionaries.AttributeSetInfo[IntValues[265]] : IntValues[265].ToString(CultureInfo.InvariantCulture); return null; } }
 
 
 		public int ArmorLevel { get { return IntValues.ContainsKey(28) ? IntValues[28] : -1; } }
@@ -207,7 +207,7 @@ namespace Mag.Shared
 
 				foreach (int spell in ActiveSpells)
 				{
-					foreach (var effect in Constants.LongValueKeySpellEffects)
+					foreach (var effect in Dictionaries.LongValueKeySpellEffects)
 					{
 						if (spell == effect.Key && effect.Value.Key == 28)
 							armorFromBuffs += effect.Value.Change;
@@ -216,7 +216,7 @@ namespace Mag.Shared
 
 				foreach (int spell in Spells)
 				{
-					foreach (var effect in Constants.LongValueKeySpellEffects)
+					foreach (var effect in Dictionaries.LongValueKeySpellEffects)
 					{
 						if (spell == effect.Key && effect.Value.Key == 28)
 							armorFromBuffs -= effect.Value.Bonus;
@@ -286,14 +286,14 @@ namespace Mag.Shared
 
 			foreach (int spell in ActiveSpells)
 			{
-				if (Constants.LongValueKeySpellEffects.ContainsKey(spell) && Constants.LongValueKeySpellEffects[spell].Key == key)
-					value -= Constants.LongValueKeySpellEffects[spell].Change;
+				if (Dictionaries.LongValueKeySpellEffects.ContainsKey(spell) && Dictionaries.LongValueKeySpellEffects[spell].Key == key)
+					value -= Dictionaries.LongValueKeySpellEffects[spell].Change;
 			}
 
 			foreach (int spell in Spells)
 			{
-				if (Constants.LongValueKeySpellEffects.ContainsKey(spell) && Constants.LongValueKeySpellEffects[spell].Key == key)
-					value += Constants.LongValueKeySpellEffects[spell].Bonus;
+				if (Dictionaries.LongValueKeySpellEffects.ContainsKey(spell) && Dictionaries.LongValueKeySpellEffects[spell].Key == key)
+					value += Dictionaries.LongValueKeySpellEffects[spell].Bonus;
 			}
 
 			return value;
@@ -308,23 +308,23 @@ namespace Mag.Shared
 
 			foreach (int spell in ActiveSpells)
 			{
-				if (Constants.DoubleValueKeySpellEffects.ContainsKey(spell) && Constants.DoubleValueKeySpellEffects[spell].Key == key)
+				if (Dictionaries.DoubleValueKeySpellEffects.ContainsKey(spell) && Dictionaries.DoubleValueKeySpellEffects[spell].Key == key)
 				{
-					if (Math.Abs(Constants.DoubleValueKeySpellEffects[spell].Change - 1) < Double.Epsilon)
-						value /= Constants.DoubleValueKeySpellEffects[spell].Change;
+					if (Math.Abs(Dictionaries.DoubleValueKeySpellEffects[spell].Change - 1) < Double.Epsilon)
+						value /= Dictionaries.DoubleValueKeySpellEffects[spell].Change;
 					else
-						value -= Constants.DoubleValueKeySpellEffects[spell].Change;
+						value -= Dictionaries.DoubleValueKeySpellEffects[spell].Change;
 				}
 			}
 
 			foreach (int spell in Spells)
 			{
-				if (Constants.DoubleValueKeySpellEffects.ContainsKey(spell) && Constants.DoubleValueKeySpellEffects[spell].Key == key && Math.Abs(Constants.DoubleValueKeySpellEffects[spell].Bonus - 0) > Double.Epsilon)
+				if (Dictionaries.DoubleValueKeySpellEffects.ContainsKey(spell) && Dictionaries.DoubleValueKeySpellEffects[spell].Key == key && Math.Abs(Dictionaries.DoubleValueKeySpellEffects[spell].Bonus - 0) > Double.Epsilon)
 				{
-					if (Math.Abs(Constants.DoubleValueKeySpellEffects[spell].Change - 1) < Double.Epsilon)
-						value *= Constants.DoubleValueKeySpellEffects[spell].Bonus;
+					if (Math.Abs(Dictionaries.DoubleValueKeySpellEffects[spell].Change - 1) < Double.Epsilon)
+						value *= Dictionaries.DoubleValueKeySpellEffects[spell].Bonus;
 					else
-						value += Constants.DoubleValueKeySpellEffects[spell].Bonus;
+						value += Dictionaries.DoubleValueKeySpellEffects[spell].Bonus;
 				}
 			}
 

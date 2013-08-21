@@ -3,6 +3,8 @@ using System.Drawing;
 
 using MagTools.Trackers.Equipment;
 
+using Mag.Shared;
+
 using VirindiViewService;
 using VirindiViewService.Controls;
 

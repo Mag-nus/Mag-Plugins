@@ -3,6 +3,8 @@
 using MagTools.Trackers;
 using MagTools.Trackers.Consumable;
 
+using Mag.Shared;
+
 using VirindiViewService.Controls;
 
 namespace MagTools.Views

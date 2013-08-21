@@ -2,6 +2,8 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 
+using Mag.Shared;
+
 using Decal.Adapter;
 
 namespace MagTools.Client

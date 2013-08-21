@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using Mag_SuitBuilder.Spells;
 
 using Mag.Shared;
+using Mag.Shared.Constants;
 
 namespace Mag_SuitBuilder.Equipment
 {

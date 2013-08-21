@@ -2,6 +2,8 @@
 
 using MagTools.Client;
 
+using Mag.Shared;
+
 using Decal.Adapter;
 
 namespace MagTools.Macros

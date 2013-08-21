@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 using Mag_SuitBuilder.Spells;
 
-using Mag.Shared;
+using Mag.Shared.Constants;
 
 namespace Mag_SuitBuilder.Equipment
 {

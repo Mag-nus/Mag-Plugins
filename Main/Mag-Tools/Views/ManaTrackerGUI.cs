@@ -2,6 +2,8 @@
 
 using MagTools.Trackers.Equipment;
 
+using Mag.Shared;
+
 using VirindiViewService.Controls;
 
 using Decal.Adapter;

@@ -15,7 +15,7 @@ using Mag_SuitBuilder.Equipment;
 using Mag_SuitBuilder.Search;
 using Mag_SuitBuilder.Spells;
 
-using Mag.Shared;
+using Mag.Shared.Constants;
 
 // Bugs
 // Spell compare is too slow, should be a hash compare

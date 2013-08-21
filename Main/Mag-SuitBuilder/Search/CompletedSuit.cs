@@ -6,7 +6,7 @@ using System.Linq;
 using Mag_SuitBuilder.Equipment;
 using Mag_SuitBuilder.Spells;
 
-using Mag.Shared;
+using Mag.Shared.Constants;
 
 namespace Mag_SuitBuilder.Search
 {
@@ -185,8 +185,8 @@ namespace Mag_SuitBuilder.Search
 
 			foreach (KeyValuePair<int, int> kvp in armorSetCounts)
 			{
-				if (Constants.AttributeSetInfo.ContainsKey(kvp.Key))
-					armorSets.Add(Constants.AttributeSetInfo[kvp.Key], kvp.Value);
+				if (Dictionaries.AttributeSetInfo.ContainsKey(kvp.Key))
+					armorSets.Add(Dictionaries.AttributeSetInfo[kvp.Key], kvp.Value);
 				else
 					armorSets.Add("Id:" + kvp.Key, kvp.Value);
 			}

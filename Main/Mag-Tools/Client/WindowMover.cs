@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
 
+using Mag.Shared;
+
 using Decal.Adapter;
 
 namespace MagTools.Client

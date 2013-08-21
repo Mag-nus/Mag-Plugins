@@ -5,6 +5,8 @@ using MagTools.Trackers.Combat.Standard;
 using MagTools.Trackers.Combat.Aetheria;
 using MagTools.Trackers.Combat.Cloaks;
 
+using Mag.Shared;
+
 using Decal.Adapter;
 
 namespace MagTools.Trackers.Combat
