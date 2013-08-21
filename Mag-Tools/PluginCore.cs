@@ -675,11 +675,11 @@ namespace MagTools
 					int objectId;
 					int destinationId;
 
-					string command = lower.Substring(10, lower.Length - 10);
+					string command = lower.Substring(9, lower.Length - 9);
 					string first = command.Substring(0, command.IndexOf(" to ", StringComparison.Ordinal));
 					string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
-					objectId = FindIdForName(first);
-					destinationId = FindIdForName(second);
+					objectId = FindIdForName(first, true, false);
+					destinationId = FindIdForName(second, false);
 
 					if (objectId == -1 || destinationId == -1)
 						return;
@@ -704,18 +704,24 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		int FindIdForName(string name)
+		int FindIdForName(string name, bool searchInInventory = true, bool searchEnvironment = true)
 		{
-			foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
+			if (searchInInventory)
 			{
-				if (wo.Name.Contains(name))
-					return wo.Id;
+				foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
+				{
+					if (wo.Name.Contains(name))
+						return wo.Id;
+				}
 			}
 
-			WorldObject closestObject = Util.GetClosestObject(name);
+			if (searchEnvironment)
+			{
+				WorldObject closestObject = Util.GetClosestObject(name);
 
-			if (closestObject != null)
-				return closestObject.Id;
+				if (closestObject != null)
+					return closestObject.Id;
+			}
 
 			return -1;
 		}
