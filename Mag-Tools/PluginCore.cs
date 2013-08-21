@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Collections.ObjectModel;
 
-using Decal.Adapter;
-
 using MagTools.Client;
 using MagTools.Inventory;
 using MagTools.Loggers;
 using MagTools.Views;
 
 using Mag.Shared;
+
+using Decal.Adapter;
+using Decal.Adapter.Wrappers;
 
 /*
  * Created by Mag-nus. 8/19/2011
@@ -566,8 +567,117 @@ namespace MagTools
 
 				string lower = e.Text.ToLower();
 
-				if (lower.StartsWith("/mt logoff") || lower.StartsWith("/mt logout"))
-					CoreManager.Current.Actions.Logout();
+				if (lower.StartsWith("/mt logoff") || lower.StartsWith("/mt logout")) CoreManager.Current.Actions.Logout();
+
+				if (lower.StartsWith("/mt send enter")) PostMessageTools.SendEnter();
+				if (lower.StartsWith("/mt send pause")) PostMessageTools.SendPause();
+				if (lower.StartsWith("/mt send cntrl+") && lower.Length >= 16) PostMessageTools.SendCntrl(e.Text[15]);
+				if (lower.StartsWith("/mt send f4")) PostMessageTools.SendF4();
+				if (lower.StartsWith("/mt send f12")) PostMessageTools.SendF12();
+				if (lower.StartsWith("/mt send msg ") && lower.Length > 13) PostMessageTools.SendMsg(e.Text.Substring(13, e.Text.Length - 13));
+				if (lower.StartsWith("/mt click ok")) PostMessageTools.ClickOK();
+				if (lower.StartsWith("/mt click yes")) PostMessageTools.ClickYes();
+				if (lower.StartsWith("/mt click no")) PostMessageTools.ClickNo();
+				if (lower.StartsWith("/mt send click "))
+				{
+					string[] splits = lower.Split(' ');
+
+					if (splits.Length >= 5)
+					{
+						int x;
+						int y;
+
+						if (!int.TryParse(splits[3], out x)) return;
+						if (!int.TryParse(splits[4], out y)) return;
+
+						PostMessageTools.SendMouseClick(x, y);
+					}
+				}
+
+				if (lower.StartsWith("/mt fellow create ") && lower.Length > 18)
+				{
+					string fellowName = lower.Substring(18, lower.Length - 18);
+
+					PostMessageTools.SendF12();
+					PostMessageTools.SendF4();
+
+					System.Drawing.Rectangle rect = Core.Actions.UIElementRegion(Decal.Adapter.Wrappers.UIElementType.Panels);
+
+					PostMessageTools.SendMouseClick(rect.X + 200, rect.Y + 240);
+					PostMessageTools.SendMsg(fellowName);
+
+					CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(FellowCreate_Current_RenderFrame);
+				}
+
+				if (lower.StartsWith("/mt use ") && lower.Length > 9)
+				{
+					int objectId;
+					int useMethod = 0;
+					
+					if (!lower.Contains(" on "))
+						objectId = FindIdForName(lower.Substring(9, lower.Length - 9));
+					else
+					{
+						string command = lower.Substring(9, lower.Length - 9);
+						string first = command.Substring(0, command.IndexOf(" on ", StringComparison.Ordinal));
+						string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
+						objectId = FindIdForName(first);
+						useMethod = FindIdForName(second);
+					}
+
+					if (objectId == -1 || useMethod == -1)
+						return;
+
+					if (useMethod == 0)
+						CoreManager.Current.Actions.UseItem(objectId, 0);
+					else
+						CoreManager.Current.Actions.UseItem(objectId, 1, useMethod);
+				}
+
+				if (lower.StartsWith("/mt give ") && lower.Contains(" to "))
+				{
+					int objectId;
+					int destinationId;
+
+					string command = lower.Substring(10, lower.Length - 10);
+					string first = command.Substring(0, command.IndexOf(" to ", StringComparison.Ordinal));
+					string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
+					objectId = FindIdForName(first);
+					destinationId = FindIdForName(second);
+
+					if (objectId == -1 || destinationId == -1)
+						return;
+
+					CoreManager.Current.Actions.GiveItem(objectId, destinationId);
+				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		int FindIdForName(string name)
+		{
+			foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
+			{
+				if (wo.Name.Contains(name))
+					return wo.Id;
+			}
+
+			WorldObject closestObject = Util.GetClosestObject(name);
+
+			if (closestObject != null)
+				return closestObject.Id;
+
+			return -1;
+		}
+
+		void FellowCreate_Current_RenderFrame(object sender, EventArgs e)
+		{
+			try
+			{
+				System.Drawing.Rectangle rect = Core.Actions.UIElementRegion(Decal.Adapter.Wrappers.UIElementType.Panels);
+
+				CoreManager.Current.RenderFrame -= new EventHandler<EventArgs>(FellowCreate_Current_RenderFrame);
+				PostMessageTools.SendMouseClick(rect.X + 145, rect.Y + 343);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
