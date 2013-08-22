@@ -643,6 +643,23 @@ namespace MagTools
 					return;
 				}
 
+				if ((lower.StartsWith("/mt select ") && lower.Length > 11) || (lower.StartsWith("/mt selectp ") && lower.Length > 12))
+				{
+					bool partialMatch = lower.StartsWith("/mt selectp ");
+					int offset = partialMatch ? 12 : 11;
+
+					int objectId;
+
+					objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, true, partialMatch);
+
+					if (objectId == -1)
+						return;
+
+						CoreManager.Current.Actions.SelectItem(objectId);
+
+					return;
+				}
+
 				if ((lower.StartsWith("/mt use ") && lower.Length > 8) || (lower.StartsWith("/mt usep ") && lower.Length > 9))
 				{
 					bool partialMatch = lower.StartsWith("/mt usep ");
