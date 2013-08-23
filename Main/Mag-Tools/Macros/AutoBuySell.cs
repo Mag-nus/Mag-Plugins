@@ -47,8 +47,6 @@ namespace MagTools.Macros
 			}
 		}
 
-		private int lastMerchantId;
-
 		// We store our lootProfile as an object instead of a VTClassic.LootCore.
 		// We do this so that if this object is instantiated before vtank's plugins are loaded, we don't throw a VTClassic.dll error.
 		// By delaying the object initialization to use, we can make sure we're using the VTClassic.dll that Virindi Tank loads.
@@ -75,29 +73,21 @@ namespace MagTools.Macros
 				// Init our LootCore object at the very last minute (looks for VTClassic.dll if its not already loaded)
 				if (lootProfile == null)
 					lootProfile = new VTClassic.LootCore();
+				else
+					((VTClassic.LootCore)lootProfile).UnloadProfile();
 
-				if (lastMerchantId != e.MerchantId)
+				FileInfo fileInfo = new FileInfo(PluginCore.PluginPersonalFolder + @"\" + CoreManager.Current.WorldFilter[e.MerchantId].Name + ".utl");
+
+				if (!fileInfo.Exists)
 				{
-					if (lastMerchantId != 0)
-						((VTClassic.LootCore)lootProfile).UnloadProfile();
+					if (Settings.SettingsManager.AutoBuySell.TestMode.Value)
+						Debug.WriteToChat("AutoBuySell.WorldFilter_ApproachVendor(), vendor profile file not found at: " + fileInfo.FullName);
 
-					lastMerchantId = 0;
-
-					FileInfo fileInfo = new FileInfo(PluginCore.PluginPersonalFolder + @"\" + CoreManager.Current.WorldFilter[e.MerchantId].Name + ".utl");
-
-					if (!fileInfo.Exists)
-					{
-						if (Settings.SettingsManager.AutoBuySell.TestMode.Value)
-							Debug.WriteToChat("AutoBuySell.WorldFilter_ApproachVendor(), vendor profile file not found at: " + fileInfo.FullName);
-
-						return;
-					}
-
-					// Load our loot profile
-					((VTClassic.LootCore)lootProfile).LoadProfile(fileInfo.FullName, false);
-
-					lastMerchantId = e.MerchantId;
+					return;
 				}
+
+				// Load our loot profile
+				((VTClassic.LootCore)lootProfile).LoadProfile(fileInfo.FullName, false);
 
 				CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
 			}
@@ -149,7 +139,7 @@ namespace MagTools.Macros
 				WorldObject buyItem = GetBuyItem(((VTClassic.LootCore)lootProfile), openVendor, out buyAmount);
 				WorldObject sellItem = GetSellItem(((VTClassic.LootCore)lootProfile));
 
-				if (buyItem != null && sellItem != null)
+				if (buyItem != null && sellItem != null && (buyItem.ObjectClass != ObjectClass.TradeNote || sellItem.ObjectClass != ObjectClass.TradeNote))
 				{
 					VirindiItemTool.PluginCore.ActivityStateChanged += new VirindiItemTool.PluginCore.delActivityStateChanged(PluginCore_ActivityStateChanged);
 					VirindiItemTool.PluginCore.BeginSellBuy(sellItem.Name, buyItem.Name, buyAmount);

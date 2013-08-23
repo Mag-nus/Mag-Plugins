@@ -558,6 +558,7 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		#region ' /mt commands '
 		void Current_CommandLineText(object sender, ChatParserInterceptEventArgs e)
 		{
 			try
@@ -650,7 +651,7 @@ namespace MagTools
 
 					int objectId;
 
-					objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, true, partialMatch);
+					objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, true, true, partialMatch);
 
 					if (objectId == -1)
 						return;
@@ -669,15 +670,15 @@ namespace MagTools
 					int useMethod = 0;
 
 					if (!lower.Contains(" on "))
-						objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, true, partialMatch);
+						objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, true, partialMatch);
 					else
 					{
 						string command = lower.Substring(offset, lower.Length - offset);
 						string first = command.Substring(0, command.IndexOf(" on ", StringComparison.Ordinal));
 						string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
 
-						objectId = FindIdForName(first, true, true, partialMatch);
-						useMethod = FindIdForName(second, true, true, partialMatch);
+						objectId = FindIdForName(first, true, false, true, partialMatch);
+						useMethod = FindIdForName(second, true, false, true, partialMatch);
 					}
 
 					if (objectId == -1 || useMethod == -1)
@@ -703,13 +704,30 @@ namespace MagTools
 					string first = command.Substring(0, command.IndexOf(" to ", StringComparison.Ordinal));
 					string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
 
-					objectId = FindIdForName(first, true, false, partialMatch);
-					destinationId = FindIdForName(second, false, true, partialMatch);
+					objectId = FindIdForName(first, true, false, false, partialMatch);
+					destinationId = FindIdForName(second, false, false, true, partialMatch);
 
 					if (objectId == -1 || destinationId == -1)
 						return;
 
 					CoreManager.Current.Actions.GiveItem(objectId, destinationId);
+
+					return;
+				}
+
+				if ((lower.StartsWith("/mt loot ") && lower.Length > 9) || (lower.StartsWith("/mt lootp ") && lower.Length > 10))
+				{
+					bool partialMatch = lower.StartsWith("/mt lootp ");
+					int offset = partialMatch ? 10 : 9;
+
+					int objectId;
+
+					objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), false, true, false, partialMatch);
+
+					if (objectId == -1)
+						return;
+
+					CoreManager.Current.Actions.UseItem(objectId, 0);
 
 					return;
 				}
@@ -729,14 +747,23 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		int FindIdForName(string name, bool searchInInventory, bool searchEnvironment, bool partialMatch)
+		int FindIdForName(string name, bool searchInInventory, bool searchOpenContainer, bool searchEnvironment, bool partialMatch)
 		{
 			// Exact match attempt first
 			if (searchInInventory)
 			{
 				foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
 				{
-					if (!partialMatch && String.Compare(wo.Name, name, StringComparison.OrdinalIgnoreCase) == 0)
+					if (String.Compare(wo.Name, name, StringComparison.OrdinalIgnoreCase) == 0)
+						return wo.Id;
+				}
+			}
+
+			if (searchOpenContainer && CoreManager.Current.Actions.OpenedContainer > 0)
+			{
+				foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetByContainer(CoreManager.Current.Actions.OpenedContainer))
+				{
+					if (String.Compare(wo.Name, name, StringComparison.OrdinalIgnoreCase) == 0)
 						return wo.Id;
 				}
 			}
@@ -756,7 +783,16 @@ namespace MagTools
 				{
 					foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
 					{
-						if (partialMatch && wo.Name.ToLower().Contains(name.ToLower()))
+						if (wo.Name.ToLower().Contains(name.ToLower()))
+							return wo.Id;
+					}
+				}
+
+				if (searchOpenContainer && CoreManager.Current.Actions.OpenedContainer > 0)
+				{
+					foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetByContainer(CoreManager.Current.Actions.OpenedContainer))
+					{
+						if (wo.Name.ToLower().Contains(name.ToLower()))
 							return wo.Id;
 					}
 				}
@@ -784,6 +820,7 @@ namespace MagTools
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
+		#endregion
 
 		#region ' Clear Persistent Stats Buttons '
 
