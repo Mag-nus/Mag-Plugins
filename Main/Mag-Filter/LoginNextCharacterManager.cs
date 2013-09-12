@@ -12,9 +12,6 @@ namespace MagFilter
 
 		readonly System.Windows.Forms.Timer loginNextCharTimer = new System.Windows.Forms.Timer();
 
-		string zonename;
-		string server;
-
 		string nextCharacter;
 
 		public LoginNextCharacterManager(LoginCharacterTools loginCharacterTools)
@@ -29,14 +26,10 @@ namespace MagFilter
 		{
 			// When we logout we get the following messages in order
 			// =========================================================================================
-			if (e.Message.Type == 0xF658) // Character List (we get this when we log out a character as well)
-				zonename = Convert.ToString(e.Message["zonename"]);
+			// 0xF658 Character List (we get this when we log out a character as well)
 
 			if (e.Message.Type == 0xF7E1) // Server Name (we get this when we log out a character as well)
-			{
-				server = Convert.ToString(e.Message["server"]);
 				loginNextCharTimer.Start();
-			}
 		}
 
 		public void FilterCore_CommandLineText(object sender, ChatParserInterceptEventArgs e)

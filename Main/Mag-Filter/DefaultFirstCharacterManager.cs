@@ -12,6 +12,8 @@ namespace MagFilter
 
 		readonly System.Windows.Forms.Timer defaultFirstCharTimer = new System.Windows.Forms.Timer();
 
+		int state;
+
 		string zonename;
 		string server;
 
@@ -59,18 +61,27 @@ namespace MagFilter
 		{
 			try
 			{
-				defaultFirstCharTimer.Stop();
-
 				var defaultFirstCharacters = Settings.SettingsManager.CharacterSelectionScreen.DefaultFirstCharacters;
 
 				foreach (var character in defaultFirstCharacters)
 				{
 					if (character.AccountName == zonename && character.Server == server)
 					{
-						loginCharacterTools.LoginCharacter(character.CharacterName);
-						return;
+						// Bypass movies/logos
+						if (state == 1 || state == 2)
+							PostMessageTools.SendMouseClick(350, 100);
+
+						if (state == 3)
+							loginCharacterTools.LoginCharacter(character.CharacterName);
+
+						break;
 					}
 				}
+
+				if (state >= 3)
+					defaultFirstCharTimer.Stop();
+
+				state++;
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
