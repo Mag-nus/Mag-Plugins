@@ -74,6 +74,8 @@ namespace MagTools.Settings
 		public static class InventoryManagement
 		{
 			public static readonly Setting<bool> InventoryLogger = new Setting<bool>("InventoryManagement/InventoryLogger", "Inventory Logger Enabled");
+
+			public static readonly Setting<bool> AetheriaRevealer = new Setting<bool>("InventoryManagement/AetheriaRevealer", "Auto Reveal Aetheria", true);
 		}
 
 		public static class ItemInfoOnIdent
