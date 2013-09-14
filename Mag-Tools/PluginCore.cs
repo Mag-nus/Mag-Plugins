@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Collections.ObjectModel;
 
 using MagTools.Client;
 using MagTools.Inventory;
 using MagTools.Loggers;
+using MagTools.Macros;
 using MagTools.Views;
 
 using Mag.Shared;
@@ -89,14 +91,15 @@ namespace MagTools
 		// General
 		InventoryExporter inventoryExporter;
 		InventoryLogger inventoryLogger;
+		AetheriaRevealer aetheriaRevealer;
 
 		// Macros
-		Macros.OpenMainPackOnLogin openMainPackOnLogin;
-		Macros.MaximizeChatOnLogin maximizeChatOnLogin;
-		Macros.AutoRecharge autoRecharge;
-		Macros.AutoTradeAccept autoTradeAccept;
-		Macros.OneTouchHeal oneTouchHeal;
-		Macros.LogOutOnDeath logOutOnDeath;
+		OpenMainPackOnLogin openMainPackOnLogin;
+		MaximizeChatOnLogin maximizeChatOnLogin;
+		AutoRecharge autoRecharge;
+		AutoTradeAccept autoTradeAccept;
+		OneTouchHeal oneTouchHeal;
+		LogOutOnDeath logOutOnDeath;
 	
 		// Trackers
 		Trackers.Equipment.EquipmentTracker equipmentTracker;
@@ -122,16 +125,16 @@ namespace MagTools
 
 
 		// Virindi Classic Looter Extensions, depends on VTClassic.dll
-		Macros.InventoryPacker inventoryPacker;
-		public Macros.IInventoryPacker InventoryPacker { get { return inventoryPacker; } }
-		Macros.AutoTradeAdd autoTradeAdd;
-		Macros.AutoBuySell autoBuySell;
+		InventoryPacker inventoryPacker;
+		public IInventoryPacker InventoryPacker { get { return inventoryPacker; } }
+		AutoTradeAdd autoTradeAdd;
+		AutoBuySell autoBuySell;
 
 
 		// Virindi Tank Extensions, depends on utank2-i.dll
 		ItemInfo.ItemInfoPrinter itemInfoPrinter;
-		Macros.Looter looter;
-		public Macros.ILooter Looter { get { return looter; } }
+		Looter looter;
+		public ILooter Looter { get { return looter; } }
 
 
 		// Views, depends on VirindiViewService.dll
@@ -180,14 +183,15 @@ namespace MagTools
 				// General
 				inventoryExporter = new InventoryExporter();
 				inventoryLogger = new InventoryLogger();
+				aetheriaRevealer = new AetheriaRevealer();
 
 				// Macros
-				openMainPackOnLogin = new Macros.OpenMainPackOnLogin();
-				maximizeChatOnLogin = new Macros.MaximizeChatOnLogin();
-				autoRecharge = new Macros.AutoRecharge();
-				autoTradeAccept = new Macros.AutoTradeAccept();
-				oneTouchHeal = new Macros.OneTouchHeal();
-				logOutOnDeath = new Macros.LogOutOnDeath();
+				openMainPackOnLogin = new OpenMainPackOnLogin();
+				maximizeChatOnLogin = new MaximizeChatOnLogin();
+				autoRecharge = new AutoRecharge();
+				autoTradeAccept = new AutoTradeAccept();
+				oneTouchHeal = new OneTouchHeal();
+				logOutOnDeath = new LogOutOnDeath();
 
 				// Trackers
 				equipmentTracker = new Trackers.Equipment.EquipmentTracker();
@@ -243,9 +247,9 @@ namespace MagTools
 				string objectName = null;
 				try
 				{
-					objectName = "inventoryPacker";		inventoryPacker = new Macros.InventoryPacker();
-					objectName = "autoTradeAdd";		autoTradeAdd = new Macros.AutoTradeAdd();
-					objectName = "autoBuySell";			autoBuySell = new Macros.AutoBuySell();
+					objectName = "inventoryPacker";		inventoryPacker = new InventoryPacker();
+					objectName = "autoTradeAdd";		autoTradeAdd = new AutoTradeAdd();
+					objectName = "autoBuySell";			autoBuySell = new AutoBuySell();
 				}
 				catch (FileNotFoundException ex) { startupErrors.Add(objectName + " failed to load: " + ex.Message + Environment.NewLine + "Is Virindi Tank running?"); }
 				catch (Exception ex) { Debug.LogException(ex); }
@@ -267,7 +271,7 @@ namespace MagTools
 
 				try
 				{
-					looter = new Macros.Looter();
+					looter = new Looter();
 				}
 				catch (FileNotFoundException ex) { startupErrors.Add("looter failed to load: " + ex.Message + Environment.NewLine + "Is Virindi Tank running?"); }
 				catch (Exception ex) { Debug.LogException(ex); }
@@ -394,6 +398,7 @@ namespace MagTools
 
 				// General
 				if (inventoryLogger != null) inventoryLogger.Dispose();
+				if (aetheriaRevealer != null) aetheriaRevealer.Dispose();
 
 
 				Current = null;
@@ -611,6 +616,35 @@ namespace MagTools
 					return;
 				}
 
+				if (lower.StartsWith("/mt get xy"))
+				{
+					Point p;
+					if (User32.GetCursorPos(out p))
+					{
+						User32.RECT rct = new User32.RECT();
+
+						if (User32.GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rct))
+							Debug.WriteToChat("Current cursor position: " + (p.X - rct.Left) + "," + (p.Y - rct.Top));
+					}
+
+					return;
+				}
+
+				if (lower.StartsWith("/mt jump") || lower.StartsWith("/mt sjump"))
+				{
+					int msToHoldDown = 0;
+					bool addShift = lower.Contains("sjump");
+					bool addW = lower.Contains("jumpw");
+
+					string[] split = lower.Split(' ');
+					if (split.Length == 3)
+						int.TryParse(split[2], out msToHoldDown);
+
+					PostMessageTools.SendSpace(msToHoldDown, addShift, addW);
+
+					return;
+				}
+
 				if (lower.StartsWith("/mt fellow "))
 				{
 					if (lower.StartsWith("/mt fellow create ") && lower.Length > 18)
@@ -649,9 +683,7 @@ namespace MagTools
 					bool partialMatch = lower.StartsWith("/mt selectp ");
 					int offset = partialMatch ? 12 : 11;
 
-					int objectId;
-
-					objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, true, true, partialMatch);
+					int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, true, true, partialMatch);
 
 					if (objectId == -1)
 						return;
@@ -670,7 +702,16 @@ namespace MagTools
 					int useMethod = 0;
 
 					if (!lower.Contains(" on "))
-						objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, true, partialMatch);
+					{
+						if (lower.Contains("closestnpc"))
+						{
+							WorldObject wo = Util.GetClosestObject(ObjectClass.Npc);
+							if (wo == null) return;
+							objectId = wo.Id;
+						}
+						else
+							objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, true, partialMatch);
+					}
 					else
 					{
 						string command = lower.Substring(offset, lower.Length - offset);
@@ -697,15 +738,12 @@ namespace MagTools
 					bool partialMatch = lower.StartsWith("/mt givep ");
 					int offset = partialMatch ? 10 : 9;
 
-					int objectId;
-					int destinationId;
-
 					string command = lower.Substring(offset, lower.Length - offset);
 					string first = command.Substring(0, command.IndexOf(" to ", StringComparison.Ordinal));
 					string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
 
-					objectId = FindIdForName(first, true, false, false, partialMatch);
-					destinationId = FindIdForName(second, false, false, true, partialMatch);
+					int objectId = FindIdForName(first, true, false, false, partialMatch);
+					int destinationId = FindIdForName(second, false, false, true, partialMatch);
 
 					if (objectId == -1 || destinationId == -1)
 						return;
@@ -720,9 +758,7 @@ namespace MagTools
 					bool partialMatch = lower.StartsWith("/mt lootp ");
 					int offset = partialMatch ? 10 : 9;
 
-					int objectId;
-
-					objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), false, true, false, partialMatch);
+					int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), false, true, false, partialMatch);
 
 					if (objectId == -1)
 						return;

@@ -289,6 +289,7 @@ namespace MagTools.Views
 				AddOption(OptionList, Settings.SettingsManager.Looting.LootSalvage);
 
 				AddOption(OptionList, Settings.SettingsManager.InventoryManagement.InventoryLogger);
+				AddOption(OptionList, Settings.SettingsManager.InventoryManagement.AetheriaRevealer);
 
 				AddOption(OptionList, Settings.SettingsManager.Misc.OpenMainPackOnLogin);
 				AddOption(OptionList, Settings.SettingsManager.Misc.MaximizeChatOnLogin);

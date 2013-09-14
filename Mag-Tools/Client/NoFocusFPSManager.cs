@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Threading;
 
 using Mag.Shared;
@@ -48,13 +47,6 @@ namespace MagTools.Client
 			}
 		}
 
-		const int WM_ACTIVATE = 0x0006;
-		const int WM_KILLFOCUS = 0x0008;
-		const int WM_ACTIVATEAPP = 0x001C;
-
-		[DllImport("user32.dll", CharSet = CharSet.Auto)]
-		private static extern bool PostMessage(int hhwnd, uint msg, IntPtr wparam, UIntPtr lparam);
-
 		void Current_WindowMessage(object sender, WindowMessageEventArgs e)
 		{
 			try
@@ -65,7 +57,7 @@ namespace MagTools.Client
 					return;
 				}
 
-				if (e.Msg == WM_KILLFOCUS)
+				if (e.Msg == User32.WM_KILLFOCUS)
 					Throttling = true;
 
 				if (e.Msg == 7 && e.LParam == 0 && e.WParam == 0)
@@ -124,8 +116,8 @@ namespace MagTools.Client
 
 				if (_throttling)
 				{
-					PostMessage((int)CoreManager.Current.Decal.Hwnd, WM_ACTIVATEAPP, (IntPtr)1, UIntPtr.Zero);
-					PostMessage((int)CoreManager.Current.Decal.Hwnd, WM_ACTIVATE, (IntPtr)2, UIntPtr.Zero);
+					User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_ACTIVATEAPP, (IntPtr)1, UIntPtr.Zero);
+					User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_ACTIVATE, (IntPtr)2, UIntPtr.Zero);
 
 					stopWatch.Start();
 				}

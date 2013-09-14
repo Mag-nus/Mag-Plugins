@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 using Decal.Adapter;
 
@@ -7,20 +7,10 @@ namespace Mag.Shared
 {
 	public static class PostMessageTools
 	{
-		[DllImport("user32.dll", CharSet = CharSet.Auto)]
-		private static extern bool PostMessage(int hhwnd, uint msg, IntPtr wparam, UIntPtr lparam);
-
 		// http://msdn.microsoft.com/en-us/library/dd375731%28v=vs.85%29.aspx
 
-		private const int WM_KEYDOWN	= 0x0100;
-		private const int WM_KEYUP		= 0x0101;
-		private const int WM_CHAR		= 0x0102;
-
-		private const int WM_MOUSEMOVE		= 0x200;
-		private const int WM_LBUTTONDOWN	= 0x201;
-		private const int WM_LBUTTONUP		= 0x202;
-
 		private const byte VK_RETURN	= 0x0D;
+		private const byte VK_SHIFT		= 0x10;
 		private const byte VK_CONTROL	= 0x11;
 		private const byte VK_PAUSE		= 0x13;
 		private const byte VK_SPACE		= 0x20;
@@ -99,28 +89,69 @@ namespace Mag.Shared
 
 		public static void SendEnter()
 		{
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)VK_RETURN, (UIntPtr)0x001C0001);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)VK_RETURN, (UIntPtr)0xC01C0001);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)VK_RETURN, (UIntPtr)0x001C0001);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)VK_RETURN, (UIntPtr)0xC01C0001);
 		}
 
 		public static void SendPause()
 		{
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)VK_PAUSE, (UIntPtr)0x00450001);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)VK_PAUSE, (UIntPtr)0xC0450001);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)VK_PAUSE, (UIntPtr)0x00450001);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)VK_PAUSE, (UIntPtr)0xC0450001);
 		}
 
-		public static void SendSpace()
+		static Timer _spaceReleaseTimer;
+		static DateTime _spaceSendTime;
+		static int _spaceHoldTimeMilliseconds;
+		static bool _spaceAddShift;
+		static bool _spaceAddW;
+
+		public static void SendSpace(int msToHoldDown = 0, bool addShift = false, bool addW = false)
 		{
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)VK_SPACE, (UIntPtr)0x00390001);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)VK_SPACE, (UIntPtr)0xC0390001);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN, (IntPtr)VK_SPACE, (UIntPtr)0x00390001);
+			if (msToHoldDown == 0)
+			{
+				if (addShift)	User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)VK_SHIFT,		(UIntPtr)0x002A0001);
+				if (addW)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)CharCode('w'),	(UIntPtr)0x00110001);
+								User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)VK_SPACE,		(UIntPtr)0xC0390001);
+				if (addW)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)CharCode('w'),	(UIntPtr)0xC0110001);
+				if (addShift)	User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)VK_SHIFT,		(UIntPtr)0xC02A0001);
+			}
+			else
+			{
+				if (_spaceReleaseTimer == null)
+				{
+					_spaceReleaseTimer = new Timer();
+					_spaceReleaseTimer.Tick += new EventHandler(SpaceReleaseTimer_Tick);
+					_spaceReleaseTimer.Interval = 1;
+				}
+
+				_spaceSendTime = DateTime.Now;
+				_spaceHoldTimeMilliseconds = msToHoldDown;
+				_spaceAddShift = addShift;
+				_spaceAddW = addW;
+				_spaceReleaseTimer.Start();
+			}
+		}
+
+		static void SpaceReleaseTimer_Tick(object sender, EventArgs e)
+		{
+			if (_spaceSendTime.AddMilliseconds(_spaceHoldTimeMilliseconds) <= DateTime.Now)
+			{
+				_spaceReleaseTimer.Stop();
+				if (_spaceAddShift)	User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)VK_SHIFT,		(UIntPtr)0x002A0001);
+				if (_spaceAddW)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)CharCode('w'),	(UIntPtr)0x00110001);
+									User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)VK_SPACE,		(UIntPtr)0xC0390001);
+				if (_spaceAddW)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)CharCode('w'),	(UIntPtr)0xC0110001);
+				if (_spaceAddShift)	User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)VK_SHIFT,		(UIntPtr)0xC02A0001);
+			}
 		}
 
 		public static void SendCntrl(char ch)
 		{
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)VK_CONTROL,		(UIntPtr)0x001D0001);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)CharCode(ch),	(UIntPtr)0x00100001);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)CharCode(ch),	(UIntPtr)0xC0100001);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)VK_CONTROL,		(UIntPtr)0xC01D0001);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)VK_CONTROL,		(UIntPtr)0x001D0001);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)CharCode(ch),	(UIntPtr)0x00100001);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)CharCode(ch),	(UIntPtr)0xC0100001);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)VK_CONTROL,		(UIntPtr)0xC01D0001);
 		}
 
 		/// <summary>
@@ -128,8 +159,8 @@ namespace Mag.Shared
 		/// </summary>
 		public static void SendF4()
 		{
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)0x00000073, (UIntPtr)0x003E0001);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)0x00000073, (UIntPtr)0xC03E0001);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)0x00000073, (UIntPtr)0x003E0001);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)0x00000073, (UIntPtr)0xC03E0001);
 		}
 
 		/// <summary>
@@ -137,8 +168,8 @@ namespace Mag.Shared
 		/// </summary>
 		public static void SendF12()
 		{
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)0x0000007B, (UIntPtr)0x00580001);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)0x0000007B, (UIntPtr)0xC0580001);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)0x0000007B, (UIntPtr)0x00580001);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)0x0000007B, (UIntPtr)0xC0580001);
 		}
 
 		public static void SendMsg(string msg)
@@ -147,33 +178,45 @@ namespace Mag.Shared
 			{
 				byte code = CharCode(ch);
 				uint lparam = (uint)((ScanCode(ch) << 0x10) | 1);
-				PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYDOWN,	(IntPtr)code, (UIntPtr)(lparam));
-				PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_KEYUP,		(IntPtr)code, (UIntPtr)(0xC0000000 | lparam));
+				User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)code, (UIntPtr)(lparam));
+				User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)code, (UIntPtr)(0xC0000000 | lparam));
 			}
 		}
 
 		public static void ClickOK()
 		{
-			SendMouseClick(0x0190, 0x0146);
+			User32.RECT rect = new User32.RECT();
+
+			User32.GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
+
+			SendMouseClick(rect.Width / 2, (int)(rect.Height * 0.5416666666666667));
 		}
 
 		public static void ClickYes()
 		{
-			SendMouseClick(0x0140, 0x0146);
+			User32.RECT rect = new User32.RECT();
+
+			User32.GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
+
+			SendMouseClick((int)(rect.Width * .4), (int)(rect.Height * 0.5416666666666667));
 		}
 
 		public static void ClickNo()
 		{
-			SendMouseClick(0x01E0, 0x0146);
+			User32.RECT rect = new User32.RECT();
+
+			User32.GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
+
+			SendMouseClick((int)(rect.Width * .6), (int)(rect.Height * 0.5416666666666667));
 		}
 
 		public static void SendMouseClick(int x, int y)
 		{
 			int loc = (y * 0x10000) + x;
 
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_MOUSEMOVE,		(IntPtr)0x00000000, (UIntPtr)loc);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_LBUTTONDOWN,	(IntPtr)0x00000001, (UIntPtr)loc);
-			PostMessage(CoreManager.Current.Decal.Hwnd.ToInt32(), WM_LBUTTONUP,		(IntPtr)0x00000000, (UIntPtr)loc);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_MOUSEMOVE,		(IntPtr)0x00000000, (UIntPtr)loc);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_LBUTTONDOWN,	(IntPtr)0x00000001, (UIntPtr)loc);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_LBUTTONUP,		(IntPtr)0x00000000, (UIntPtr)loc);
 		}
 	}
 }
