@@ -795,7 +795,7 @@ namespace MagTools
 				}
 			}
 
-			if (searchOpenContainer && CoreManager.Current.Actions.OpenedContainer > 0)
+			if (searchOpenContainer && CoreManager.Current.Actions.OpenedContainer != 0)
 			{
 				foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetByContainer(CoreManager.Current.Actions.OpenedContainer))
 				{
@@ -824,7 +824,7 @@ namespace MagTools
 					}
 				}
 
-				if (searchOpenContainer && CoreManager.Current.Actions.OpenedContainer > 0)
+				if (searchOpenContainer && CoreManager.Current.Actions.OpenedContainer != 0)
 				{
 					foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetByContainer(CoreManager.Current.Actions.OpenedContainer))
 					{
