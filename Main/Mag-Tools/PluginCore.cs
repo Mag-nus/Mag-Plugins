@@ -630,6 +630,19 @@ namespace MagTools
 					return;
 				}
 
+				if (lower.StartsWith("/mt face "))
+				{
+					if (lower.Length > 9)
+					{
+						int heading;
+						int.TryParse(lower.Substring(9, lower.Length - 9), out heading);
+
+						CoreManager.Current.Actions.FaceHeading(heading, true);
+					}
+
+					return;
+				}
+
 				if (lower.StartsWith("/mt jump") || lower.StartsWith("/mt sjump"))
 				{
 					int msToHoldDown = 0;
