@@ -138,7 +138,10 @@ namespace MagTools.Macros
 				}
 
 				if (aetheriaManaStoneId != 0)
+				{
+					CoreManager.Current.Actions.SelectItem(coalescedAetheriaId);
 					CoreManager.Current.Actions.UseItem(aetheriaManaStoneId, 1, coalescedAetheriaId);
+				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
