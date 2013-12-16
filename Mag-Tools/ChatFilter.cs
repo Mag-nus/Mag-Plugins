@@ -255,7 +255,7 @@ namespace MagTools
 						{
 							WorldObjectCollection collection = CoreManager.Current.WorldFilter.GetByName(sourceName);
 
-							if (collection.Count == 1 && collection.First.ObjectClass == ObjectClass.Vendor)
+							if (collection.Count >= 1 && collection.First.ObjectClass == ObjectClass.Vendor)
 								e.Eat = true;
 						}
 					}
@@ -287,7 +287,7 @@ namespace MagTools
 						{
 							WorldObjectCollection collection = CoreManager.Current.WorldFilter.GetByName(sourceName);
 
-							if (collection.Count == 1 && collection.First.ObjectClass == ObjectClass.Npc)
+							if (collection.Count >= 1 && collection.First.ObjectClass == ObjectClass.Npc)
 								e.Eat = true;
 						}
 					}
