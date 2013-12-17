@@ -509,8 +509,6 @@ namespace Mag_SuitBuilder
 			this.MinimumSize = new System.Drawing.Size(1100, 779);
 			this.Name = "Form1";
 			this.Text = "Mag-Suit Builder";
-			this.Activated += new System.EventHandler(this.Form1_Activated);
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
 			this.tabControl1.ResumeLayout(false);
 			this.tabPage3.ResumeLayout(false);
 			this.tabPage3.PerformLayout();
