@@ -77,7 +77,7 @@ namespace Mag_SuitBuilder.Equipment
 			{
 				int minRating;
 				int.TryParse(txtMinRating.Text, out minRating);
-				if (mwo.TotalRating < minRating)
+				if (minRating > 0 && mwo.TotalRating < minRating)
 					return false;
 			}
 
