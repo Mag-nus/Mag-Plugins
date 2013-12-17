@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,6 +13,7 @@ using System.Xml;
 using System.Xml.Serialization;
 
 using Mag_SuitBuilder.Equipment;
+using Mag_SuitBuilder.Properties;
 using Mag_SuitBuilder.Search;
 using Mag_SuitBuilder.Spells;
 
@@ -62,20 +64,50 @@ namespace Mag_SuitBuilder
 			base.OnLoad(e);
 		}
 
-		bool activated;
-
-		private void Form1_Activated(object sender, EventArgs e)
+		protected override void OnShown(EventArgs e)
 		{
-			if (activated) return;
-			activated = true;
+			base.OnShown(e);
 
 			btnLoadFromDB_Click(null, null);
+			
+			if (String.IsNullOrEmpty(Settings.Default.ColumnWidths))
+			{
+				string originalText = txtInventoryRootPath.Text;
+				txtInventoryRootPath.Text += "    Autosizing columns... If you have lots of inventory and a 486 this may take a while.";
+				txtInventoryRootPath.Refresh();
+
+				equipmentGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
+
+				txtInventoryRootPath.Text = originalText;
+			}
+			else
+			{
+				var columnWidths = Settings.Default.ColumnWidths.Split(',');
+
+				for (int i = 0 ; i < columnWidths.Length ; i++)
+				{
+					if (equipmentGrid.Columns.Count <= i)
+						break;
+
+					int width;
+					if (int.TryParse(columnWidths[i], out width))
+						equipmentGrid.Columns[i].Width = width;
+				}
+			}
 		}
 
-		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
 		{
 			if (btnStopCalculating.Enabled)
 				btnStopCalculating.PerformClick();
+
+			string columnWidths = null;
+			foreach (DataGridViewColumn column in equipmentGrid.Columns)
+				columnWidths += (columnWidths == null ? null : ",") + column.Width.ToString(CultureInfo.InvariantCulture);
+			Settings.Default.ColumnWidths = columnWidths;
+			Settings.Default.Save();
+
+			base.OnClosing(e);
 		}
 
 		private void chkTree_CheckedChanged(object sender, EventArgs e)
@@ -84,8 +116,6 @@ namespace Mag_SuitBuilder
 			filtersControl1.Visible = chkFilters.Checked;
 
 		}
-
-		bool autoSizedColumns;
 
 		private void btnLoadFromDB_Click(object sender, EventArgs e)
 		{
@@ -162,15 +192,6 @@ namespace Mag_SuitBuilder
 			foreach (TreeNode node in CharactersTreeView.Nodes)
 				node.Checked = true;
 
-			if (!autoSizedColumns)
-			{
-				txtInventoryRootPath.Text = txtInventoryRootPathOrig + "    Autosizing columns... If you have lots of inventory and a 486 this may take a while.";
-				txtInventoryRootPath.Refresh();
-
-				autoSizedColumns = true;
-				equipmentGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
-			}
-
 			txtInventoryRootPath.Text = txtInventoryRootPathOrig;
 
 			this.Enabled = true;
@@ -228,7 +249,6 @@ namespace Mag_SuitBuilder
 		private void cmdResizeColumns_Click(object sender, EventArgs e)
 		{
 			this.Enabled = false;
-			autoSizedColumns = true;
 			equipmentGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
 			this.Enabled = true;
 		}

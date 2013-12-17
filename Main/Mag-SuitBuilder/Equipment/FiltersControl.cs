@@ -73,6 +73,14 @@ namespace Mag_SuitBuilder.Equipment
 			if ((mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel < minimumBaseArmorLevel && mwo.EquippableSlots.IsBodyArmor())
 				return false;
 
+			if (mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing || mwo.ObjectClass == (int)ObjectClass.Jewelry)
+			{
+				int minRating;
+				int.TryParse(txtMinRating.Text, out minRating);
+				if (mwo.TotalRating < minRating)
+					return false;
+			}
+
 
 			if (mwo.ObjectClass == (int)ObjectClass.Armor)
 			{

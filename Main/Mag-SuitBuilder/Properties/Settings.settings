@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Mag_SuitBuilder.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ColumnWidths" Type="System.String" Scope="User">
+      <Value Profile="(Default)">117,21,21,82,143,145,93,498,79,150,83,79,105,26,66,21,21,21,38,38,38,38,38,38,38,38,26,41,26,50,38,21,21,21,21,21,21,21,21,21,26,47,41,38,38,38,38</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
