@@ -69,8 +69,12 @@
 			this.label5 = new System.Windows.Forms.Label();
 			this.txtMinLegendaries = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
-			this.txtMinRating = new System.Windows.Forms.TextBox();
+			this.txtMinTotalRating = new System.Windows.Forms.TextBox();
 			this.label7 = new System.Windows.Forms.Label();
+			this.label8 = new System.Windows.Forms.Label();
+			this.label9 = new System.Windows.Forms.Label();
+			this.txtMinDefensiveRating = new System.Windows.Forms.TextBox();
+			this.txtMinOffensiveRating = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// txtMinimumBaseArmorLevel
@@ -549,31 +553,76 @@
 			this.label6.TabIndex = 78;
 			this.label6.Text = "Legendary";
 			// 
-			// txtMinRating
+			// txtMinTotalRating
 			// 
-			this.txtMinRating.Location = new System.Drawing.Point(179, 76);
-			this.txtMinRating.MaxLength = 1;
-			this.txtMinRating.Name = "txtMinRating";
-			this.txtMinRating.Size = new System.Drawing.Size(18, 20);
-			this.txtMinRating.TabIndex = 84;
-			this.txtMinRating.Text = "0";
-			this.txtMinRating.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			this.txtMinTotalRating.Location = new System.Drawing.Point(259, 119);
+			this.txtMinTotalRating.MaxLength = 1;
+			this.txtMinTotalRating.Name = "txtMinTotalRating";
+			this.txtMinTotalRating.Size = new System.Drawing.Size(18, 20);
+			this.txtMinTotalRating.TabIndex = 84;
+			this.txtMinTotalRating.Text = "0";
+			this.txtMinTotalRating.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
 			// 
 			// label7
 			// 
 			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(91, 79);
+			this.label7.Location = new System.Drawing.Point(141, 121);
 			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(85, 13);
+			this.label7.Size = new System.Drawing.Size(112, 13);
 			this.label7.TabIndex = 85;
-			this.label7.Text = "Minimum Rating:";
+			this.label7.Text = "Minimum Total Rating:";
+			this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.Location = new System.Drawing.Point(117, 98);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(136, 13);
+			this.label8.TabIndex = 86;
+			this.label8.Text = "Minimum Defensive Rating:";
+			this.label8.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// label9
+			// 
+			this.label9.AutoSize = true;
+			this.label9.Location = new System.Drawing.Point(120, 76);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(133, 13);
+			this.label9.TabIndex = 87;
+			this.label9.Text = "Minimum Offensive Rating:";
+			this.label9.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// txtMinDefensiveRating
+			// 
+			this.txtMinDefensiveRating.Location = new System.Drawing.Point(259, 95);
+			this.txtMinDefensiveRating.MaxLength = 1;
+			this.txtMinDefensiveRating.Name = "txtMinDefensiveRating";
+			this.txtMinDefensiveRating.Size = new System.Drawing.Size(18, 20);
+			this.txtMinDefensiveRating.TabIndex = 88;
+			this.txtMinDefensiveRating.Text = "0";
+			this.txtMinDefensiveRating.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// txtMinOffensiveRating
+			// 
+			this.txtMinOffensiveRating.Location = new System.Drawing.Point(259, 72);
+			this.txtMinOffensiveRating.MaxLength = 1;
+			this.txtMinOffensiveRating.Name = "txtMinOffensiveRating";
+			this.txtMinOffensiveRating.Size = new System.Drawing.Size(18, 20);
+			this.txtMinOffensiveRating.TabIndex = 89;
+			this.txtMinOffensiveRating.Text = "0";
+			this.txtMinOffensiveRating.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
 			// 
 			// FiltersControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.txtMinOffensiveRating);
+			this.Controls.Add(this.txtMinDefensiveRating);
+			this.Controls.Add(this.label9);
+			this.Controls.Add(this.label8);
 			this.Controls.Add(this.label7);
-			this.Controls.Add(this.txtMinRating);
+			this.Controls.Add(this.txtMinTotalRating);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.txtMinEpics);
 			this.Controls.Add(this.label5);
@@ -665,7 +714,11 @@
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.TextBox txtMinLegendaries;
 		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.TextBox txtMinRating;
+		private System.Windows.Forms.TextBox txtMinTotalRating;
 		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.TextBox txtMinDefensiveRating;
+		private System.Windows.Forms.TextBox txtMinOffensiveRating;
 	}
 }

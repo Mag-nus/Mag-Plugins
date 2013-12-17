@@ -75,9 +75,21 @@ namespace Mag_SuitBuilder.Equipment
 
 			if (mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing || mwo.ObjectClass == (int)ObjectClass.Jewelry)
 			{
-				int minRating;
-				int.TryParse(txtMinRating.Text, out minRating);
-				if (minRating > 0 && mwo.TotalRating < minRating)
+				int rating;
+
+				if (mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing)
+				{
+					int.TryParse(txtMinOffensiveRating.Text, out rating);
+					if (rating > 0 && mwo.CritDamRating + mwo.CritRating + mwo.DamRating < rating)
+						return false;
+
+					int.TryParse(txtMinDefensiveRating.Text, out rating);
+					if (rating > 0 && mwo.CritDamResistRating + mwo.CritResistRating + mwo.DamResistRating < rating)
+						return false;
+				}
+
+				int.TryParse(txtMinTotalRating.Text, out rating);
+				if (rating > 0 && mwo.TotalRating < rating)
 					return false;
 			}
 

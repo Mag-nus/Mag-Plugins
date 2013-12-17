@@ -35,6 +35,12 @@ namespace Mag_SuitBuilder
 
 		protected override void OnLoad(EventArgs e)
 		{
+			if ((ModifierKeys & Keys.Shift) == 0)
+			{
+				if (!Settings.Default.InitialSize.IsEmpty) Size = Settings.Default.InitialSize;
+				if (!Settings.Default.InitialLocation.IsEmpty) Location = Settings.Default.InitialLocation;
+			}
+
 			Text += " " + Application.ProductVersion;
 			txtInventoryRootPath.Text = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-Tools\";
 
@@ -100,6 +106,12 @@ namespace Mag_SuitBuilder
 		{
 			if (btnStopCalculating.Enabled)
 				btnStopCalculating.PerformClick();
+
+			if ((ModifierKeys & Keys.Shift) == 0)
+			{
+				Settings.Default.InitialLocation = (WindowState == FormWindowState.Normal) ? Location : RestoreBounds.Location;
+				Settings.Default.InitialSize = (WindowState == FormWindowState.Normal) ? Size : RestoreBounds.Size;
+			}
 
 			string columnWidths = null;
 			foreach (DataGridViewColumn column in equipmentGrid.Columns)
