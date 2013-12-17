@@ -79,18 +79,24 @@ namespace Mag_SuitBuilder.Equipment
 
 				if (mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing)
 				{
-					int.TryParse(txtMinOffensiveRating.Text, out rating);
-					if (rating > 0 && mwo.CritDamRating + mwo.CritRating + mwo.DamRating < rating)
-						return false;
+					if (int.TryParse(txtMinOffensiveRating.Text, out rating))
+					{
+						if (rating > 0 && Math.Max(mwo.CritDamRating, 0) + Math.Max(mwo.CritRating, 0) + Math.Max(mwo.DamRating, 0) < rating)
+							return false;
+					}
 
-					int.TryParse(txtMinDefensiveRating.Text, out rating);
-					if (rating > 0 && mwo.CritDamResistRating + mwo.CritResistRating + mwo.DamResistRating < rating)
-						return false;
+					if (int.TryParse(txtMinDefensiveRating.Text, out rating))
+					{
+						if (rating > 0 && Math.Max(mwo.CritDamResistRating, 0) + Math.Max(mwo.CritResistRating, 0) + Math.Max(mwo.DamResistRating, 0) < rating)
+							return false;
+					}
 				}
 
-				int.TryParse(txtMinTotalRating.Text, out rating);
-				if (rating > 0 && mwo.TotalRating < rating)
-					return false;
+				if (int.TryParse(txtMinTotalRating.Text, out rating))
+				{
+					if (rating > 0 && Math.Max(mwo.TotalRating, 0) < rating)
+						return false;
+				}
 			}
 
 
