@@ -31,6 +31,7 @@ namespace Mag_SuitBuilder.Equipment
 			lblItemName.Text = null;
 
 			lblAL.Text = null;
+			lblRating.Text = null;
 			lblArmorSet.Text = null;
 
 			lblSpell1.Text = null;
@@ -55,6 +56,9 @@ namespace Mag_SuitBuilder.Equipment
 
 			if (piece.CalcedStartingArmorLevel > 0)
 				lblAL.Text = piece.CalcedStartingArmorLevel.ToString(CultureInfo.InvariantCulture);
+
+			if (piece.TotalRating > 0)
+				lblRating.Text = "[" + piece.TotalRating + "]";
 
 			lblArmorSet.Text = piece.ItemSet;
 

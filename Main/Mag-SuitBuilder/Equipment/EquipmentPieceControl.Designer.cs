@@ -40,6 +40,7 @@
 			this.lblSpell6 = new System.Windows.Forms.Label();
 			this.chkLocked = new System.Windows.Forms.CheckBox();
 			this.chkExclude = new System.Windows.Forms.CheckBox();
+			this.lblRating = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// lblItemName
@@ -63,7 +64,7 @@
 			// lblArmorSet
 			// 
 			this.lblArmorSet.AutoSize = true;
-			this.lblArmorSet.Location = new System.Drawing.Point(38, 26);
+			this.lblArmorSet.Location = new System.Drawing.Point(45, 26);
 			this.lblArmorSet.Name = "lblArmorSet";
 			this.lblArmorSet.Size = new System.Drawing.Size(50, 13);
 			this.lblArmorSet.TabIndex = 14;
@@ -156,11 +157,21 @@
 			this.chkExclude.UseVisualStyleBackColor = true;
 			this.chkExclude.CheckedChanged += new System.EventHandler(this.chkExclude_CheckedChanged);
 			// 
+			// lblRating
+			// 
+			this.lblRating.AutoSize = true;
+			this.lblRating.Location = new System.Drawing.Point(24, 26);
+			this.lblRating.Name = "lblRating";
+			this.lblRating.Size = new System.Drawing.Size(21, 13);
+			this.lblRating.TabIndex = 24;
+			this.lblRating.Text = "[R]";
+			// 
 			// EquipmentPieceControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.Controls.Add(this.lblRating);
 			this.Controls.Add(this.chkExclude);
 			this.Controls.Add(this.chkLocked);
 			this.Controls.Add(this.lblSpell6);
@@ -194,5 +205,6 @@
 		private System.Windows.Forms.Label lblSpell6;
 		private System.Windows.Forms.CheckBox chkLocked;
 		private System.Windows.Forms.CheckBox chkExclude;
+		private System.Windows.Forms.Label lblRating;
 	}
 }
