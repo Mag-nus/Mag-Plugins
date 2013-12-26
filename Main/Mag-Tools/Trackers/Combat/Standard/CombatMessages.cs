@@ -12,6 +12,8 @@ namespace MagTools.Trackers.Combat.Standard
 		public static Collection<Regex> MagicReceivedAttacks = new Collection<Regex>();
 		public static Collection<Regex> MagicGivenAttacks = new Collection<Regex>();
 
+		public static Collection<Regex> MagicCastAttacks = new Collection<Regex>();
+
 		public static Collection<Regex> TargetKilledByMe = new Collection<Regex>();
 
 		static CombatMessages()
@@ -66,6 +68,10 @@ namespace MagTools.Trackers.Combat.Standard
 			// You exhaust Mag-lite for 42 points with Martyr's Hecatomb VII.
 			// You drain Mag-lite for 34 points with Martyr's Hecatomb VII.
 			MagicGivenAttacks.Add(new Regex("^You [\\w]+ (?<targetname>.+) for (?<points>.+) point.* with .+$"));
+
+
+			//MagicCastAttacks.Add(new Regex("^You cast Gossamer Flesh on (?<targetname>.+)$"));
+			MagicCastAttacks.Add(new Regex("^You cast Gossamer Flesh on (?<targetname>((?!(refreshing|surpassing)).)+)$"));
 
 
 			// You flatten Noble Remains's body with the force of your assault!

@@ -199,6 +199,20 @@ namespace MagTools.Trackers.Combat.Standard
 						}
 					}
 
+					foreach (Regex regex in CombatMessages.MagicCastAttacks)
+					{
+						Match match = regex.Match(e.Text);
+
+						if (match.Success)
+						{
+							sourceName = CoreManager.Current.CharacterFilter.Name;
+							targetName = match.Groups["targetname"].Value;
+							attackType = AttackType.Magic;
+							damageElemenet = DamageElement.None;
+							goto Found;
+						}
+					}
+
 					Found: ;
 				}
 
