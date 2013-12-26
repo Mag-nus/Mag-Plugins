@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 
 using Mag_SuitBuilder.Spells;
@@ -121,8 +123,15 @@ namespace Mag_SuitBuilder.Equipment
 
 			foreach (var spellId in Spells)
 			{
-				Spell spell = Spell.GetSpell(spellId);
-				cachedSpells.Add(spell);
+				try
+				{
+					Spell spell = Spell.GetSpell(spellId);
+					cachedSpells.Add(spell);
+				}
+				catch (ArgumentException)
+				{
+					MessageBox.Show("Unable to cache spell id: " + spellId + " on item: " + Name + ". Spell ID not found in the master table.");
+				}
 			}
 
 			itemSearchCacheBuilt = true;
