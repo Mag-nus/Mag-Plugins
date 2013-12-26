@@ -401,7 +401,7 @@ namespace Mag_SuitBuilder
 					{
 						try
 						{
-							if (item.EquippableSlots.GetTotalBitsSet() > 1 && MessageBox.Show(item.Name + " covers multiple slots. Would you like to reduce it?", "Add Item", MessageBoxButtons.YesNo) == DialogResult.Yes)
+							if (item.EquippableSlots.GetTotalBitsSet() > 1 && item.EquippableSlots.IsBodyArmor() && MessageBox.Show(item.Name + " covers multiple slots. Would you like to reduce it?", "Add Item", MessageBoxButtons.YesNo) == DialogResult.Yes)
 							{
 								var reductionOptions = item.Coverage.ReductionOptions();
 
