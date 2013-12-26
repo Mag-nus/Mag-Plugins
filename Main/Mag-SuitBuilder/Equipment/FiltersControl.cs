@@ -68,9 +68,21 @@ namespace Mag_SuitBuilder.Equipment
 				return false;
 
 
-			int minimumBaseArmorLevel;
-			int.TryParse(txtMinimumBaseArmorLevel.Text, out minimumBaseArmorLevel);
-			if ((mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel < minimumBaseArmorLevel && mwo.EquippableSlots.IsBodyArmor())
+			int value;
+			int.TryParse(txtMinimumBaseArmorLevel.Text, out value);
+			if ((mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel < value && mwo.EquippableSlots.IsCoreBodyArmor())
+				return false;
+
+			int.TryParse(txtMaximumBaseArmorLevel.Text, out value);
+			if ((mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel > value && mwo.EquippableSlots.IsCoreBodyArmor())
+				return false;
+
+			int.TryParse(txtMinimumExtremityArmorLevel.Text, out value);
+			if ((mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel < value && mwo.EquippableSlots.IsExtremityBodyArmor())
+				return false;
+
+			int.TryParse(txtMaximumExtremityArmorLevel.Text, out value);
+			if ((mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel > value && mwo.EquippableSlots.IsExtremityBodyArmor())
 				return false;
 
 			if (mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing || mwo.ObjectClass == (int)ObjectClass.Jewelry)
@@ -81,36 +93,74 @@ namespace Mag_SuitBuilder.Equipment
 				{
 					if (int.TryParse(txtMinOffensiveRating.Text, out rating))
 					{
-						if (rating > 0 && Math.Max(mwo.CritDamRating, 0) + Math.Max(mwo.CritRating, 0) + Math.Max(mwo.DamRating, 0) < rating)
+						if (Math.Max(mwo.CritDamRating, 0) + Math.Max(mwo.CritRating, 0) + Math.Max(mwo.DamRating, 0) < rating)
+							return false;
+					}
+
+					if (int.TryParse(txtMaxOffensiveRating.Text, out rating))
+					{
+						if (Math.Max(mwo.CritDamRating, 0) + Math.Max(mwo.CritRating, 0) + Math.Max(mwo.DamRating, 0) > rating)
 							return false;
 					}
 
 					if (int.TryParse(txtMinDefensiveRating.Text, out rating))
 					{
-						if (rating > 0 && Math.Max(mwo.CritDamResistRating, 0) + Math.Max(mwo.CritResistRating, 0) + Math.Max(mwo.DamResistRating, 0) < rating)
+						if (Math.Max(mwo.CritDamResistRating, 0) + Math.Max(mwo.CritResistRating, 0) + Math.Max(mwo.DamResistRating, 0) < rating)
+							return false;
+					}
+
+					if (int.TryParse(txtMaxDefensiveRating.Text, out rating))
+					{
+						if (Math.Max(mwo.CritDamResistRating, 0) + Math.Max(mwo.CritResistRating, 0) + Math.Max(mwo.DamResistRating, 0) > rating)
 							return false;
 					}
 				}
 
+				if (mwo.ObjectClass == (int)ObjectClass.Jewelry)
+				{
+					if (int.TryParse(txtMinOtherRating.Text, out rating))
+					{
+						if (Math.Max(mwo.HealBoostRating, 0) + Math.Max(mwo.VitalityRating, 0) < rating)
+							return false;
+					}
+
+					if (int.TryParse(txtMaxOtherRating.Text, out rating))
+					{
+						if (Math.Max(mwo.HealBoostRating, 0) + Math.Max(mwo.VitalityRating, 0) > rating)
+							return false;
+					}				
+				}
+
 				if (int.TryParse(txtMinTotalRating.Text, out rating))
 				{
-					if (rating > 0 && Math.Max(mwo.TotalRating, 0) < rating)
+					if (Math.Max(mwo.TotalRating, 0) < rating)
+						return false;
+				}
+
+				if (int.TryParse(txtMaxTotalRating.Text, out rating))
+				{
+					if ( Math.Max(mwo.TotalRating, 0) > rating)
 						return false;
 				}
 			}
 
 
-			if (mwo.ObjectClass == (int)ObjectClass.Armor)
+			if (mwo.EquippableSlots.IsBodyArmor())
 			{
-				if (!chkArmor.Checked) return false;
+				if (!chkBodyArmorClothing.Checked) return false;
 			}
-			else if (mwo.ObjectClass == (int)ObjectClass.Clothing)
+			else if (mwo.EquippableSlots.IsUnderwear())
 			{
-				if (!chkClothing.Checked) return false;
+				if (!chkShirtPants.Checked) return false;
 			}
 			else if (mwo.ObjectClass == (int)ObjectClass.Jewelry)
 			{
 				if (!chkJewelry.Checked) return false;
+
+				if (!chkJewelryNecklace.Checked && mwo.EquippableSlots == EquippableSlotFlags.Necklace) return false;
+				if (!chkJewelryTrinket.Checked && mwo.EquippableSlots == EquippableSlotFlags.Trinket) return false;
+				if (!chkJewelryBracelet.Checked && mwo.EquippableSlots == (EquippableSlotFlags.LeftBracelet | EquippableSlotFlags.RightBracelet)) return false;
+				if (!chkJewelryRing.Checked && mwo.EquippableSlots == (EquippableSlotFlags.LeftRing | EquippableSlotFlags.RightRing)) return false;
 			}
 			else if (mwo.ObjectClass == (int)ObjectClass.MeleeWeapon)
 			{
@@ -183,8 +233,14 @@ namespace Mag_SuitBuilder.Equipment
 			int minLegendaries;
 			int.TryParse(txtMinLegendaries.Text, out minLegendaries);
 
+			int maxLegendaries;
+			int.TryParse(txtMaxLegendaries.Text, out maxLegendaries);
+
 			int minEpics;
 			int.TryParse(txtMinEpics.Text, out minEpics);
+
+			int maxEpics;
+			int.TryParse(txtMaxEpics.Text, out maxEpics);
 			
 			if (minLegendaries > 0 || minEpics > 0)
 			{
@@ -197,7 +253,7 @@ namespace Mag_SuitBuilder.Equipment
 					if (spell.CantripLevel >= Spell.CantripLevels.Epic) epics++;
 				}
 
-				if ((minLegendaries > 0 && legendaries < minLegendaries) || (minEpics > 0 && epics < minEpics))
+				if (legendaries < minLegendaries || legendaries > maxLegendaries || epics < minEpics || epics > maxEpics)
 					return false;
 			}
 
