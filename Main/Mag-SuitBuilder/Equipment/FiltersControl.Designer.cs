@@ -100,6 +100,15 @@
 			this.txtMaxDefensiveRating = new System.Windows.Forms.TextBox();
 			this.txtMaxOtherRating = new System.Windows.Forms.TextBox();
 			this.txtMaxTotalRating = new System.Windows.Forms.TextBox();
+			this.label21 = new System.Windows.Forms.Label();
+			this.txtWieldRequirementLevelMax = new System.Windows.Forms.TextBox();
+			this.label22 = new System.Windows.Forms.Label();
+			this.txtWieldRequirementLevelMin = new System.Windows.Forms.TextBox();
+			this.label23 = new System.Windows.Forms.Label();
+			this.txtWieldRequirementSkillMax = new System.Windows.Forms.TextBox();
+			this.label24 = new System.Windows.Forms.Label();
+			this.txtWieldRequirementSkillMin = new System.Windows.Forms.TextBox();
+			this.label25 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// txtMinimumBaseArmorLevel
@@ -897,10 +906,107 @@
 			this.txtMaxTotalRating.Text = "9";
 			this.txtMaxTotalRating.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
 			// 
+			// label21
+			// 
+			this.label21.AutoSize = true;
+			this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label21.Location = new System.Drawing.Point(306, 482);
+			this.label21.Name = "label21";
+			this.label21.Size = new System.Drawing.Size(102, 13);
+			this.label21.TabIndex = 115;
+			this.label21.Text = "Wield Requirements";
+			// 
+			// txtWieldRequirementLevelMax
+			// 
+			this.txtWieldRequirementLevelMax.Location = new System.Drawing.Point(389, 499);
+			this.txtWieldRequirementLevelMax.MaxLength = 3;
+			this.txtWieldRequirementLevelMax.Name = "txtWieldRequirementLevelMax";
+			this.txtWieldRequirementLevelMax.Size = new System.Drawing.Size(24, 20);
+			this.txtWieldRequirementLevelMax.TabIndex = 119;
+			this.txtWieldRequirementLevelMax.Text = "999";
+			this.txtWieldRequirementLevelMax.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// label22
+			// 
+			this.label22.AutoSize = true;
+			this.label22.Location = new System.Drawing.Point(351, 501);
+			this.label22.Name = "label22";
+			this.label22.Size = new System.Drawing.Size(34, 13);
+			this.label22.TabIndex = 118;
+			this.label22.Text = ">= =<";
+			// 
+			// txtWieldRequirementLevelMin
+			// 
+			this.txtWieldRequirementLevelMin.Location = new System.Drawing.Point(323, 498);
+			this.txtWieldRequirementLevelMin.MaxLength = 3;
+			this.txtWieldRequirementLevelMin.Name = "txtWieldRequirementLevelMin";
+			this.txtWieldRequirementLevelMin.Size = new System.Drawing.Size(24, 20);
+			this.txtWieldRequirementLevelMin.TabIndex = 117;
+			this.txtWieldRequirementLevelMin.Text = "0";
+			this.txtWieldRequirementLevelMin.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// label23
+			// 
+			this.label23.AutoSize = true;
+			this.label23.Location = new System.Drawing.Point(281, 502);
+			this.label23.Name = "label23";
+			this.label23.Size = new System.Drawing.Size(36, 13);
+			this.label23.TabIndex = 116;
+			this.label23.Text = "Level:";
+			this.label23.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// txtWieldRequirementSkillMax
+			// 
+			this.txtWieldRequirementSkillMax.Location = new System.Drawing.Point(389, 525);
+			this.txtWieldRequirementSkillMax.MaxLength = 3;
+			this.txtWieldRequirementSkillMax.Name = "txtWieldRequirementSkillMax";
+			this.txtWieldRequirementSkillMax.Size = new System.Drawing.Size(24, 20);
+			this.txtWieldRequirementSkillMax.TabIndex = 123;
+			this.txtWieldRequirementSkillMax.Text = "999";
+			this.txtWieldRequirementSkillMax.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// label24
+			// 
+			this.label24.AutoSize = true;
+			this.label24.Location = new System.Drawing.Point(351, 527);
+			this.label24.Name = "label24";
+			this.label24.Size = new System.Drawing.Size(34, 13);
+			this.label24.TabIndex = 122;
+			this.label24.Text = ">= =<";
+			// 
+			// txtWieldRequirementSkillMin
+			// 
+			this.txtWieldRequirementSkillMin.Location = new System.Drawing.Point(323, 524);
+			this.txtWieldRequirementSkillMin.MaxLength = 3;
+			this.txtWieldRequirementSkillMin.Name = "txtWieldRequirementSkillMin";
+			this.txtWieldRequirementSkillMin.Size = new System.Drawing.Size(24, 20);
+			this.txtWieldRequirementSkillMin.TabIndex = 121;
+			this.txtWieldRequirementSkillMin.Text = "0";
+			this.txtWieldRequirementSkillMin.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// label25
+			// 
+			this.label25.AutoSize = true;
+			this.label25.Location = new System.Drawing.Point(288, 527);
+			this.label25.Name = "label25";
+			this.label25.Size = new System.Drawing.Size(29, 13);
+			this.label25.TabIndex = 120;
+			this.label25.Text = "Skill:";
+			this.label25.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
 			// FiltersControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.txtWieldRequirementSkillMax);
+			this.Controls.Add(this.label24);
+			this.Controls.Add(this.txtWieldRequirementSkillMin);
+			this.Controls.Add(this.label25);
+			this.Controls.Add(this.txtWieldRequirementLevelMax);
+			this.Controls.Add(this.label22);
+			this.Controls.Add(this.txtWieldRequirementLevelMin);
+			this.Controls.Add(this.label23);
+			this.Controls.Add(this.label21);
 			this.Controls.Add(this.txtMaxTotalRating);
 			this.Controls.Add(this.txtMaxOtherRating);
 			this.Controls.Add(this.txtMaxDefensiveRating);
@@ -1054,5 +1160,14 @@
 		private System.Windows.Forms.TextBox txtMaxDefensiveRating;
 		private System.Windows.Forms.TextBox txtMaxOtherRating;
 		private System.Windows.Forms.TextBox txtMaxTotalRating;
+		private System.Windows.Forms.Label label21;
+		private System.Windows.Forms.TextBox txtWieldRequirementLevelMax;
+		private System.Windows.Forms.Label label22;
+		private System.Windows.Forms.TextBox txtWieldRequirementLevelMin;
+		private System.Windows.Forms.Label label23;
+		private System.Windows.Forms.TextBox txtWieldRequirementSkillMax;
+		private System.Windows.Forms.Label label24;
+		private System.Windows.Forms.TextBox txtWieldRequirementSkillMin;
+		private System.Windows.Forms.Label label25;
 	}
 }

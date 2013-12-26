@@ -401,7 +401,28 @@ namespace Mag_SuitBuilder
 					{
 						try
 						{
-							if (!baseSuit.AddItem(item))
+							if (item.EquippableSlots.GetTotalBitsSet() > 1 && MessageBox.Show(item.Name + " covers multiple slots. Would you like to reduce it?", "Add Item", MessageBoxButtons.YesNo) == DialogResult.Yes)
+							{
+								var reductionOptions = item.Coverage.ReductionOptions();
+
+								EquippableSlotFlags slotFlag = EquippableSlotFlags.None;
+
+								foreach (var option in reductionOptions)
+								{
+									if (option == CoverageFlags.Chest && baseSuit[EquippableSlotFlags.Chest] == null)			{ slotFlag = EquippableSlotFlags.Chest; break; }
+									if (option == CoverageFlags.UpperArms && baseSuit[EquippableSlotFlags.UpperArms] == null)	{ slotFlag = EquippableSlotFlags.UpperArms; break; }
+									if (option == CoverageFlags.LowerArms && baseSuit[EquippableSlotFlags.LowerArms] == null)	{ slotFlag = EquippableSlotFlags.LowerArms; break; }
+									if (option == CoverageFlags.Abdomen && baseSuit[EquippableSlotFlags.Abdomen] == null)		{ slotFlag = EquippableSlotFlags.Abdomen; break; }
+									if (option == CoverageFlags.UpperLegs && baseSuit[EquippableSlotFlags.UpperLegs] == null)	{ slotFlag = EquippableSlotFlags.UpperLegs; break; }
+									if (option == CoverageFlags.LowerLegs && baseSuit[EquippableSlotFlags.LowerLegs] == null)	{ slotFlag = EquippableSlotFlags.LowerLegs; break; }
+								}
+
+								if (slotFlag == EquippableSlotFlags.None)
+									MessageBox.Show("Unable to reduce " + item + " into an open single slot." + Environment.NewLine + "Reduction coverage option not expected or not open.");
+								else
+									baseSuit.AddItem(slotFlag, item);
+							}
+							else if (!baseSuit.AddItem(item))
 								MessageBox.Show("Failed to add " + item.Name + " to base suit of armor.");
 						}
 						catch (ArgumentException) // Item failed to add
