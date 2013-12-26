@@ -3,6 +3,7 @@ namespace MagTools.Trackers.Combat.Standard
 {
 	public enum DamageElement
 	{
+		None,
 		Unknown,
 
 		Typeless,
