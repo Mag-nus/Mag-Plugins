@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using Mag_SuitBuilder.Equipment;
 
+using Mag.Shared.Constants;
+
 namespace Mag_SuitBuilder.Search
 {
 	abstract class Searcher
@@ -42,11 +44,47 @@ namespace Mag_SuitBuilder.Search
 					SuitBuilder.Push(o.Value, o.Key);
 			}
 
-			// Remove pieces we can't add to our base suit, or pieces that can provide no beneficial spell
+			// Remove pieces that can provide no beneficial spell
 			for (int i = Equipment.Count - 1; i >= 0; i--)
 			{
-				if (!SuitBuilder.SlotIsOpen(Equipment[i].EquippableSlots) || !SuitBuilder.CanGetBeneficialSpellFrom(Equipment[i]))
+				if (!SuitBuilder.CanGetBeneficialSpellFrom(Equipment[i]))
 					Equipment.RemoveAt(i);
+			}
+
+			// Remove pieces we can't add to our base suit
+			for (int i = Equipment.Count - 1; i >= 0; i--)
+			{
+				if (!SuitBuilder.SlotIsOpen(Equipment[i].EquippableSlots))
+				{
+					if (Equipment[i].EquippableSlots.GetTotalBitsSet() == 1)
+						Equipment.RemoveAt(i);
+					else
+					{
+						if (Equipment[i].EquippableSlots.IsBodyArmor())
+						{
+							var reductionOptions = Equipment[i].Coverage.ReductionOptions();
+
+							foreach (var option in reductionOptions)
+							{
+								if (option == CoverageFlags.Chest && SuitBuilder.SlotIsOpen(EquippableSlotFlags.Chest)) goto end;
+								if (option == CoverageFlags.UpperArms && SuitBuilder.SlotIsOpen(EquippableSlotFlags.UpperArms)) goto end;
+								if (option == CoverageFlags.LowerArms && SuitBuilder.SlotIsOpen(EquippableSlotFlags.LowerArms)) goto end;
+								if (option == CoverageFlags.Abdomen && SuitBuilder.SlotIsOpen(EquippableSlotFlags.Abdomen)) goto end;
+								if (option == CoverageFlags.UpperLegs && SuitBuilder.SlotIsOpen(EquippableSlotFlags.UpperLegs)) goto end;
+								if (option == CoverageFlags.LowerLegs && SuitBuilder.SlotIsOpen(EquippableSlotFlags.LowerLegs)) goto end;
+							}
+
+							Equipment.RemoveAt(i);
+						}
+						else
+						{
+							if ((Equipment[i].EquippableSlots.HasFlag(EquippableSlotFlags.LeftRing) || Equipment[i].EquippableSlots.HasFlag(EquippableSlotFlags.RightRing)) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.LeftRing) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.RightRing)) { Equipment.RemoveAt(i); goto end; }
+							if ((Equipment[i].EquippableSlots.HasFlag(EquippableSlotFlags.LeftBracelet) || Equipment[i].EquippableSlots.HasFlag(EquippableSlotFlags.RightBracelet)) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.LeftBracelet) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.RightBracelet)) { Equipment.RemoveAt(i); goto end; }
+						}
+					}
+				}
+
+				end: ;
 			}
 		}
 				
