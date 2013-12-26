@@ -85,65 +85,6 @@ namespace Mag_SuitBuilder.Equipment
 			if ((mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel > value && mwo.EquippableSlots.IsExtremityBodyArmor())
 				return false;
 
-			if (mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing || mwo.ObjectClass == (int)ObjectClass.Jewelry)
-			{
-				int rating;
-
-				if (mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing)
-				{
-					if (int.TryParse(txtMinOffensiveRating.Text, out rating))
-					{
-						if (Math.Max(mwo.CritDamRating, 0) + Math.Max(mwo.CritRating, 0) + Math.Max(mwo.DamRating, 0) < rating)
-							return false;
-					}
-
-					if (int.TryParse(txtMaxOffensiveRating.Text, out rating))
-					{
-						if (Math.Max(mwo.CritDamRating, 0) + Math.Max(mwo.CritRating, 0) + Math.Max(mwo.DamRating, 0) > rating)
-							return false;
-					}
-
-					if (int.TryParse(txtMinDefensiveRating.Text, out rating))
-					{
-						if (Math.Max(mwo.CritDamResistRating, 0) + Math.Max(mwo.CritResistRating, 0) + Math.Max(mwo.DamResistRating, 0) < rating)
-							return false;
-					}
-
-					if (int.TryParse(txtMaxDefensiveRating.Text, out rating))
-					{
-						if (Math.Max(mwo.CritDamResistRating, 0) + Math.Max(mwo.CritResistRating, 0) + Math.Max(mwo.DamResistRating, 0) > rating)
-							return false;
-					}
-				}
-
-				if (mwo.ObjectClass == (int)ObjectClass.Jewelry)
-				{
-					if (int.TryParse(txtMinOtherRating.Text, out rating))
-					{
-						if (Math.Max(mwo.HealBoostRating, 0) + Math.Max(mwo.VitalityRating, 0) < rating)
-							return false;
-					}
-
-					if (int.TryParse(txtMaxOtherRating.Text, out rating))
-					{
-						if (Math.Max(mwo.HealBoostRating, 0) + Math.Max(mwo.VitalityRating, 0) > rating)
-							return false;
-					}				
-				}
-
-				if (int.TryParse(txtMinTotalRating.Text, out rating))
-				{
-					if (Math.Max(mwo.TotalRating, 0) < rating)
-						return false;
-				}
-
-				if (int.TryParse(txtMaxTotalRating.Text, out rating))
-				{
-					if ( Math.Max(mwo.TotalRating, 0) > rating)
-						return false;
-				}
-			}
-
 
 			if (mwo.EquippableSlots.IsBodyArmor())
 			{
@@ -230,6 +171,7 @@ namespace Mag_SuitBuilder.Equipment
 			}
 
 
+			// Spell Quantities
 			int minLegendaries;
 			int.TryParse(txtMinLegendaries.Text, out minLegendaries);
 
@@ -242,22 +184,105 @@ namespace Mag_SuitBuilder.Equipment
 			int maxEpics;
 			int.TryParse(txtMaxEpics.Text, out maxEpics);
 			
-			if (minLegendaries > 0 || minEpics > 0)
-			{
-				int legendaries = 0;
-				int epics = 0;
+			int legendaries = 0;
+			int epics = 0;
 
-				foreach (Spell spell in mwo.CachedSpells)
+			foreach (Spell spell in mwo.CachedSpells)
+			{
+				if (spell.CantripLevel >= Spell.CantripLevels.Legendary) legendaries++;
+				if (spell.CantripLevel >= Spell.CantripLevels.Epic) epics++;
+			}
+
+			if (legendaries < minLegendaries || legendaries > maxLegendaries || epics < minEpics || epics > maxEpics)
+				return false;
+
+
+			// Ratings
+			if (mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing || mwo.ObjectClass == (int)ObjectClass.Jewelry)
+			{
+				if (mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing)
 				{
-					if (spell.CantripLevel >= Spell.CantripLevels.Legendary) legendaries++;
-					if (spell.CantripLevel >= Spell.CantripLevels.Epic) epics++;
+					if (int.TryParse(txtMinOffensiveRating.Text, out value))
+					{
+						if (Math.Max(mwo.CritDamRating, 0) + Math.Max(mwo.CritRating, 0) + Math.Max(mwo.DamRating, 0) < value)
+							return false;
+					}
+
+					if (int.TryParse(txtMaxOffensiveRating.Text, out value))
+					{
+						if (Math.Max(mwo.CritDamRating, 0) + Math.Max(mwo.CritRating, 0) + Math.Max(mwo.DamRating, 0) > value)
+							return false;
+					}
+
+					if (int.TryParse(txtMinDefensiveRating.Text, out value))
+					{
+						if (Math.Max(mwo.CritDamResistRating, 0) + Math.Max(mwo.CritResistRating, 0) + Math.Max(mwo.DamResistRating, 0) < value)
+							return false;
+					}
+
+					if (int.TryParse(txtMaxDefensiveRating.Text, out value))
+					{
+						if (Math.Max(mwo.CritDamResistRating, 0) + Math.Max(mwo.CritResistRating, 0) + Math.Max(mwo.DamResistRating, 0) > value)
+							return false;
+					}
 				}
 
-				if (legendaries < minLegendaries || legendaries > maxLegendaries || epics < minEpics || epics > maxEpics)
+				if (mwo.ObjectClass == (int)ObjectClass.Jewelry)
+				{
+					if (int.TryParse(txtMinOtherRating.Text, out value))
+					{
+						if (Math.Max(mwo.HealBoostRating, 0) + Math.Max(mwo.VitalityRating, 0) < value)
+							return false;
+					}
+
+					if (int.TryParse(txtMaxOtherRating.Text, out value))
+					{
+						if (Math.Max(mwo.HealBoostRating, 0) + Math.Max(mwo.VitalityRating, 0) > value)
+							return false;
+					}
+				}
+
+				if (int.TryParse(txtMinTotalRating.Text, out value))
+				{
+					if (Math.Max(mwo.TotalRating, 0) < value)
+						return false;
+				}
+
+				if (int.TryParse(txtMaxTotalRating.Text, out value))
+				{
+					if (Math.Max(mwo.TotalRating, 0) > value)
+						return false;
+				}
+			}
+
+
+			// Wield Requirements
+			if (int.TryParse(txtWieldRequirementLevelMin.Text, out value))
+			{
+				if (Math.Max(mwo.WieldLevel, 0) < value)
+					return false;
+			}
+
+			if (int.TryParse(txtWieldRequirementLevelMax.Text, out value))
+			{
+				if (Math.Max(mwo.WieldLevel, 0) > value)
+					return false;
+			}
+
+			if (int.TryParse(txtWieldRequirementSkillMin.Text, out value))
+			{
+				if (Math.Max(mwo.SkillLevel, 0) < value)
+					return false;
+			}
+
+			if (int.TryParse(txtWieldRequirementSkillMax.Text, out value))
+			{
+				if (Math.Max(mwo.SkillLevel, 0) > value)
 					return false;
 			}
 
 
+			// Spell Selector
 			if (cantripSelectorControl1.Count > 0)
 			{
 				foreach (var spell in mwo.CachedSpells)

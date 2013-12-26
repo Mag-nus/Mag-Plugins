@@ -144,8 +144,10 @@ namespace Mag.Shared
 		public Double ManaCBonus { get { return DoubleValues.ContainsKey(144) ? DoubleValues[144] : -1; } }
 
 
-		// Wield Level
-		// Skill Level
+		public int WieldLevel { get { if (IntValues.ContainsKey(160) && IntValues[160] > 0 && IntValues.ContainsKey(158) && IntValues[158] == 7 && IntValues.ContainsKey(159) && IntValues[159] == 1) return IntValues[160]; return -1; }  }
+
+		public int SkillLevel { get { if (IntValues.ContainsKey(160) && IntValues[160] > 0 && (!IntValues.ContainsKey(158) || IntValues[158] != 7) && IntValues.ContainsKey(159)) return IntValues[160]; return -1; } }
+
 
 		public int LoreRequirement { get { return IntValues.ContainsKey(109) ? IntValues[109] : -1; } }
 

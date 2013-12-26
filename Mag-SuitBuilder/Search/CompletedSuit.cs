@@ -141,7 +141,7 @@ namespace Mag_SuitBuilder.Search
 			{
 				foreach (KeyValuePair<EquippableSlotFlags, SuitBuildableMyWorldObject> kvp in items)
 				{
-					if ((kvp.Key & slot) == slot)
+					if ((kvp.Key & slot) != 0)
 						return kvp.Value;
 				}
 
