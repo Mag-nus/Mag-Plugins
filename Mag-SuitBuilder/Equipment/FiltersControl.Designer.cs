@@ -31,8 +31,8 @@
 			this.txtMinimumBaseArmorLevel = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.checkRemoveEquipped = new System.Windows.Forms.CheckBox();
-			this.chkArmor = new System.Windows.Forms.CheckBox();
-			this.chkClothing = new System.Windows.Forms.CheckBox();
+			this.chkBodyArmorClothing = new System.Windows.Forms.CheckBox();
+			this.chkShirtPants = new System.Windows.Forms.CheckBox();
 			this.chkJewelry = new System.Windows.Forms.CheckBox();
 			this.chkMeleeWeapon = new System.Windows.Forms.CheckBox();
 			this.chkMissileWeapon = new System.Windows.Forms.CheckBox();
@@ -61,7 +61,6 @@
 			this.chkMeleeLight = new System.Windows.Forms.CheckBox();
 			this.chkMeleeFinesse = new System.Windows.Forms.CheckBox();
 			this.chkMelee2H = new System.Windows.Forms.CheckBox();
-			this.cantripSelectorControl1 = new Mag_SuitBuilder.Spells.CantripSelectorControl();
 			this.chkWandStaffOrbWar = new System.Windows.Forms.CheckBox();
 			this.chkWandStaffOrbVoid = new System.Windows.Forms.CheckBox();
 			this.label4 = new System.Windows.Forms.Label();
@@ -75,11 +74,37 @@
 			this.label9 = new System.Windows.Forms.Label();
 			this.txtMinDefensiveRating = new System.Windows.Forms.TextBox();
 			this.txtMinOffensiveRating = new System.Windows.Forms.TextBox();
+			this.label10 = new System.Windows.Forms.Label();
+			this.txtMaximumBaseArmorLevel = new System.Windows.Forms.TextBox();
+			this.chkJewelryBracelet = new System.Windows.Forms.CheckBox();
+			this.chkJewelryTrinket = new System.Windows.Forms.CheckBox();
+			this.chkJewelryNecklace = new System.Windows.Forms.CheckBox();
+			this.chkJewelryRing = new System.Windows.Forms.CheckBox();
+			this.cantripSelectorControl1 = new Mag_SuitBuilder.Spells.CantripSelectorControl();
+			this.label11 = new System.Windows.Forms.Label();
+			this.txtMaximumExtremityArmorLevel = new System.Windows.Forms.TextBox();
+			this.label12 = new System.Windows.Forms.Label();
+			this.txtMinimumExtremityArmorLevel = new System.Windows.Forms.TextBox();
+			this.txtMaxEpics = new System.Windows.Forms.TextBox();
+			this.label13 = new System.Windows.Forms.Label();
+			this.txtMaxLegendaries = new System.Windows.Forms.TextBox();
+			this.label14 = new System.Windows.Forms.Label();
+			this.label15 = new System.Windows.Forms.Label();
+			this.label16 = new System.Windows.Forms.Label();
+			this.txtMinOtherRating = new System.Windows.Forms.TextBox();
+			this.label17 = new System.Windows.Forms.Label();
+			this.label18 = new System.Windows.Forms.Label();
+			this.label19 = new System.Windows.Forms.Label();
+			this.label20 = new System.Windows.Forms.Label();
+			this.txtMaxOffensiveRating = new System.Windows.Forms.TextBox();
+			this.txtMaxDefensiveRating = new System.Windows.Forms.TextBox();
+			this.txtMaxOtherRating = new System.Windows.Forms.TextBox();
+			this.txtMaxTotalRating = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// txtMinimumBaseArmorLevel
 			// 
-			this.txtMinimumBaseArmorLevel.Location = new System.Drawing.Point(3, 49);
+			this.txtMinimumBaseArmorLevel.Location = new System.Drawing.Point(304, 53);
 			this.txtMinimumBaseArmorLevel.MaxLength = 3;
 			this.txtMinimumBaseArmorLevel.Name = "txtMinimumBaseArmorLevel";
 			this.txtMinimumBaseArmorLevel.Size = new System.Drawing.Size(33, 20);
@@ -91,11 +116,11 @@
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(42, 52);
+			this.label1.Location = new System.Drawing.Point(180, 56);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(198, 13);
+			this.label1.Size = new System.Drawing.Size(118, 13);
 			this.label1.TabIndex = 39;
-			this.label1.Text = "Minimum base armor level for body armor";
+			this.label1.Text = "Base Core Armor Level:";
 			// 
 			// checkRemoveEquipped
 			// 
@@ -108,31 +133,31 @@
 			this.checkRemoveEquipped.UseVisualStyleBackColor = true;
 			this.checkRemoveEquipped.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
 			// 
-			// chkArmor
+			// chkBodyArmorClothing
 			// 
-			this.chkArmor.AutoSize = true;
-			this.chkArmor.Checked = true;
-			this.chkArmor.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkArmor.Location = new System.Drawing.Point(3, 75);
-			this.chkArmor.Name = "chkArmor";
-			this.chkArmor.Size = new System.Drawing.Size(53, 17);
-			this.chkArmor.TabIndex = 42;
-			this.chkArmor.Text = "Armor";
-			this.chkArmor.UseVisualStyleBackColor = true;
-			this.chkArmor.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			this.chkBodyArmorClothing.AutoSize = true;
+			this.chkBodyArmorClothing.Checked = true;
+			this.chkBodyArmorClothing.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkBodyArmorClothing.Location = new System.Drawing.Point(3, 75);
+			this.chkBodyArmorClothing.Name = "chkBodyArmorClothing";
+			this.chkBodyArmorClothing.Size = new System.Drawing.Size(123, 17);
+			this.chkBodyArmorClothing.TabIndex = 42;
+			this.chkBodyArmorClothing.Text = "Body Armor/Clothing";
+			this.chkBodyArmorClothing.UseVisualStyleBackColor = true;
+			this.chkBodyArmorClothing.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
 			// 
-			// chkClothing
+			// chkShirtPants
 			// 
-			this.chkClothing.AutoSize = true;
-			this.chkClothing.Checked = true;
-			this.chkClothing.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkClothing.Location = new System.Drawing.Point(3, 98);
-			this.chkClothing.Name = "chkClothing";
-			this.chkClothing.Size = new System.Drawing.Size(64, 17);
-			this.chkClothing.TabIndex = 43;
-			this.chkClothing.Text = "Clothing";
-			this.chkClothing.UseVisualStyleBackColor = true;
-			this.chkClothing.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			this.chkShirtPants.AutoSize = true;
+			this.chkShirtPants.Checked = true;
+			this.chkShirtPants.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkShirtPants.Location = new System.Drawing.Point(3, 98);
+			this.chkShirtPants.Name = "chkShirtPants";
+			this.chkShirtPants.Size = new System.Drawing.Size(84, 17);
+			this.chkShirtPants.TabIndex = 43;
+			this.chkShirtPants.Text = "Shirts/Pants";
+			this.chkShirtPants.UseVisualStyleBackColor = true;
+			this.chkShirtPants.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
 			// 
 			// chkJewelry
 			// 
@@ -152,7 +177,7 @@
 			this.chkMeleeWeapon.AutoSize = true;
 			this.chkMeleeWeapon.Checked = true;
 			this.chkMeleeWeapon.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMeleeWeapon.Location = new System.Drawing.Point(3, 144);
+			this.chkMeleeWeapon.Location = new System.Drawing.Point(3, 167);
 			this.chkMeleeWeapon.Name = "chkMeleeWeapon";
 			this.chkMeleeWeapon.Size = new System.Drawing.Size(99, 17);
 			this.chkMeleeWeapon.TabIndex = 45;
@@ -165,7 +190,7 @@
 			this.chkMissileWeapon.AutoSize = true;
 			this.chkMissileWeapon.Checked = true;
 			this.chkMissileWeapon.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMissileWeapon.Location = new System.Drawing.Point(3, 213);
+			this.chkMissileWeapon.Location = new System.Drawing.Point(3, 236);
 			this.chkMissileWeapon.Name = "chkMissileWeapon";
 			this.chkMissileWeapon.Size = new System.Drawing.Size(101, 17);
 			this.chkMissileWeapon.TabIndex = 46;
@@ -178,7 +203,7 @@
 			this.chkWandStaffOrb.AutoSize = true;
 			this.chkWandStaffOrb.Checked = true;
 			this.chkWandStaffOrb.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkWandStaffOrb.Location = new System.Drawing.Point(3, 259);
+			this.chkWandStaffOrb.Location = new System.Drawing.Point(3, 282);
 			this.chkWandStaffOrb.Name = "chkWandStaffOrb";
 			this.chkWandStaffOrb.Size = new System.Drawing.Size(100, 17);
 			this.chkWandStaffOrb.TabIndex = 47;
@@ -191,7 +216,7 @@
 			this.chkAllElseObjectClasses.AutoSize = true;
 			this.chkAllElseObjectClasses.Checked = true;
 			this.chkAllElseObjectClasses.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkAllElseObjectClasses.Location = new System.Drawing.Point(2, 397);
+			this.chkAllElseObjectClasses.Location = new System.Drawing.Point(2, 420);
 			this.chkAllElseObjectClasses.Name = "chkAllElseObjectClasses";
 			this.chkAllElseObjectClasses.Size = new System.Drawing.Size(60, 17);
 			this.chkAllElseObjectClasses.TabIndex = 48;
@@ -249,7 +274,7 @@
 			// chkSalvage
 			// 
 			this.chkSalvage.AutoSize = true;
-			this.chkSalvage.Location = new System.Drawing.Point(3, 305);
+			this.chkSalvage.Location = new System.Drawing.Point(3, 328);
 			this.chkSalvage.Name = "chkSalvage";
 			this.chkSalvage.Size = new System.Drawing.Size(65, 17);
 			this.chkSalvage.TabIndex = 56;
@@ -260,7 +285,7 @@
 			// chkContainersFoci
 			// 
 			this.chkContainersFoci.AutoSize = true;
-			this.chkContainersFoci.Location = new System.Drawing.Point(3, 328);
+			this.chkContainersFoci.Location = new System.Drawing.Point(3, 351);
 			this.chkContainersFoci.Name = "chkContainersFoci";
 			this.chkContainersFoci.Size = new System.Drawing.Size(108, 17);
 			this.chkContainersFoci.TabIndex = 57;
@@ -271,7 +296,7 @@
 			// chkMoneyNotesKeys
 			// 
 			this.chkMoneyNotesKeys.AutoSize = true;
-			this.chkMoneyNotesKeys.Location = new System.Drawing.Point(2, 351);
+			this.chkMoneyNotesKeys.Location = new System.Drawing.Point(2, 374);
 			this.chkMoneyNotesKeys.Name = "chkMoneyNotesKeys";
 			this.chkMoneyNotesKeys.Size = new System.Drawing.Size(133, 17);
 			this.chkMoneyNotesKeys.TabIndex = 58;
@@ -282,7 +307,7 @@
 			// chkCompsKitsFoodManaStones
 			// 
 			this.chkCompsKitsFoodManaStones.AutoSize = true;
-			this.chkCompsKitsFoodManaStones.Location = new System.Drawing.Point(2, 374);
+			this.chkCompsKitsFoodManaStones.Location = new System.Drawing.Point(2, 397);
 			this.chkCompsKitsFoodManaStones.Name = "chkCompsKitsFoodManaStones";
 			this.chkCompsKitsFoodManaStones.Size = new System.Drawing.Size(195, 17);
 			this.chkCompsKitsFoodManaStones.TabIndex = 59;
@@ -295,7 +320,7 @@
 			this.chkMasteryBow.AutoSize = true;
 			this.chkMasteryBow.Checked = true;
 			this.chkMasteryBow.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMasteryBow.Location = new System.Drawing.Point(9, 236);
+			this.chkMasteryBow.Location = new System.Drawing.Point(9, 259);
 			this.chkMasteryBow.Name = "chkMasteryBow";
 			this.chkMasteryBow.Size = new System.Drawing.Size(47, 17);
 			this.chkMasteryBow.TabIndex = 60;
@@ -308,7 +333,7 @@
 			this.chkMasteryCrossbow.AutoSize = true;
 			this.chkMasteryCrossbow.Checked = true;
 			this.chkMasteryCrossbow.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMasteryCrossbow.Location = new System.Drawing.Point(55, 236);
+			this.chkMasteryCrossbow.Location = new System.Drawing.Point(55, 259);
 			this.chkMasteryCrossbow.Name = "chkMasteryCrossbow";
 			this.chkMasteryCrossbow.Size = new System.Drawing.Size(72, 17);
 			this.chkMasteryCrossbow.TabIndex = 61;
@@ -321,7 +346,7 @@
 			this.chkMasteryThrown.AutoSize = true;
 			this.chkMasteryThrown.Checked = true;
 			this.chkMasteryThrown.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMasteryThrown.Location = new System.Drawing.Point(133, 236);
+			this.chkMasteryThrown.Location = new System.Drawing.Point(133, 259);
 			this.chkMasteryThrown.Name = "chkMasteryThrown";
 			this.chkMasteryThrown.Size = new System.Drawing.Size(62, 17);
 			this.chkMasteryThrown.TabIndex = 62;
@@ -334,7 +359,7 @@
 			this.chkMasteryUA.AutoSize = true;
 			this.chkMasteryUA.Checked = true;
 			this.chkMasteryUA.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMasteryUA.Location = new System.Drawing.Point(14, 190);
+			this.chkMasteryUA.Location = new System.Drawing.Point(14, 213);
 			this.chkMasteryUA.Name = "chkMasteryUA";
 			this.chkMasteryUA.Size = new System.Drawing.Size(41, 17);
 			this.chkMasteryUA.TabIndex = 63;
@@ -347,7 +372,7 @@
 			this.chkMasterySword.AutoSize = true;
 			this.chkMasterySword.Checked = true;
 			this.chkMasterySword.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMasterySword.Location = new System.Drawing.Point(61, 190);
+			this.chkMasterySword.Location = new System.Drawing.Point(61, 213);
 			this.chkMasterySword.Name = "chkMasterySword";
 			this.chkMasterySword.Size = new System.Drawing.Size(56, 17);
 			this.chkMasterySword.TabIndex = 66;
@@ -360,7 +385,7 @@
 			this.chkMasteryAxe.AutoSize = true;
 			this.chkMasteryAxe.Checked = true;
 			this.chkMasteryAxe.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMasteryAxe.Location = new System.Drawing.Point(123, 190);
+			this.chkMasteryAxe.Location = new System.Drawing.Point(123, 213);
 			this.chkMasteryAxe.Name = "chkMasteryAxe";
 			this.chkMasteryAxe.Size = new System.Drawing.Size(44, 17);
 			this.chkMasteryAxe.TabIndex = 67;
@@ -373,7 +398,7 @@
 			this.chkMasteryMace.AutoSize = true;
 			this.chkMasteryMace.Checked = true;
 			this.chkMasteryMace.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMasteryMace.Location = new System.Drawing.Point(173, 190);
+			this.chkMasteryMace.Location = new System.Drawing.Point(173, 213);
 			this.chkMasteryMace.Name = "chkMasteryMace";
 			this.chkMasteryMace.Size = new System.Drawing.Size(53, 17);
 			this.chkMasteryMace.TabIndex = 68;
@@ -386,7 +411,7 @@
 			this.chkMasterySpear.AutoSize = true;
 			this.chkMasterySpear.Checked = true;
 			this.chkMasterySpear.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMasterySpear.Location = new System.Drawing.Point(232, 190);
+			this.chkMasterySpear.Location = new System.Drawing.Point(232, 213);
 			this.chkMasterySpear.Name = "chkMasterySpear";
 			this.chkMasterySpear.Size = new System.Drawing.Size(54, 17);
 			this.chkMasterySpear.TabIndex = 69;
@@ -399,7 +424,7 @@
 			this.chkMasteryDagger.AutoSize = true;
 			this.chkMasteryDagger.Checked = true;
 			this.chkMasteryDagger.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMasteryDagger.Location = new System.Drawing.Point(292, 190);
+			this.chkMasteryDagger.Location = new System.Drawing.Point(292, 213);
 			this.chkMasteryDagger.Name = "chkMasteryDagger";
 			this.chkMasteryDagger.Size = new System.Drawing.Size(61, 17);
 			this.chkMasteryDagger.TabIndex = 70;
@@ -412,7 +437,7 @@
 			this.chkMasteryStaff.AutoSize = true;
 			this.chkMasteryStaff.Checked = true;
 			this.chkMasteryStaff.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMasteryStaff.Location = new System.Drawing.Point(359, 190);
+			this.chkMasteryStaff.Location = new System.Drawing.Point(359, 213);
 			this.chkMasteryStaff.Name = "chkMasteryStaff";
 			this.chkMasteryStaff.Size = new System.Drawing.Size(48, 17);
 			this.chkMasteryStaff.TabIndex = 71;
@@ -425,7 +450,7 @@
 			this.chkMeleeHeavy.AutoSize = true;
 			this.chkMeleeHeavy.Checked = true;
 			this.chkMeleeHeavy.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMeleeHeavy.Location = new System.Drawing.Point(14, 167);
+			this.chkMeleeHeavy.Location = new System.Drawing.Point(14, 190);
 			this.chkMeleeHeavy.Name = "chkMeleeHeavy";
 			this.chkMeleeHeavy.Size = new System.Drawing.Size(57, 17);
 			this.chkMeleeHeavy.TabIndex = 72;
@@ -438,7 +463,7 @@
 			this.chkMeleeLight.AutoSize = true;
 			this.chkMeleeLight.Checked = true;
 			this.chkMeleeLight.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMeleeLight.Location = new System.Drawing.Point(77, 167);
+			this.chkMeleeLight.Location = new System.Drawing.Point(77, 190);
 			this.chkMeleeLight.Name = "chkMeleeLight";
 			this.chkMeleeLight.Size = new System.Drawing.Size(49, 17);
 			this.chkMeleeLight.TabIndex = 73;
@@ -451,7 +476,7 @@
 			this.chkMeleeFinesse.AutoSize = true;
 			this.chkMeleeFinesse.Checked = true;
 			this.chkMeleeFinesse.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMeleeFinesse.Location = new System.Drawing.Point(132, 167);
+			this.chkMeleeFinesse.Location = new System.Drawing.Point(132, 190);
 			this.chkMeleeFinesse.Name = "chkMeleeFinesse";
 			this.chkMeleeFinesse.Size = new System.Drawing.Size(62, 17);
 			this.chkMeleeFinesse.TabIndex = 74;
@@ -464,7 +489,7 @@
 			this.chkMelee2H.AutoSize = true;
 			this.chkMelee2H.Checked = true;
 			this.chkMelee2H.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkMelee2H.Location = new System.Drawing.Point(200, 167);
+			this.chkMelee2H.Location = new System.Drawing.Point(200, 190);
 			this.chkMelee2H.Name = "chkMelee2H";
 			this.chkMelee2H.Size = new System.Drawing.Size(40, 17);
 			this.chkMelee2H.TabIndex = 75;
@@ -472,20 +497,12 @@
 			this.chkMelee2H.UseVisualStyleBackColor = true;
 			this.chkMelee2H.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
 			// 
-			// cantripSelectorControl1
-			// 
-			this.cantripSelectorControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.cantripSelectorControl1.Location = new System.Drawing.Point(0, 569);
-			this.cantripSelectorControl1.Name = "cantripSelectorControl1";
-			this.cantripSelectorControl1.Size = new System.Drawing.Size(528, 182);
-			this.cantripSelectorControl1.TabIndex = 51;
-			// 
 			// chkWandStaffOrbWar
 			// 
 			this.chkWandStaffOrbWar.AutoSize = true;
 			this.chkWandStaffOrbWar.Checked = true;
 			this.chkWandStaffOrbWar.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkWandStaffOrbWar.Location = new System.Drawing.Point(9, 282);
+			this.chkWandStaffOrbWar.Location = new System.Drawing.Point(9, 305);
 			this.chkWandStaffOrbWar.Name = "chkWandStaffOrbWar";
 			this.chkWandStaffOrbWar.Size = new System.Drawing.Size(46, 17);
 			this.chkWandStaffOrbWar.TabIndex = 76;
@@ -498,7 +515,7 @@
 			this.chkWandStaffOrbVoid.AutoSize = true;
 			this.chkWandStaffOrbVoid.Checked = true;
 			this.chkWandStaffOrbVoid.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkWandStaffOrbVoid.Location = new System.Drawing.Point(55, 282);
+			this.chkWandStaffOrbVoid.Location = new System.Drawing.Point(55, 305);
 			this.chkWandStaffOrbVoid.Name = "chkWandStaffOrbVoid";
 			this.chkWandStaffOrbVoid.Size = new System.Drawing.Size(47, 17);
 			this.chkWandStaffOrbVoid.TabIndex = 77;
@@ -509,15 +526,16 @@
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(266, 282);
+			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label4.Location = new System.Drawing.Point(328, 267);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(141, 13);
+			this.label4.Size = new System.Drawing.Size(80, 13);
 			this.label4.TabIndex = 82;
-			this.label4.Text = "Spells Equal Or Better Than:";
+			this.label4.Text = "Spell Quantities";
 			// 
 			// txtMinEpics
 			// 
-			this.txtMinEpics.Location = new System.Drawing.Point(329, 320);
+			this.txtMinEpics.Location = new System.Drawing.Point(329, 309);
 			this.txtMinEpics.MaxLength = 1;
 			this.txtMinEpics.Name = "txtMinEpics";
 			this.txtMinEpics.Size = new System.Drawing.Size(18, 20);
@@ -528,15 +546,16 @@
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(266, 323);
+			this.label5.Location = new System.Drawing.Point(292, 312);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(28, 13);
+			this.label5.Size = new System.Drawing.Size(31, 13);
 			this.label5.TabIndex = 80;
-			this.label5.Text = "Epic";
+			this.label5.Text = "Epic:";
+			this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// txtMinLegendaries
 			// 
-			this.txtMinLegendaries.Location = new System.Drawing.Point(329, 298);
+			this.txtMinLegendaries.Location = new System.Drawing.Point(329, 283);
 			this.txtMinLegendaries.MaxLength = 1;
 			this.txtMinLegendaries.Name = "txtMinLegendaries";
 			this.txtMinLegendaries.Size = new System.Drawing.Size(18, 20);
@@ -547,15 +566,16 @@
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(266, 301);
+			this.label6.Location = new System.Drawing.Point(266, 286);
 			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(57, 13);
+			this.label6.Size = new System.Drawing.Size(60, 13);
 			this.label6.TabIndex = 78;
-			this.label6.Text = "Legendary";
+			this.label6.Text = "Legendary:";
+			this.label6.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// txtMinTotalRating
 			// 
-			this.txtMinTotalRating.Location = new System.Drawing.Point(259, 119);
+			this.txtMinTotalRating.Location = new System.Drawing.Point(329, 449);
 			this.txtMinTotalRating.MaxLength = 1;
 			this.txtMinTotalRating.Name = "txtMinTotalRating";
 			this.txtMinTotalRating.Size = new System.Drawing.Size(18, 20);
@@ -566,36 +586,36 @@
 			// label7
 			// 
 			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(141, 121);
+			this.label7.Location = new System.Drawing.Point(289, 452);
 			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(112, 13);
+			this.label7.Size = new System.Drawing.Size(34, 13);
 			this.label7.TabIndex = 85;
-			this.label7.Text = "Minimum Total Rating:";
+			this.label7.Text = "Total:";
 			this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// label8
 			// 
 			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(117, 98);
+			this.label8.Location = new System.Drawing.Point(265, 401);
 			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(136, 13);
+			this.label8.Size = new System.Drawing.Size(58, 13);
 			this.label8.TabIndex = 86;
-			this.label8.Text = "Minimum Defensive Rating:";
+			this.label8.Text = "Defensive:";
 			this.label8.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// label9
 			// 
 			this.label9.AutoSize = true;
-			this.label9.Location = new System.Drawing.Point(120, 76);
+			this.label9.Location = new System.Drawing.Point(268, 374);
 			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(133, 13);
+			this.label9.Size = new System.Drawing.Size(55, 13);
 			this.label9.TabIndex = 87;
-			this.label9.Text = "Minimum Offensive Rating:";
+			this.label9.Text = "Offensive:";
 			this.label9.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// txtMinDefensiveRating
 			// 
-			this.txtMinDefensiveRating.Location = new System.Drawing.Point(259, 95);
+			this.txtMinDefensiveRating.Location = new System.Drawing.Point(329, 397);
 			this.txtMinDefensiveRating.MaxLength = 1;
 			this.txtMinDefensiveRating.Name = "txtMinDefensiveRating";
 			this.txtMinDefensiveRating.Size = new System.Drawing.Size(18, 20);
@@ -605,7 +625,7 @@
 			// 
 			// txtMinOffensiveRating
 			// 
-			this.txtMinOffensiveRating.Location = new System.Drawing.Point(259, 72);
+			this.txtMinOffensiveRating.Location = new System.Drawing.Point(329, 371);
 			this.txtMinOffensiveRating.MaxLength = 1;
 			this.txtMinOffensiveRating.Name = "txtMinOffensiveRating";
 			this.txtMinOffensiveRating.Size = new System.Drawing.Size(18, 20);
@@ -613,10 +633,299 @@
 			this.txtMinOffensiveRating.Text = "0";
 			this.txtMinOffensiveRating.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
 			// 
+			// label10
+			// 
+			this.label10.AutoSize = true;
+			this.label10.Location = new System.Drawing.Point(341, 56);
+			this.label10.Name = "label10";
+			this.label10.Size = new System.Drawing.Size(34, 13);
+			this.label10.TabIndex = 90;
+			this.label10.Text = ">= =<";
+			// 
+			// txtMaximumBaseArmorLevel
+			// 
+			this.txtMaximumBaseArmorLevel.Location = new System.Drawing.Point(380, 53);
+			this.txtMaximumBaseArmorLevel.MaxLength = 3;
+			this.txtMaximumBaseArmorLevel.Name = "txtMaximumBaseArmorLevel";
+			this.txtMaximumBaseArmorLevel.Size = new System.Drawing.Size(33, 20);
+			this.txtMaximumBaseArmorLevel.TabIndex = 91;
+			this.txtMaximumBaseArmorLevel.Text = "999";
+			this.txtMaximumBaseArmorLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtMaximumBaseArmorLevel.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// chkJewelryBracelet
+			// 
+			this.chkJewelryBracelet.AutoSize = true;
+			this.chkJewelryBracelet.Checked = true;
+			this.chkJewelryBracelet.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkJewelryBracelet.Location = new System.Drawing.Point(157, 144);
+			this.chkJewelryBracelet.Name = "chkJewelryBracelet";
+			this.chkJewelryBracelet.Size = new System.Drawing.Size(65, 17);
+			this.chkJewelryBracelet.TabIndex = 94;
+			this.chkJewelryBracelet.Text = "Bracelet";
+			this.chkJewelryBracelet.UseVisualStyleBackColor = true;
+			this.chkJewelryBracelet.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkJewelryTrinket
+			// 
+			this.chkJewelryTrinket.AutoSize = true;
+			this.chkJewelryTrinket.Checked = true;
+			this.chkJewelryTrinket.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkJewelryTrinket.Location = new System.Drawing.Point(92, 144);
+			this.chkJewelryTrinket.Name = "chkJewelryTrinket";
+			this.chkJewelryTrinket.Size = new System.Drawing.Size(59, 17);
+			this.chkJewelryTrinket.TabIndex = 93;
+			this.chkJewelryTrinket.Text = "Trinket";
+			this.chkJewelryTrinket.UseVisualStyleBackColor = true;
+			this.chkJewelryTrinket.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkJewelryNecklace
+			// 
+			this.chkJewelryNecklace.AutoSize = true;
+			this.chkJewelryNecklace.Checked = true;
+			this.chkJewelryNecklace.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkJewelryNecklace.Location = new System.Drawing.Point(14, 144);
+			this.chkJewelryNecklace.Name = "chkJewelryNecklace";
+			this.chkJewelryNecklace.Size = new System.Drawing.Size(72, 17);
+			this.chkJewelryNecklace.TabIndex = 92;
+			this.chkJewelryNecklace.Text = "Necklace";
+			this.chkJewelryNecklace.UseVisualStyleBackColor = true;
+			this.chkJewelryNecklace.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// chkJewelryRing
+			// 
+			this.chkJewelryRing.AutoSize = true;
+			this.chkJewelryRing.Checked = true;
+			this.chkJewelryRing.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chkJewelryRing.Location = new System.Drawing.Point(228, 144);
+			this.chkJewelryRing.Name = "chkJewelryRing";
+			this.chkJewelryRing.Size = new System.Drawing.Size(48, 17);
+			this.chkJewelryRing.TabIndex = 95;
+			this.chkJewelryRing.Text = "Ring";
+			this.chkJewelryRing.UseVisualStyleBackColor = true;
+			this.chkJewelryRing.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// cantripSelectorControl1
+			// 
+			this.cantripSelectorControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.cantripSelectorControl1.Location = new System.Drawing.Point(0, 569);
+			this.cantripSelectorControl1.Name = "cantripSelectorControl1";
+			this.cantripSelectorControl1.Size = new System.Drawing.Size(528, 182);
+			this.cantripSelectorControl1.TabIndex = 51;
+			// 
+			// label11
+			// 
+			this.label11.AutoSize = true;
+			this.label11.Location = new System.Drawing.Point(160, 78);
+			this.label11.Name = "label11";
+			this.label11.Size = new System.Drawing.Size(138, 13);
+			this.label11.TabIndex = 96;
+			this.label11.Text = "Base Extremity Armor Level:";
+			// 
+			// txtMaximumExtremityArmorLevel
+			// 
+			this.txtMaximumExtremityArmorLevel.Location = new System.Drawing.Point(380, 76);
+			this.txtMaximumExtremityArmorLevel.MaxLength = 3;
+			this.txtMaximumExtremityArmorLevel.Name = "txtMaximumExtremityArmorLevel";
+			this.txtMaximumExtremityArmorLevel.Size = new System.Drawing.Size(33, 20);
+			this.txtMaximumExtremityArmorLevel.TabIndex = 99;
+			this.txtMaximumExtremityArmorLevel.Text = "999";
+			this.txtMaximumExtremityArmorLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtMaximumExtremityArmorLevel.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// label12
+			// 
+			this.label12.AutoSize = true;
+			this.label12.Location = new System.Drawing.Point(341, 79);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(34, 13);
+			this.label12.TabIndex = 98;
+			this.label12.Text = ">= =<";
+			// 
+			// txtMinimumExtremityArmorLevel
+			// 
+			this.txtMinimumExtremityArmorLevel.Location = new System.Drawing.Point(304, 76);
+			this.txtMinimumExtremityArmorLevel.MaxLength = 3;
+			this.txtMinimumExtremityArmorLevel.Name = "txtMinimumExtremityArmorLevel";
+			this.txtMinimumExtremityArmorLevel.Size = new System.Drawing.Size(33, 20);
+			this.txtMinimumExtremityArmorLevel.TabIndex = 97;
+			this.txtMinimumExtremityArmorLevel.Text = "230";
+			this.txtMinimumExtremityArmorLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+			this.txtMinimumExtremityArmorLevel.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// txtMaxEpics
+			// 
+			this.txtMaxEpics.Location = new System.Drawing.Point(389, 309);
+			this.txtMaxEpics.MaxLength = 1;
+			this.txtMaxEpics.Name = "txtMaxEpics";
+			this.txtMaxEpics.Size = new System.Drawing.Size(18, 20);
+			this.txtMaxEpics.TabIndex = 100;
+			this.txtMaxEpics.Text = "9";
+			this.txtMaxEpics.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// label13
+			// 
+			this.label13.AutoSize = true;
+			this.label13.Location = new System.Drawing.Point(351, 286);
+			this.label13.Name = "label13";
+			this.label13.Size = new System.Drawing.Size(34, 13);
+			this.label13.TabIndex = 101;
+			this.label13.Text = ">= =<";
+			// 
+			// txtMaxLegendaries
+			// 
+			this.txtMaxLegendaries.Location = new System.Drawing.Point(390, 283);
+			this.txtMaxLegendaries.MaxLength = 1;
+			this.txtMaxLegendaries.Name = "txtMaxLegendaries";
+			this.txtMaxLegendaries.Size = new System.Drawing.Size(18, 20);
+			this.txtMaxLegendaries.TabIndex = 102;
+			this.txtMaxLegendaries.Text = "9";
+			this.txtMaxLegendaries.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// label14
+			// 
+			this.label14.AutoSize = true;
+			this.label14.Location = new System.Drawing.Point(351, 312);
+			this.label14.Name = "label14";
+			this.label14.Size = new System.Drawing.Size(34, 13);
+			this.label14.TabIndex = 103;
+			this.label14.Text = ">= =<";
+			// 
+			// label15
+			// 
+			this.label15.AutoSize = true;
+			this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label15.Location = new System.Drawing.Point(365, 351);
+			this.label15.Name = "label15";
+			this.label15.Size = new System.Drawing.Size(43, 13);
+			this.label15.TabIndex = 104;
+			this.label15.Text = "Ratings";
+			// 
+			// label16
+			// 
+			this.label16.AutoSize = true;
+			this.label16.Location = new System.Drawing.Point(287, 424);
+			this.label16.Name = "label16";
+			this.label16.Size = new System.Drawing.Size(36, 13);
+			this.label16.TabIndex = 105;
+			this.label16.Text = "Other:";
+			this.label16.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// txtMinOtherRating
+			// 
+			this.txtMinOtherRating.Location = new System.Drawing.Point(329, 423);
+			this.txtMinOtherRating.MaxLength = 1;
+			this.txtMinOtherRating.Name = "txtMinOtherRating";
+			this.txtMinOtherRating.Size = new System.Drawing.Size(18, 20);
+			this.txtMinOtherRating.TabIndex = 106;
+			this.txtMinOtherRating.Text = "0";
+			this.txtMinOtherRating.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// label17
+			// 
+			this.label17.AutoSize = true;
+			this.label17.Location = new System.Drawing.Point(351, 374);
+			this.label17.Name = "label17";
+			this.label17.Size = new System.Drawing.Size(34, 13);
+			this.label17.TabIndex = 107;
+			this.label17.Text = ">= =<";
+			// 
+			// label18
+			// 
+			this.label18.AutoSize = true;
+			this.label18.Location = new System.Drawing.Point(351, 400);
+			this.label18.Name = "label18";
+			this.label18.Size = new System.Drawing.Size(34, 13);
+			this.label18.TabIndex = 108;
+			this.label18.Text = ">= =<";
+			// 
+			// label19
+			// 
+			this.label19.AutoSize = true;
+			this.label19.Location = new System.Drawing.Point(351, 424);
+			this.label19.Name = "label19";
+			this.label19.Size = new System.Drawing.Size(34, 13);
+			this.label19.TabIndex = 109;
+			this.label19.Text = ">= =<";
+			// 
+			// label20
+			// 
+			this.label20.AutoSize = true;
+			this.label20.Location = new System.Drawing.Point(351, 452);
+			this.label20.Name = "label20";
+			this.label20.Size = new System.Drawing.Size(34, 13);
+			this.label20.TabIndex = 110;
+			this.label20.Text = ">= =<";
+			// 
+			// txtMaxOffensiveRating
+			// 
+			this.txtMaxOffensiveRating.Location = new System.Drawing.Point(389, 372);
+			this.txtMaxOffensiveRating.MaxLength = 1;
+			this.txtMaxOffensiveRating.Name = "txtMaxOffensiveRating";
+			this.txtMaxOffensiveRating.Size = new System.Drawing.Size(18, 20);
+			this.txtMaxOffensiveRating.TabIndex = 111;
+			this.txtMaxOffensiveRating.Text = "9";
+			this.txtMaxOffensiveRating.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// txtMaxDefensiveRating
+			// 
+			this.txtMaxDefensiveRating.Location = new System.Drawing.Point(389, 398);
+			this.txtMaxDefensiveRating.MaxLength = 1;
+			this.txtMaxDefensiveRating.Name = "txtMaxDefensiveRating";
+			this.txtMaxDefensiveRating.Size = new System.Drawing.Size(18, 20);
+			this.txtMaxDefensiveRating.TabIndex = 112;
+			this.txtMaxDefensiveRating.Text = "9";
+			this.txtMaxDefensiveRating.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// txtMaxOtherRating
+			// 
+			this.txtMaxOtherRating.Location = new System.Drawing.Point(389, 424);
+			this.txtMaxOtherRating.MaxLength = 1;
+			this.txtMaxOtherRating.Name = "txtMaxOtherRating";
+			this.txtMaxOtherRating.Size = new System.Drawing.Size(18, 20);
+			this.txtMaxOtherRating.TabIndex = 113;
+			this.txtMaxOtherRating.Text = "9";
+			this.txtMaxOtherRating.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
+			// txtMaxTotalRating
+			// 
+			this.txtMaxTotalRating.Location = new System.Drawing.Point(389, 450);
+			this.txtMaxTotalRating.MaxLength = 1;
+			this.txtMaxTotalRating.Name = "txtMaxTotalRating";
+			this.txtMaxTotalRating.Size = new System.Drawing.Size(18, 20);
+			this.txtMaxTotalRating.TabIndex = 114;
+			this.txtMaxTotalRating.Text = "9";
+			this.txtMaxTotalRating.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
+			// 
 			// FiltersControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.txtMaxTotalRating);
+			this.Controls.Add(this.txtMaxOtherRating);
+			this.Controls.Add(this.txtMaxDefensiveRating);
+			this.Controls.Add(this.txtMaxOffensiveRating);
+			this.Controls.Add(this.label20);
+			this.Controls.Add(this.label19);
+			this.Controls.Add(this.label18);
+			this.Controls.Add(this.label17);
+			this.Controls.Add(this.txtMinOtherRating);
+			this.Controls.Add(this.label16);
+			this.Controls.Add(this.label15);
+			this.Controls.Add(this.label14);
+			this.Controls.Add(this.txtMaxLegendaries);
+			this.Controls.Add(this.label13);
+			this.Controls.Add(this.txtMaxEpics);
+			this.Controls.Add(this.txtMaximumExtremityArmorLevel);
+			this.Controls.Add(this.label12);
+			this.Controls.Add(this.txtMinimumExtremityArmorLevel);
+			this.Controls.Add(this.label11);
+			this.Controls.Add(this.chkJewelryRing);
+			this.Controls.Add(this.chkJewelryBracelet);
+			this.Controls.Add(this.chkJewelryTrinket);
+			this.Controls.Add(this.chkJewelryNecklace);
+			this.Controls.Add(this.txtMaximumBaseArmorLevel);
+			this.Controls.Add(this.label10);
 			this.Controls.Add(this.txtMinOffensiveRating);
 			this.Controls.Add(this.txtMinDefensiveRating);
 			this.Controls.Add(this.label9);
@@ -659,8 +968,8 @@
 			this.Controls.Add(this.chkMissileWeapon);
 			this.Controls.Add(this.chkMeleeWeapon);
 			this.Controls.Add(this.chkJewelry);
-			this.Controls.Add(this.chkClothing);
-			this.Controls.Add(this.chkArmor);
+			this.Controls.Add(this.chkShirtPants);
+			this.Controls.Add(this.chkBodyArmorClothing);
 			this.Controls.Add(this.txtMinimumBaseArmorLevel);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.checkRemoveEquipped);
@@ -676,8 +985,8 @@
 		private System.Windows.Forms.TextBox txtMinimumBaseArmorLevel;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.CheckBox checkRemoveEquipped;
-		private System.Windows.Forms.CheckBox chkArmor;
-		private System.Windows.Forms.CheckBox chkClothing;
+		private System.Windows.Forms.CheckBox chkBodyArmorClothing;
+		private System.Windows.Forms.CheckBox chkShirtPants;
 		private System.Windows.Forms.CheckBox chkJewelry;
 		private System.Windows.Forms.CheckBox chkMeleeWeapon;
 		private System.Windows.Forms.CheckBox chkMissileWeapon;
@@ -720,5 +1029,30 @@
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.TextBox txtMinDefensiveRating;
 		private System.Windows.Forms.TextBox txtMinOffensiveRating;
+		private System.Windows.Forms.Label label10;
+		private System.Windows.Forms.TextBox txtMaximumBaseArmorLevel;
+		private System.Windows.Forms.CheckBox chkJewelryBracelet;
+		private System.Windows.Forms.CheckBox chkJewelryTrinket;
+		private System.Windows.Forms.CheckBox chkJewelryNecklace;
+		private System.Windows.Forms.CheckBox chkJewelryRing;
+		private System.Windows.Forms.Label label11;
+		private System.Windows.Forms.TextBox txtMaximumExtremityArmorLevel;
+		private System.Windows.Forms.Label label12;
+		private System.Windows.Forms.TextBox txtMinimumExtremityArmorLevel;
+		private System.Windows.Forms.TextBox txtMaxEpics;
+		private System.Windows.Forms.Label label13;
+		private System.Windows.Forms.TextBox txtMaxLegendaries;
+		private System.Windows.Forms.Label label14;
+		private System.Windows.Forms.Label label15;
+		private System.Windows.Forms.Label label16;
+		private System.Windows.Forms.TextBox txtMinOtherRating;
+		private System.Windows.Forms.Label label17;
+		private System.Windows.Forms.Label label18;
+		private System.Windows.Forms.Label label19;
+		private System.Windows.Forms.Label label20;
+		private System.Windows.Forms.TextBox txtMaxOffensiveRating;
+		private System.Windows.Forms.TextBox txtMaxDefensiveRating;
+		private System.Windows.Forms.TextBox txtMaxOtherRating;
+		private System.Windows.Forms.TextBox txtMaxTotalRating;
 	}
 }

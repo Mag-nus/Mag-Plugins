@@ -77,6 +77,16 @@ namespace Mag.Shared.Constants
 			return ((int)value & 0x00007F21) != 0;
 		}
 
+		public static bool IsCoreBodyArmor(this EquippableSlotFlags value)
+		{
+			return (value & (EquippableSlotFlags.Chest | EquippableSlotFlags.UpperArms | EquippableSlotFlags.LowerArms | EquippableSlotFlags.Abdomen | EquippableSlotFlags.UpperLegs | EquippableSlotFlags.LowerLegs)) != 0;
+		}
+
+		public static bool IsExtremityBodyArmor(this EquippableSlotFlags value)
+		{
+			return (value & (EquippableSlotFlags.Feet | EquippableSlotFlags.Hands | EquippableSlotFlags.Head)) != 0;
+		}
+
 		public static bool IsUnderwear(this EquippableSlotFlags value)
 		{
 			if (value == (EquippableSlotFlags.Feet | EquippableSlotFlags.PantsLowerLegs))
