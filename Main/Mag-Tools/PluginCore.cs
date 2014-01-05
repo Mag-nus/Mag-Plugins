@@ -736,7 +736,7 @@ namespace MagTools
 						string first = command.Substring(0, command.IndexOf(" on ", StringComparison.Ordinal));
 						string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
 
-						objectId = FindIdForName(first, searchInventory, false, searchLandscape, partialMatch);
+						objectId = FindIdForName(first, searchInventory, false, false, partialMatch);
 						useMethod = FindIdForName(second, searchInventory, false, searchLandscape, partialMatch, objectId);
 					}
 
