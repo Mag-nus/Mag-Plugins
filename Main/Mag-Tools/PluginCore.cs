@@ -91,7 +91,7 @@ namespace MagTools
 		// General
 		InventoryExporter inventoryExporter;
 		InventoryLogger inventoryLogger;
-		AetheriaRevealer aetheriaRevealer;
+		IdleActionManager idleActionManager;
 
 		// Macros
 		OpenMainPackOnLogin openMainPackOnLogin;
@@ -183,7 +183,7 @@ namespace MagTools
 				// General
 				inventoryExporter = new InventoryExporter();
 				inventoryLogger = new InventoryLogger();
-				aetheriaRevealer = new AetheriaRevealer();
+				idleActionManager = new IdleActionManager();
 
 				// Macros
 				openMainPackOnLogin = new OpenMainPackOnLogin();
@@ -398,7 +398,7 @@ namespace MagTools
 
 				// General
 				if (inventoryLogger != null) inventoryLogger.Dispose();
-				if (aetheriaRevealer != null) aetheriaRevealer.Dispose();
+				if (idleActionManager != null) idleActionManager.Dispose();
 
 
 				Current = null;
@@ -546,7 +546,7 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		void CharacterFilter_Logoff(object sender, Decal.Adapter.Wrappers.LogoffEventArgs e)
+		void CharacterFilter_Logoff(object sender, LogoffEventArgs e)
 		{
 			try
 			{
@@ -667,7 +667,7 @@ namespace MagTools
 						PostMessageTools.SendF12();
 						PostMessageTools.SendF4();
 
-						System.Drawing.Rectangle rect = Core.Actions.UIElementRegion(Decal.Adapter.Wrappers.UIElementType.Panels);
+						Rectangle rect = Core.Actions.UIElementRegion(UIElementType.Panels);
 
 						PostMessageTools.SendMouseClick(rect.X + 200, rect.Y + 240);
 						PostMessageTools.SendMsg(fellowName);
@@ -706,10 +706,15 @@ namespace MagTools
 					return;
 				}
 
-				if ((lower.StartsWith("/mt use ") && lower.Length > 8) || (lower.StartsWith("/mt usep ") && lower.Length > 9))
+				if ((lower.StartsWith("/mt use ") && lower.Length > 8) || (lower.StartsWith("/mt usep ") && lower.Length > 9) ||
+					(lower.StartsWith("/mt usei ") && lower.Length > 9) || (lower.StartsWith("/mt useip ") && lower.Length > 10) ||
+					(lower.StartsWith("/mt usel ") && lower.Length > 9) || (lower.StartsWith("/mt uselp ") && lower.Length > 10))
 				{
-					bool partialMatch = lower.StartsWith("/mt usep ");
-					int offset = partialMatch ? 9 : 8;
+					bool partialMatch = lower.StartsWith("/mt usep ") || lower.StartsWith("/mt useip ") || lower.StartsWith("/mt uselp ");
+					int offset = lower.StartsWith("/mt use ") || lower.StartsWith("/mt usep ") ? (partialMatch ? 9 : 8) : (partialMatch ? 10 : 9);
+
+					bool searchInventory = !lower.StartsWith("/mt usel");
+					bool searchLandscape = !lower.StartsWith("/mt usei");
 
 					int objectId;
 					int useMethod = 0;
@@ -723,7 +728,7 @@ namespace MagTools
 							objectId = wo.Id;
 						}
 						else
-							objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, true, partialMatch);
+							objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), searchInventory, false, searchLandscape, partialMatch);
 					}
 					else
 					{
@@ -731,8 +736,8 @@ namespace MagTools
 						string first = command.Substring(0, command.IndexOf(" on ", StringComparison.Ordinal));
 						string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
 
-						objectId = FindIdForName(first, true, false, true, partialMatch);
-						useMethod = FindIdForName(second, true, false, true, partialMatch);
+						objectId = FindIdForName(first, searchInventory, false, searchLandscape, partialMatch);
+						useMethod = FindIdForName(second, searchInventory, false, searchLandscape, partialMatch, objectId);
 					}
 
 					if (objectId == -1 || useMethod == -1)
@@ -741,7 +746,10 @@ namespace MagTools
 					if (useMethod == 0)
 						CoreManager.Current.Actions.UseItem(objectId, 0);
 					else
+					{
+						CoreManager.Current.Actions.SelectItem(useMethod);
 						CoreManager.Current.Actions.UseItem(objectId, 1, useMethod);
+					}
 
 					return;
 				}
@@ -796,14 +804,14 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		int FindIdForName(string name, bool searchInInventory, bool searchOpenContainer, bool searchEnvironment, bool partialMatch)
+		int FindIdForName(string name, bool searchInInventory, bool searchOpenContainer, bool searchEnvironment, bool partialMatch, int idToSkip = 0)
 		{
 			// Exact match attempt first
 			if (searchInInventory)
 			{
 				foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
 				{
-					if (String.Compare(wo.Name, name, StringComparison.OrdinalIgnoreCase) == 0)
+					if (String.Compare(wo.Name, name, StringComparison.OrdinalIgnoreCase) == 0 && wo.Id != idToSkip)
 						return wo.Id;
 				}
 			}
@@ -832,7 +840,7 @@ namespace MagTools
 				{
 					foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
 					{
-						if (wo.Name.ToLower().Contains(name.ToLower()))
+						if (wo.Name.ToLower().Contains(name.ToLower()) && wo.Id != idToSkip)
 							return wo.Id;
 					}
 				}
@@ -862,7 +870,7 @@ namespace MagTools
 		{
 			try
 			{
-				System.Drawing.Rectangle rect = Core.Actions.UIElementRegion(Decal.Adapter.Wrappers.UIElementType.Panels);
+				Rectangle rect = Core.Actions.UIElementRegion(UIElementType.Panels);
 
 				CoreManager.Current.RenderFrame -= new EventHandler<EventArgs>(FellowCreate_Current_RenderFrame);
 				PostMessageTools.SendMouseClick(rect.X + 145, rect.Y + 343);

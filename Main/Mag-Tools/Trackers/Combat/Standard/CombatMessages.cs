@@ -70,8 +70,10 @@ namespace MagTools.Trackers.Combat.Standard
 			MagicGivenAttacks.Add(new Regex("^You [\\w]+ (?<targetname>.+) for (?<points>.+) point.* with .+$"));
 
 
-			//MagicCastAttacks.Add(new Regex("^You cast Gossamer Flesh on (?<targetname>.+)$"));
-			MagicCastAttacks.Add(new Regex("^You cast Gossamer Flesh on (?<targetname>((?!(refreshing|surpassing)).)+)$"));
+			// You cast Gossamer Flesh on Chicken
+			MagicCastAttacks.Add(new Regex("^You cast Gossamer Flesh on (?<targetname>((?!, ).)+)$"));
+			// You cast Gossamer Flesh on Chicken, refreshing Gossamer Flesh
+			MagicCastAttacks.Add(new Regex("^You cast Gossamer Flesh on (?<targetname>.+), .+$"));
 
 
 			// You flatten Noble Remains's body with the force of your assault!

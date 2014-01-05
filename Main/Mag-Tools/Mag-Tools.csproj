@@ -110,7 +110,7 @@
     <Compile Include="Loggers\Chat\LoggedChat.cs" />
     <Compile Include="Loggers\ILogger.cs" />
     <Compile Include="Loggers\ILoggerTarget.cs" />
-    <Compile Include="Macros\AetheriaRevealer.cs" />
+    <Compile Include="Macros\IdleActionManager.cs" />
     <Compile Include="Macros\LogOutOnDeath.cs" />
     <Compile Include="Trackers\Consumable\ConsumableTracker.cs" />
     <Compile Include="Trackers\Consumable\TrackedConsumable.cs" />

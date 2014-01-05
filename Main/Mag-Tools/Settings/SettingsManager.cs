@@ -76,6 +76,12 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> InventoryLogger = new Setting<bool>("InventoryManagement/InventoryLogger", "Inventory Logger Enabled");
 
 			public static readonly Setting<bool> AetheriaRevealer = new Setting<bool>("InventoryManagement/AetheriaRevealer", "Auto Reveal Aetheria", true);
+
+			public static readonly Setting<bool> HeartCarver = new Setting<bool>("InventoryManagement/HeartCarver", "Auto Carve Hearts");
+
+			public static readonly Setting<bool> ShatteredKeyFixer = new Setting<bool>("InventoryManagement/ShatteredKeyFixer", "Auto Fix Shattered Keys");
+
+			public static readonly Setting<bool> KeyRinger = new Setting<bool>("InventoryManagement/KeyRinger", "Auto Ring Keys");
 		}
 
 		public static class ItemInfoOnIdent
