@@ -189,7 +189,7 @@ namespace Mag.Shared
 
 			User32.GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
 
-			SendMouseClick(rect.Width / 2, (int)(rect.Height * 0.5416666666666667));
+			SendMouseClick(rect.Width / 2, rect.Height / 2 + 31);
 		}
 
 		public static void ClickYes()
@@ -198,7 +198,9 @@ namespace Mag.Shared
 
 			User32.GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
 
-			SendMouseClick((int)(rect.Width * .4), (int)(rect.Height * 0.5416666666666667));
+			// 800x600 +32 works, +33 does not work on single/double/tripple line boxes
+			// 1600x1200 +31 works, +32 does not work on single/double/tripple line boxes
+			SendMouseClick(rect.Width / 2 - 80, rect.Height / 2 + 31);
 		}
 
 		public static void ClickNo()
@@ -207,7 +209,7 @@ namespace Mag.Shared
 
 			User32.GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
 
-			SendMouseClick((int)(rect.Width * .6), (int)(rect.Height * 0.5416666666666667));
+			SendMouseClick(rect.Width / 2 + 80, rect.Height / 2 + 31);
 		}
 
 		public static void SendMouseClick(int x, int y)

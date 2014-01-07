@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Globalization;
 using MagTools.Trackers.Equipment;
 
 using Mag.Shared;
@@ -82,7 +82,7 @@ namespace MagTools.Views
 
 					((HudPictureBox)newRow[0]).Image = wo.Icon + 0x6000000;
 					((HudStaticText)newRow[1]).Text = wo.Name;
-					((HudStaticText)newRow[5]).Text = obj.Id.ToString();
+					((HudStaticText)newRow[5]).Text = obj.Id.ToString(CultureInfo.InvariantCulture);
 				}
 
 				Item_Changed(obj);
@@ -132,13 +132,13 @@ namespace MagTools.Views
 						{
 							((HudStaticText)mainView.ManaList[row - 1][3]).Text = "-";
 							((HudStaticText)mainView.ManaList[row - 1][4]).Text = "-";
-							((HudStaticText)mainView.ManaList[row - 1][6]).Text = int.MaxValue.ToString();
+							((HudStaticText)mainView.ManaList[row - 1][6]).Text = int.MaxValue.ToString(CultureInfo.InvariantCulture);
 						}
 						else
 						{
 							((HudStaticText)mainView.ManaList[row - 1][3]).Text = obj.CalculatedCurrentMana + " / " + obj.MaximumMana;
 							((HudStaticText)mainView.ManaList[row - 1][4]).Text = string.Format("{0:d}h{1:d2}m", (int)obj.ManaTimeRemaining.TotalHours, obj.ManaTimeRemaining.Minutes);
-							((HudStaticText)mainView.ManaList[row - 1][6]).Text = obj.ManaTimeRemaining.TotalSeconds.ToString();
+							((HudStaticText)mainView.ManaList[row - 1][6]).Text = obj.ManaTimeRemaining.TotalSeconds.ToString(CultureInfo.InvariantCulture);
 						}
 
 						SortList();

@@ -127,8 +127,8 @@
 
       </control>
     </page>
-    
-    <page label="   Misc   ">
+
+  <page label="   Misc   ">
       <control progid="DecalControls.Notebook" left="0" top="0" width="320" height="460">
 
         <page label="  Options  ">
@@ -167,10 +167,17 @@
           </control>
         </page>
 
-        <page label="  Tools  ">
+        <page label="  Inventory  ">
           <control progid="DecalControls.FixedLayout" clipped="">
             <control progid="DecalControls.PushButton" name="ClipboardWornEquipment" left="10" top="10" width="140" height="20" text="Clipboard Worn Equipment" />
-            <control progid="DecalControls.PushButton" name="ClipboardInventoryInfo" left="10" top="40" width="140" height="20" text="Clipboard Inventory Info" />
+            <control progid="DecalControls.PushButton" name="ClipboardInventoryInfo" left="170" top="10" width="140" height="20" text="Clipboard Inventory Info" />
+            <control progid="DecalControls.Edit" name="InventorySearch" left="5" top="40" width="310" height="16" text="regex search string" />
+            <control progid="DecalControls.List" name="InventoryList" left="0" top="60" width="320" height="270">
+              <column progid="DecalControls.IconColumn" name="InventoryListItemIcon" fixedwidth="16" />
+              <column progid="DecalControls.TextColumn" name="InventoryListItemName" fixedwidth="304" />
+              <column progid="DecalControls.TextColumn" name="InventoryListItemID" />
+            </control>
+            <control progid="DecalControls.StaticText" name="InventoryItemText" left="5" top="335" width="310" height="120" />
           </control>
         </page>
 

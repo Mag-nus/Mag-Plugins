@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Collections.ObjectModel;
-
+using System.Text.RegularExpressions;
 using MagTools.Client;
 using MagTools.Inventory;
 using MagTools.Loggers;
@@ -14,6 +15,7 @@ using Mag.Shared;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
+using VirindiViewService.Controls;
 
 /*
  * Created by Mag-nus. 8/19/2011
@@ -150,7 +152,7 @@ namespace MagTools
 		ChatLoggerGUI chatLoggerGroup1GUI;
 		ChatLoggerGUI chatLoggerGroup2GUI;
 
-		HUD hud;
+		//HUD hud;
 
 
 		readonly Collection<string> startupErrors = new Collection<string>();
@@ -310,11 +312,14 @@ namespace MagTools
 					mainView.ClipboardWornEquipment.Hit += (s2, e2) => { try { inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.WornEquipment); } catch (Exception ex) { Debug.LogException(ex); } };
 					mainView.ClipboardInventoryInfo.Hit += (s2, e2) => { try { inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.Inventory); } catch (Exception ex) { Debug.LogException(ex); } };
 
+					mainView.InventorySearch.Change += new EventHandler(InventorySearch_Change);
+					mainView.InventoryList.Click += new VirindiViewService.Controls.HudList.delClickedControl(InventoryList_Click);
+
 					System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
 					System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
 					mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
 
-					hud = new HUD(equipmentTracker);
+					//hud = new HUD(equipmentTracker);
 				}
 				catch (FileNotFoundException ex) { startupErrors.Add("Views failed to load: " + ex.Message + Environment.NewLine + "Is Virindi View Service Running?"); }
 				catch (Exception ex) { Debug.LogException(ex); }
@@ -343,7 +348,7 @@ namespace MagTools
 
 				// Views, depends on VirindiViewService.dll
 				// We dispose these before our other objects (Trackers/Macros) as these probably reference those other objects.
-				if (hud != null) hud.Dispose();
+				//if (hud != null) hud.Dispose();
 
 				if (chatLoggerGroup1GUI != null) chatLoggerGroup1GUI.Dispose();
 				if (chatLoggerGroup2GUI != null) chatLoggerGroup2GUI.Dispose();
@@ -698,11 +703,8 @@ namespace MagTools
 
 					int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, true, true, partialMatch);
 
-					if (objectId == -1)
-						return;
-
-						CoreManager.Current.Actions.SelectItem(objectId);
-
+					if (objectId == -1) return;
+					CoreManager.Current.Actions.SelectItem(objectId);
 					return;
 				}
 
@@ -766,11 +768,8 @@ namespace MagTools
 					int objectId = FindIdForName(first, true, false, false, partialMatch);
 					int destinationId = FindIdForName(second, false, false, true, partialMatch);
 
-					if (objectId == -1 || destinationId == -1)
-						return;
-
+					if (objectId == -1 || destinationId == -1) return;
 					CoreManager.Current.Actions.GiveItem(objectId, destinationId);
-
 					return;
 				}
 
@@ -781,11 +780,20 @@ namespace MagTools
 
 					int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), false, true, false, partialMatch);
 
-					if (objectId == -1)
-						return;
-
+					if (objectId == -1) return;
 					CoreManager.Current.Actions.UseItem(objectId, 0);
+					return;
+				}
 
+				if ((lower.StartsWith("/mt drop ") && lower.Length > 9) || (lower.StartsWith("/mt dropp ") && lower.Length > 10))
+				{
+					bool partialMatch = lower.StartsWith("/mt dropp ");
+					int offset = partialMatch ? 10 : 9;
+
+					int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, partialMatch);
+
+					if (objectId == -1) return;
+					CoreManager.Current.Actions.DropItem(objectId);
 					return;
 				}
 
@@ -797,6 +805,60 @@ namespace MagTools
 					if (state == "melee") CoreManager.Current.Actions.SetCombatMode(CombatState.Melee);
 					if (state == "missile") CoreManager.Current.Actions.SetCombatMode(CombatState.Missile);
 					if (state == "peace") CoreManager.Current.Actions.SetCombatMode(CombatState.Peace);
+				}
+
+				if ((lower.StartsWith("/mt trade add ") && lower.Length > 14) || (lower.StartsWith("/mt trade addp ") && lower.Length > 15))
+				{
+					bool partialMatch = lower.StartsWith("/mt trade addp ");
+					int offset = partialMatch ? 15 : 14;
+
+					int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, partialMatch);
+
+					if (objectId == -1) return;
+					CoreManager.Current.Actions.TradeAdd(objectId);
+					return;
+				}
+				if (lower.StartsWith("/mt trade accept")) CoreManager.Current.Actions.TradeAccept();
+				if (lower.StartsWith("/mt trade decline")) CoreManager.Current.Actions.TradeDecline();
+				if (lower.StartsWith("/mt trade reset")) CoreManager.Current.Actions.TradeReset();
+				if (lower.StartsWith("/mt trade end")) CoreManager.Current.Actions.TradeEnd();
+
+				if (CoreManager.Current.Actions.VendorId != 0)
+				{
+					if ((lower.StartsWith("/mt vendor addbuy ") && lower.Length > 18) || (lower.StartsWith("/mt vendor addbuyp ") && lower.Length > 19))
+					{
+						bool partialMatch = lower.StartsWith("/mt vendor addbuyp ");
+						int offset = partialMatch ? 19 : 18;
+
+						int count;
+						string itemName = lower.Substring(offset, lower.Length - offset);
+						var splits = itemName.Split(' ');
+						if (splits.Length > 1 && int.TryParse(splits[splits.Length - 1], out count))
+							itemName = itemName.Substring(0, itemName.LastIndexOf(' '));
+						else
+							count = 1;
+
+						int objectId = FindIdForName(itemName, true, false, false, partialMatch);
+
+						if (objectId == -1) return;
+						CoreManager.Current.Actions.VendorAddBuyList(objectId, count);
+						return;
+					}
+					if ((lower.StartsWith("/mt vendor addsell ") && lower.Length > 19) || (lower.StartsWith("/mt vendor addsellp ") && lower.Length > 20))
+					{
+						bool partialMatch = lower.StartsWith("/mt vendor addsellp ");
+						int offset = partialMatch ? 20 : 19;
+
+						int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, partialMatch);
+
+						if (objectId == -1) return;
+						CoreManager.Current.Actions.VendorAddSellList(objectId);
+						return;
+					}
+					if (lower.StartsWith("/mt vendor buy")) CoreManager.Current.Actions.VendorBuyAll();
+					if (lower.StartsWith("/mt vendor clearbuy")) CoreManager.Current.Actions.VendorClearBuyList();
+					if (lower.StartsWith("/mt vendor sell")) CoreManager.Current.Actions.VendorSellAll();
+					if (lower.StartsWith("/mt vendor clearsell")) CoreManager.Current.Actions.VendorClearSellList();
 				}
 
 				if (lower.StartsWith("/mt autopack") && inventoryPacker != null) inventoryPacker.Start();
@@ -953,6 +1015,55 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		#endregion
+
+		#region ' InventorySearch Change, InventoryList Click '
+		void InventorySearch_Change(object sender, EventArgs e)
+		{
+			try
+			{
+				mainView.InventoryList.ClearRows();
+
+				var regex = new Regex(mainView.InventorySearch.Text, RegexOptions.IgnoreCase);
+
+				foreach (var wo in CoreManager.Current.WorldFilter.GetInventory())
+				{
+					var itemInfo = new ItemInfo.ItemInfo(wo);
+
+					if (regex.IsMatch(itemInfo.ToString()))
+					{
+						HudList.HudListRowAccessor newRow = mainView.InventoryList.AddRow();
+
+						((HudPictureBox)newRow[0]).Image = wo.Icon + 0x6000000;
+						((HudStaticText)newRow[1]).Text = wo.Name;
+						((HudStaticText)newRow[2]).Text = wo.Id.ToString(CultureInfo.InvariantCulture);
+					}
+				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void InventoryList_Click(object sender, int row, int col)
+		{
+			try
+			{
+				int id;
+
+				if (int.TryParse(((HudStaticText)mainView.InventoryList[row][2]).Text, out id))
+				{
+					CoreManager.Current.Actions.SelectItem(id);
+
+					var wo = CoreManager.Current.WorldFilter[id];
+
+					if (wo != null)
+					{
+						var itemInfo = new ItemInfo.ItemInfo(wo);
+						mainView.InventoryItemText.Text = itemInfo.ToString();
+					}
+				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
 		#endregion
 
 		void SavePersistentStatsTimer_Tick(object sender, EventArgs e)

@@ -61,7 +61,7 @@ namespace MagTools.Macros
 		{
 			try
 			{
-				if (Settings.SettingsManager.InventoryManagement.AetheriaRevealer.Value && e.New.ObjectClass == ObjectClass.Misc && e.New.Name == "Coalesced Aetheria")
+				if (Settings.SettingsManager.InventoryManagement.AetheriaRevealer.Value && e.New.ObjectClass == ObjectClass.Gem && e.New.Name == "Coalesced Aetheria")
 					timer.Start();
 
 				if (Settings.SettingsManager.InventoryManagement.HeartCarver.Value && e.New.ObjectClass == ObjectClass.Misc && e.New.Name.EndsWith(" Heart"))
@@ -83,7 +83,7 @@ namespace MagTools.Macros
 		{
 			try
 			{
-				if (Settings.SettingsManager.InventoryManagement.AetheriaRevealer.Value && e.Changed.ObjectClass == ObjectClass.Misc && e.Changed.Name == "Coalesced Aetheria")
+				if (Settings.SettingsManager.InventoryManagement.AetheriaRevealer.Value && e.Changed.ObjectClass == ObjectClass.Gem && e.Changed.Name == "Coalesced Aetheria")
 					timer.Start();
 
 				if (Settings.SettingsManager.InventoryManagement.HeartCarver.Value && e.Changed.ObjectClass == ObjectClass.Misc && e.Changed.Name.EndsWith(" Heart"))
@@ -135,7 +135,7 @@ namespace MagTools.Macros
 					foreach (var wo in CoreManager.Current.WorldFilter.GetInventory())
 					{
 						if (wo.ObjectClass == ObjectClass.Gem && wo.Name == "Aetheria Mana Stone") toolId = wo.Id;
-						if (wo.ObjectClass == ObjectClass.Misc && wo.Name == "Coalesced Aetheria") targetId = wo.Id;
+						if (wo.ObjectClass == ObjectClass.Gem && wo.Name == "Coalesced Aetheria") targetId = wo.Id;
 					}
 				}
 
@@ -167,11 +167,20 @@ namespace MagTools.Macros
 					if (closestChest == null || Util.GetDistanceFromPlayer(closestChest) > 10)
 					{
 						couldRequireConfirmation = false;
+						WorldObject bestKeyRing = null;
 						foreach (var wo in CoreManager.Current.WorldFilter.GetInventory())
 						{
-							if (wo.ObjectClass == ObjectClass.Misc && wo.Name == "Burning Sands Keyring") toolId = wo.Id;
+							if (wo.ObjectClass == ObjectClass.Misc && wo.Name == "Burning Sands Keyring" && wo.Values(LongValueKey.UsesRemaining) > 0 && wo.Values(LongValueKey.KeysHeld) < 24)
+							{
+								if (bestKeyRing == null || (bestKeyRing.Values(LongValueKey.KeysHeld) < wo.Values(LongValueKey.KeysHeld)))
+									bestKeyRing = wo;
+								else if (bestKeyRing.Values(LongValueKey.KeysHeld) == 0 && bestKeyRing.Values(LongValueKey.UsesRemaining) > wo.Values(LongValueKey.UsesRemaining))
+									bestKeyRing = wo;
+							}
 							if (wo.ObjectClass == ObjectClass.Key && wo.Name == "Aged Legendary Key") targetId = wo.Id;
 						}
+						if (bestKeyRing != null)
+							toolId = bestKeyRing.Id;
 					}
 				}
 
