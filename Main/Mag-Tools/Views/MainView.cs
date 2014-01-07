@@ -91,9 +91,13 @@ namespace MagTools.Views
 
 		HudTextBox NoFocusFPS { get; set; }
 
-		// Misc - Tools
+		// Misc - Inventory
 		public HudButton ClipboardWornEquipment { get; private set; }
 		public HudButton ClipboardInventoryInfo { get; private set; }
+
+		public HudTextBox InventorySearch { get; private set; }
+		public HudList InventoryList { get; private set; }
+		public HudStaticText InventoryItemText { get; private set; }
 
 		// Misc - About
 		public HudStaticText VersionLabel { get; private set; }
@@ -188,9 +192,13 @@ namespace MagTools.Views
 
 				NoFocusFPS = view != null ? (HudTextBox)view["NoFocusFPS"] : new HudTextBox();
 
-				// Misc - Tools
+				// Misc - Inventory
 				ClipboardWornEquipment = view != null ? (HudButton)view["ClipboardWornEquipment"] : new HudButton();
 				ClipboardInventoryInfo = view != null ? (HudButton)view["ClipboardInventoryInfo"] : new HudButton();
+
+				InventorySearch = view != null ? (HudTextBox)view["InventorySearch"] : new HudTextBox();
+				InventoryList = view != null ? (HudList)view["InventoryList"] : new HudList();
+				InventoryItemText = view != null ? (HudStaticText)view["InventoryItemText"] : new HudStaticText();
 
 				// Misc - About
 				VersionLabel = view != null ? (HudStaticText)view["VersionLabel"] : new HudStaticText();

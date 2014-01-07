@@ -144,7 +144,7 @@ namespace MagTools.ItemInfo
 
 			ItemInfo itemInfo = new ItemInfo(e.IdentifiedItem);
 
-			sb.Append(itemInfo.ToString());
+			sb.Append(itemInfo);
 
 			CoreManager.Current.Actions.AddChatText(sb.ToString(), 14, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 

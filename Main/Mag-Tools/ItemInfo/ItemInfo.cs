@@ -346,6 +346,9 @@ namespace MagTools.ItemInfo
 				sb.Append("]");
 			}
 
+			if (wo.ObjectClass == ObjectClass.Misc && wo.Name.Contains("Keyring"))
+				sb.Append(", Keys: " + wo.Values(LongValueKey.KeysHeld) + ", Uses: " + wo.Values(LongValueKey.UsesRemaining));
+
 			return sb.ToString();
 		}
 	}
