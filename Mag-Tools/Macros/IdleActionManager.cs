@@ -70,9 +70,12 @@ namespace MagTools.Macros
 				if (Settings.SettingsManager.InventoryManagement.ShatteredKeyFixer.Value && e.New.ObjectClass == ObjectClass.Misc && e.New.Name.StartsWith("Shattered ") && e.New.Name.EndsWith(" Key"))
 					timer.Start();
 
-				if (Settings.SettingsManager.InventoryManagement.KeyRinger.Value && e.New.ObjectClass == ObjectClass.Key)
+				if (Settings.SettingsManager.InventoryManagement.KeyRinger.Value)
 				{
-					if (e.New.Name == "Aged Legendary Key")
+					if (e.New.ObjectClass == ObjectClass.Misc && e.New.Name == "Burning Sands Keyring")
+						CoreManager.Current.Actions.RequestId(e.New.Id);
+
+					if (e.New.ObjectClass == ObjectClass.Key && e.New.Name == "Aged Legendary Key")
 						timer.Start();
 				}
 			}
@@ -92,9 +95,17 @@ namespace MagTools.Macros
 				if (Settings.SettingsManager.InventoryManagement.ShatteredKeyFixer.Value && e.Changed.ObjectClass == ObjectClass.Misc && e.Changed.Name.StartsWith("Shattered ") && e.Changed.Name.EndsWith(" Key"))
 					timer.Start();
 
-				if (Settings.SettingsManager.InventoryManagement.KeyRinger.Value && e.Changed.ObjectClass == ObjectClass.Key)
+				if (Settings.SettingsManager.InventoryManagement.KeyRinger.Value)
 				{
-					if (e.Changed.Name == "Aged Legendary Key")
+					if (e.Changed.ObjectClass == ObjectClass.Misc && e.Changed.Name == "Burning Sands Keyring")
+					{
+						if (e.Change == WorldChangeType.IdentReceived)
+							timer.Start();
+						else
+							CoreManager.Current.Actions.RequestId(e.Changed.Id);
+					}
+
+					if (e.Changed.ObjectClass == ObjectClass.Key && e.Changed.Name == "Aged Legendary Key")
 						timer.Start();
 				}
 			}
@@ -170,7 +181,7 @@ namespace MagTools.Macros
 						WorldObject bestKeyRing = null;
 						foreach (var wo in CoreManager.Current.WorldFilter.GetInventory())
 						{
-							if (wo.ObjectClass == ObjectClass.Misc && wo.Name == "Burning Sands Keyring" && wo.Values(LongValueKey.UsesRemaining) > 0 && wo.Values(LongValueKey.KeysHeld) < 24)
+							if (wo.HasIdData && wo.ObjectClass == ObjectClass.Misc && wo.Name == "Burning Sands Keyring" && wo.Values(LongValueKey.UsesRemaining) > 0 && wo.Values(LongValueKey.KeysHeld) < 24)
 							{
 								if (bestKeyRing == null || (bestKeyRing.Values(LongValueKey.KeysHeld) < wo.Values(LongValueKey.KeysHeld)))
 									bestKeyRing = wo;

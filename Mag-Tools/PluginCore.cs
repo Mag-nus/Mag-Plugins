@@ -729,6 +729,12 @@ namespace MagTools
 							if (wo == null) return;
 							objectId = wo.Id;
 						}
+						else if (lower.Contains("closestportal"))
+						{
+							WorldObject wo = Util.GetClosestObject(ObjectClass.Portal);
+							if (wo == null) return;
+							objectId = wo.Id;
+						}
 						else
 							objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), searchInventory, false, searchLandscape, partialMatch);
 					}
