@@ -198,7 +198,7 @@ namespace MagTools.Settings
 
 			public static void SetOnLoginCompleteCommands(string account, string server, string character, IList<string> commands)
 			{
-				SettingsFile.SetNodeChilderen("_" + account + "/" + XmlConvert.EncodeName(server) + "_" + XmlConvert.EncodeName(character) + "/OnLoginCompleteCommands", "Command", commands);
+				SettingsFile.SetNodeChilderen("_" + account + "_" + XmlConvert.EncodeName(server) + "/" + XmlConvert.EncodeName(character) + "/OnLoginCompleteCommands", "Command", commands);
 			}
 		}
 
