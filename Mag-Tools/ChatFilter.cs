@@ -203,6 +203,13 @@ namespace MagTools
 						e.Eat = true;
 				}
 
+				if (e.Eat == false && Settings.SettingsManager.Filters.AuraOfCraftman.Value)
+				{
+					// Your Aura of the Craftman augmentation increased your skill by 5!
+					if (!isChat && e.Text.StartsWith("Your Aura of the Craftman augmentation increased your skill by 5!"))
+						e.Eat = true;
+				}
+
 				if (e.Eat == false && Settings.SettingsManager.Filters.ManaStoneUsage.Value)
 				{
 					// The Mana Stone gives 6,127 points of mana to the following items: 

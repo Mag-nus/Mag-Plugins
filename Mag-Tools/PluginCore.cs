@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
+
 using MagTools.Client;
 using MagTools.Inventory;
 using MagTools.Loggers;
@@ -15,7 +14,6 @@ using Mag.Shared;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
-using VirindiViewService.Controls;
 
 /*
  * Created by Mag-nus. 8/19/2011
@@ -96,8 +94,10 @@ namespace MagTools
 		IdleActionManager idleActionManager;
 
 		// Macros
+		LoginActions loginActions;
 		OpenMainPackOnLogin openMainPackOnLogin;
 		MaximizeChatOnLogin maximizeChatOnLogin;
+		AutoPercentConfirmation autoPercentConfirmation;
 		AutoRecharge autoRecharge;
 		AutoTradeAccept autoTradeAccept;
 		OneTouchHeal oneTouchHeal;
@@ -152,6 +152,11 @@ namespace MagTools
 		ChatLoggerGUI chatLoggerGroup1GUI;
 		ChatLoggerGUI chatLoggerGroup2GUI;
 
+		InventoryToolsView inventoryToolsView;
+		TinkeringToolsView tinkeringToolsView;
+
+		AccountServerCharacterGUI accountServerCharacterGUI;
+
 		//HUD hud;
 
 
@@ -188,8 +193,10 @@ namespace MagTools
 				idleActionManager = new IdleActionManager();
 
 				// Macros
+				loginActions = new LoginActions();
 				openMainPackOnLogin = new OpenMainPackOnLogin();
 				maximizeChatOnLogin = new MaximizeChatOnLogin();
+				autoPercentConfirmation = new AutoPercentConfirmation();
 				autoRecharge = new AutoRecharge();
 				autoTradeAccept = new AutoTradeAccept();
 				oneTouchHeal = new OneTouchHeal();
@@ -296,8 +303,14 @@ namespace MagTools
 					corpseTrackerGUI = new CorpseTrackerGUI(corpseTracker, mainView.CorpseTrackerList);
 					playerTrackerGUI = new PlayerTrackerGUI(playerTracker, mainView.PlayerTrackerList);
 					consumableTrackerGUI = new ConsumableTrackerGUI(consumableTracker, mainView.ConsumableTrackerList);
+
 					chatLoggerGroup1GUI = new ChatLoggerGUI(chatLogger, Settings.SettingsManager.ChatLogger.Groups[0], mainView.ChatLogger1List);
 					chatLoggerGroup2GUI = new ChatLoggerGUI(chatLogger, Settings.SettingsManager.ChatLogger.Groups[1], mainView.ChatLogger2List);
+
+					inventoryToolsView = new InventoryToolsView(mainView, inventoryExporter);
+					tinkeringToolsView = new TinkeringToolsView(mainView);
+
+					accountServerCharacterGUI = new AccountServerCharacterGUI(mainView);
 
 					mainView.CombatTrackerClearCurrentStats.Hit += (s2, e2) => { try { combatTrackerCurrent.ClearStats(); } catch (Exception ex) { Debug.LogException(ex); } };
 					mainView.CombatTrackerExportCurrentStats.Hit += (s2, e2) => { try { combatTrackerCurrent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker." + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ".xml", true); } catch (Exception ex) { Debug.LogException(ex); } };
@@ -308,12 +321,6 @@ namespace MagTools
 					mainView.PlayerTrackerClearHistory.Hit += new EventHandler(PlayerTrackerClearHistory_Hit);
 
 					mainView.ChatLoggerClearHistory.Hit += new EventHandler(ChatLoggerClearHistory_Hit);
-
-					mainView.ClipboardWornEquipment.Hit += (s2, e2) => { try { inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.WornEquipment); } catch (Exception ex) { Debug.LogException(ex); } };
-					mainView.ClipboardInventoryInfo.Hit += (s2, e2) => { try { inventoryExporter.ExportToClipboard(InventoryExporter.ExportGroups.Inventory); } catch (Exception ex) { Debug.LogException(ex); } };
-
-					mainView.InventorySearch.Change += new EventHandler(InventorySearch_Change);
-					mainView.InventoryList.Click += new VirindiViewService.Controls.HudList.delClickedControl(InventoryList_Click);
 
 					System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
 					System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
@@ -349,6 +356,10 @@ namespace MagTools
 				// Views, depends on VirindiViewService.dll
 				// We dispose these before our other objects (Trackers/Macros) as these probably reference those other objects.
 				//if (hud != null) hud.Dispose();
+
+				if (accountServerCharacterGUI != null) accountServerCharacterGUI.Dispose();
+
+				if (tinkeringToolsView != null) tinkeringToolsView.Dispose();
 
 				if (chatLoggerGroup1GUI != null) chatLoggerGroup1GUI.Dispose();
 				if (chatLoggerGroup2GUI != null) chatLoggerGroup2GUI.Dispose();
@@ -395,8 +406,10 @@ namespace MagTools
 				if (consumableTracker != null) consumableTracker.Dispose();
 
 				// Macros
+				if (loginActions != null) loginActions.Dispose();
 				if (openMainPackOnLogin != null) openMainPackOnLogin.Dispose();
 				if (maximizeChatOnLogin != null) maximizeChatOnLogin.Dispose();
+				if (autoPercentConfirmation != null) autoPercentConfirmation.Dispose();
 				if (autoRecharge != null) autoRecharge.Dispose();
 				if (autoTradeAccept != null) autoTradeAccept.Dispose();
 				if (logOutOnDeath != null) logOutOnDeath.Dispose();
@@ -576,300 +589,321 @@ namespace MagTools
 				if (e.Text == null)
 					return;
 
-				string lower = e.Text.ToLower();
-
-				if (lower.StartsWith("/mt logoff") || lower.StartsWith("/mt logout"))
-				{
-					CoreManager.Current.Actions.Logout();
-					return;
-				}
-
-				if (lower.StartsWith("/mt send "))
-				{
-					     if (lower.StartsWith("/mt send enter")) PostMessageTools.SendEnter();
-					else if (lower.StartsWith("/mt send pause")) PostMessageTools.SendPause();
-					else if (lower.StartsWith("/mt send space")) PostMessageTools.SendSpace();
-					else if (lower.StartsWith("/mt send cntrl+") && lower.Length >= 16) PostMessageTools.SendCntrl(e.Text[15]);
-					else if (lower.StartsWith("/mt send f4")) PostMessageTools.SendF4();
-					else if (lower.StartsWith("/mt send f12")) PostMessageTools.SendF12();
-					else if (lower.StartsWith("/mt send msg ") && lower.Length > 13) PostMessageTools.SendMsg(e.Text.Substring(13, e.Text.Length - 13));
-
-					return;
-				}
-
-				if (lower.StartsWith("/mt click "))
-				{
-					     if (lower.StartsWith("/mt click ok")) PostMessageTools.ClickOK();
-					else if (lower.StartsWith("/mt click yes")) PostMessageTools.ClickYes();
-					else if (lower.StartsWith("/mt click no")) PostMessageTools.ClickNo();
-					else if (lower.StartsWith("/mt click "))
-					{
-						string[] splits = lower.Split(' ');
-
-						if (splits.Length >= 4)
-						{
-							int x;
-							int y;
-
-							if (!int.TryParse(splits[2], out x)) return;
-							if (!int.TryParse(splits[3], out y)) return;
-
-							PostMessageTools.SendMouseClick(x, y);
-						}
-					}
-
-					return;
-				}
-
-				if (lower.StartsWith("/mt get xy"))
-				{
-					Point p;
-					if (User32.GetCursorPos(out p))
-					{
-						User32.RECT rct = new User32.RECT();
-
-						if (User32.GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rct))
-							Debug.WriteToChat("Current cursor position: " + (p.X - rct.Left) + "," + (p.Y - rct.Top));
-					}
-
-					return;
-				}
-
-				if (lower.StartsWith("/mt face "))
-				{
-					if (lower.Length > 9)
-					{
-						int heading;
-						int.TryParse(lower.Substring(9, lower.Length - 9), out heading);
-
-						CoreManager.Current.Actions.FaceHeading(heading, true);
-					}
-
-					return;
-				}
-
-				if (lower.StartsWith("/mt jump") || lower.StartsWith("/mt sjump"))
-				{
-					int msToHoldDown = 0;
-					bool addShift = lower.Contains("sjump");
-					bool addW = lower.Contains("jumpw");
-
-					string[] split = lower.Split(' ');
-					if (split.Length == 3)
-						int.TryParse(split[2], out msToHoldDown);
-
-					PostMessageTools.SendSpace(msToHoldDown, addShift, addW);
-
-					return;
-				}
-
-				if (lower.StartsWith("/mt fellow "))
-				{
-					if (lower.StartsWith("/mt fellow create ") && lower.Length > 18)
-					{
-						string fellowName = lower.Substring(18, lower.Length - 18);
-
-						PostMessageTools.SendF12();
-						PostMessageTools.SendF4();
-
-						Rectangle rect = Core.Actions.UIElementRegion(UIElementType.Panels);
-
-						PostMessageTools.SendMouseClick(rect.X + 200, rect.Y + 240);
-						PostMessageTools.SendMsg(fellowName);
-
-						CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(FellowCreate_Current_RenderFrame);
-					}
-					else if (lower.StartsWith("/mt fellow open")) Core.Actions.FellowshipSetOpen(true);
-					else if (lower.StartsWith("/mt fellow close")) Core.Actions.FellowshipSetOpen(false);
-					else if (lower.StartsWith("/mt fellow disband")) Core.Actions.FellowshipDisband();
-					else if (lower.StartsWith("/mt fellow quit")) Core.Actions.FellowshipQuit();
-					else if (lower.StartsWith("/mt fellow recruit ") && lower.Length > 19)
-					{
-						string player = lower.Substring(19, lower.Length - 19);
-
-						WorldObject closest = Util.GetClosestObject(player);
-
-						if (closest != null)
-							Core.Actions.FellowshipRecruit(closest.Id);
-					}
-
-					return;
-				}
-
-				if ((lower.StartsWith("/mt select ") && lower.Length > 11) || (lower.StartsWith("/mt selectp ") && lower.Length > 12))
-				{
-					bool partialMatch = lower.StartsWith("/mt selectp ");
-					int offset = partialMatch ? 12 : 11;
-
-					int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, true, true, partialMatch);
-
-					if (objectId == -1) return;
-					CoreManager.Current.Actions.SelectItem(objectId);
-					return;
-				}
-
-				if ((lower.StartsWith("/mt use ") && lower.Length > 8) || (lower.StartsWith("/mt usep ") && lower.Length > 9) ||
-					(lower.StartsWith("/mt usei ") && lower.Length > 9) || (lower.StartsWith("/mt useip ") && lower.Length > 10) ||
-					(lower.StartsWith("/mt usel ") && lower.Length > 9) || (lower.StartsWith("/mt uselp ") && lower.Length > 10))
-				{
-					bool partialMatch = lower.StartsWith("/mt usep ") || lower.StartsWith("/mt useip ") || lower.StartsWith("/mt uselp ");
-					int offset = lower.StartsWith("/mt use ") || lower.StartsWith("/mt usep ") ? (partialMatch ? 9 : 8) : (partialMatch ? 10 : 9);
-
-					bool searchInventory = !lower.StartsWith("/mt usel");
-					bool searchLandscape = !lower.StartsWith("/mt usei");
-
-					int objectId;
-					int useMethod = 0;
-
-					if (!lower.Contains(" on "))
-					{
-						if (lower.Contains("closestnpc"))
-						{
-							WorldObject wo = Util.GetClosestObject(ObjectClass.Npc);
-							if (wo == null) return;
-							objectId = wo.Id;
-						}
-						else if (lower.Contains("closestportal"))
-						{
-							WorldObject wo = Util.GetClosestObject(ObjectClass.Portal);
-							if (wo == null) return;
-							objectId = wo.Id;
-						}
-						else
-							objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), searchInventory, false, searchLandscape, partialMatch);
-					}
-					else
-					{
-						string command = lower.Substring(offset, lower.Length - offset);
-						string first = command.Substring(0, command.IndexOf(" on ", StringComparison.Ordinal));
-						string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
-
-						objectId = FindIdForName(first, searchInventory, false, false, partialMatch);
-						useMethod = FindIdForName(second, searchInventory, false, searchLandscape, partialMatch, objectId);
-					}
-
-					if (objectId == -1 || useMethod == -1)
-						return;
-
-					if (useMethod == 0)
-						CoreManager.Current.Actions.UseItem(objectId, 0);
-					else
-					{
-						CoreManager.Current.Actions.SelectItem(useMethod);
-						CoreManager.Current.Actions.UseItem(objectId, 1, useMethod);
-					}
-
-					return;
-				}
-
-				if ((lower.StartsWith("/mt give ") && lower.Contains(" to ")) || (lower.StartsWith("/mt givep ") && lower.Contains(" to ")))
-				{
-					bool partialMatch = lower.StartsWith("/mt givep ");
-					int offset = partialMatch ? 10 : 9;
-
-					string command = lower.Substring(offset, lower.Length - offset);
-					string first = command.Substring(0, command.IndexOf(" to ", StringComparison.Ordinal));
-					string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
-
-					int objectId = FindIdForName(first, true, false, false, partialMatch);
-					int destinationId = FindIdForName(second, false, false, true, partialMatch);
-
-					if (objectId == -1 || destinationId == -1) return;
-					CoreManager.Current.Actions.GiveItem(objectId, destinationId);
-					return;
-				}
-
-				if ((lower.StartsWith("/mt loot ") && lower.Length > 9) || (lower.StartsWith("/mt lootp ") && lower.Length > 10))
-				{
-					bool partialMatch = lower.StartsWith("/mt lootp ");
-					int offset = partialMatch ? 10 : 9;
-
-					int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), false, true, false, partialMatch);
-
-					if (objectId == -1) return;
-					CoreManager.Current.Actions.UseItem(objectId, 0);
-					return;
-				}
-
-				if ((lower.StartsWith("/mt drop ") && lower.Length > 9) || (lower.StartsWith("/mt dropp ") && lower.Length > 10))
-				{
-					bool partialMatch = lower.StartsWith("/mt dropp ");
-					int offset = partialMatch ? 10 : 9;
-
-					int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, partialMatch);
-
-					if (objectId == -1) return;
-					CoreManager.Current.Actions.DropItem(objectId);
-					return;
-				}
-
-				if (lower.StartsWith("/mt combatstate ") && lower.Length > 16)
-				{
-					string state = lower.Substring(16, lower.Length - 16);
-
-					if (state == "magic") CoreManager.Current.Actions.SetCombatMode(CombatState.Magic);
-					if (state == "melee") CoreManager.Current.Actions.SetCombatMode(CombatState.Melee);
-					if (state == "missile") CoreManager.Current.Actions.SetCombatMode(CombatState.Missile);
-					if (state == "peace") CoreManager.Current.Actions.SetCombatMode(CombatState.Peace);
-				}
-
-				if ((lower.StartsWith("/mt trade add ") && lower.Length > 14) || (lower.StartsWith("/mt trade addp ") && lower.Length > 15))
-				{
-					bool partialMatch = lower.StartsWith("/mt trade addp ");
-					int offset = partialMatch ? 15 : 14;
-
-					int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, partialMatch);
-
-					if (objectId == -1) return;
-					CoreManager.Current.Actions.TradeAdd(objectId);
-					return;
-				}
-				if (lower.StartsWith("/mt trade accept")) CoreManager.Current.Actions.TradeAccept();
-				if (lower.StartsWith("/mt trade decline")) CoreManager.Current.Actions.TradeDecline();
-				if (lower.StartsWith("/mt trade reset")) CoreManager.Current.Actions.TradeReset();
-				if (lower.StartsWith("/mt trade end")) CoreManager.Current.Actions.TradeEnd();
-
-				if (CoreManager.Current.Actions.VendorId != 0)
-				{
-					if ((lower.StartsWith("/mt vendor addbuy ") && lower.Length > 18) || (lower.StartsWith("/mt vendor addbuyp ") && lower.Length > 19))
-					{
-						bool partialMatch = lower.StartsWith("/mt vendor addbuyp ");
-						int offset = partialMatch ? 19 : 18;
-
-						int count;
-						string itemName = lower.Substring(offset, lower.Length - offset);
-						var splits = itemName.Split(' ');
-						if (splits.Length > 1 && int.TryParse(splits[splits.Length - 1], out count))
-							itemName = itemName.Substring(0, itemName.LastIndexOf(' '));
-						else
-							count = 1;
-
-						int objectId = FindIdForName(itemName, true, false, false, partialMatch);
-
-						if (objectId == -1) return;
-						CoreManager.Current.Actions.VendorAddBuyList(objectId, count);
-						return;
-					}
-					if ((lower.StartsWith("/mt vendor addsell ") && lower.Length > 19) || (lower.StartsWith("/mt vendor addsellp ") && lower.Length > 20))
-					{
-						bool partialMatch = lower.StartsWith("/mt vendor addsellp ");
-						int offset = partialMatch ? 20 : 19;
-
-						int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, partialMatch);
-
-						if (objectId == -1) return;
-						CoreManager.Current.Actions.VendorAddSellList(objectId);
-						return;
-					}
-					if (lower.StartsWith("/mt vendor buy")) CoreManager.Current.Actions.VendorBuyAll();
-					if (lower.StartsWith("/mt vendor clearbuy")) CoreManager.Current.Actions.VendorClearBuyList();
-					if (lower.StartsWith("/mt vendor sell")) CoreManager.Current.Actions.VendorSellAll();
-					if (lower.StartsWith("/mt vendor clearsell")) CoreManager.Current.Actions.VendorClearSellList();
-				}
-
-				if (lower.StartsWith("/mt autopack") && inventoryPacker != null) inventoryPacker.Start();
+				ProcessMTCommand(e.Text);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		public void ProcessMTCommand(string mtCommand)
+		{
+			string lower = mtCommand.ToLower();
+
+			if (lower.StartsWith("/mt test"))
+			{
+				//void Current_ChatBoxMessage(object sender, ChatTextInterceptEventArgs e)
+				/*CoreManager.Current.ChatBoxMessage += new EventHandler<ChatTextInterceptEventArgs>(Current_ChatBoxMessage);
+				if (CoreManager.Current.ChatBoxMessage != null)
+				{ // or the event-name for field-like events
+					// or your own event-type in place of EventHandler
+					foreach (EventHandler subscriber in field.GetInvocationList())
+					{
+						// etc
+					}
+				}*/
+
+				return;
+			}
+
+			if (lower.StartsWith("/mt logoff") || lower.StartsWith("/mt logout"))
+			{
+				CoreManager.Current.Actions.Logout();
+				return;
+			}
+
+			if (lower.StartsWith("/mt send "))
+			{
+				if (lower.StartsWith("/mt send enter")) PostMessageTools.SendEnter();
+				else if (lower.StartsWith("/mt send pause")) PostMessageTools.SendPause();
+				else if (lower.StartsWith("/mt send space")) PostMessageTools.SendSpace();
+				else if (lower.StartsWith("/mt send cntrl+") && lower.Length >= 16) PostMessageTools.SendCntrl(mtCommand[15]);
+				else if (lower.StartsWith("/mt send f4")) PostMessageTools.SendF4();
+				else if (lower.StartsWith("/mt send f12")) PostMessageTools.SendF12();
+				else if (lower.StartsWith("/mt send msg ") && lower.Length > 13) PostMessageTools.SendMsg(mtCommand.Substring(13, mtCommand.Length - 13));
+
+				return;
+			}
+
+			if (lower.StartsWith("/mt click "))
+			{
+				if (lower.StartsWith("/mt click ok")) PostMessageTools.ClickOK();
+				else if (lower.StartsWith("/mt click yes")) PostMessageTools.ClickYes();
+				else if (lower.StartsWith("/mt click no")) PostMessageTools.ClickNo();
+				else if (lower.StartsWith("/mt click "))
+				{
+					string[] splits = lower.Split(' ');
+
+					if (splits.Length >= 4)
+					{
+						int x;
+						int y;
+
+						if (!int.TryParse(splits[2], out x)) return;
+						if (!int.TryParse(splits[3], out y)) return;
+
+						PostMessageTools.SendMouseClick(x, y);
+					}
+				}
+
+				return;
+			}
+
+			if (lower.StartsWith("/mt get xy"))
+			{
+				Point p;
+				if (User32.GetCursorPos(out p))
+				{
+					User32.RECT rct = new User32.RECT();
+
+					if (User32.GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rct))
+						Debug.WriteToChat("Current cursor position: " + (p.X - rct.Left) + "," + (p.Y - rct.Top));
+				}
+
+				return;
+			}
+
+			if (lower.StartsWith("/mt face "))
+			{
+				if (lower.Length > 9)
+				{
+					int heading;
+					int.TryParse(lower.Substring(9, lower.Length - 9), out heading);
+
+					CoreManager.Current.Actions.FaceHeading(heading, true);
+				}
+
+				return;
+			}
+
+			if (lower.StartsWith("/mt jump") || lower.StartsWith("/mt sjump"))
+			{
+				int msToHoldDown = 0;
+				bool addShift = lower.Contains("sjump");
+				bool addW = lower.Contains("jumpw");
+
+				string[] split = lower.Split(' ');
+				if (split.Length == 3)
+					int.TryParse(split[2], out msToHoldDown);
+
+				PostMessageTools.SendSpace(msToHoldDown, addShift, addW);
+
+				return;
+			}
+
+			if (lower.StartsWith("/mt fellow "))
+			{
+				if (lower.StartsWith("/mt fellow create ") && lower.Length > 18)
+				{
+					string fellowName = lower.Substring(18, lower.Length - 18);
+
+					PostMessageTools.SendF12();
+					PostMessageTools.SendF4();
+
+					Rectangle rect = Core.Actions.UIElementRegion(UIElementType.Panels);
+
+					PostMessageTools.SendMouseClick(rect.X + 200, rect.Y + 240);
+					PostMessageTools.SendMsg(fellowName);
+
+					CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(FellowCreate_Current_RenderFrame);
+				}
+				else if (lower.StartsWith("/mt fellow open")) Core.Actions.FellowshipSetOpen(true);
+				else if (lower.StartsWith("/mt fellow close")) Core.Actions.FellowshipSetOpen(false);
+				else if (lower.StartsWith("/mt fellow disband")) Core.Actions.FellowshipDisband();
+				else if (lower.StartsWith("/mt fellow quit")) Core.Actions.FellowshipQuit();
+				else if (lower.StartsWith("/mt fellow recruit ") && lower.Length > 19)
+				{
+					string player = lower.Substring(19, lower.Length - 19);
+
+					WorldObject closest = Util.GetClosestObject(player);
+
+					if (closest != null)
+						Core.Actions.FellowshipRecruit(closest.Id);
+				}
+
+				return;
+			}
+
+			if ((lower.StartsWith("/mt select ") && lower.Length > 11) || (lower.StartsWith("/mt selectp ") && lower.Length > 12))
+			{
+				bool partialMatch = lower.StartsWith("/mt selectp ");
+				int offset = partialMatch ? 12 : 11;
+
+				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, true, true, partialMatch);
+
+				if (objectId == -1) return;
+				CoreManager.Current.Actions.SelectItem(objectId);
+				return;
+			}
+
+			if ((lower.StartsWith("/mt use ") && lower.Length > 8) || (lower.StartsWith("/mt usep ") && lower.Length > 9) ||
+				(lower.StartsWith("/mt usei ") && lower.Length > 9) || (lower.StartsWith("/mt useip ") && lower.Length > 10) ||
+				(lower.StartsWith("/mt usel ") && lower.Length > 9) || (lower.StartsWith("/mt uselp ") && lower.Length > 10))
+			{
+				bool partialMatch = lower.StartsWith("/mt usep ") || lower.StartsWith("/mt useip ") || lower.StartsWith("/mt uselp ");
+				int offset = lower.StartsWith("/mt use ") || lower.StartsWith("/mt usep ") ? (partialMatch ? 9 : 8) : (partialMatch ? 10 : 9);
+
+				bool searchInventory = !lower.StartsWith("/mt usel");
+				bool searchLandscape = !lower.StartsWith("/mt usei");
+
+				int objectId;
+				int useMethod = 0;
+
+				if (!lower.Contains(" on "))
+				{
+					if (lower.Contains("closestnpc"))
+					{
+						WorldObject wo = Util.GetClosestObject(ObjectClass.Npc);
+						if (wo == null) return;
+						objectId = wo.Id;
+					}
+					else if (lower.Contains("closestportal"))
+					{
+						WorldObject wo = Util.GetClosestObject(ObjectClass.Portal);
+						if (wo == null) return;
+						objectId = wo.Id;
+					}
+					else
+						objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), searchInventory, false, searchLandscape, partialMatch);
+				}
+				else
+				{
+					string command = lower.Substring(offset, lower.Length - offset);
+					string first = command.Substring(0, command.IndexOf(" on ", StringComparison.Ordinal));
+					string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
+
+					objectId = FindIdForName(first, searchInventory, false, false, partialMatch);
+					useMethod = FindIdForName(second, searchInventory, false, searchLandscape, partialMatch, objectId);
+				}
+
+				if (objectId == -1 || useMethod == -1)
+					return;
+
+				if (useMethod == 0)
+					CoreManager.Current.Actions.UseItem(objectId, 0);
+				else
+				{
+					CoreManager.Current.Actions.SelectItem(useMethod);
+					CoreManager.Current.Actions.UseItem(objectId, 1, useMethod);
+				}
+
+				return;
+			}
+
+			if ((lower.StartsWith("/mt give ") && lower.Contains(" to ")) || (lower.StartsWith("/mt givep ") && lower.Contains(" to ")))
+			{
+				bool partialMatch = lower.StartsWith("/mt givep ");
+				int offset = partialMatch ? 10 : 9;
+
+				string command = lower.Substring(offset, lower.Length - offset);
+				string first = command.Substring(0, command.IndexOf(" to ", StringComparison.Ordinal));
+				string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
+
+				int objectId = FindIdForName(first, true, false, false, partialMatch);
+				int destinationId = FindIdForName(second, false, false, true, partialMatch);
+
+				if (objectId == -1 || destinationId == -1) return;
+				CoreManager.Current.Actions.GiveItem(objectId, destinationId);
+				return;
+			}
+
+			if ((lower.StartsWith("/mt loot ") && lower.Length > 9) || (lower.StartsWith("/mt lootp ") && lower.Length > 10))
+			{
+				bool partialMatch = lower.StartsWith("/mt lootp ");
+				int offset = partialMatch ? 10 : 9;
+
+				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), false, true, false, partialMatch);
+
+				if (objectId == -1) return;
+				CoreManager.Current.Actions.UseItem(objectId, 0);
+				return;
+			}
+
+			if ((lower.StartsWith("/mt drop ") && lower.Length > 9) || (lower.StartsWith("/mt dropp ") && lower.Length > 10))
+			{
+				bool partialMatch = lower.StartsWith("/mt dropp ");
+				int offset = partialMatch ? 10 : 9;
+
+				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, partialMatch);
+
+				if (objectId == -1) return;
+				CoreManager.Current.Actions.DropItem(objectId);
+				return;
+			}
+
+			if (lower.StartsWith("/mt combatstate ") && lower.Length > 16)
+			{
+				string state = lower.Substring(16, lower.Length - 16);
+
+				if (state == "magic") CoreManager.Current.Actions.SetCombatMode(CombatState.Magic);
+				if (state == "melee") CoreManager.Current.Actions.SetCombatMode(CombatState.Melee);
+				if (state == "missile") CoreManager.Current.Actions.SetCombatMode(CombatState.Missile);
+				if (state == "peace") CoreManager.Current.Actions.SetCombatMode(CombatState.Peace);
+			}
+
+			if ((lower.StartsWith("/mt trade add ") && lower.Length > 14) || (lower.StartsWith("/mt trade addp ") && lower.Length > 15))
+			{
+				bool partialMatch = lower.StartsWith("/mt trade addp ");
+				int offset = partialMatch ? 15 : 14;
+
+				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, partialMatch);
+
+				if (objectId == -1) return;
+				CoreManager.Current.Actions.TradeAdd(objectId);
+				return;
+			}
+			if (lower.StartsWith("/mt trade accept")) CoreManager.Current.Actions.TradeAccept();
+			if (lower.StartsWith("/mt trade decline")) CoreManager.Current.Actions.TradeDecline();
+			if (lower.StartsWith("/mt trade reset")) CoreManager.Current.Actions.TradeReset();
+			if (lower.StartsWith("/mt trade end")) CoreManager.Current.Actions.TradeEnd();
+
+			if (CoreManager.Current.Actions.VendorId != 0)
+			{
+				if ((lower.StartsWith("/mt vendor addbuy ") && lower.Length > 18) || (lower.StartsWith("/mt vendor addbuyp ") && lower.Length > 19))
+				{
+					bool partialMatch = lower.StartsWith("/mt vendor addbuyp ");
+					int offset = partialMatch ? 19 : 18;
+
+					int count;
+					string itemName = lower.Substring(offset, lower.Length - offset);
+					var splits = itemName.Split(' ');
+					if (splits.Length > 1 && int.TryParse(splits[splits.Length - 1], out count))
+						itemName = itemName.Substring(0, itemName.LastIndexOf(' '));
+					else
+						count = 1;
+
+					int objectId = FindIdForName(itemName, true, false, false, partialMatch);
+
+					if (objectId == -1) return;
+					CoreManager.Current.Actions.VendorAddBuyList(objectId, count);
+					return;
+				}
+				if ((lower.StartsWith("/mt vendor addsell ") && lower.Length > 19) || (lower.StartsWith("/mt vendor addsellp ") && lower.Length > 20))
+				{
+					bool partialMatch = lower.StartsWith("/mt vendor addsellp ");
+					int offset = partialMatch ? 20 : 19;
+
+					int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, partialMatch);
+
+					if (objectId == -1) return;
+					CoreManager.Current.Actions.VendorAddSellList(objectId);
+					return;
+				}
+				if (lower.StartsWith("/mt vendor buy")) CoreManager.Current.Actions.VendorBuyAll();
+				if (lower.StartsWith("/mt vendor clearbuy")) CoreManager.Current.Actions.VendorClearBuyList();
+				if (lower.StartsWith("/mt vendor sell")) CoreManager.Current.Actions.VendorSellAll();
+				if (lower.StartsWith("/mt vendor clearsell")) CoreManager.Current.Actions.VendorClearSellList();
+			}
+
+			if (lower.StartsWith("/mt autopack") && inventoryPacker != null) inventoryPacker.Start();
 		}
 
 		int FindIdForName(string name, bool searchInInventory, bool searchOpenContainer, bool searchEnvironment, bool partialMatch, int idToSkip = 0)
@@ -1021,55 +1055,6 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		#endregion
-
-		#region ' InventorySearch Change, InventoryList Click '
-		void InventorySearch_Change(object sender, EventArgs e)
-		{
-			try
-			{
-				mainView.InventoryList.ClearRows();
-
-				var regex = new Regex(mainView.InventorySearch.Text, RegexOptions.IgnoreCase);
-
-				foreach (var wo in CoreManager.Current.WorldFilter.GetInventory())
-				{
-					var itemInfo = new ItemInfo.ItemInfo(wo);
-
-					if (regex.IsMatch(itemInfo.ToString()))
-					{
-						HudList.HudListRowAccessor newRow = mainView.InventoryList.AddRow();
-
-						((HudPictureBox)newRow[0]).Image = wo.Icon + 0x6000000;
-						((HudStaticText)newRow[1]).Text = wo.Name;
-						((HudStaticText)newRow[2]).Text = wo.Id.ToString(CultureInfo.InvariantCulture);
-					}
-				}
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		void InventoryList_Click(object sender, int row, int col)
-		{
-			try
-			{
-				int id;
-
-				if (int.TryParse(((HudStaticText)mainView.InventoryList[row][2]).Text, out id))
-				{
-					CoreManager.Current.Actions.SelectItem(id);
-
-					var wo = CoreManager.Current.WorldFilter[id];
-
-					if (wo != null)
-					{
-						var itemInfo = new ItemInfo.ItemInfo(wo);
-						mainView.InventoryItemText.Text = itemInfo.ToString();
-					}
-				}
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
 		#endregion
 
 		void SavePersistentStatsTimer_Tick(object sender, EventArgs e)

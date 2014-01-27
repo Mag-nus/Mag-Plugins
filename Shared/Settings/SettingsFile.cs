@@ -114,7 +114,7 @@ namespace Mag.Shared.Settings
 			return currentNode;
 		}
 
-		public static IEnumerable<string> GetCollection(string xPath)
+		public static IList<string> GetChilderenInnerTexts(string xPath)
 		{
 			XmlNode xmlNode = XmlDocument.SelectSingleNode(_rootNodeName + "/" + xPath);
 
@@ -123,12 +123,43 @@ namespace Mag.Shared.Settings
 			if (xmlNode != null)
 			{
 				foreach (XmlNode childNode in xmlNode.ChildNodes)
-				{
 					collection.Add(childNode.InnerText);
-				}
 			}
 
 			return collection;
+		}
+
+		public static void SetNodeChilderen(string xPath, string childNodeName, IList<string> innerTexts)
+		{
+			// Before we save a setting, we reload the document to make sure we don't overwrite settings saved from another session.
+			ReloadXmlDocument();
+
+			XmlNode parentNode = XmlDocument.SelectSingleNode(_rootNodeName + "/" + xPath);
+
+			if (parentNode == null)
+			{
+				if (innerTexts.Count == 0)
+					return;
+
+				parentNode = createMissingNode(_rootNodeName + "/" + xPath);
+			}
+
+			parentNode.RemoveAll();
+
+			if (innerTexts.Count == 0)
+			{
+				XmlDocument.Save(_documentPath);
+				return;
+			}
+
+			foreach (string innerText in innerTexts)
+			{
+				XmlNode childNode = parentNode.AppendChild(XmlDocument.CreateElement(childNodeName));
+
+				childNode.InnerText = innerText;
+			}
+
+			XmlDocument.Save(_documentPath);
 		}
 
 		public static XmlNode GetNode(string xPath)
