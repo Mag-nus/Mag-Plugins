@@ -725,8 +725,12 @@ namespace MagTools
 
 					WorldObject closest = Util.GetClosestObject(player);
 
-					if (closest != null)
-						Core.Actions.FellowshipRecruit(closest.Id);
+					try
+					{
+						if (closest != null)
+							Core.Actions.FellowshipRecruit(closest.Id);
+					}
+					catch (AccessViolationException) { } // Eat the decal error
 				}
 
 				return;
