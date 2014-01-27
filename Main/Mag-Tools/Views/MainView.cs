@@ -74,6 +74,36 @@ namespace MagTools.Views
 		public HudList ChatGroup2OptionsList { get; private set; }
 
 
+		// Tools - Inventory
+		public HudButton ClipboardWornEquipment { get; private set; }
+		public HudButton ClipboardInventoryInfo { get; private set; }
+
+		public HudTextBox InventorySearch { get; private set; }
+		public HudList InventoryList { get; private set; }
+		public HudStaticText InventoryItemText { get; private set; }
+
+		// Tools - Tinkering
+		public HudButton TinkeringAddSelectedItem { get; private set; }
+
+		public HudCombo TinkeringMaterial { get; private set; }
+		public HudTextBox TinkeringMinimumPercent { get; private set; }
+		public HudTextBox TinkeringTargetTotalTinks { get; private set; }
+
+		public HudButton TinkeringStart { get; private set; }
+		public HudButton TinkeringStop { get; private set; }
+
+		public HudList TinkeringList { get; private set; }
+
+		// Tools - Character
+		public HudTextBox LoginText { get; private set; }
+		public HudButton LoginAdd { get; private set; }
+		public HudList LoginList { get; private set; }
+
+		public HudTextBox LoginCompleteText { get; private set; }
+		public HudButton LoginCompleteAdd { get; private set; }
+		public HudList LoginCompleteList { get; private set; }
+
+
 		// Misc - Options
 		HudList OptionList { get; set; }
 
@@ -90,14 +120,6 @@ namespace MagTools.Views
 		HudStaticText ClientSetPosition { get; set; }
 
 		HudTextBox NoFocusFPS { get; set; }
-
-		// Misc - Inventory
-		public HudButton ClipboardWornEquipment { get; private set; }
-		public HudButton ClipboardInventoryInfo { get; private set; }
-
-		public HudTextBox InventorySearch { get; private set; }
-		public HudList InventoryList { get; private set; }
-		public HudStaticText InventoryItemText { get; private set; }
 
 		// Misc - About
 		public HudStaticText VersionLabel { get; private set; }
@@ -173,7 +195,37 @@ namespace MagTools.Views
 
 				ChatGroup1OptionsList = view != null ? (HudList)view["ChatGroup1OptionsList"] : new HudList();
 				ChatGroup2OptionsList = view != null ? (HudList)view["ChatGroup2OptionsList"] : new HudList();
-	
+
+
+				// Tools - Inventory
+				ClipboardWornEquipment = view != null ? (HudButton)view["ClipboardWornEquipment"] : new HudButton();
+				ClipboardInventoryInfo = view != null ? (HudButton)view["ClipboardInventoryInfo"] : new HudButton();
+
+				InventorySearch = view != null ? (HudTextBox)view["InventorySearch"] : new HudTextBox();
+				InventoryList = view != null ? (HudList)view["InventoryList"] : new HudList();
+				InventoryItemText = view != null ? (HudStaticText)view["InventoryItemText"] : new HudStaticText();
+
+				// Tools - Tinkering
+				TinkeringAddSelectedItem = view != null ? (HudButton)view["TinkeringAddSelectedItem"] : new HudButton();
+
+				TinkeringMaterial = view != null ? (HudCombo)view["TinkeringMaterial"] : new HudCombo(view.Controls);
+				TinkeringMinimumPercent = view != null ? (HudTextBox)view["TinkeringMinimumPercent"] : new HudTextBox();
+				TinkeringTargetTotalTinks = view != null ? (HudTextBox)view["TinkeringTargetTotalTinks"] : new HudTextBox();
+
+				TinkeringStart = view != null ? (HudButton)view["TinkeringStart"] : new HudButton();
+				TinkeringStop = view != null ? (HudButton)view["TinkeringStop"] : new HudButton();
+
+				TinkeringList = view != null ? (HudList)view["TinkeringList"] : new HudList();
+
+				// Tools - Character
+				LoginText = view != null ? (HudTextBox)view["LoginText"] : new HudTextBox();
+				LoginAdd = view != null ? (HudButton)view["LoginAdd"] : new HudButton();
+				LoginList = view != null ? (HudList)view["LoginList"] : new HudList();
+
+				LoginCompleteText = view != null ? (HudTextBox)view["LoginCompleteText"] : new HudTextBox();
+				LoginCompleteAdd = view != null ? (HudButton)view["LoginCompleteAdd"] : new HudButton();
+				LoginCompleteList = view != null ? (HudList)view["LoginCompleteList"] : new HudList();
+
 
 				// Misc - Options
 				OptionList = view != null ? (HudList)view["OptionList"] : new HudList();
@@ -191,14 +243,6 @@ namespace MagTools.Views
 				ClientSetPosition = view != null ? (HudStaticText)view["ClientSetPosition"] : new HudStaticText();
 
 				NoFocusFPS = view != null ? (HudTextBox)view["NoFocusFPS"] : new HudTextBox();
-
-				// Misc - Inventory
-				ClipboardWornEquipment = view != null ? (HudButton)view["ClipboardWornEquipment"] : new HudButton();
-				ClipboardInventoryInfo = view != null ? (HudButton)view["ClipboardInventoryInfo"] : new HudButton();
-
-				InventorySearch = view != null ? (HudTextBox)view["InventorySearch"] : new HudTextBox();
-				InventoryList = view != null ? (HudList)view["InventoryList"] : new HudList();
-				InventoryItemText = view != null ? (HudStaticText)view["InventoryItemText"] : new HudStaticText();
 
 				// Misc - About
 				VersionLabel = view != null ? (HudStaticText)view["VersionLabel"] : new HudStaticText();
@@ -296,6 +340,8 @@ namespace MagTools.Views
 				AddOption(OptionList, Settings.SettingsManager.Looting.AutoLootMyCorpses);
 				AddOption(OptionList, Settings.SettingsManager.Looting.LootSalvage);
 
+				AddOption(OptionList, Settings.SettingsManager.Tinkering.AutoClickYes);
+
 				AddOption(OptionList, Settings.SettingsManager.InventoryManagement.InventoryLogger);
 				AddOption(OptionList, Settings.SettingsManager.InventoryManagement.AetheriaRevealer);
 				AddOption(OptionList, Settings.SettingsManager.InventoryManagement.HeartCarver);
@@ -339,6 +385,7 @@ namespace MagTools.Views
 				AddOption(FiltersList, Settings.SettingsManager.Filters.HealingKitFail);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.Salvaging);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.SalvagingFails);
+				AddOption(FiltersList, Settings.SettingsManager.Filters.AuraOfCraftman);
 				AddOption(FiltersList, Settings.SettingsManager.Filters.ManaStoneUsage);
 
 				AddOption(FiltersList, Settings.SettingsManager.Filters.TradeBuffBotSpam);

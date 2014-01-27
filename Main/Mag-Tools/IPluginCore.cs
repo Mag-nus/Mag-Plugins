@@ -10,5 +10,7 @@ namespace MagTools
 		IEquipmentTracker EquipmentTracker { get; }
 
 		Macros.ILooter Looter { get; }
+
+		void ProcessMTCommand(string mtCommand);
 	}
 }

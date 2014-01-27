@@ -48,12 +48,10 @@ namespace MagTools.Settings
 				{
 					Collection<Regex> whitelist = new Collection<Regex>();
 
-					IEnumerable<string> collection = SettingsFile.GetCollection("AutoTradeAccept/Whitelist");
+					IEnumerable<string> collection = SettingsFile.GetChilderenInnerTexts("AutoTradeAccept/Whitelist");
 
 					foreach (string s in collection)
-					{
 						whitelist.Add(new Regex("^" + s + "$"));
-					}
 
 					return whitelist;
 				}
@@ -69,6 +67,11 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> AutoLootMyCorpses = new Setting<bool>("Looting/AutoLootMyCorpse", "Auto Loot My Corpses", true);
 
 			public static readonly Setting<bool> LootSalvage = new Setting<bool>("Looting/LootSalvage", "Auto Loot Salvage");
+		}
+
+		public static class Tinkering
+		{
+			public static readonly Setting<bool> AutoClickYes = new Setting<bool>("Tinkering/AutoClickYes", "Auto Click Yes on 100%");
 		}
 
 		public static class InventoryManagement
@@ -176,6 +179,29 @@ namespace MagTools.Settings
 			}
 		}
 		
+		public static class AccountServerCharacter
+		{
+			public static IList<string> GetOnLoginCommands(string account, string server, string character)
+			{
+				return SettingsFile.GetChilderenInnerTexts("_" + account + "_" + server + "/" + character + "/OnLoginCommands");
+			}
+
+			public static void SetOnLoginCommands(string account, string server, string character, IList<string> commands)
+			{
+				SettingsFile.SetNodeChilderen("_" + account + "_" + server + "/" + character + "/OnLoginCommands", "Command", commands);
+			}
+
+			public static IList<string> GetOnLoginCompleteCommands(string account, string server, string character)
+			{
+				return SettingsFile.GetChilderenInnerTexts("_" + account + "_" + server + "/" + character + "/OnLoginCompleteCommands");
+			}
+
+			public static void SetOnLoginCompleteCommands(string account, string server, string character, IList<string> commands)
+			{
+				SettingsFile.SetNodeChilderen("_" + account + "/" + server + "_" + character + "/OnLoginCompleteCommands", "Command", commands);
+			}
+		}
+
 		public static class Misc
 		{
 			public static readonly Setting<bool> OpenMainPackOnLogin = new Setting<bool>("Misc/OpenMainPackOnLogin", "Open Main Pack On Login", true);
@@ -337,6 +363,8 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> Salvaging = new Setting<bool>("Filters/Salvaging", "Salvaging");
 
 			public static readonly Setting<bool> SalvagingFails = new Setting<bool>("Filters/SalvagingFails", "Salvaging Fails");
+
+			public static readonly Setting<bool> AuraOfCraftman = new Setting<bool>("Filters/AuraOfCraftman", "Aura Of Craftman Spam");
 
 			public static readonly Setting<bool> ManaStoneUsage = new Setting<bool>("Filters/ManaStoneUsage", "Mana Stone Usage");
 

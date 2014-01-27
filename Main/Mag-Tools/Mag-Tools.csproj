@@ -110,8 +110,13 @@
     <Compile Include="Loggers\Chat\LoggedChat.cs" />
     <Compile Include="Loggers\ILogger.cs" />
     <Compile Include="Loggers\ILoggerTarget.cs" />
+    <Compile Include="Macros\AutoPercentConfirmation.cs" />
     <Compile Include="Macros\IdleActionManager.cs" />
+    <Compile Include="Macros\LoginActions.cs" />
     <Compile Include="Macros\LogOutOnDeath.cs" />
+    <Compile Include="Views\AccountServerCharacterGUI.cs" />
+    <Compile Include="Views\InventoryToolsView.cs" />
+    <Compile Include="Views\TinkeringToolsView.cs" />
     <Compile Include="Trackers\Consumable\ConsumableTracker.cs" />
     <Compile Include="Trackers\Consumable\TrackedConsumable.cs" />
     <Compile Include="Trackers\Corpse\CorpseTracker.cs" />

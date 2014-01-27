@@ -142,7 +142,7 @@ namespace MagTools.Macros
 
 				if ((toolId == 0 || targetId == 0) && Settings.SettingsManager.InventoryManagement.AetheriaRevealer.Value)
 				{
-					couldRequireConfirmation = false;
+					toolId = 0; targetId = 0; couldRequireConfirmation = false;
 					foreach (var wo in CoreManager.Current.WorldFilter.GetInventory())
 					{
 						if (wo.ObjectClass == ObjectClass.Gem && wo.Name == "Aetheria Mana Stone") toolId = wo.Id;
@@ -152,7 +152,7 @@ namespace MagTools.Macros
 
 				if ((toolId == 0 || targetId == 0) && Settings.SettingsManager.InventoryManagement.HeartCarver.Value && CoreManager.Current.CharacterFilter.Skills[CharFilterSkillType.Lockpick].Training >= TrainingType.Trained)
 				{
-					couldRequireConfirmation = true;
+					toolId = 0; targetId = 0; couldRequireConfirmation = true;
 					foreach (var wo in CoreManager.Current.WorldFilter.GetInventory())
 					{
 						if (wo.ObjectClass == ObjectClass.Misc && wo.Name == "Intricate Carving Tool") toolId = wo.Id;
@@ -162,7 +162,7 @@ namespace MagTools.Macros
 
 				if ((toolId == 0 || targetId == 0) && Settings.SettingsManager.InventoryManagement.ShatteredKeyFixer.Value && CoreManager.Current.CharacterFilter.Skills[CharFilterSkillType.Lockpick].Training >= TrainingType.Trained)
 				{
-					couldRequireConfirmation = true;
+					toolId = 0; targetId = 0; couldRequireConfirmation = true;
 					foreach (var wo in CoreManager.Current.WorldFilter.GetInventory())
 					{
 						if (wo.ObjectClass == ObjectClass.Misc && wo.Name == "Intricate Carving Tool") toolId = wo.Id;
@@ -177,7 +177,7 @@ namespace MagTools.Macros
 
 					if (closestChest == null || Util.GetDistanceFromPlayer(closestChest) > 10)
 					{
-						couldRequireConfirmation = false;
+						toolId = 0; targetId = 0; couldRequireConfirmation = false;
 						WorldObject bestKeyRing = null;
 						foreach (var wo in CoreManager.Current.WorldFilter.GetInventory())
 						{
@@ -212,10 +212,10 @@ namespace MagTools.Macros
 		void EchoFilter_ServerDispatch(object sender, NetworkMessageEventArgs e)
 		{
 			try
-			{
+			{ 
 				if (lastActionThatCouldRequireConfirmation != DateTime.MinValue && DateTime.Now - lastActionThatCouldRequireConfirmation < TimeSpan.FromSeconds(5))
 				{
-					if (e.Message.Type == 0xF7B0 && (int)e.Message["event"] == 0x0274) // 0x0274 = Confirmation Panel
+					if (e.Message.Type == 0xF7B0 && (int)e.Message["event"] == 0x0274 && e.Message.Value<int>("type") == 5) // 0x0274 = Confirmation Panel
 					{
 						lastActionThatCouldRequireConfirmation = DateTime.MinValue;
 						PostMessageTools.ClickYes();

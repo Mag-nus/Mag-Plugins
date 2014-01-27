@@ -99,12 +99,15 @@
 
     <page label=" Loggers ">
       <control progid="DecalControls.Notebook">
+        
         <page label="  Chat Group 1  ">
           <control progid="DecalControls.List" name="ChatLogger1List" left="0" top="0" width="320" height="460" />
         </page>
+        
         <page label="  Chat Group 2  ">
           <control progid="DecalControls.List" name="ChatLogger2List" left="0" top="0" width="320" height="460" />
         </page>
+        
         <page label="    Options    ">
           <control progid="DecalControls.FixedLayout" clipped="">
             <control progid="DecalControls.PushButton" name="ChatLoggerClearHistory" left="10" top="10" width="120" height="20" text="Clear History" />
@@ -128,7 +131,78 @@
       </control>
     </page>
 
-  <page label="   Misc   ">
+    <page label=" Tools ">
+      <control progid="DecalControls.Notebook">
+
+        <page label="  Inventory  ">
+          <control progid="DecalControls.FixedLayout" clipped="">
+            <control progid="DecalControls.PushButton" name="ClipboardWornEquipment" left="10" top="10" width="140" height="20" text="Clipboard Worn Equipment" />
+            <control progid="DecalControls.PushButton" name="ClipboardInventoryInfo" left="170" top="10" width="140" height="20" text="Clipboard Inventory Info" />
+            <control progid="DecalControls.Edit" name="InventorySearch" left="5" top="40" width="310" height="16" text="regex search string" />
+            <control progid="DecalControls.List" name="InventoryList" left="0" top="60" width="320" height="270">
+              <column progid="DecalControls.IconColumn" name="InventoryListItemIcon" fixedwidth="16" />
+              <column progid="DecalControls.TextColumn" name="InventoryListItemName" fixedwidth="304" />
+              <column progid="DecalControls.TextColumn" name="InventoryListItemID" />
+            </control>
+            <control progid="DecalControls.StaticText" name="InventoryItemText" left="5" top="335" width="310" height="120" />
+          </control>
+        </page>
+
+        <page label="  Tinkering  ">
+          <control progid="DecalControls.FixedLayout" clipped="">
+            <control progid="DecalControls.PushButton" name="TinkeringAddSelectedItem" left="10" top="10" width="140" height="20" text="Add Selected Item" />
+            <control progid="DecalControls.Choice" name="TinkeringMaterial" left="170" top="10" width="140" height="20" />
+            
+            <control progid="DecalControls.StaticText" name="TinkeringMinimumPercentLabel" left="5" top="40" width="100" height="18" text="Minimum Percent: "/>
+            <control progid="DecalControls.Edit" name="TinkeringMinimumPercent" left="110" top="40" width="35" height="16" />
+            <control progid="DecalControls.StaticText" name="TinkeringTargetTotalTinksLabel" left="5" top="60" width="100" height="18" text="Target Total Tinks: "/>
+            <control progid="DecalControls.Edit" name="TinkeringTargetTotalTinks" left="110" top="60" width="25" height="16" />
+
+            <control progid="DecalControls.PushButton" name="TinkeringStart" left="40" top="105" width="100" height="20" text="Start" />
+            <control progid="DecalControls.PushButton" name="TinkeringStop" left="180" top="105" width="100" height="20" text="Stop" />
+            
+            <control progid="DecalControls.List" name="TinkeringList" left="0" top="135" width="320" height="275">
+              <column progid="DecalControls.TextColumn" name="TinkeringListCurrent" fixedwidth="16" />
+              <column progid="DecalControls.IconColumn" name="TinkeringListItemIcon" fixedwidth="16" />
+              <column progid="DecalControls.TextColumn" name="TinkeringListItemName" fixedwidth="184" />
+              <column progid="DecalControls.TextColumn" name="TinkeringListItemWork" fixedwidth="20" />
+              <column progid="DecalControls.TextColumn" name="TinkeringListItemTinks" fixedwidth="20" />
+              <column progid="DecalControls.IconColumn" name="TinkeringListDeleteIcon" fixedwidth="16" />
+              <column progid="DecalControls.TextColumn" name="TinkeringListItemID" />
+            </control>
+          </control>
+        </page>
+
+        <page label="  Character  ">
+          <control progid="DecalControls.FixedLayout" clipped="">
+
+            <control progid="DecalControls.StaticText" name="LoginLabel" left="5" top="10" width="60" height="16" text="On Login:"/>
+            <control progid="DecalControls.Edit" name="LoginText" left="65" top="12" width="205" height="16" />
+            <control progid="DecalControls.PushButton" name="LoginAdd" left="275" top="10" width="40" height="20" text="Add" />
+            <control progid="DecalControls.List" name="LoginList" left="0" top="35" width="320" height="90">
+              <column progid="DecalControls.TextColumn" name="LoginListText" fixedwidth="224" />
+              <column progid="DecalControls.IconColumn" name="LoginListUpIcon" fixedwidth="16" />
+              <column progid="DecalControls.IconColumn" name="LoginListDownIcon" fixedwidth="16" />
+              <column progid="DecalControls.IconColumn" name="LoginListDeleteIcon" fixedwidth="16" />
+            </control>
+
+            <control progid="DecalControls.StaticText" name="LoginCompleteLabel" left="5" top="132" width="110" height="16" text="On Login Complete:"/>
+            <control progid="DecalControls.Edit" name="LoginCompleteText" left="115" top="132" width="155" height="16" />
+            <control progid="DecalControls.PushButton" name="LoginCompleteAdd" left="275" top="130" width="40" height="20" text="Add" />
+            <control progid="DecalControls.List" name="LoginCompleteList" left="0" top="155" width="320" height="90">
+              <column progid="DecalControls.TextColumn" name="LoginCompleteListText" fixedwidth="224" />
+              <column progid="DecalControls.IconColumn" name="LoginCompleteListUpIcon" fixedwidth="16" />
+              <column progid="DecalControls.IconColumn" name="LoginCompleteListDownIcon" fixedwidth="16" />
+              <column progid="DecalControls.IconColumn" name="LoginCompleteListDeleteIcon" fixedwidth="16" />
+            </control>
+            
+          </control>
+        </page>
+        
+      </control>
+    </page>
+    
+    <page label="   Misc   ">
       <control progid="DecalControls.Notebook" left="0" top="0" width="320" height="460">
 
         <page label="  Options  ">
@@ -164,20 +238,6 @@
 
             <control progid="DecalControls.StaticText" name="NoFocusFPSLabel" left="10" top="250" width="310" height="30" text="This sets the frames per second the client will run at when its not in focus. Default is 10 (off):"/>
             <control progid="DecalControls.Edit" name="NoFocusFPS" left="200" top="265" width="30" height="16" text="" />
-          </control>
-        </page>
-
-        <page label="  Inventory  ">
-          <control progid="DecalControls.FixedLayout" clipped="">
-            <control progid="DecalControls.PushButton" name="ClipboardWornEquipment" left="10" top="10" width="140" height="20" text="Clipboard Worn Equipment" />
-            <control progid="DecalControls.PushButton" name="ClipboardInventoryInfo" left="170" top="10" width="140" height="20" text="Clipboard Inventory Info" />
-            <control progid="DecalControls.Edit" name="InventorySearch" left="5" top="40" width="310" height="16" text="regex search string" />
-            <control progid="DecalControls.List" name="InventoryList" left="0" top="60" width="320" height="270">
-              <column progid="DecalControls.IconColumn" name="InventoryListItemIcon" fixedwidth="16" />
-              <column progid="DecalControls.TextColumn" name="InventoryListItemName" fixedwidth="304" />
-              <column progid="DecalControls.TextColumn" name="InventoryListItemID" />
-            </control>
-            <control progid="DecalControls.StaticText" name="InventoryItemText" left="5" top="335" width="310" height="120" />
           </control>
         </page>
 
