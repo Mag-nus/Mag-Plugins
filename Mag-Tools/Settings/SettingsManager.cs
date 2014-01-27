@@ -183,22 +183,22 @@ namespace MagTools.Settings
 		{
 			public static IList<string> GetOnLoginCommands(string account, string server, string character)
 			{
-				return SettingsFile.GetChilderenInnerTexts("_" + account + "_" + server + "/" + character + "/OnLoginCommands");
+				return SettingsFile.GetChilderenInnerTexts("_" + account + "_" + XmlConvert.EncodeName(server) + "/" + XmlConvert.EncodeName(character) + "/OnLoginCommands");
 			}
 
 			public static void SetOnLoginCommands(string account, string server, string character, IList<string> commands)
 			{
-				SettingsFile.SetNodeChilderen("_" + account + "_" + server + "/" + character + "/OnLoginCommands", "Command", commands);
+				SettingsFile.SetNodeChilderen("_" + account + "_" + XmlConvert.EncodeName(server) + "/" + XmlConvert.EncodeName(character) + "/OnLoginCommands", "Command", commands);
 			}
 
 			public static IList<string> GetOnLoginCompleteCommands(string account, string server, string character)
 			{
-				return SettingsFile.GetChilderenInnerTexts("_" + account + "_" + server + "/" + character + "/OnLoginCompleteCommands");
+				return SettingsFile.GetChilderenInnerTexts("_" + account + "_" + XmlConvert.EncodeName(server) + "/" + XmlConvert.EncodeName(character) + "/OnLoginCompleteCommands");
 			}
 
 			public static void SetOnLoginCompleteCommands(string account, string server, string character, IList<string> commands)
 			{
-				SettingsFile.SetNodeChilderen("_" + account + "/" + server + "_" + character + "/OnLoginCompleteCommands", "Command", commands);
+				SettingsFile.SetNodeChilderen("_" + account + "/" + XmlConvert.EncodeName(server) + "_" + XmlConvert.EncodeName(character) + "/OnLoginCompleteCommands", "Command", commands);
 			}
 		}
 
