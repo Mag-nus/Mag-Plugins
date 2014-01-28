@@ -58,16 +58,14 @@ namespace MagTools.Macros
 				if (commands.Count == 0)
 					return;
 
-				if (commands.Count == 1)
-					processCommand(commands[0]);
-				else
-				{
-					if (pendingCommands.Count == 0)
-						CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
+				if (pendingCommands.Count == 0)
+					CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
 
-					foreach (var action in commands)
-						pendingCommands.Enqueue(action);
-				}
+				// This queues up a dummy command so our actions happen one frame after all the other plugins have finished Login
+				pendingCommands.Enqueue(null);
+
+				foreach (var action in commands)
+					pendingCommands.Enqueue(action);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -81,16 +79,14 @@ namespace MagTools.Macros
 				if (commands.Count == 0)
 					return;
 
-				if (commands.Count == 1)
-					processCommand(commands[0]);
-				else
-				{
-					if (pendingCommands.Count == 0)
-						CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
+				if (pendingCommands.Count == 0)
+					CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
 
-					foreach (var action in commands)
-						pendingCommands.Enqueue(action);
-				}
+				// This queues up a dummy command so our actions happen one frame after all the other plugins have finished LoginComplete
+				pendingCommands.Enqueue(null);
+
+				foreach (var action in commands)
+					pendingCommands.Enqueue(action);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -101,7 +97,8 @@ namespace MagTools.Macros
 			{
 				var pendingAction = pendingCommands.Dequeue();
 
-				processCommand(pendingAction);
+				if (!String.IsNullOrEmpty(pendingAction))
+					processCommand(pendingAction);
 
 				if (pendingCommands.Count == 0)
 					CoreManager.Current.RenderFrame -= new EventHandler<EventArgs>(Current_RenderFrame);
@@ -114,7 +111,7 @@ namespace MagTools.Macros
 			if (command.ToLower().StartsWith("/mt"))
 				PluginCore.Current.ProcessMTCommand(command);
 			else
-				CoreManager.Current.Actions.InvokeChatParser(command);
+				DecalProxy.DispatchChatToBoxWithPluginIntercept(command);
 		}
 	}
 }

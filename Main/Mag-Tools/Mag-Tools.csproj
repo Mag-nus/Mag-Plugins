@@ -74,7 +74,7 @@
       <Link>Shared\Debug.cs</Link>
     </Compile>
     <Compile Include="..\Shared\DecalProxy.cs">
-      <Link>Settings\DecalProxy.cs</Link>
+      <Link>Shared\DecalProxy.cs</Link>
     </Compile>
     <Compile Include="..\Shared\MyWorldObject.cs">
       <Link>Shared\MyWorldObject.cs</Link>
@@ -114,6 +114,7 @@
     <Compile Include="Macros\IdleActionManager.cs" />
     <Compile Include="Macros\LoginActions.cs" />
     <Compile Include="Macros\LogOutOnDeath.cs" />
+    <Compile Include="Macros\PeriodicActions.cs" />
     <Compile Include="Views\AccountServerCharacterGUI.cs" />
     <Compile Include="Views\InventoryToolsView.cs" />
     <Compile Include="Views\TinkeringToolsView.cs" />

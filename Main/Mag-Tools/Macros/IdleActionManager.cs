@@ -130,8 +130,11 @@ namespace MagTools.Macros
 				if (CoreManager.Current.Actions.CombatMode != CombatState.Peace)
 					return;
 
-				if (CoreManager.Current.Actions.OpenedContainer != 0)
-					return;
+				try
+				{
+					if (CoreManager.Current.Actions.OpenedContainer != 0)
+						return;
+				} catch (System.AccessViolationException) { } // Eat the decal error
 
 				if (CoreManager.Current.Actions.BusyState != 0)
 					return;
