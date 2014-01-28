@@ -79,7 +79,13 @@ namespace MagTools.Client
 					return;
 
 				if (stopWatch.ElapsedMilliseconds < 1000 / Settings.SettingsManager.Misc.NoFocusFPS.Value)
-					Thread.Sleep((int)((1000 / Settings.SettingsManager.Misc.NoFocusFPS.Value) - stopWatch.ElapsedMilliseconds));
+				{
+					int msToSleep = (int)((1000 / Settings.SettingsManager.Misc.NoFocusFPS.Value) - stopWatch.ElapsedMilliseconds);
+					if (msToSleep > 100) 
+						msToSleep = 100;
+					if (msToSleep > 0)
+						Thread.Sleep(msToSleep);
+				}
 
 				stopWatch.Reset();
 				stopWatch.Start();
