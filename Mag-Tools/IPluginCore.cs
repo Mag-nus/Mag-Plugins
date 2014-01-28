@@ -11,6 +11,6 @@ namespace MagTools
 
 		Macros.ILooter Looter { get; }
 
-		void ProcessMTCommand(string mtCommand);
+		bool ProcessMTCommand(string mtCommand);
 	}
 }

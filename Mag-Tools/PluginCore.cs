@@ -14,6 +14,7 @@ using Mag.Shared;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
+using Decal.Filters;
 
 /*
  * Created by Mag-nus. 8/19/2011
@@ -95,6 +96,7 @@ namespace MagTools
 
 		// Macros
 		LoginActions loginActions;
+		PeriodicActions periodicActions;
 		OpenMainPackOnLogin openMainPackOnLogin;
 		MaximizeChatOnLogin maximizeChatOnLogin;
 		AutoPercentConfirmation autoPercentConfirmation;
@@ -194,6 +196,7 @@ namespace MagTools
 
 				// Macros
 				loginActions = new LoginActions();
+				periodicActions = new PeriodicActions();
 				openMainPackOnLogin = new OpenMainPackOnLogin();
 				maximizeChatOnLogin = new MaximizeChatOnLogin();
 				autoPercentConfirmation = new AutoPercentConfirmation();
@@ -407,6 +410,7 @@ namespace MagTools
 
 				// Macros
 				if (loginActions != null) loginActions.Dispose();
+				if (periodicActions != null) periodicActions.Dispose();
 				if (openMainPackOnLogin != null) openMainPackOnLogin.Dispose();
 				if (maximizeChatOnLogin != null) maximizeChatOnLogin.Dispose();
 				if (autoPercentConfirmation != null) autoPercentConfirmation.Dispose();
@@ -589,17 +593,19 @@ namespace MagTools
 				if (e.Text == null)
 					return;
 
-				ProcessMTCommand(e.Text);
+				if (ProcessMTCommand(e.Text))
+					e.Eat = true;
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
-		public void ProcessMTCommand(string mtCommand)
+		public bool ProcessMTCommand(string mtCommand)
 		{
 			string lower = mtCommand.ToLower();
 
 			if (lower.StartsWith("/mt test"))
 			{
+				//DecalProxy.DispatchChatToBoxWithPluginIntercept("/vt start");
 				//void Current_ChatBoxMessage(object sender, ChatTextInterceptEventArgs e)
 				/*CoreManager.Current.ChatBoxMessage += new EventHandler<ChatTextInterceptEventArgs>(Current_ChatBoxMessage);
 				if (CoreManager.Current.ChatBoxMessage != null)
@@ -611,13 +617,13 @@ namespace MagTools
 					}
 				}*/
 
-				return;
+				return true;
 			}
 
 			if (lower.StartsWith("/mt logoff") || lower.StartsWith("/mt logout"))
 			{
 				CoreManager.Current.Actions.Logout();
-				return;
+				return true;
 			}
 
 			if (lower.StartsWith("/mt send "))
@@ -629,8 +635,9 @@ namespace MagTools
 				else if (lower.StartsWith("/mt send f4")) PostMessageTools.SendF4();
 				else if (lower.StartsWith("/mt send f12")) PostMessageTools.SendF12();
 				else if (lower.StartsWith("/mt send msg ") && lower.Length > 13) PostMessageTools.SendMsg(mtCommand.Substring(13, mtCommand.Length - 13));
+				else return false;
 
-				return;
+				return true;
 			}
 
 			if (lower.StartsWith("/mt click "))
@@ -647,14 +654,14 @@ namespace MagTools
 						int x;
 						int y;
 
-						if (!int.TryParse(splits[2], out x)) return;
-						if (!int.TryParse(splits[3], out y)) return;
+						if (!int.TryParse(splits[2], out x)) return false;
+						if (!int.TryParse(splits[3], out y)) return false;
 
 						PostMessageTools.SendMouseClick(x, y);
 					}
 				}
 
-				return;
+				return true;
 			}
 
 			if (lower.StartsWith("/mt get xy"))
@@ -668,7 +675,7 @@ namespace MagTools
 						Debug.WriteToChat("Current cursor position: " + (p.X - rct.Left) + "," + (p.Y - rct.Top));
 				}
 
-				return;
+				return true;
 			}
 
 			if (lower.StartsWith("/mt face "))
@@ -676,12 +683,13 @@ namespace MagTools
 				if (lower.Length > 9)
 				{
 					int heading;
-					int.TryParse(lower.Substring(9, lower.Length - 9), out heading);
+					if (!int.TryParse(lower.Substring(9, lower.Length - 9), out heading))
+						return false;
 
 					CoreManager.Current.Actions.FaceHeading(heading, true);
 				}
 
-				return;
+				return true;
 			}
 
 			if (lower.StartsWith("/mt jump") || lower.StartsWith("/mt sjump"))
@@ -696,7 +704,7 @@ namespace MagTools
 
 				PostMessageTools.SendSpace(msToHoldDown, addShift, addW);
 
-				return;
+				return true;
 			}
 
 			if (lower.StartsWith("/mt fellow "))
@@ -732,8 +740,58 @@ namespace MagTools
 					}
 					catch (AccessViolationException) { } // Eat the decal error
 				}
+				else return false;
 
-				return;
+				return true;
+			}
+
+			if ((lower.StartsWith("/mt cast ") && lower.Length > 9) || (lower.StartsWith("/mt castp ") && lower.Length > 10))
+			{
+				bool partialMatch = lower.StartsWith("/mt castp ");
+				int offset = partialMatch ? 10 : 9;
+
+				int spellId;
+				int objectId = 0;
+
+				string[] splits = lower.Split(' ');
+
+				if (splits.Length < 3)
+					return false;
+
+				int.TryParse(splits[2], out spellId);
+
+				string spellName;
+				string targetName = null;
+
+				if (!lower.Contains(" on "))
+					spellName = lower.Substring(offset, lower.Length - offset);
+				else
+				{
+					spellName = lower.Substring(offset, lower.IndexOf(" on ", StringComparison.Ordinal) - offset);
+					targetName = lower.Substring(lower.IndexOf(" on ", StringComparison.Ordinal) + 4, lower.Length - (lower.IndexOf(" on ", StringComparison.Ordinal) + 4));
+				}
+
+				if (spellId == 0)
+				{
+					FileService service = CoreManager.Current.Filter<FileService>();
+
+					for (int i = 0; i < service.SpellTable.Length; i++)
+					{
+						Spell spell = service.SpellTable[i];
+
+						if (String.Equals(spellName, spell.Name, StringComparison.OrdinalIgnoreCase) || (partialMatch && spell.Name.ToLower().Contains(spellName.ToLower())))
+						{
+							spellId = spell.Id;
+							break;
+						}
+					}
+				}
+
+				if (targetName != null)
+					objectId = FindIdForName(targetName, false, false, true, partialMatch);
+
+				CoreManager.Current.Actions.CastSpell(spellId, objectId);
+				return true;
 			}
 
 			if ((lower.StartsWith("/mt select ") && lower.Length > 11) || (lower.StartsWith("/mt selectp ") && lower.Length > 12))
@@ -743,9 +801,9 @@ namespace MagTools
 
 				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, true, true, partialMatch);
 
-				if (objectId == -1) return;
+				if (objectId == -1) return false;
 				CoreManager.Current.Actions.SelectItem(objectId);
-				return;
+				return true;
 			}
 
 			if ((lower.StartsWith("/mt use ") && lower.Length > 8) || (lower.StartsWith("/mt usep ") && lower.Length > 9) ||
@@ -766,13 +824,19 @@ namespace MagTools
 					if (lower.Contains("closestnpc"))
 					{
 						WorldObject wo = Util.GetClosestObject(ObjectClass.Npc);
-						if (wo == null) return;
+						if (wo == null) return false;
+						objectId = wo.Id;
+					}
+					else if (lower.Contains("closestvendor"))
+					{
+						WorldObject wo = Util.GetClosestObject(ObjectClass.Vendor);
+						if (wo == null) return false;
 						objectId = wo.Id;
 					}
 					else if (lower.Contains("closestportal"))
 					{
 						WorldObject wo = Util.GetClosestObject(ObjectClass.Portal);
-						if (wo == null) return;
+						if (wo == null) return false;
 						objectId = wo.Id;
 					}
 					else
@@ -789,7 +853,7 @@ namespace MagTools
 				}
 
 				if (objectId == -1 || useMethod == -1)
-					return;
+					return false;
 
 				if (useMethod == 0)
 					CoreManager.Current.Actions.UseItem(objectId, 0);
@@ -799,7 +863,7 @@ namespace MagTools
 					CoreManager.Current.Actions.UseItem(objectId, 1, useMethod);
 				}
 
-				return;
+				return true;
 			}
 
 			if ((lower.StartsWith("/mt give ") && lower.Contains(" to ")) || (lower.StartsWith("/mt givep ") && lower.Contains(" to ")))
@@ -814,9 +878,9 @@ namespace MagTools
 				int objectId = FindIdForName(first, true, false, false, partialMatch);
 				int destinationId = FindIdForName(second, false, false, true, partialMatch);
 
-				if (objectId == -1 || destinationId == -1) return;
+				if (objectId == -1 || destinationId == -1) return false;
 				CoreManager.Current.Actions.GiveItem(objectId, destinationId);
-				return;
+				return true;
 			}
 
 			if ((lower.StartsWith("/mt loot ") && lower.Length > 9) || (lower.StartsWith("/mt lootp ") && lower.Length > 10))
@@ -826,9 +890,9 @@ namespace MagTools
 
 				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), false, true, false, partialMatch);
 
-				if (objectId == -1) return;
+				if (objectId == -1) return false;
 				CoreManager.Current.Actions.UseItem(objectId, 0);
-				return;
+				return true;
 			}
 
 			if ((lower.StartsWith("/mt drop ") && lower.Length > 9) || (lower.StartsWith("/mt dropp ") && lower.Length > 10))
@@ -838,9 +902,9 @@ namespace MagTools
 
 				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, partialMatch);
 
-				if (objectId == -1) return;
+				if (objectId == -1) return false;
 				CoreManager.Current.Actions.DropItem(objectId);
-				return;
+				return true;
 			}
 
 			if (lower.StartsWith("/mt combatstate ") && lower.Length > 16)
@@ -848,9 +912,11 @@ namespace MagTools
 				string state = lower.Substring(16, lower.Length - 16);
 
 				if (state == "magic") CoreManager.Current.Actions.SetCombatMode(CombatState.Magic);
-				if (state == "melee") CoreManager.Current.Actions.SetCombatMode(CombatState.Melee);
-				if (state == "missile") CoreManager.Current.Actions.SetCombatMode(CombatState.Missile);
-				if (state == "peace") CoreManager.Current.Actions.SetCombatMode(CombatState.Peace);
+				else if (state == "melee") CoreManager.Current.Actions.SetCombatMode(CombatState.Melee);
+				else if (state == "missile") CoreManager.Current.Actions.SetCombatMode(CombatState.Missile);
+				else if (state == "peace") CoreManager.Current.Actions.SetCombatMode(CombatState.Peace);
+				else return false;
+				return true;
 			}
 
 			if ((lower.StartsWith("/mt trade add ") && lower.Length > 14) || (lower.StartsWith("/mt trade addp ") && lower.Length > 15))
@@ -860,14 +926,14 @@ namespace MagTools
 
 				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, partialMatch);
 
-				if (objectId == -1) return;
+				if (objectId == -1) return false;
 				CoreManager.Current.Actions.TradeAdd(objectId);
-				return;
+				return true;
 			}
-			if (lower.StartsWith("/mt trade accept")) CoreManager.Current.Actions.TradeAccept();
-			if (lower.StartsWith("/mt trade decline")) CoreManager.Current.Actions.TradeDecline();
-			if (lower.StartsWith("/mt trade reset")) CoreManager.Current.Actions.TradeReset();
-			if (lower.StartsWith("/mt trade end")) CoreManager.Current.Actions.TradeEnd();
+			if (lower.StartsWith("/mt trade accept")) { CoreManager.Current.Actions.TradeAccept(); return true; }
+			if (lower.StartsWith("/mt trade decline")) { CoreManager.Current.Actions.TradeDecline(); return true; }
+			if (lower.StartsWith("/mt trade reset")) { CoreManager.Current.Actions.TradeReset(); return true; }
+			if (lower.StartsWith("/mt trade end")) { CoreManager.Current.Actions.TradeEnd(); return true; }
 
 			if (CoreManager.Current.Actions.VendorId != 0)
 			{
@@ -886,9 +952,9 @@ namespace MagTools
 
 					int objectId = FindIdForName(itemName, true, false, false, partialMatch);
 
-					if (objectId == -1) return;
+					if (objectId == -1) return false;
 					CoreManager.Current.Actions.VendorAddBuyList(objectId, count);
-					return;
+					return true;
 				}
 				if ((lower.StartsWith("/mt vendor addsell ") && lower.Length > 19) || (lower.StartsWith("/mt vendor addsellp ") && lower.Length > 20))
 				{
@@ -897,17 +963,21 @@ namespace MagTools
 
 					int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, partialMatch);
 
-					if (objectId == -1) return;
+					if (objectId == -1) return false;
 					CoreManager.Current.Actions.VendorAddSellList(objectId);
-					return;
+					return true;
 				}
-				if (lower.StartsWith("/mt vendor buy")) CoreManager.Current.Actions.VendorBuyAll();
-				if (lower.StartsWith("/mt vendor clearbuy")) CoreManager.Current.Actions.VendorClearBuyList();
-				if (lower.StartsWith("/mt vendor sell")) CoreManager.Current.Actions.VendorSellAll();
-				if (lower.StartsWith("/mt vendor clearsell")) CoreManager.Current.Actions.VendorClearSellList();
+				if (lower.StartsWith("/mt vendor buy")) { CoreManager.Current.Actions.VendorBuyAll(); return true; }
+				if (lower.StartsWith("/mt vendor clearbuy")) { CoreManager.Current.Actions.VendorClearBuyList(); return true; }
+				if (lower.StartsWith("/mt vendor sell")) { CoreManager.Current.Actions.VendorSellAll(); return true; }
+				if (lower.StartsWith("/mt vendor clearsell")) { CoreManager.Current.Actions.VendorClearSellList(); return true; }
 			}
 
-			if (lower.StartsWith("/mt autopack") && inventoryPacker != null) inventoryPacker.Start();
+			if (lower.StartsWith("/mt autopack") && inventoryPacker != null) { inventoryPacker.Start(); return true; }
+
+			if (lower.StartsWith("/mt dumpspells")) { Util.ExportSpells(@"c:\mt spelldump.txt"); return true; }
+
+			return false;
 		}
 
 		int FindIdForName(string name, bool searchInInventory, bool searchOpenContainer, bool searchEnvironment, bool partialMatch, int idToSkip = 0)
