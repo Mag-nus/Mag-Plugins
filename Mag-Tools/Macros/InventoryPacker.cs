@@ -58,7 +58,10 @@ namespace MagTools.Macros
 					return;
 
 				if (e.Text.ToLower().Contains(CoreManager.Current.CharacterFilter.Name.ToLower() + " autopack"))
+				{
+					e.Eat = true;
 					Start();
+				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}

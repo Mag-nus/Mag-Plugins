@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Globalization;
 using Decal.Adapter;
 
 using Mag.Shared;
@@ -17,6 +17,11 @@ namespace MagTools.Views
 		private readonly HudTextBox loginCompleteText;
 		private readonly HudList loginCompleteList;
 
+		private readonly HudTextBox periodicCommandText;
+		private readonly HudTextBox periodicCommandInterval;
+		private readonly HudTextBox periodicCommandOffset;
+		private readonly HudList periodicCommandList;
+
 		public AccountServerCharacterGUI(MainView mainView)
 		{
 			try
@@ -30,6 +35,13 @@ namespace MagTools.Views
 				mainView.LoginCompleteAdd.Hit += new EventHandler(LoginCompleteAdd_Hit);
 				loginCompleteList = mainView.LoginCompleteList;
 				loginCompleteList.Click += new HudList.delClickedControl(loginCompleteList_Click);
+
+				periodicCommandText = mainView.PeriodicCommandText;
+				periodicCommandInterval = mainView.PeriodicCommandInterval;
+				periodicCommandOffset = mainView.PeriodicCommandOffset;
+				mainView.PeriodicCommandAdd.Hit += new EventHandler(PeriodicCommandAdd_Hit);
+				periodicCommandList = mainView.PeriodicCommandList;
+				periodicCommandList.Click += new HudList.delClickedControl(periodicCommandList_Click);
 
 				CoreManager.Current.CharacterFilter.Login += new EventHandler<Decal.Adapter.Wrappers.LoginEventArgs>(CharacterFilter_Login);
 			}
@@ -90,6 +102,18 @@ namespace MagTools.Views
 					((HudPictureBox)newRow[2]).Image = 0x60028FD;
 					((HudPictureBox)newRow[3]).Image = 0x60011F8;
 				}
+
+				var periodicCommands = Settings.SettingsManager.AccountServerCharacter.GetPeriodicCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name);
+
+				foreach (var command in periodicCommands)
+				{
+					HudList.HudListRowAccessor newRow = periodicCommandList.AddRow();
+
+					((HudStaticText)newRow[0]).Text = command.Command;
+					((HudStaticText)newRow[1]).Text = command.Interval.TotalMinutes.ToString(CultureInfo.InvariantCulture);
+					((HudStaticText)newRow[2]).Text = command.OffsetFromMidnight.TotalMinutes.ToString(CultureInfo.InvariantCulture);
+					((HudPictureBox)newRow[3]).Image = 0x60011F8;
+				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -98,22 +122,22 @@ namespace MagTools.Views
 		{
 			try
 			{
-				var action = loginText.Text;
+				var command = loginText.Text;
 
-				if (String.IsNullOrEmpty(action))
+				if (String.IsNullOrEmpty(command))
 					return;
 
 				loginText.Text = String.Empty;
 
-				var actions = Settings.SettingsManager.AccountServerCharacter.GetOnLoginCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name);
+				var commands = Settings.SettingsManager.AccountServerCharacter.GetOnLoginCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name);
 
-				actions.Add(action);
+				commands.Add(command);
 
-				Settings.SettingsManager.AccountServerCharacter.SetOnLoginCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name, actions);
+				Settings.SettingsManager.AccountServerCharacter.SetOnLoginCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name, commands);
 
 				HudList.HudListRowAccessor newRow = loginList.AddRow();
 
-				((HudStaticText)newRow[0]).Text = action;
+				((HudStaticText)newRow[0]).Text = command;
 				((HudPictureBox)newRow[1]).Image = 0x60028FC;
 				((HudPictureBox)newRow[2]).Image = 0x60028FD;
 				((HudPictureBox)newRow[3]).Image = 0x60011F8;
@@ -134,23 +158,23 @@ namespace MagTools.Views
 					((HudStaticText)loginList[row][0]).Text = ((HudStaticText)loginList[row - 1][0]).Text;
 					((HudStaticText)loginList[row - 1][0]).Text = temp;
 				}
-
-				if (col == 2)
+				else if (col == 2)
 				{
 					string temp = ((HudStaticText)loginList[row][0]).Text;
 					((HudStaticText)loginList[row][0]).Text = ((HudStaticText)loginList[row + 1][0]).Text;
 					((HudStaticText)loginList[row + 1][0]).Text = temp;
 				}
-
-				if (col == 3)
+				else if (col == 3)
 					loginList.RemoveRow(row);
+				else
+					return;
 
-				var actions = new List<string>();
+				var commands = new List<string>();
 
 				for (int i = 0 ; i < loginList.RowCount ; i++)
-					actions.Add(((HudStaticText)loginList[i][0]).Text);
+					commands.Add(((HudStaticText)loginList[i][0]).Text);
 
-				Settings.SettingsManager.AccountServerCharacter.SetOnLoginCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name, actions);
+				Settings.SettingsManager.AccountServerCharacter.SetOnLoginCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name, commands);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -159,22 +183,22 @@ namespace MagTools.Views
 		{
 			try
 			{
-				var action = loginCompleteText.Text;
+				var command = loginCompleteText.Text;
 
-				if (String.IsNullOrEmpty(action))
+				if (String.IsNullOrEmpty(command))
 					return;
 
 				loginCompleteText.Text = String.Empty;
 
-				var actions = Settings.SettingsManager.AccountServerCharacter.GetOnLoginCompleteCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name);
+				var commands = Settings.SettingsManager.AccountServerCharacter.GetOnLoginCompleteCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name);
 
-				actions.Add(action);
+				commands.Add(command);
 
-				Settings.SettingsManager.AccountServerCharacter.SetOnLoginCompleteCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name, actions);
+				Settings.SettingsManager.AccountServerCharacter.SetOnLoginCompleteCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name, commands);
 
 				HudList.HudListRowAccessor newRow = loginCompleteList.AddRow();
 
-				((HudStaticText)newRow[0]).Text = action;
+				((HudStaticText)newRow[0]).Text = command;
 				((HudPictureBox)newRow[1]).Image = 0x60028FC;
 				((HudPictureBox)newRow[2]).Image = 0x60028FD;
 				((HudPictureBox)newRow[3]).Image = 0x60011F8;
@@ -195,23 +219,85 @@ namespace MagTools.Views
 					((HudStaticText)loginCompleteList[row][0]).Text = ((HudStaticText)loginCompleteList[row - 1][0]).Text;
 					((HudStaticText)loginCompleteList[row - 1][0]).Text = temp;
 				}
-
-				if (col == 2)
+				else if (col == 2)
 				{
 					string temp = ((HudStaticText)loginCompleteList[row][0]).Text;
 					((HudStaticText)loginCompleteList[row][0]).Text = ((HudStaticText)loginCompleteList[row + 1][0]).Text;
 					((HudStaticText)loginCompleteList[row + 1][0]).Text = temp;
 				}
-
-				if (col == 3)
+				else if (col == 3)
 					loginCompleteList.RemoveRow(row);
+				else
+					return;
 
-				var actions = new List<string>();
+				var commands = new List<string>();
 
 				for (int i = 0; i < loginCompleteList.RowCount; i++)
-					actions.Add(((HudStaticText)loginCompleteList[i][0]).Text);
+					commands.Add(((HudStaticText)loginCompleteList[i][0]).Text);
 
-				Settings.SettingsManager.AccountServerCharacter.SetOnLoginCompleteCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name, actions);
+				Settings.SettingsManager.AccountServerCharacter.SetOnLoginCompleteCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name, commands);
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void PeriodicCommandAdd_Hit(object sender, EventArgs e)
+		{
+			try
+			{
+				var command = periodicCommandText.Text;
+				var intervalText = periodicCommandInterval.Text;
+				var offsetText = periodicCommandOffset.Text;
+
+				if (String.IsNullOrEmpty(command) || String.IsNullOrEmpty(intervalText) || String.IsNullOrEmpty(offsetText))
+					return;
+
+				int interval;
+				int offset;
+
+				if (!int.TryParse(intervalText, out interval) || interval <= 0 || !int.TryParse(offsetText, out offset) || offset < 0)
+					return;
+
+				periodicCommandText.Text = String.Empty;
+
+				var commands = Settings.SettingsManager.AccountServerCharacter.GetPeriodicCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name);
+
+				commands.Add(new Settings.SettingsManager.AccountServerCharacter.PeriodicCommand(command, TimeSpan.FromMinutes(interval), TimeSpan.FromMinutes(offset)));
+
+				Settings.SettingsManager.AccountServerCharacter.SetPeriodicCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name, commands);
+
+				HudList.HudListRowAccessor newRow = periodicCommandList.AddRow();
+
+				((HudStaticText)newRow[0]).Text = command;
+				((HudStaticText)newRow[1]).Text = interval.ToString(CultureInfo.InvariantCulture);
+				((HudStaticText)newRow[2]).Text = offset.ToString(CultureInfo.InvariantCulture);
+				((HudPictureBox)newRow[3]).Image = 0x60011F8;
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void periodicCommandList_Click(object sender, int row, int col)
+		{
+			try
+			{
+				if (col == 3)
+					periodicCommandList.RemoveRow(row);
+				else
+					return;
+
+				var commands = new List<Settings.SettingsManager.AccountServerCharacter.PeriodicCommand>();
+
+				for (int i = 0; i < periodicCommandList.RowCount; i++)
+				{
+					int interval;
+					int offset;
+
+					int.TryParse(((HudStaticText)periodicCommandList[i][1]).Text, out interval);
+					int.TryParse(((HudStaticText)periodicCommandList[i][2]).Text, out offset);
+
+					commands.Add(new Settings.SettingsManager.AccountServerCharacter.PeriodicCommand(((HudStaticText)periodicCommandList[i][0]).Text, TimeSpan.FromMinutes(interval), TimeSpan.FromMinutes(offset)));
+				}
+
+				Settings.SettingsManager.AccountServerCharacter.SetPeriodicCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name, commands);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}

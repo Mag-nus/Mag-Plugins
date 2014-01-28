@@ -96,7 +96,7 @@ namespace MagTools
 
 		// Macros
 		LoginActions loginActions;
-		PeriodicActions periodicActions;
+		PeriodicCommands periodicCommands;
 		OpenMainPackOnLogin openMainPackOnLogin;
 		MaximizeChatOnLogin maximizeChatOnLogin;
 		AutoPercentConfirmation autoPercentConfirmation;
@@ -196,7 +196,7 @@ namespace MagTools
 
 				// Macros
 				loginActions = new LoginActions();
-				periodicActions = new PeriodicActions();
+				periodicCommands = new PeriodicCommands();
 				openMainPackOnLogin = new OpenMainPackOnLogin();
 				maximizeChatOnLogin = new MaximizeChatOnLogin();
 				autoPercentConfirmation = new AutoPercentConfirmation();
@@ -410,7 +410,7 @@ namespace MagTools
 
 				// Macros
 				if (loginActions != null) loginActions.Dispose();
-				if (periodicActions != null) periodicActions.Dispose();
+				if (periodicCommands != null) periodicCommands.Dispose();
 				if (openMainPackOnLogin != null) openMainPackOnLogin.Dispose();
 				if (maximizeChatOnLogin != null) maximizeChatOnLogin.Dispose();
 				if (autoPercentConfirmation != null) autoPercentConfirmation.Dispose();
@@ -785,10 +785,15 @@ namespace MagTools
 							break;
 						}
 					}
+
+					if (spellId == 0) return false;
 				}
 
 				if (targetName != null)
+				{
 					objectId = FindIdForName(targetName, false, false, true, partialMatch);
+					if (objectId == -1) return false;
+				}
 
 				CoreManager.Current.Actions.CastSpell(spellId, objectId);
 				return true;
@@ -1046,9 +1051,9 @@ namespace MagTools
 		{
 			try
 			{
-				Rectangle rect = Core.Actions.UIElementRegion(UIElementType.Panels);
-
 				CoreManager.Current.RenderFrame -= new EventHandler<EventArgs>(FellowCreate_Current_RenderFrame);
+
+				Rectangle rect = Core.Actions.UIElementRegion(UIElementType.Panels);
 				PostMessageTools.SendMouseClick(rect.X + 145, rect.Y + 343);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }

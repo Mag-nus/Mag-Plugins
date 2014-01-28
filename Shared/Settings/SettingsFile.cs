@@ -9,7 +9,7 @@ namespace Mag.Shared.Settings
 {
 	static class SettingsFile
 	{
-		static readonly XmlDocument XmlDocument = new XmlDocument();
+		internal static readonly XmlDocument XmlDocument = new XmlDocument();
 
 		static string _documentPath;
 
@@ -44,6 +44,11 @@ namespace Mag.Shared.Settings
 
 				XmlDocument.LoadXml("<" + _rootNodeName + "></" + _rootNodeName + ">");
 			}
+		}
+
+		public static void SaveXmlDocument()
+		{
+			XmlDocument.Save(_documentPath);
 		}
 
 		public static T GetSetting<T>(string xPath, T defaultValue = default(T))
@@ -162,9 +167,14 @@ namespace Mag.Shared.Settings
 			XmlDocument.Save(_documentPath);
 		}
 
-		public static XmlNode GetNode(string xPath)
+		public static XmlNode GetNode(string xPath, bool createIfNull = false)
 		{
-			return XmlDocument.SelectSingleNode(_rootNodeName + "/" + xPath);
+			var node = XmlDocument.SelectSingleNode(_rootNodeName + "/" + xPath);
+
+			if (node == null && createIfNull)
+				node = createMissingNode(_rootNodeName + "/" + xPath);
+
+			return node;
 		}
 
 		public static void SetNodeChilderen(string xPath, string childNodeName, Collection<Dictionary<string, string>> childNodeAttributes)
