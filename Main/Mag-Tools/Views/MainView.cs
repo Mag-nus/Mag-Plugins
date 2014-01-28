@@ -103,6 +103,12 @@ namespace MagTools.Views
 		public HudButton LoginCompleteAdd { get; private set; }
 		public HudList LoginCompleteList { get; private set; }
 
+		public HudTextBox PeriodicCommandText { get; private set; }
+		public HudTextBox PeriodicCommandInterval { get; private set; }
+		public HudTextBox PeriodicCommandOffset { get; private set; }
+		public HudButton PeriodicCommandAdd { get; private set; }
+		public HudList PeriodicCommandList { get; private set; }
+
 
 		// Misc - Options
 		HudList OptionList { get; set; }
@@ -225,6 +231,12 @@ namespace MagTools.Views
 				LoginCompleteText = view != null ? (HudTextBox)view["LoginCompleteText"] : new HudTextBox();
 				LoginCompleteAdd = view != null ? (HudButton)view["LoginCompleteAdd"] : new HudButton();
 				LoginCompleteList = view != null ? (HudList)view["LoginCompleteList"] : new HudList();
+
+				PeriodicCommandText = view != null ? (HudTextBox)view["PeriodicCommandText"] : new HudTextBox();
+				PeriodicCommandInterval = view != null ? (HudTextBox)view["PeriodicCommandInterval"] : new HudTextBox();
+				PeriodicCommandOffset = view != null ? (HudTextBox)view["PeriodicCommandOffset"] : new HudTextBox();
+				PeriodicCommandAdd = view != null ? (HudButton)view["PeriodicCommandAdd"] : new HudButton();
+				PeriodicCommandList = view != null ? (HudList)view["PeriodicCommandList"] : new HudList();
 
 
 				// Misc - Options

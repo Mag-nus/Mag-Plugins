@@ -95,15 +95,17 @@ namespace MagTools.Macros
 		{
 			try
 			{
-				var pendingAction = pendingCommands.Dequeue();
+				var pendingCommand = pendingCommands.Dequeue();
 
-				if (!String.IsNullOrEmpty(pendingAction))
-					processCommand(pendingAction);
-
+				if (!String.IsNullOrEmpty(pendingCommand))
+					processCommand(pendingCommand);
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+			finally
+			{
 				if (pendingCommands.Count == 0)
 					CoreManager.Current.RenderFrame -= new EventHandler<EventArgs>(Current_RenderFrame);
 			}
-			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		void processCommand(string command)
