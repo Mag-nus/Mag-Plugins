@@ -21,7 +21,7 @@ namespace Mag.Shared
 			{
 				case 'a': return 0x1E;
 				case 'b': return 0x30;
-				case 'c': return 0x2e;
+				case 'c': return 0x2E;
 				case 'd': return 0x20;
 				case 'e': return 0x12;
 				case 'f': return 0x21;
@@ -37,14 +37,14 @@ namespace Mag.Shared
 				case 'p': return 0x19;
 				case 'q': return 0x10;
 				case 'r': return 0x13;
-				case 's': return 0x1f;
+				case 's': return 0x1F;
 				case 't': return 0x14;
 				case 'u': return 0x16;
-				case 'v': return 0x2f;
+				case 'v': return 0x2F;
 				case 'w': return 0x11;
-				case 'x': return 0x2d;
+				case 'x': return 0x2D;
 				case 'y': return 0x15;
-				case 'z': return 0x2c;
+				case 'z': return 0x2C;
 				case '/': return 0x35;
 				case ' ': return 0x39;
 			}
@@ -104,16 +104,25 @@ namespace Mag.Shared
 		static int _spaceHoldTimeMilliseconds;
 		static bool _spaceAddShift;
 		static bool _spaceAddW;
+		static bool _spaceAddZ;
+		static bool _spaceAddX;
+		static bool _spaceAddC;
 
-		public static void SendSpace(int msToHoldDown = 0, bool addShift = false, bool addW = false)
+		public static void SendSpace(int msToHoldDown = 0, bool addShift = false, bool addW = false, bool addZ = false, bool addX = false, bool addC = false)
 		{
 			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN, (IntPtr)VK_SPACE, (UIntPtr)0x00390001);
 			if (msToHoldDown == 0)
 			{
 				if (addShift)	User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)VK_SHIFT,		(UIntPtr)0x002A0001);
 				if (addW)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)CharCode('w'),	(UIntPtr)0x00110001);
+				if (addZ)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)CharCode('z'),	(UIntPtr)0x002C0001);
+				if (addX)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)CharCode('x'),	(UIntPtr)0x002D0001);
+				if (addC)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)CharCode('c'),	(UIntPtr)0x002E0001);
 								User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)VK_SPACE,		(UIntPtr)0xC0390001);
 				if (addW)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)CharCode('w'),	(UIntPtr)0xC0110001);
+				if (addZ)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)CharCode('z'),	(UIntPtr)0xC02C0001);
+				if (addX)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)CharCode('x'),	(UIntPtr)0xC02D0001);
+				if (addC)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)CharCode('c'),	(UIntPtr)0xC02E0001);
 				if (addShift)	User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)VK_SHIFT,		(UIntPtr)0xC02A0001);
 			}
 			else
@@ -129,6 +138,9 @@ namespace Mag.Shared
 				_spaceHoldTimeMilliseconds = msToHoldDown;
 				_spaceAddShift = addShift;
 				_spaceAddW = addW;
+				_spaceAddZ = addZ;
+				_spaceAddX = addX;
+				_spaceAddC = addC;
 				_spaceReleaseTimer.Start();
 			}
 		}
@@ -140,8 +152,14 @@ namespace Mag.Shared
 				_spaceReleaseTimer.Stop();
 				if (_spaceAddShift)	User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)VK_SHIFT,		(UIntPtr)0x002A0001);
 				if (_spaceAddW)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)CharCode('w'),	(UIntPtr)0x00110001);
+				if (_spaceAddZ)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)CharCode('z'),	(UIntPtr)0x002C0001);
+				if (_spaceAddX)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)CharCode('x'),	(UIntPtr)0x002D0001);
+				if (_spaceAddC)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)CharCode('c'),	(UIntPtr)0x002E0001);
 									User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)VK_SPACE,		(UIntPtr)0xC0390001);
 				if (_spaceAddW)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)CharCode('w'),	(UIntPtr)0xC0110001);
+				if (_spaceAddZ)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)CharCode('z'),	(UIntPtr)0xC02C0001);
+				if (_spaceAddX)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)CharCode('x'),	(UIntPtr)0xC02D0001);
+				if (_spaceAddC)		User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)CharCode('c'),	(UIntPtr)0xC02E0001);
 				if (_spaceAddShift)	User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)VK_SHIFT,		(UIntPtr)0xC02A0001);
 			}
 		}

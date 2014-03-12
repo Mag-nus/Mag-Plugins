@@ -29,8 +29,12 @@ namespace MagTools.Trackers.Combat.Standard
 
 
 			// Melee/Missile received
+			// Critical hit! Overpower! Lugian Launcher smashes your lower leg for 108 points of bludgeoning damage!
+			MeleeMissileReceivedAttacks.Add(new Regex("^Critical hit! Overpower! (?<targetname>.+) [\\w]+ your .+ for (?<points>.*) point.* of .+ damage.*$"));
 			// Critical hit! Virindi Executor scratches your upper leg for 3 points of slashing damage!
 			MeleeMissileReceivedAttacks.Add(new Regex("^Critical hit! (?<targetname>.+) [\\w]+ your .+ for (?<points>.*) point.* of .+ damage.*$"));
+			// Overpower! Lugian Launcher bashes your foot for 43 points of bludgeoning damage!
+			MeleeMissileReceivedAttacks.Add(new Regex("^Overpower! (?<targetname>.+) [\\w]+ your .+ for (?<points>.+) point.* of .+ damage.*$"));
 			// Ruschk Sadist numbs your lower leg for 2 points of cold damage!
 			// Annihilator grazes your upper arm for 3 points of bludgeoning damage!
 			// Viamontian Mercenary scratches your foot for 3 points of slashing damage! Your Critical Protection augmentation allows you to avoid a critical hit!
@@ -43,9 +47,13 @@ namespace MagTools.Trackers.Combat.Standard
 			MeleeMissileGivenAttacks.Add(new Regex("^You [\\w]+ (?<targetname>.*) for (?<points>.+) point.* of .+ damage.*$"));
 
 			// Magic received
+			// Critical hit! Overpower! Virindi Rival shocks you for 96 points with Incantation of Lightning Arc.
+			MagicReceivedAttacks.Add(new Regex("^Critical hit! Overpower! (?<targetname>.+) [\\w]+ you for (?<points>.+) point.* with .+$"));
 			// Critical hit! Mag-salvager smashes you for 147 points with Incantation of Shock Wave Streak.
 			// Critical hit! Mag-salvager exhausts you for 39 points with Martyr's Hecatomb VII.
 			MagicReceivedAttacks.Add(new Regex("^Critical hit! (?<targetname>.+) [\\w]+ you for (?<points>.+) point.* with .+$"));
+			// Overpower! Virindi Rival shocks you for 96 points with Incantation of Lightning Arc.
+			MagicReceivedAttacks.Add(new Regex("^Overpower! (?<targetname>.+) [\\w]+ you for (?<points>.+) point.* with .+$"));
 			// Crystal Shard Sentinel scorches you for 47 points with Flame Arc VII.
 			// Tendril of T'thuun depletes you for 188 points with Martyr's Hecatomb V.
 			// Mag-salvager siphons you for 121 points with Martyr's Hecatomb VII.

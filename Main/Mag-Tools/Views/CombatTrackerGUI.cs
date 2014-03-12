@@ -293,7 +293,7 @@ namespace MagTools.Views
 
 				int killingBlows = 0;
 				int damageReceived = 0;
-				int damageGiven = 0;
+				long damageGiven = 0;
 
 				foreach (CombatInfo combatInfo in combatInfos)
 				{
@@ -491,10 +491,10 @@ namespace MagTools.Views
 						// Normal Avg/Max
 						// Crits/%
 						// Crit Avg/Max
-						int totalNormalDamage = 0;
+						long totalNormalDamage = 0;
 						int maxNormalDamage = 0;
 						int crits = 0;
-						int totalCritDamage = 0;
+						long totalCritDamage = 0;
 						int maxCritDamage = 0;
 						foreach (CombatInfo combatInfo in combatInfos)
 						{
@@ -513,11 +513,11 @@ namespace MagTools.Views
 						}
 
 						if (totalAttacks - failedAttacks - crits - killingBlows != 0)
-							combatTrackerGUIInfo.SetAvgMax(totalNormalDamage / (totalAttacks - failedAttacks - crits - killingBlows), maxNormalDamage);
+							combatTrackerGUIInfo.SetAvgMax((int)(totalNormalDamage / (totalAttacks - failedAttacks - crits - killingBlows)), maxNormalDamage);
 						if (totalAttacks - failedAttacks - killingBlows != 0)
 							combatTrackerGUIInfo.SetCrits(crits, (crits / (float)(totalAttacks - failedAttacks - killingBlows)) * 100);
 						if (crits != 0)
-							combatTrackerGUIInfo.SetCritsAvgMax(totalCritDamage / crits, maxCritDamage);
+							combatTrackerGUIInfo.SetCritsAvgMax((int)(totalCritDamage / crits), maxCritDamage);
 
 
 						// Damage Total

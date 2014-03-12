@@ -328,7 +328,7 @@ namespace MagTools.Views
 		}
 
 
-		public int TotalDamage
+		public long TotalDamage
 		{
 			set { totalDmgText.Text = value == 0 ? "" : value.ToString("#,##0"); }
 		}
