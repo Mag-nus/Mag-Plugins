@@ -697,12 +697,15 @@ namespace MagTools
 				int msToHoldDown = 0;
 				bool addShift = lower.Contains("sjump");
 				bool addW = lower.Contains("jumpw");
+				bool addZ = lower.Contains("jumpz");
+				bool addX = lower.Contains("jumpx");
+				bool addC = lower.Contains("jumpc");
 
 				string[] split = lower.Split(' ');
 				if (split.Length == 3)
 					int.TryParse(split[2], out msToHoldDown);
 
-				PostMessageTools.SendSpace(msToHoldDown, addShift, addW);
+				PostMessageTools.SendSpace(msToHoldDown, addShift, addW, addZ, addX, addC);
 
 				return true;
 			}

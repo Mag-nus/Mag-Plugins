@@ -396,7 +396,7 @@ namespace Mag.Shared
 			}
 		}
 
-		public static string NumberFormatter(int number, string format, int largestViewableNumber, string reducedFormat = "#,##0.0")
+		public static string NumberFormatter(long number, string format, int largestViewableNumber, string reducedFormat = "#,##0")
 		{
 			if (number <= largestViewableNumber)
 				return number.ToString(format);

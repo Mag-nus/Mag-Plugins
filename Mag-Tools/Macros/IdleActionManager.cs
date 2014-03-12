@@ -134,7 +134,15 @@ namespace MagTools.Macros
 				{
 					if (CoreManager.Current.Actions.OpenedContainer != 0)
 						return;
-				} catch (System.AccessViolationException) { } // Eat the decal error
+				} 
+				/*System.AccessViolationException: Attempted to read or write protected memory. This is often an indication that other memory is corrupt.
+					at Decal.Interop.Core.ACHooksClass.get_OpenedContainer()
+					at Decal.Adapter.Wrappers.HooksWrapper.get_OpenedContainer()*/
+				catch (AccessViolationException)
+				{
+					timer.Stop();
+					return;
+				}
 
 				if (CoreManager.Current.Actions.BusyState != 0)
 					return;
