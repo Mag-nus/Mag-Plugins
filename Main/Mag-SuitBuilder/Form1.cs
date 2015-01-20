@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
@@ -62,8 +63,10 @@ namespace Mag_SuitBuilder
 
 			boundList.ListChanged += (s, e2) =>
 			{
-				foreach (var item in boundList)
-					item.IsSurpassed = boundList.ItemIsSurpassed(item);
+				//foreach (var item in boundList)
+				//	item.IsSurpassed = boundList.ItemIsSurpassed(item);
+				Parallel.ForEach(boundList, item => item.IsSurpassed = boundList.ItemIsSurpassed(item));
+
 				equipmentGrid.Invalidate();
 			};
 
@@ -352,6 +355,7 @@ namespace Mag_SuitBuilder
 
 		ArmorSearcher armorSearcher;
 		List<Searcher> accessorySearchers = new List<Searcher>(); // We use this list to stop accessory searchers when the user stops the build.
+		bool abortedSearch;
 
 		private void btnCalculatePossibilities_Click(object sender, System.EventArgs e)
 		{
@@ -367,6 +371,8 @@ namespace Mag_SuitBuilder
 			}
 
 			accessorySearchers.Clear();
+
+			abortedSearch = false;
 
 			SearcherConfiguration config = new SearcherConfiguration();
 			config.CantripsToLookFor = filtersControl1.CantripsToLookFor;
@@ -476,6 +482,9 @@ namespace Mag_SuitBuilder
 
 			ThreadPool.QueueUserWorkItem(delegate
 			{
+				if (abortedSearch)
+					return;
+
 				AccessorySearcher accSearcher = new AccessorySearcher(new SearcherConfiguration(), boundList, obj);
 				accessorySearchers.Add(accSearcher);
 				accSearcher.SuitCreated += new Action<CompletedSuit>(accSearcher_SuitCreated);
@@ -557,6 +566,8 @@ namespace Mag_SuitBuilder
 		{
 			progressBar1.Style = ProgressBarStyle.Blocks;
 			btnStopCalculating.Enabled = false;
+
+			abortedSearch = true;
 
 			armorSearcher.Stop();
 
