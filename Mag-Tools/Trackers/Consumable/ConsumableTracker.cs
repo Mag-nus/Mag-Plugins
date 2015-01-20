@@ -8,9 +8,9 @@ namespace MagTools.Trackers.Consumable
 	class ConsumableTracker : ITracker<TrackedConsumable>, IDisposable
 	{
 		/// <summary>
-		/// This is raised when an item has been added to the tracker.
+		/// TThis is raised when one or more items have been added to the tracker.
 		/// </summary>
-		public event Action<TrackedConsumable> ItemAdded;
+		public event Action<ICollection<TrackedConsumable>> ItemsAdded;
 
 		/// <summary>
 		/// This is raised when an item we're tracking has been changed.
@@ -22,7 +22,7 @@ namespace MagTools.Trackers.Consumable
 		/// </summary>
 		public event Action<TrackedConsumable> ItemRemoved;
 
-		readonly Dictionary<int, TrackedConsumable> trackedItems = new Dictionary<int, TrackedConsumable>();
+		//readonly Dictionary<int, TrackedConsumable> trackedItems = new Dictionary<int, TrackedConsumable>();
 
 		public ConsumableTracker()
 		{

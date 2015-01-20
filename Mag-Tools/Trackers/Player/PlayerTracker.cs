@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Collections.ObjectModel;
 using Mag.Shared;
 
 using Decal.Adapter;
@@ -11,9 +11,9 @@ namespace MagTools.Trackers.Player
 	class PlayerTracker : ITracker<TrackedPlayer>, IDisposable
 	{
 		/// <summary>
-		/// This is raised when an item has been added to the tracker.
+		/// This is raised when one or more items have been added to the tracker.
 		/// </summary>
-		public event Action<TrackedPlayer> ItemAdded;
+		public event Action<ICollection<TrackedPlayer>> ItemsAdded;
 
 		/// <summary>
 		/// This is raised when an item we're tracking has been changed.
@@ -124,8 +124,8 @@ namespace MagTools.Trackers.Player
 
 			trackedItems.Add(newItem);
 
-			if (ItemAdded != null)
-				ItemAdded(newItem);
+			if (ItemsAdded != null)
+				ItemsAdded(new Collection<TrackedPlayer> { newItem });
 		}
 
 		public void ClearStats()
@@ -145,6 +145,8 @@ namespace MagTools.Trackers.Player
 
 			if (PlayerTrackerImporter.Import(xmlFileName, out importedItems))
 			{
+				List<TrackedPlayer> itemsAdded = new List<TrackedPlayer>();
+
 				foreach (var newItem in importedItems)
 				{
 					foreach (var item in trackedItems)
@@ -154,12 +156,13 @@ namespace MagTools.Trackers.Player
 					}
 
 					trackedItems.Add(newItem);
-
-					if (ItemAdded != null)
-						ItemAdded(newItem);
+					itemsAdded.Add(newItem);
 
 					next:;
 				}
+
+				if (ItemsAdded != null)
+					ItemsAdded(itemsAdded);
 			}
 		}
 

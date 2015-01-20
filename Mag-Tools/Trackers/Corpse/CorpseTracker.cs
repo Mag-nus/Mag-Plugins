@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
+
 using Mag.Shared;
 
 namespace MagTools.Trackers.Corpse
@@ -10,9 +11,9 @@ namespace MagTools.Trackers.Corpse
 	class CorpseTracker : ITracker<TrackedCorpse>, IDisposable
 	{
 		/// <summary>
-		/// This is raised when an item has been added to the tracker.
+		/// This is raised when one or more items have been added to the tracker.
 		/// </summary>
-		public event Action<TrackedCorpse> ItemAdded;
+		public event Action<ICollection<TrackedCorpse>> ItemsAdded;
 
 		/// <summary>
 		/// This is raised when an item we're tracking has been changed.
@@ -233,8 +234,8 @@ namespace MagTools.Trackers.Corpse
 
 				trackedItems.Add(trackedItem);
 
-				if (ItemAdded != null)
-					ItemAdded(trackedItem);
+				if (ItemsAdded != null)
+					ItemsAdded(new List<TrackedCorpse> { trackedItem });
 			}
 		}
 
@@ -279,6 +280,8 @@ namespace MagTools.Trackers.Corpse
 
 			if (CorpseTrackerImporter.Import(xmlFileName, out importedItems))
 			{
+				List<TrackedCorpse> itemsAdded = new List<TrackedCorpse>();
+
 				foreach (var newItem in importedItems)
 				{
 					if (CorpsePassesActiveTrackingFilter(newItem))
@@ -290,13 +293,14 @@ namespace MagTools.Trackers.Corpse
 						}
 
 						trackedItems.Add(newItem);
-
-						if (ItemAdded != null)
-							ItemAdded(newItem);
+						itemsAdded.Add(newItem);
 					}
 
 					next:;
 				}
+
+				if (ItemsAdded != null)
+					ItemsAdded(itemsAdded);
 			}
 		}
 

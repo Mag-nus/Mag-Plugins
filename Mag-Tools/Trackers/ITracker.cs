@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MagTools.Trackers
 {
 	public interface ITracker<T>
 	{
 		/// <summary>
-		/// This is raised when an item has been added to the tracker.
+		/// This is raised when one or more items have been added to the tracker.
 		/// </summary>
-		event Action<T> ItemAdded;
+		event Action<ICollection<T>> ItemsAdded;
 
 		/// <summary>
 		/// This is raised when an item we're tracking has been changed.

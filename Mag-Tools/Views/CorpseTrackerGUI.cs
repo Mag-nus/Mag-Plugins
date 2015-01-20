@@ -38,7 +38,7 @@ namespace MagTools.Views
 				((HudStaticText)newRow[2]).Text = "Coords";
 				((HudStaticText)newRow[3]).Text = "Id";
 
-				tracker.ItemAdded += new Action<TrackedCorpse>(corpseTracker_ItemAdded);
+				tracker.ItemsAdded += new Action<System.Collections.Generic.ICollection<TrackedCorpse>>(corpseTracker_ItemsAdded);
 				tracker.ItemChanged += new Action<TrackedCorpse>(corpseTracker_ItemChanged);
 				tracker.ItemRemoved += new Action<TrackedCorpse>(corpseTracker_ItemRemoved);
 
@@ -66,7 +66,7 @@ namespace MagTools.Views
 			{
 				if (disposing)
 				{
-					tracker.ItemAdded -= new Action<TrackedCorpse>(corpseTracker_ItemAdded);
+					tracker.ItemsAdded -= new Action<System.Collections.Generic.ICollection<TrackedCorpse>>(corpseTracker_ItemsAdded);
 					tracker.ItemChanged -= new Action<TrackedCorpse>(corpseTracker_ItemChanged);
 					tracker.ItemRemoved -= new Action<TrackedCorpse>(corpseTracker_ItemRemoved);
 
@@ -78,23 +78,26 @@ namespace MagTools.Views
 			}
 		}
 
-		void corpseTracker_ItemAdded(TrackedCorpse item)
+		void corpseTracker_ItemsAdded(System.Collections.Generic.ICollection<TrackedCorpse> items)
 		{
 			try
 			{
-				if (item.Opened)
-					return;
+				foreach (var item in items)
+				{
+					if (item.Opened)
+						return;
 
-				HudList.HudListRowAccessor newRow = hudList.InsertRow(1);
+					HudList.HudListRowAccessor newRow = hudList.InsertRow(1);
 
-				((HudStaticText)newRow[0]).Text = item.TimeStamp.ToString("ddd HH:mm");
+					((HudStaticText)newRow[0]).Text = item.TimeStamp.ToString("ddd HH:mm");
 
-				((HudStaticText)newRow[1]).Text = item.Description;
+					((HudStaticText)newRow[1]).Text = item.Description;
 
-				CoordsObject newCords = Mag.Shared.Util.GetCoords(item.LandBlock, item.LocationX, item.LocationY);
-				((HudStaticText)newRow[2]).Text = newCords.ToString();
+					CoordsObject newCords = Mag.Shared.Util.GetCoords(item.LandBlock, item.LocationX, item.LocationY);
+					((HudStaticText)newRow[2]).Text = newCords.ToString();
 
-				((HudStaticText)newRow[3]).Text = item.Id.ToString(CultureInfo.InvariantCulture);
+					((HudStaticText)newRow[3]).Text = item.Id.ToString(CultureInfo.InvariantCulture);
+				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
