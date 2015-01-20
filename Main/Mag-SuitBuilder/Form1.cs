@@ -238,6 +238,8 @@ namespace Mag_SuitBuilder
 		{
 			if (clear)
 			{
+				Cursor.Current = Cursors.WaitCursor;
+
 				boundList.RaiseListChangedEvents = false;
 				boundList.Clear();
 			}
@@ -260,6 +262,8 @@ namespace Mag_SuitBuilder
 			{
 				boundList.RaiseListChangedEvents = true;
 				boundList.ResetBindings();
+
+				Cursor.Current = Cursors.Arrow;
 			}
 		}
 

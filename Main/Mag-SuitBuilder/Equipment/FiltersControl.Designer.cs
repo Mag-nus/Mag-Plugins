@@ -109,6 +109,8 @@
 			this.label24 = new System.Windows.Forms.Label();
 			this.txtWieldRequirementSkillMin = new System.Windows.Forms.TextBox();
 			this.label25 = new System.Windows.Forms.Label();
+			this.chkPets = new System.Windows.Forms.CheckBox();
+			this.cmdClearAllCheckboxes = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// txtMinimumBaseArmorLevel
@@ -225,7 +227,7 @@
 			this.chkAllElseObjectClasses.AutoSize = true;
 			this.chkAllElseObjectClasses.Checked = true;
 			this.chkAllElseObjectClasses.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkAllElseObjectClasses.Location = new System.Drawing.Point(2, 420);
+			this.chkAllElseObjectClasses.Location = new System.Drawing.Point(2, 443);
 			this.chkAllElseObjectClasses.Name = "chkAllElseObjectClasses";
 			this.chkAllElseObjectClasses.Size = new System.Drawing.Size(60, 17);
 			this.chkAllElseObjectClasses.TabIndex = 48;
@@ -994,10 +996,33 @@
 			this.label25.Text = "Skill:";
 			this.label25.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
+			// chkPets
+			// 
+			this.chkPets.AutoSize = true;
+			this.chkPets.Location = new System.Drawing.Point(2, 420);
+			this.chkPets.Name = "chkPets";
+			this.chkPets.Size = new System.Drawing.Size(47, 17);
+			this.chkPets.TabIndex = 124;
+			this.chkPets.Text = "Pets";
+			this.chkPets.UseVisualStyleBackColor = true;
+			this.chkPets.CheckedChanged += new System.EventHandler(this.chkFilter_CheckedChanged);
+			// 
+			// cmdClearAllCheckboxes
+			// 
+			this.cmdClearAllCheckboxes.Location = new System.Drawing.Point(3, 472);
+			this.cmdClearAllCheckboxes.Name = "cmdClearAllCheckboxes";
+			this.cmdClearAllCheckboxes.Size = new System.Drawing.Size(132, 23);
+			this.cmdClearAllCheckboxes.TabIndex = 125;
+			this.cmdClearAllCheckboxes.Text = "Clear All Checkboxes";
+			this.cmdClearAllCheckboxes.UseVisualStyleBackColor = true;
+			this.cmdClearAllCheckboxes.Click += new System.EventHandler(this.cmdClearAllCheckboxes_Click);
+			// 
 			// FiltersControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.cmdClearAllCheckboxes);
+			this.Controls.Add(this.chkPets);
 			this.Controls.Add(this.txtWieldRequirementSkillMax);
 			this.Controls.Add(this.label24);
 			this.Controls.Add(this.txtWieldRequirementSkillMin);
@@ -1169,5 +1194,7 @@
 		private System.Windows.Forms.Label label24;
 		private System.Windows.Forms.TextBox txtWieldRequirementSkillMin;
 		private System.Windows.Forms.Label label25;
+		private System.Windows.Forms.CheckBox chkPets;
+		private System.Windows.Forms.Button cmdClearAllCheckboxes;
 	}
 }
