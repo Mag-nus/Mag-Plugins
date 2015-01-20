@@ -26,7 +26,7 @@ namespace MagFilter
 		{
 			if (e.Message.Type == 0xF659) // One of your characters is still in the world. Please try again in a few minutes.
 			{
-				loginRetryTimer.Interval = 200;
+				loginRetryTimer.Interval = 100;
 				loginRetryTimer.Start();
 			}
 		}
@@ -35,22 +35,21 @@ namespace MagFilter
 		{
 			loginRetryTimer.Stop();
 
-			if (loginRetryTimer.Interval == 300)
+			if (loginRetryTimer.Interval == 200)
 			{
 				// Click the Enter button
 				Mag.Shared.PostMessageTools.SendMouseClick(0x015C, 0x0185);
 
-				loginRetryTimer.Interval = 200;
 				loginRetryTimer.Start();
-				return;
 			}
 
-			if (loginRetryTimer.Interval == 200)
+			if (loginRetryTimer.Interval == 100)
 			{
 				// Click the OK button
-				Mag.Shared.PostMessageTools.ClickOK();
+				Mag.Shared.PostMessageTools.SendMouseClick(400, 331);
+				Mag.Shared.PostMessageTools.SendMouseClick(400, 325);
 
-				loginRetryTimer.Interval = 300;
+				loginRetryTimer.Interval = 200;
 				loginRetryTimer.Start();
 			}
 		}
