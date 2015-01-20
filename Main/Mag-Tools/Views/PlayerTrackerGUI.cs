@@ -153,27 +153,28 @@ namespace MagTools.Views
 			if (DateTime.Now - lastSortTime <= TimeSpan.FromSeconds(2))
 				return;
 
+			// DateTime.TryParseExact is also very slow, so we cache the timestamps here
+			List<DateTime> timeStamps = new List<DateTime>();
+			timeStamps.Add(DateTime.MinValue); // This is just a placeholder to line up the indexes with hudList
+
+			for (int row = 1; row < hudList.RowCount; row++)
+			{
+				DateTime timeStamp;
+
+				DateTime.TryParseExact(((HudStaticText)hudList[row][0]).Text, "yy/MM/dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out timeStamp);
+
+				timeStamps.Add(timeStamp);
+			}
+
 			for (int row = 1; row < hudList.RowCount - 1; row++)
 			{
 				for (int compareRow = row + 1; compareRow < hudList.RowCount; compareRow++)
 				{
 					string rowName = ((HudStaticText)hudList[row][1]).Text;
-					DateTime rowDateTime;
-
-					//if (!DateTime.TryParse(((HudStaticText)playerList[row][0]).Text, out rowDateTime))
-					//	break;
-
-					if (!DateTime.TryParseExact(((HudStaticText)hudList[row][0]).Text, "yy/MM/dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out rowDateTime))
-						break;
+					DateTime rowDateTime = timeStamps[row];
 
 					string compareName = ((HudStaticText)hudList[compareRow][1]).Text;
-					DateTime compareDateTime;
-
-					//if (!DateTime.TryParse(((HudStaticText)playerList[compareRow][0]).Text, out compareDateTime))
-					//	continue;
-
-					if (!DateTime.TryParseExact(((HudStaticText)hudList[compareRow][0]).Text, "yy/MM/dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out compareDateTime))
-						break;
+					DateTime compareDateTime = timeStamps[compareRow];
 
 					if (rowDateTime < compareDateTime || (rowDateTime == compareDateTime && String.Compare(rowName, compareName, StringComparison.Ordinal) > 0))
 					{
@@ -188,6 +189,10 @@ namespace MagTools.Views
 						string obj3 = ((HudStaticText)hudList[row][2]).Text;
 						((HudStaticText)hudList[row][2]).Text = ((HudStaticText)hudList[compareRow][2]).Text;
 						((HudStaticText)hudList[compareRow][2]).Text = obj3;
+
+						DateTime obj4 = timeStamps[row];
+						timeStamps[row] = timeStamps[compareRow];
+						timeStamps[compareRow] = obj4;
 					}
 				}
 			}
