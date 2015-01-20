@@ -17,33 +17,36 @@ namespace Mag_SuitBuilder.Equipment
 
 			cantripSelectorControl1.CollectionChanged += (s, e) =>
 			{
-				if (FiltersChanged != null)
+				if (FiltersChanged != null && !suspendChangedEvent)
 					FiltersChanged();
 			};
 		}
 
 		public Action FiltersChanged;
+		private bool suspendChangedEvent;
 
 		private void chkFilter_CheckedChanged(object sender, EventArgs e)
 		{
-			if (FiltersChanged != null)
+			if (FiltersChanged != null && !suspendChangedEvent)
 				FiltersChanged();
 		}
 
 		private void txtFilter_TextChanged(object sender, EventArgs e)
 		{
-			if (FiltersChanged != null)
+			if (FiltersChanged != null && !suspendChangedEvent)
 				FiltersChanged();
 		}
 
 		private void cboFilter_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (FiltersChanged != null)
+			if (FiltersChanged != null && !suspendChangedEvent)
 				FiltersChanged();
 		}
 
 		public void UpdateArmorSets(IDictionary<string, int> armorSets)
 		{
+			suspendChangedEvent = true;
+
 			cboPrimaryArmorSet.Items.Clear();
 			cboPrimaryArmorSet.Items.Add(new KeyValuePair<string, int>("No Armor Set", 0));
 			cboPrimaryArmorSet.Items.Add(new KeyValuePair<string, int>("Any Armor Set", 255));
@@ -57,6 +60,11 @@ namespace Mag_SuitBuilder.Equipment
 			cboSecondaryArmorSet.SelectedIndex = 1;
 			foreach (var v in armorSets)
 				cboSecondaryArmorSet.Items.Add(v);
+
+			suspendChangedEvent = false;
+
+			if (FiltersChanged != null)
+				FiltersChanged();
 		}
 
 		public bool ItemPassesFilters(SuitBuildableMyWorldObject mwo)

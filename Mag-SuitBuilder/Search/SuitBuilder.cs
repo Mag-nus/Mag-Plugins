@@ -26,7 +26,7 @@ namespace Mag_SuitBuilder.Search
 
 		EquippableSlotFlags occupiedSlots = EquippableSlotFlags.None;
 
-		readonly Spell[] spells = new Spell[17 * 5];
+		readonly Spell[] spells = new Spell[17 * 6];
 		int nextOpenSpellIndex;
 
 		readonly int[] armorSetCountById = new int[256];

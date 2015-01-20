@@ -187,15 +187,24 @@ namespace Mag_SuitBuilder.Spells
 			return Spells[text];
 		}
 
+		private static readonly Dictionary<int, Spell> CachedSpells = new Dictionary<int, Spell>();
+
 		public static Spell GetSpell(int id)
 		{
+			if (CachedSpells.ContainsKey(id))
+				return CachedSpells[id];
+
 			int idIndex = SpellTableHeader.IndexOf("Id");
 			int nameIndex = SpellTableHeader.IndexOf("Name");
 
 			foreach (string[] line in SpellTable)
 			{
 				if (line[idIndex] == id.ToString())
-					return GetSpell(line[nameIndex]);
+				{
+					var spell = GetSpell(line[nameIndex]);
+					CachedSpells.Add(id, spell);
+					return spell;
+				}
 			}
 
 			throw new ArgumentException("Spell of id: " + id + " not found in Spells.csv");
