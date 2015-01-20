@@ -43,6 +43,22 @@ namespace Mag_SuitBuilder.Equipment
 				FiltersChanged();
 		}
 
+		private void cmdClearAllCheckboxes_Click(object sender, EventArgs e)
+		{
+			suspendChangedEvent = true;
+
+			foreach (var control in Controls)
+			{
+				if (control is CheckBox)
+					(control as CheckBox).Checked = false;
+			}
+
+			suspendChangedEvent = false;
+
+			if (FiltersChanged != null)
+				FiltersChanged();
+		}
+
 		public void UpdateArmorSets(IDictionary<string, int> armorSets)
 		{
 			suspendChangedEvent = true;
@@ -158,6 +174,10 @@ namespace Mag_SuitBuilder.Equipment
 			else if (mwo.ObjectClass == (int)ObjectClass.SpellComponent || mwo.ObjectClass == (int)ObjectClass.HealingKit || mwo.ObjectClass == (int)ObjectClass.Food || mwo.ObjectClass == (int)ObjectClass.ManaStone)
 			{
 				if (!chkCompsKitsFoodManaStones.Checked) return false;
+			}
+			else if (mwo.ObjClass == ObjectClass.Misc && mwo.Name.Contains("Essence"))
+			{
+				if (!chkPets.Checked) return false;
 			}
 			else if (mwo.ObjectClass != 0) // All Else
 			{
