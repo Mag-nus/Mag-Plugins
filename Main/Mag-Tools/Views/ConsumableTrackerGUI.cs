@@ -32,7 +32,7 @@ namespace MagTools.Views
 				((HudStaticText)newRow[1]).Text = "Name";
 				((HudStaticText)newRow[2]).Text = "Coords";*/
 
-				tracker.ItemAdded += new Action<TrackedConsumable>(consumableTracker_ItemAdded);
+				tracker.ItemsAdded += new Action<System.Collections.Generic.ICollection<TrackedConsumable>>(consumableTracker_ItemsAdded);
 				tracker.ItemChanged += new Action<TrackedConsumable>(consumableTracker_ItemChanged);
 				tracker.ItemRemoved += new Action<TrackedConsumable>(consumableTracker_ItemRemoved);
 			}
@@ -58,7 +58,7 @@ namespace MagTools.Views
 			{
 				if (disposing)
 				{
-					tracker.ItemAdded -= new Action<TrackedConsumable>(consumableTracker_ItemAdded);
+					tracker.ItemsAdded -= new Action<System.Collections.Generic.ICollection<TrackedConsumable>>(consumableTracker_ItemsAdded);
 					tracker.ItemChanged -= new Action<TrackedConsumable>(consumableTracker_ItemChanged);
 					tracker.ItemRemoved -= new Action<TrackedConsumable>(consumableTracker_ItemRemoved);
 				}
@@ -68,7 +68,7 @@ namespace MagTools.Views
 			}
 		}
 
-		void consumableTracker_ItemAdded(TrackedConsumable item)
+		void consumableTracker_ItemsAdded(System.Collections.Generic.ICollection<TrackedConsumable> obj)
 		{
 			try
 			{

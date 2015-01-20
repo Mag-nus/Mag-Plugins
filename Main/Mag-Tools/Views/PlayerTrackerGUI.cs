@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 using MagTools.Trackers;
@@ -38,7 +39,8 @@ namespace MagTools.Views
 				((HudStaticText)newRow[2]).Text = "Coords";
 				((HudStaticText)newRow[3]).Text = "Id";
 
-				tracker.ItemAdded += new Action<TrackedPlayer>(playerTracker_ItemAdded);
+				//tracker.ItemAdded += new Action<TrackedPlayer>(playerTracker_ItemAdded);
+				tracker.ItemsAdded += new Action<ICollection<TrackedPlayer>>(playerTracker_ItemsAdded);
 				tracker.ItemChanged += new Action<TrackedPlayer>(playerTracker_ItemChanged);
 				tracker.ItemRemoved += new Action<TrackedPlayer>(playerTracker_ItemRemoved);
 
@@ -66,7 +68,8 @@ namespace MagTools.Views
 			{
 				if (disposing)
 				{
-					tracker.ItemAdded -= new Action<TrackedPlayer>(playerTracker_ItemAdded);
+					//tracker.ItemAdded -= new Action<TrackedPlayer>(playerTracker_ItemAdded);
+					tracker.ItemsAdded -= new Action<ICollection<TrackedPlayer>>(playerTracker_ItemsAdded);
 					tracker.ItemChanged -= new Action<TrackedPlayer>(playerTracker_ItemChanged);
 					tracker.ItemRemoved -= new Action<TrackedPlayer>(playerTracker_ItemRemoved);
 
@@ -78,15 +81,20 @@ namespace MagTools.Views
 			}
 		}
 
-		void playerTracker_ItemAdded(TrackedPlayer item)
+		void playerTracker_ItemsAdded(ICollection<TrackedPlayer> items)
 		{
 			try
 			{
-				HudList.HudListRowAccessor newRow = hudList.InsertRow(1);
+				foreach (var item in items)
+				{
+					HudList.HudListRowAccessor newRow = hudList.InsertRow(1);
 
-				((HudStaticText)newRow[1]).Text = item.Name;
+					((HudStaticText) newRow[1]).Text = item.Name;
 
-				playerTracker_ItemChanged(item);
+					UpdateItem(item);
+				}
+
+				SortList();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -95,22 +103,27 @@ namespace MagTools.Views
 		{
 			try
 			{
-				for (int row = 1; row <= hudList.RowCount; row++)
-				{
-					if (((HudStaticText)hudList[row - 1][1]).Text == item.Name)
-					{
-						((HudStaticText)hudList[row - 1][0]).Text = item.LastSeen.ToString("yy/MM/dd HH:mm");
+				UpdateItem(item);
 
-						CoordsObject newCords = Mag.Shared.Util.GetCoords(item.LandBlock, item.LocationX, item.LocationY);
-						((HudStaticText)hudList[row - 1][2]).Text = newCords.ToString();
-
-						((HudStaticText)hudList[row - 1][3]).Text = item.Id.ToString(CultureInfo.InvariantCulture);
-
-						SortList();
-					}
-				}
+				SortList();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void UpdateItem(TrackedPlayer item)
+		{
+			for (int row = 1; row <= hudList.RowCount; row++)
+			{
+				if (((HudStaticText)hudList[row - 1][1]).Text == item.Name)
+				{
+					((HudStaticText)hudList[row - 1][0]).Text = item.LastSeen.ToString("yy/MM/dd HH:mm");
+
+					CoordsObject newCords = Mag.Shared.Util.GetCoords(item.LandBlock, item.LocationX, item.LocationY);
+					((HudStaticText)hudList[row - 1][2]).Text = newCords.ToString();
+
+					((HudStaticText)hudList[row - 1][3]).Text = item.Id.ToString(CultureInfo.InvariantCulture);
+				}
+			}
 		}
 
 		void playerTracker_ItemRemoved(TrackedPlayer item)

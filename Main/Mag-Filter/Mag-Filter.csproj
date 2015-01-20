@@ -35,10 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Decal.Adapter">
-      <HintPath>C:\Games\Decal 3.0\Decal.Adapter.dll</HintPath>
+    <Reference Include="Decal.Adapter, Version=2.9.7.2, Culture=neutral, PublicKeyToken=bd1c8ce002ce221e, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Binaries\Decal\2.9.7.2\Decal.Adapter.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
   </ItemGroup>
@@ -54,6 +56,9 @@
     </Compile>
     <Compile Include="..\Shared\Settings\SettingsFile.cs">
       <Link>Shared\Settings\SettingsFile.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\User32.cs">
+      <Link>Shared\User32.cs</Link>
     </Compile>
     <Compile Include="AutoRetryLogin.cs" />
     <Compile Include="Character.cs" />
