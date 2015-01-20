@@ -201,8 +201,10 @@ namespace Mag_SuitBuilder
 
 			CharactersTreeView.ExpandAll();
 
-			foreach (TreeNode node in CharactersTreeView.Nodes)
-				node.Checked = true;
+			if (CharactersTreeView.Nodes.Count == 1)
+				CharactersTreeView.Nodes[0].Checked = true;
+			//foreach (TreeNode node in CharactersTreeView.Nodes)
+			//	node.Checked = true;
 
 			txtInventoryRootPath.Text = txtInventoryRootPathOrig;
 

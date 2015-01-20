@@ -2986,16 +2986,16 @@ Id,Name,Description,Difficulty,Duration,Family,Mana,School,Speed,TargetEffect,Ta
 3057,Enervation,Lowers the total stamina of a target by 20% for 2 minutes.,300,120,411,10,Creature Enchantment,0.01,11,16,5,0.25,1
 3058,Asphyiaxtion,Lowers the attributes of a target by 40 points for two minutes.,300,120,421,10,Creature Enchantment,0.01,9,16,5,0.25,1
 3059,Enervation,Lowers the total stamina of a target by 30% for 2 minutes.,300,120,411,10,Creature Enchantment,0.01,11,16,5,0.25,1
-3060,Poison Blood,Lowers the total health of a target by 30% for 2 minutes.,300,120,410,10,Creature Enchantment,0.01,7,16,5,0.25,1
+3060,Poison Blood,Lowers the total health of a target by 30% for 45 seconds.,300,45,410,10,Creature Enchantment,0.01,7,16,5,0.25,1
 3061,Taint Mana,Lowers the total mana of a target by 30% for 2 minutes.,300,120,412,10,Creature Enchantment,0.01,15,16,5,0.25,1
 3062,Asphyxiation,Lowers the attributes of a target by 20 points for two minutes.,300,120,421,10,Creature Enchantment,0.01,9,16,5,0.25,1
 3063,Enervation,Lowers the total stamina of a target by 10% for 2 minutes.,300,120,411,10,Creature Enchantment,0.01,11,16,5,0.25,1
-3064,Poison Blood,Lowers the total health of a target by 10% for 2 minutes.,300,120,410,10,Creature Enchantment,0.01,7,16,5,0.25,1
+3064,Poison Blood,Lowers the total health of a target by 10% for 45 seconds.,300,45,410,10,Creature Enchantment,0.01,7,16,5,0.25,1
 3065,Taint Mana,Lowers the total mana of a target by 10% for 2 minutes.,300,120,412,10,Creature Enchantment,0.01,15,16,5,0.25,1
 3066,Lesser Ward of Rebirth,Increase natural healing rate of all fellowship members by 100%.,255,3600,93,70,Life Magic,0.15,37,16,5,0.25,1
 3067,Matron's Curse,Lowers total mana of each fellowship member by 50%.,500,120,412,10,Creature Enchantment,0.01,9,16,0,1,1
 3068,Minor Ward of Rebirth,Increase natural healing rate of all fellowship members by 125%..,310,3600,93,70,Life Magic,0.15,37,16,5,0.25,1
-3069,Poison Blood,Lowers the total health of a target by 20% for 2 minutes.,300,120,410,10,Creature Enchantment,0.01,7,16,5,0.25,1
+3069,Poison Blood,Lowers the total health of a target by 20% for 45 seconds.,300,45,410,10,Creature Enchantment,0.01,7,16,5,0.25,1
 3070,Taint Mana,Lowers the total mana of a target by 20% for 2 minutes.,300,120,412,10,Creature Enchantment,0.01,15,16,5,0.25,1
 3071,Ward of Rebirth,Increase natural healing rate of all fellowship members by 150%.,500,3600,93,70,Life Magic,0.15,37,16,5,0.25,1
 3072,Hall of the Temple Guardians,Transports the target to the specified destination.,500,-1,214,50,Item Enchantment,0.25,16,16,150,0,1
@@ -3378,14 +3378,14 @@ Id,Name,Description,Difficulty,Duration,Family,Mana,School,Speed,TargetEffect,Ta
 3449,Mass Blood Disease,Pain wracks your body and the bodies of your fellowship members as painful spores burrow into your flesh and enter your blood stream. Causes a large amount of damage over time.,325,40,94,70,Life Magic,0.15,38,16,5,1,0
 3450,Cloud of Mold Spores,A small cloud of spores pours into your lungs choking the vigor from your body. Stamina degenerates over time.,325,40,96,70,Life Magic,0.15,42,16,0,0,0
 3451,Concussive Belch,The creature let's out a violent belch that is laden with magical force. It damages a single target for 120-220 of bludgeon Damage.,350,-1,118,5,War Magic,0.15,0,16,30,0.2,1
-3452,Concussive Wail,The creature let's out a violent wail that is laden with magical force. It sends a ring of damage around it dealing 80 – 200 damage bludgeoning damage.,350,-1,223,10,War Magic,0.2,0,0,4.5,0,1
+3452,Concussive Wail,The creature let's out a violent wail that is laden with magical force. It sends a ring of damage around it dealing 80 ?Çô 200 damage bludgeoning damage.,350,-1,223,10,War Magic,0.2,0,0,4.5,0,1
 3453,Feelun Blight,The creature summons the power of the mighty feelun tree and coalesces it into a blast of fire against a single target. It damages a single target for 120 -220 of fire damage.,350,-1,226,10,War Magic,0.2,0,0,4.5,0,1
 3454,Wrath of the Feelun,The creature summons the power of the mighty feelun tree and coalesces it into a blast of fire against a single target. It damages a single target for 120 - 220 of fire damage.,350,-1,121,5,War Magic,0.15,0,16,30,0.2,1
-3455,Koruu Cloud,A cloud of spores launches out of the creature inflicting powerful damage to all around. The spells deals 80 – 200 damage of cold damage with each bolt.,350,-1,224,10,War Magic,0.2,0,0,4.5,0,1
+3455,Koruu Cloud,A cloud of spores launches out of the creature inflicting powerful damage to all around. The spells deals 80 ?Çô 200 damage of cold damage with each bolt.,350,-1,224,10,War Magic,0.2,0,0,4.5,0,1
 3456,Koruu's Wrath,A cloud of spores launches out of the creature inflicting powerful damage to all around. 120 - 220 of cold damage.,350,-1,119,5,War Magic,0.15,0,16,30,0.2,1
-3457,Mana Bolt,The creature launch a blast of pure mana at a single target dealing 50 – 100 damage.,350,-1,118,5,War Magic,0.15,0,16,30,0.2,1
-3458,Mana Purge,The creature launch a blast of pure mana in a ring around itself dealing 50 – 100 damage with each bolt.,350,-1,223,80,War Magic,0.2,0,0,4.5,0,1
-3459,Mucor Cloud,A cloud of spores launches out of the creature inflicting powerful damage to all around. This speall deals 80 – 200 damage acid damage with each bolt.,350,-1,131,10,War Magic,0.4,0,0,15,0.2,1
+3457,Mana Bolt,The creature launch a blast of pure mana at a single target dealing 50 ?Çô 100 damage.,350,-1,118,5,War Magic,0.15,0,16,30,0.2,1
+3458,Mana Purge,The creature launch a blast of pure mana in a ring around itself dealing 50 ?Çô 100 damage with each bolt.,350,-1,223,80,War Magic,0.2,0,0,4.5,0,1
+3459,Mucor Cloud,A cloud of spores launches out of the creature inflicting powerful damage to all around. This speall deals 80 ?Çô 200 damage acid damage with each bolt.,350,-1,131,10,War Magic,0.4,0,0,15,0.2,1
 3460,Dissolving Vortex,A cloud of spores launches out of the creature inflicting powerful damage to a target. Deals 120 - 220 acid damage to a single target.,350,-1,131,5,War Magic,0.15,0,16,30,0.2,1
 3461,Batter Flesh,Target's flesh is left open and vulnerable to bludgeoning attacks. Increases damage the target takes from Bludgeoning by 200%.,350,60,104,10,Life Magic,0.15,56,16,5,0.25,1
 3462,Canker Flesh,Target's flesh is left open and vulnerable to acid attacks. Increases damage the target takes from acid by 200%.,350,60,102,10,Life Magic,0.15,50,16,5,0.25,1
@@ -3736,15 +3736,15 @@ Id,Name,Description,Difficulty,Duration,Family,Mana,School,Speed,TargetEffect,Ta
 3807,Force Ring,Shoots nine waves of force outward from the caster. Each wave does 30-60 points of piercing damage to the first thing it hits.,200,-1,227,80,War Magic,0.2,0,0,4.5,0,1
 3808,Lightning Ring,Shoots nine waves of lightning outward from the caster. Each wave does 30-60 points of electric damage to the first thing it hits.,200,-1,225,80,War Magic,0.2,0,0,4.5,0,1
 3809,Minor Salvaging Aptitude,Increases the target's Salvaging skill by 5 points.,5,3600,437,10,Creature Enchantment,0.01,26,16,0,1,1
-3810,Asheron’s Benediction,Raises health by 10% for 24 hours. Additional spells can be layered over this.,100,86400,520,1,Creature Enchantment,0.01,6,16,5,0.25,1
-3811,Blackmoor’s Favor,Increases Natural Armor by 50 points for 24 hours. Additional spells can be layered over this.,100,86400,519,1,Life Magic,0.01,55,16,5,1,1
+3810,Asheron?ÇÖs Benediction,Raises health by 10% for 24 hours. Additional spells can be layered over this.,100,86400,520,1,Creature Enchantment,0.01,6,16,5,0.25,1
+3811,Blackmoor?ÇÖs Favor,Increases Natural Armor by 50 points for 24 hours. Additional spells can be layered over this.,100,86400,519,1,Life Magic,0.01,55,16,5,1,1
 3812,Tursh's Lair,Transports the target to the specified destination.,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
 3813,Free Ride to Shoushi,Transports the target to the specified destination.,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
 3814,Free Ride to Yaraq,Transports the target to the specified destination.,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
 3815,Free Ride to Holtburg,Transports the target to the specified destination.,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
 3816,Marksman's Ken,The keen sight of the Hunters of the Raven Hand strengths your aim. increasing your Missile Weapons skill by 10 points. Additional spells can be layered over this.,10,2400,331,10,Creature Enchantment,0.01,18,16,0,1,1
 3817,Hunter's Ward,Shadowy tendrils weave about you. forming a magical encasement increasing your natural armor by 30 points. Additional spells can be layered over this.,30,2400,379,10,Life Magic,0.01,55,16,0,1,1
-3818,Curse of Raven Fury,Drains half of the caster’s health and projects a ring of vicious energy outwards. When struck. the target’s health is reduced by 200% of the amount drained from the caster.,300,-1,80,150,Life Magic,0.15,0,0,4.5,0,1
+3818,Curse of Raven Fury,Drains half of the caster?ÇÖs health and projects a ring of vicious energy outwards. When struck. the target?ÇÖs health is reduced by 200% of the amount drained from the caster.,300,-1,80,150,Life Magic,0.15,0,0,4.5,0,1
 3819,Conscript's Might,The might of the Conscripts of the Raven Hand flows through you. bolstering your strength by 10 points. Additional spells can be layered over this.,10,2400,261,10,Creature Enchantment,0.01,6,16,0,1,1
 3820,Conscript's Ward,Shadowy tendrils weave about you. forming a magical encasement increasing your natural armor by 30 points. Additional spells can be layered over this.,30,2400,379,10,Life Magic,0.01,55,16,0,1,1
 3821,Augur's Will,The will of the Augurs of the Raven Hand flows through you. increasing your Self by 10 points. Additional spells can be layered over this.,10,2400,271,10,Creature Enchantment,0.01,14,16,0,1,1
@@ -3807,11 +3807,11 @@ Id,Name,Description,Difficulty,Duration,Family,Mana,School,Speed,TargetEffect,Ta
 3878,Incendiary Strike,Shoots a bolt of flame at the target.  The bolt does 150-300 points of fire damage to the target.,400,-1,121,35,War Magic,0.15,0,16,30,0.2,1
 3879,Glacial Strike,Shoots a bolt of frost at the target. The bolt does 150-300 points of cold damage to the target.,400,-1,119,35,War Magic,0.15,0,16,30,0.2,1
 3880,Galvanic Strike,Shoots a bolt of lighting at the target. The bolt does 150-300 points of electrical damage to the target.,400,-1,120,35,War Magic,0.15,0,16,30,0.2,1
-3881,Corrosive Ring,Shoots eight waves of acid outward from the caster. Each wave does 100-200 points of acid damage to the first thing it hits.,400,-1,222,80,War Magic,0.2,0,0,10,0,1
-3882,Incendiary Ring,Shoots eight waves of flame outward from the caster. Each wave does 100-200 points of fire damage to the first thing it hits.,400,-1,226,80,War Magic,0.2,0,0,10,0,1
-3883,Pyroclastic Explosion,Shoots sixteen waves of flame outward from the caster. Each wave does 75-150 points of fire damage to the first thing it hits.,400,-1,226,80,War Magic,0.2,0,0,10,0,1
-3884,Glacial Ring,Shoots eight waves of frost outward from the caster. Each wave does 100-200 points of cold damage to the first thing it hits.,400,-1,224,80,War Magic,0.2,0,0,10,0,1
-3885,Galvanic Ring,Shoots eight waves of lightning outward from the caster. Each wave does 100-200 points of electric damage to the first thing it hits.,400,-1,225,80,War Magic,0.2,0,0,10,0,1
+3881,Corrosive Ring,Shoots eight waves of acid outward from the caster. Each wave does 100-200 points of acid damage to the first thing it hits.,400,-1,222,80,War Magic,0.2,0,0,8,0,1
+3882,Incendiary Ring,Shoots eight waves of flame outward from the caster. Each wave does 100-200 points of fire damage to the first thing it hits.,400,-1,226,80,War Magic,0.2,0,0,8,0,1
+3883,Pyroclastic Explosion,Shoots sixteen waves of flame outward from the caster. Each wave does 75-150 points of fire damage to the first thing it hits.,400,-1,226,80,War Magic,0.2,0,0,8,0,1
+3884,Glacial Ring,Shoots eight waves of frost outward from the caster. Each wave does 100-200 points of cold damage to the first thing it hits.,400,-1,224,80,War Magic,0.2,0,0,8,0,1
+3885,Galvanic Ring,Shoots eight waves of lightning outward from the caster. Each wave does 100-200 points of electric damage to the first thing it hits.,400,-1,225,80,War Magic,0.2,0,0,8,0,1
 3886,Magic Disarmament,Decreases the target's Magic Defense skill by 200 points.,400,60,42,70,Creature Enchantment,0.15,23,16,10,0.25,1
 3887,Entering the Hatch,Entering the Hatch,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
 3888,Passage to the Rare Chambers,Passage to the Rare Chambers,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
@@ -3879,7 +3879,7 @@ Id,Name,Description,Difficulty,Duration,Family,Mana,School,Speed,TargetEffect,Ta
 3950,Frost Wave,Shoots eight waves of frost forward from the caster. Each wave does 80-150 points of cold damage to the first thing it hits.,400,-1,224,80,War Magic,0.01,0,16,15,0,1
 3951,Lightning Wave,Shoots eight waves of lightning forward from the caster. Each wave does 80-100 points of electric damage to the first thing it hits.,400,-1,225,80,War Magic,0.01,0,16,15,0,1
 3952,Shock Waves,Shoots eight shock waves forward from the caster. Each wave does 80-150 points of bludgeoning damage to the first thing it hits.,400,-1,223,80,War Magic,0.01,0,16,15,0,1
-3953,Carraida’s Benediction,Raises health by 10% for 24 hours. Additional spells can be layered over this.,100,86400,520,1,Creature Enchantment,0.01,6,16,5,0.25,1
+3953,Carraida?ÇÖs Benediction,Raises health by 10% for 24 hours. Additional spells can be layered over this.,100,86400,520,1,Creature Enchantment,0.01,6,16,5,0.25,1
 3954,Access to the White Tower,Teleports the target into the White Tower.,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
 3955,Epic Bludgeon Ward,Reduces damage the target takes from bludgeoning by 20%. Additional magical protection can be layered over this.,20,10800,401,20,Life Magic,0.05,55,16,5,0.85,0
 3956,Epic Piercing Ward,Reduces damage the target takes from piercing by 20%. Additional magical protection can be layered over this.,20,10800,405,20,Life Magic,0.05,45,16,5,0.85,0
@@ -3892,7 +3892,7 @@ Id,Name,Description,Difficulty,Duration,Family,Mana,School,Speed,TargetEffect,Ta
 3963,Epic Coordination,Increases the target's Coordination by 25 points. Additional spells can be layered over this.,25,780,267,10,Creature Enchantment,0.01,8,16,0,1,1
 3964,Epic Focus,Increases the target's Focus by 25 points. Additional spells can be layered over this.,25,780,269,10,Creature Enchantment,0.01,16,16,0,1,1
 3965,Epic Strength,Increases the target's Strength by 25 points. Additional spells can be layered over this.,25,780,261,10,Creature Enchantment,0.01,6,16,0,1,1
-3966,Ringleader's Chambers,Target is portaled into a the Bandit Ringleader’s chambers,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
+3966,Ringleader's Chambers,Target is portaled into a the Bandit Ringleader?ÇÖs chambers,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
 3967,Bandit Trap,Target is portaled into a Sawato Bandit Trap!,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
 3968,Bandit Hideout,Target is portaled into the Sawato Bandit Hideout,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
 3969,Acid Bomb,Shoots 12 waves of acid outward from the caster. Each wave does 100-400 points of acid damage to the first thing it hits.,400,-1,222,80,War Magic,0.2,0,0,5,0,1
@@ -3943,14 +3943,14 @@ Id,Name,Description,Difficulty,Duration,Family,Mana,School,Speed,TargetEffect,Ta
 4014,Abyssal Totem Temple Sending,The Abyssal Totem Gateway sends you to the Abyssal Totem Temple.,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
 4015,Ruschk Skin,Increases the target's natural armor by 10 points. Additional spells can be layered over this.,10,10800,513,10,Life Magic,0.01,55,16,0,1,1
 4016,Shadow's Heart,Increases the target's Healing skill by 25 points. Additional spells can be layered over this.,25,10800,349,10,Creature Enchantment,0.01,20,16,0,1,1
-4017,Phial's Accuracy,Increases the target's Missile Weapons skill by 500 points.,500,3600,19,100,Creature Enchantment,0.15,18,16,5,0.85,1
+4017,Phial's Accuracy,Increases the target's Missile Weapons skill by 800 points.,500,3600,19,100,Creature Enchantment,0.15,18,16,5,0.85,1
 4018,Permafrost,A frozen shell that offers a surprising amount of protection.,475,3600,160,70,Item Enchantment,0.15,142,6,25,0,1
 4019,Epic Quickness,Increases the target's Quickness by 25 points. Additional spells can be layered over this.,25,780,265,10,Creature Enchantment,0.01,12,16,0,1,1
 4020,Epic Deception Prowess,Increases the target's Deception skill by 25 points. Additional spells can be layered over this.,25,780,343,10,Creature Enchantment,0.01,28,16,0,1,1
 4021,Flurry of Stars,Shoots five whirling blades quickly outward from the caster. Each blade does 115-189 points of slashing damage to the first thing it hits.,300,-1,137,70,War Magic,0.15,0,16,30,0.2,1
 4022,Zombies Persistence,Increase caster's natural healing rate by 200% for 60 seconds.,545,60,93,50,Life Magic,0.2,37,16,5,1,1
 4023,Disco Inferno Portal Sending,This spell sends the player to the Night Club dungeon.,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
-4024,Asheron’s Lesser Benediction,Raises health by 10% for 24 hours. Additional spells can be layered over this.,100,86400,520,1,Creature Enchantment,0.01,6,16,5,0.25,1
+4024,Asheron?ÇÖs Lesser Benediction,Raises health by 10% for 24 hours. Additional spells can be layered over this.,100,86400,520,1,Creature Enchantment,0.01,6,16,5,0.25,1
 4025,Cast Iron Stomach,Increases maximum stamina by 50 points.,50,10800,281,10,Life Magic,0.01,35,16,0,1,1
 4026,Hematic Verdure,Increases maximum health by 25 points.,25,510,279,70,Life Magic,0.3,31,16,0,0,1
 4027,Messenger's Stride,Increases the target's Run skill by 30 points. Additional spells can be layered over this.,30,780,369,10,Creature Enchantment,0.01,24,16,0,1,1
@@ -5109,26 +5109,26 @@ Id,Name,Description,Difficulty,Duration,Family,Mana,School,Speed,TargetEffect,Ta
 5181,Eldrytch Web Basement,Transports the target to the specified destination.,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
 5182,Aura of Incantation of Spirit Drinker,Increases the elemental damage bonus of an elemental magic caster by 8%.,350,5400,695,80,Item Enchantment,0.15,57,16,25,0,1
 5183,Aura of Incantation of Blood Drinker Self,Increases a weapon's damage value by 24 points.,350,5400,154,80,Item Enchantment,0.15,57,16,25,0,1
-5184,Rare Damage Boost VII,Your damage rating is increased by 7.,1,510,633,70,Life Magic,0.3,35,16,0,0,1
-5185,Rare Damage Boost VIII,Your damage rating is increased by 8.,1,510,633,70,Life Magic,0.3,35,16,0,0,1
-5186,Rare Damage Boost IX,Your damage rating is increased by 9.,1,510,633,70,Life Magic,0.3,35,16,0,0,1
-5187,Rare Damage Boost X,Your damage rating is increased by 10.,1,510,633,70,Life Magic,0.3,35,16,0,0,1
-5188,Rare Damage Reduction I,Your damage reduction rating is increased by 1.,1,510,634,70,Life Magic,0.3,35,16,0,0,1
-5189,Rare Damage Reduction II,Your damage reduction rating is increased by 2.,1,510,634,70,Life Magic,0.3,35,16,0,0,1
-5190,Rare Damage Reduction III,Your damage reduction rating is increased by 3.,1,510,634,70,Life Magic,0.3,35,16,0,0,1
-5191,Rare Damage Reduction IV,Your damage reduction rating is increased by 4.,1,510,634,70,Life Magic,0.3,35,16,0,0,1
-5192,Rare Damage Reduction V,Your damage reduction rating is increased by 5.,1,510,634,70,Life Magic,0.3,35,16,0,0,1
-5193,Rare Damage Reduction V,Your damage reduction rating is increased by 5.,1,510,634,70,Life Magic,0.3,35,16,0,0,1
-5194,Rare Damage Reduction V,Your damage reduction rating is increased by 5.,1,510,634,70,Life Magic,0.3,35,16,0,0,1
-5195,Rare Damage Reduction V,Your damage reduction rating is increased by 5.,1,510,634,70,Life Magic,0.3,35,16,0,0,1
-5196,Rare Damage Reduction V,Your damage reduction rating is increased by 5.,1,510,634,70,Life Magic,0.3,35,16,0,0,1
-5197,Rare Damage Reduction V,Your damage reduction rating is increased by 5.,1,510,634,70,Life Magic,0.3,35,16,0,0,1
-5198,Rare Damage Boost I,Your damage rating is increased by 1.,1,510,633,70,Life Magic,0.3,35,16,0,0,1
-5199,Rare Damage Boost II,Your damage rating is increased by 2.,1,510,633,70,Life Magic,0.3,35,16,0,0,1
-5200,Rare Damage Boost III,Your damage rating is increased by 3.,1,510,633,70,Life Magic,0.3,35,16,0,0,1
-5201,Rare Damage Boost IV,Your damage rating is increased by 4.,1,510,633,70,Life Magic,0.3,35,16,0,0,1
-5202,Rare Damage Boost V,Your damage rating is increased by 5.,1,510,633,70,Life Magic,0.3,35,16,0,0,1
-5203,Rare Damage Boost VI,Your damage rating is increased by 6.,1,510,633,70,Life Magic,0.3,35,16,0,0,1
+5184,Rare Damage Boost VII,Your damage rating is increased by 7.,1,10800,633,70,Life Magic,0.3,35,16,0,0,1
+5185,Rare Damage Boost VIII,Your damage rating is increased by 8.,1,10800,633,70,Life Magic,0.3,35,16,0,0,1
+5186,Rare Damage Boost IX,Your damage rating is increased by 9.,1,10800,633,70,Life Magic,0.3,35,16,0,0,1
+5187,Rare Damage Boost X,Your damage rating is increased by 10.,1,10800,633,70,Life Magic,0.3,35,16,0,0,1
+5188,Rare Damage Reduction I,Your damage reduction rating is increased by 1.,1,10800,634,70,Life Magic,0.3,35,16,0,0,1
+5189,Rare Damage Reduction II,Your damage reduction rating is increased by 2.,1,10800,634,70,Life Magic,0.3,35,16,0,0,1
+5190,Rare Damage Reduction III,Your damage reduction rating is increased by 3.,1,10800,634,70,Life Magic,0.3,35,16,0,0,1
+5191,Rare Damage Reduction IV,Your damage reduction rating is increased by 4.,1,10800,634,70,Life Magic,0.3,35,16,0,0,1
+5192,Rare Damage Reduction V,Your damage reduction rating is increased by 5.,1,10800,634,70,Life Magic,0.3,35,16,0,0,1
+5193,Rare Damage Reduction V,Your damage reduction rating is increased by 5.,1,10800,634,70,Life Magic,0.3,35,16,0,0,1
+5194,Rare Damage Reduction V,Your damage reduction rating is increased by 5.,1,10800,634,70,Life Magic,0.3,35,16,0,0,1
+5195,Rare Damage Reduction V,Your damage reduction rating is increased by 5.,1,10800,634,70,Life Magic,0.3,35,16,0,0,1
+5196,Rare Damage Reduction V,Your damage reduction rating is increased by 5.,1,10800,634,70,Life Magic,0.3,35,16,0,0,1
+5197,Rare Damage Reduction V,Your damage reduction rating is increased by 5.,1,10800,634,70,Life Magic,0.3,35,16,0,0,1
+5198,Rare Damage Boost I,Your damage rating is increased by 1.,1,10800,633,70,Life Magic,0.3,35,16,0,0,1
+5199,Rare Damage Boost II,Your damage rating is increased by 2.,1,10800,633,70,Life Magic,0.3,35,16,0,0,1
+5200,Rare Damage Boost III,Your damage rating is increased by 3.,1,10800,633,70,Life Magic,0.3,35,16,0,0,1
+5201,Rare Damage Boost IV,Your damage rating is increased by 4.,1,10800,633,70,Life Magic,0.3,35,16,0,0,1
+5202,Rare Damage Boost V,Your damage rating is increased by 5.,1,10800,633,70,Life Magic,0.3,35,16,0,0,1
+5203,Rare Damage Boost VI,Your damage rating is increased by 6.,1,10800,633,70,Life Magic,0.3,35,16,0,0,1
 5204,Surge of Destruction,The damage rating of the caster is increased by 20.,1,8,628,70,Life Magic,0.3,162,16,0,0,1
 5205,Surge of Affliction,The target loses 150 points of health over 19 seconds.,250,19,631,80,Life Magic,0.15,165,16,5,0.25,1
 5206,Surge of Protection,The damage reduction rating of the caster is increased by 20.,1,12,629,70,Life Magic,0.3,163,16,0,0,1
@@ -5898,11 +5898,11 @@ Id,Name,Description,Difficulty,Duration,Family,Mana,School,Speed,TargetEffect,Ta
 5971,Galvanic Volley,Shoots five blue bolts of lightning toward the target. Each bolt does 50-100 points of electric damage to the first thing it hits.,400,-1,210,40,War Magic,0.15,0,16,30,0.2,1
 5972,Galvanic Bomb,Shoots 12 waves of blue lightning outward from the caster. Each wave does 200-1000 points of electric damage to the first thing it hits.,400,-1,225,80,War Magic,0.2,0,0,5,0,1
 5973,Protection of Mouf,Reduces damage the target takes from Cold by 15%. Additional spells can be layered over this.,15,5400,289,10,Life Magic,0.01,51,16,0,1,1
-5974,Rare Armor Damage Boost I,Your damage rating is increased by 1.,1,510,694,70,Life Magic,0.3,35,16,0,0,1
-5975,Rare Armor Damage Boost II,Your damage rating is increased by 2.,1,510,694,70,Life Magic,0.3,35,16,0,0,1
-5976,Rare Armor Damage Boost III,Your damage rating is increased by 3.,1,510,694,70,Life Magic,0.3,35,16,0,0,1
-5977,Rare Armor Damage Boost IV,Your damage rating is increased by 4.,1,510,694,70,Life Magic,0.3,35,16,0,0,1
-5978,Rare Armor Damage Boost V,Your damage rating is increased by 5.,1,510,694,70,Life Magic,0.3,35,16,0,0,1
+5974,Rare Armor Damage Boost I,Your damage rating is increased by 1.,1,10800,694,70,Life Magic,0.3,35,16,0,0,1
+5975,Rare Armor Damage Boost II,Your damage rating is increased by 2.,1,10800,694,70,Life Magic,0.3,35,16,0,0,1
+5976,Rare Armor Damage Boost III,Your damage rating is increased by 3.,1,10800,694,70,Life Magic,0.3,35,16,0,0,1
+5977,Rare Armor Damage Boost IV,Your damage rating is increased by 4.,1,10800,694,70,Life Magic,0.3,35,16,0,0,1
+5978,Rare Armor Damage Boost V,Your damage rating is increased by 5.,1,10800,694,70,Life Magic,0.3,35,16,0,0,1
 5979,Blighted Touch,Sath'tik's blighted touch wracks your body. you are afflicted with his corruption and suffer greatly. All secondary attributes are reduced by 40% for the duration of the spell.,327,60,410,10,Creature Enchantment,0.01,9,16,0,1,1
 5980,Corrupted Touch,Sath'tik's corruption has seeped into your skin. causing damage over time. The target loses 357 points of health over 30 seconds.,350,30,618,80,Life Magic,0.15,32,16,5,0.25,1
 5981,Sath'tik's Curse,Your wounds are cursed and don't heal as well.,350,300,619,80,Life Magic,0.15,38,16,5,0.25,1
@@ -6070,3 +6070,198 @@ Id,Name,Description,Difficulty,Duration,Family,Mana,School,Speed,TargetEffect,Ta
 6143,Apprentice Invoker's Summoning Aptitude,Increases the target's Summoning skill by 5 points.,2,1800,699,10,Creature Enchantment,0.01,20,16,0,1,1
 6144,Journeyman Invoker's Summoning Aptitude,Increases the target's Summoning skill by 10 points.,3,1800,699,10,Creature Enchantment,0.01,20,16,0,1,1
 6145,Master Invoker's Summoning Aptitude,Increases the target's Summoning skill by 20 points.,4,1800,699,10,Creature Enchantment,0.01,20,16,0,1,1
+6146,Ride The Lightning,Reduces damage the target takes from Lightning by 70%.,425,10800,107,80,Life Magic,0.15,53,16,0,0,0
+6147,Entrance to the Frozen Valley,Transports target to the Frozen Valley.,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
+6148,Begone and Be Afraid,Transports the target to the specified destination.,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
+6149,Rynthid Vision,Transports the target to the specified destination.,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
+6150,Rynthid Recall,Transports the caster to the area overrun by the Rynthid.,225,-1,214,150,Item Enchantment,0.25,16,16,0,0,1
+6151,Crimson Storm,Shoots eight waves of lightning outward from the caster. Each wave does 42-84 points of electric damage to the first thing it hits.,200,-1,225,80,War Magic,0.2,0,0,4.5,0,1
+6152,Rocky Shrapnel,Shoots 12 waves of boulders outward from the caster. Each wave does 100-400 points of bludgeoning damage to the first thing it hits.,400,-1,223,80,War Magic,0.2,0,0,10,0,1
+6153,Tryptophan Coma,You are soooooo sleepy. reducing your Quickness.,400,300,6,80,Creature Enchantment,0.15,13,16,5,0.25,1
+6154,Entering the Basement,Entering the Basement,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
+6155,Earthen Stomp,The stomp of these creatures creates powerful rings of destructive force.,1200,-1,223,80,Life Magic,0.2,0,0,3,0,1
+6156,Viridian Ring,A powerful emanation that creates a ring of overwhelming life magic.,1200,-1,80,150,Life Magic,0.15,32,0,3,0,1
+6157,Withering Ring,A terrible emanation that destroys the victim's ability to heal wounds.,1200,-1,643,150,Life Magic,0.15,38,0,3,0,1
+6158,Poison Breath,A deadly cone of poison.,1200,-1,530,40,Life Magic,0.15,0,0,30,0.2,1
+6159,Thorn Volley,A cone of thorns and quill like projectiles.,600,-1,136,40,Life Magic,0.15,0,0,30,0.2,1
+6160,Thorns,Shoots a cluster of sharp thorns at the target. The cluster does 142-204 points of piercing damage to the first thing it hits.,400,-1,122,40,War Magic,0.15,0,16,30,0.2,1
+6161,Acidic Thorns,Shoots a cluster of acidic thorns at the target. The cluster does 142-204 points of acid damage to the first thing it hits.,400,-1,117,40,War Magic,0.15,0,16,30,0.2,1
+6162,Thorn Arc,Shoots a cluster of sharp thorns at the target. The thorns do 142-204 points of piercing damage to the first thing it hits.,400,-1,122,40,War Magic,0.15,0,16,30,0.2,1
+6163,Ring of Thorns,Shoots eight clusters of thorns outward from the caster. Each does 42-84 points of piercing damage to the first thing it hits.,300,-1,227,80,War Magic,0.2,0,0,4.5,0,1
+6164,Deadly Ring of Thorns,Shoots eight clusters of thorns outward from the caster. Each does 42-84 points of piercing damage to the first thing it hits.,1200,-1,227,80,War Magic,0.2,0,0,4.5,0,1
+6165,Deadly Thorn Volley,A deadly cone of thorns and quill like projectiles.,1200,-1,136,40,Life Magic,0.15,0,0,30,0.2,1
+6166,Poisoned Wounds,Your wounds are poisoned and don't heal as well.,350,30,619,80,Life Magic,0.15,38,16,5,0.25,1
+6167,Poisoned Vitality,Poison flows in your veins reducing your total health by 50%.,50,30,410,10,Creature Enchantment,0.01,9,16,0,1,1
+6168,Deadly Ring of Lightning,The power of storms creates a deadly ring of lightning.,1200,-1,225,80,War Magic,0.2,0,0,4.5,0,1
+6169,Deadly Lightning Volley,A deadly cone of lightning.,1200,-1,134,40,War Magic,0.15,0,0,30,0.2,1
+6170,Honeyed Life Mead,Increases maximum health by 20 points.,20,10800,700,70,Life Magic,0.3,31,16,0,0,1
+6171,Honeyed Mana Mead,Increases maximum mana by 50 points.,20,10800,701,70,Life Magic,0.3,31,16,0,0,1
+6172,Honeyed Vigor Mead,Increases maximum stamina by 50 points.,20,10800,702,70,Life Magic,0.3,31,16,0,0,1
+6173,Raging Heart,Increases maximum health by 65 points for 1 hour.,65,3600,279,70,Life Magic,0.3,31,16,0,0,1
+6174,Twisting Wounds,The Critical Damage Rating of the caster is increased by 10.,2,1200,703,70,Life Magic,0.3,162,16,0,0,1
+6175,Increasing Pain,The damage rating of the caster is increased by 10. This spell does not stack with Luminous Crystal of Surging Strength.,2,1200,650,70,Life Magic,0.3,162,16,0,0,1
+6176,Genius,Increases the caster's Focus by 50 points for a short period of time.,250,30,15,60,Creature Enchantment,0.3,16,16,0,0,1
+6177,Gauntlet Item Mastery,Increases the caster's Item Tinkering skill by 150 points for 10 minutes. This effect does not stack with Prodigal rare spells.,250,600,453,70,Creature Enchantment,0.15,26,16,0,0,1
+6178,Gauntlet Weapon Mastery,Increases the caster's Weapon Tinkering skill by 150 points for 10 minutes. This effect does not stack with Prodigal rare spells.,250,600,455,70,Creature Enchantment,0.15,26,16,0,0,1
+6179,Gauntlet Magic Item Mastery,Increases the caster's Magic Item Tinkering skill by 150 points for 10 minutes. This effect does not stack with Prodigal rare spells.,250,600,454,70,Creature Enchantment,0.15,26,16,0,0,1
+6180,Gauntlet Armor Mastery,Increases the caster's Armor Tinkering skill by 150 points for 10 minutes. This effect does not stack with Prodigal rare spells.,250,600,452,70,Creature Enchantment,0.15,26,16,0,0,1
+6181,Singeing Flames,Shoots eight waves of flame forward from the caster. Each wave does 150-250 points of fire damage to the first thing it hits.,400,-1,226,80,War Magic,0.01,0,16,30,0,1
+6182,Over-Exerted,Decreases all of the target's defense skills by 500 for 1 minute.,100,60,686,70,Creature Enchantment,0.15,172,16,5,0.25,1
+6183,Return to the Stronghold,Transports the target to the Gauntlet.,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
+6184,Return to the Stronghold,Transports the target to the Gauntlet.,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
+6185,Return to the Stronghold,Transports the target to the Gauntlet.,125,-1,214,50,Item Enchantment,0.25,16,16,30,0,1
+6186,Deafening Wail,The bark of these creatures creates powerful rings of destructive force.,1200,-1,223,80,War Magic,0.2,0,0,3,0,1
+6187,Screeching Howl,A deafening howl creating deadly shockwaves.,1200,-1,132,40,War Magic,0.15,0,0,30,0.2,1
+6188,Earthquake,The stomp of this creature violently shakes the ground.,1200,-1,223,80,War Magic,0.2,0,0,3,0,1
+6189,Searing Disc II,Shoots eight waves of acid outward from the caster. Each wave does 49-96 points of acid damage to the first thing it hits.,300,-1,222,90,War Magic,0.2,0,0,4.5,0,1
+6190,Horizon's Blades II,Shoots eight blades outward from the caster. Each blade does 49-98 points of slashing damage to the first thing it hits.,300,-1,228,90,War Magic,0.2,0,0,4.5,0,1
+6191,Cassius' Ring of Fire II,Shoots eight waves of flame outward from the caster. Each wave does 49-98 points of fire damage to the first thing it hits.,300,-1,226,90,War Magic,0.2,0,0,4.5,0,1
+6192,Nuhmudira's Spines II,Shoots eight waves of force outward from the caster. Each wave does 49-98 points of piercing damage to the first thing it hits.,300,-1,227,90,War Magic,0.2,0,0,4.5,0,1
+6193,Halo of Frost II,Shoots eight waves of frost outward from the caster. Each wave does 49-98 points of cold damage to the first thing it hits.,300,-1,224,90,War Magic,0.2,0,0,4.5,0,1
+6194,Eye of the Storm II,Shoots eight waves of lightning outward from the caster. Each wave does 49-98 points of electric damage to the first thing it hits.,300,-1,225,90,War Magic,0.2,0,0,4.5,0,1
+6195,Clouded Soul II,Shoots eight waves of nether outward from the caster. Each wave does 109-172 points of nether damage to the first thing it hits.,300,-1,641,90,Void Magic,0.2,0,0,4.5,0,1
+6196,Tectonic Rifts II,Shoots eight shock waves outward from the caster. Each wave does 49-96 points of bludgeoning damage to the first thing it hits.,300,-1,223,90,War Magic,0.2,0,0,4.5,0,1
+6197,Eye of the Storm II,Shoots eight waves of lightning outward from the caster. Each wave does 49-98 points of electric damage to the first thing it hits.,250,-1,225,90,War Magic,0.2,0,0,4.5,0,1
+6198,Incantation of Lightning Bolt,Shoots a bolt of lighting at the target. The bolt does 142-204 points of electrical damage to the first thing it hits.,400,-1,120,40,War Magic,0.15,0,16,30,0.2,1
+6199,Incantation of Lightning Arc,Shoots a bolt of lighting at the target. The bolt does 142-204 points of electrical damage to the first thing it hits.,400,-1,120,40,War Magic,0.15,0,16,30,0.2,1
+6200,Paragon's Dual Wield Mastery V,Increases the wielder's Dual Wield skill by 5 points.,5,5400,708,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6201,Paragon's Finesse Weapon Mastery I,Increases the wielder's Finesse Weapons skill by 1 point.,1,5400,716,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6202,Paragon's Finesse Weapon Mastery II,Increases the wielder's Finesse Weapons skill by 2 points.,2,5400,716,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6203,Paragon's Finesse Weapon Mastery III,Increases the wielder's Finesse Weapons skill by 3 points.,3,5400,716,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6204,Paragon's Finesse Weapon Mastery IV,Increases the wielder's Finesse Weapons skill by 4 points.,4,5400,716,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6205,Paragon's Finesse Weapon Mastery V,Increases the wielder's Finesse Weapons skill by 5 points.,5,5400,716,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6206,Paragon's Heavy Weapon Mastery I,Increases the wielder's Heavy Weapons skill by 1 point.,1,5400,717,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6207,Paragon's Heavy Weapon Mastery II,Increases the wielder's Heavy Weapons skill by 2 points.,2,5400,717,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6208,Paragon's Heavy Weapon Mastery III,Increases the wielder's Heavy Weapons skill by 3 points.,3,5400,717,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6209,Paragon's Heavy Weapon Mastery IV,Increases the wielder's Heavy Weapons skill by 4 points.,4,5400,717,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6210,Paragon's Heavy Weapon Mastery V,Increases the wielder's Heavy Weapons skill by 5 points.,5,5400,717,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6211,Paragon's Life Magic Mastery I,Increases the wielder's Life Magic skill by 1 point.,1,5400,719,80,Creature Enchantment,0.15,26,16,5,0.25,1
+6212,Paragon's Life Magic Mastery II,Increases the wielder's Life Magic skill by 2 points.,2,5400,719,80,Creature Enchantment,0.15,26,16,5,0.25,1
+6213,Paragon's Life Magic Mastery III,Increases the wielder's Life Magic skill by 3 points.,3,5400,719,80,Creature Enchantment,0.15,26,16,5,0.25,1
+6214,Paragon's Life Magic Mastery IV,Increases the wielder's Life Magic skill by 4 points.,4,5400,719,80,Creature Enchantment,0.15,26,16,5,0.25,1
+6215,Paragon's Life Magic Mastery V,Increases the wielder's Life Magic skill by 5 points.,5,5400,719,80,Creature Enchantment,0.15,26,16,5,0.25,1
+6216,Paragon's Light Weapon Mastery I,Increases the wielder's Light Weapons skill by 1 point.,1,5400,715,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6217,Paragon's Light Weapon Mastery II,Increases the wielder's Light Weapons skill by 2 points.,2,5400,715,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6218,Paragon's Light Weapon Mastery III,Increases the wielder's Light Weapons skill by 3 points.,3,5400,715,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6219,Paragon's Light Weapon Mastery IV,Increases the wielder's Light Weapons skill by 4 points.,4,5400,715,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6220,Paragon's Light Weapon Mastery V,Increases the wielder's Light Weapons skill by 5 points.,5,5400,715,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6221,Paragon's Missile Weapon Mastery I,Increases the wielder's Missile Weapons skill by 1 point.,1,5400,721,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6222,Paragon's Missile Weapon Mastery II,Increases the wielder's Missile Weapons skill by 2 points.,2,5400,721,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6223,Paragon's Missile Weapon Mastery III,Increases the wielder's Missile Weapons skill by 3 points.,3,5400,721,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6224,Paragon's Missile Weapon Mastery IV,Increases the wielder's Missile Weapons skill by 4 points.,4,5400,721,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6225,Paragon's Missile Weapon Mastery V,Increases the wielder's Missile Weapons skill by 5 points.,5,5400,721,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6226,Paragon's Recklessness Mastery I,Increases the wielder's Recklessness skill by 1 point.,1,5400,709,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6227,Paragon's Recklessness Mastery II,Increases the wielder's Recklessness skill by 2 points.,2,5400,709,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6228,Paragon's Recklessness Mastery III,Increases the wielder's Recklessness skill by 3 points.,3,5400,709,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6229,Paragon's Recklessness Mastery IV,Increases the wielder's Recklessness skill by 4 points.,4,5400,709,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6230,Paragon's Recklessness Mastery V,Increases the wielder's Recklessness skill by 5 points.,5,5400,709,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6231,Paragon's Sneak Attack Mastery I,Increases the wielder's Sneak Attack skill by 1 point.,1,5400,710,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6232,Paragon's Sneak Attack Mastery II,Increases the wielder's Sneak Attack skill by 2 points.,2,5400,710,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6233,Paragon's Sneak Attack Mastery III,Increases the wielder's Sneak Attack skill by 3 points.,3,5400,710,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6234,Paragon's Sneak Attack Mastery IV,Increases the wielder's Sneak Attack skill by 4 points.,4,5400,710,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6235,Paragon's Sneak Attack Mastery V,Increases the wielder's Sneak Attack skill by 5 points.,5,5400,710,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6236,Paragon's Two Handed Combat Mastery I,Increases the wielder's Two Handed Combat skill by 1 point.,1,5400,727,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6237,Paragon's Two Handed Combat Mastery II,Increases the wielder's Two Handed Combat skill by 2 points.,2,5400,727,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6238,Paragon's Two Handed Combat Mastery III,Increases the wielder's Two Handed Combat skill by 3 points.,3,5400,727,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6239,Paragon's Two Handed Combat Mastery IV,Increases the wielder's Two Handed Combat skill by 4 points.,4,5400,727,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6240,Paragon's Two Handed Combat Mastery V,Increases the wielder's Two Handed Combat skill by 5 points.,5,5400,727,80,Creature Enchantment,0.15,18,16,5,0.25,1
+6241,Paragon's Void Magic Mastery I,Increases the wielder's Void Magic skill by 1 point.,1,5400,720,80,Creature Enchantment,0.15,26,16,5,0.25,1
+6242,Paragon's Void Magic Mastery II,Increases the wielder's Void Magic skill by 2 points.,2,5400,720,80,Creature Enchantment,0.15,26,16,5,0.25,1
+6243,Paragon's Void Magic Mastery III,Increases the wielder's Void Magic skill by 3 points.,3,5400,720,80,Creature Enchantment,0.15,26,16,5,0.25,1
+6244,Paragon's Void Magic Mastery IV,Increases the wielder's Void Magic skill by 4 points.,4,5400,720,80,Creature Enchantment,0.15,26,16,5,0.25,1
+6245,Paragon's Void Magic Mastery V,Increases the wielder's Void Magic skill by 5 points.,5,5400,720,80,Creature Enchantment,0.15,26,16,5,0.25,1
+6246,Paragon's War Magic Mastery I,Increases the wielder's War Magic skill by 1 point.,1,5400,718,80,Creature Enchantment,0.15,26,16,5,0.25,1
+6247,Paragon's War Magic Mastery II,Increases the wielder's War Magic skill by 2 points.,2,5400,718,80,Creature Enchantment,0.15,26,16,5,0.25,1
+6248,Paragon's War Magic Mastery III,Increases the wielder's War Magic skill by 3 points.,3,5400,718,80,Creature Enchantment,0.15,26,16,5,0.25,1
+6249,Paragon's War Magic Mastery IV,Increases the wielder's War Magic skill by 4 points.,4,5400,718,80,Creature Enchantment,0.15,26,16,5,0.25,1
+6250,Paragon's War Magic Mastery V,Increases the wielder's War Magic skill by 5 points.,5,5400,718,80,Creature Enchantment,0.15,26,16,5,0.25,1
+6251,Paragon's Dirty Fighting Mastery I,Increases the wielder's Dirty Fighting skill by 1 point.,1,5400,707,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6252,Paragon's Dirty Fighting Mastery II,Increases the wielder's Dirty Fighting skill by 2 points.,2,5400,707,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6253,Paragon's Dirty Fighting Mastery III,Increases the wielder's Dirty Fighting skill by 3 points.,3,5400,707,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6254,Paragon's Dirty Fighting Mastery IV,Increases the wielder's Dirty Fighting skill by 4 points.,4,5400,707,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6255,Paragon's Dirty Fighting Mastery V,Increases the wielder's Dirty Fighting skill by 5 points.,5,5400,707,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6256,Paragon's Dual Wield Mastery I,Increases the wielder's Dual Wield skill by 1 point.,1,5400,708,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6257,Paragon's Dual Wield Mastery II,Increases the wielder's Dual Wield skill by 2 points.,2,5400,708,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6258,Paragon's Dual Wield Mastery III,Increases the wielder's Dual Wield skill by 3 points.,3,5400,708,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6259,Paragon's Dual Wield Mastery IV,Increases the wielder's Dual Wield skill by 4 points.,4,5400,708,80,Creature Enchantment,0.15,20,16,5,0.25,1
+6260,Paragon's Willpower V,Increases the wielder's Self by 5 points.,5,5400,726,80,Creature Enchantment,0.15,14,16,5,0.25,1
+6261,Paragon's Coordination I,Increases the wielder's Coordination by 1 point.,1,5400,723,80,Creature Enchantment,0.15,8,16,5,0.25,1
+6262,Paragon's Coordination II,Increases the wielder's Coordination by 2 points.,2,5400,723,80,Creature Enchantment,0.15,8,16,5,0.25,1
+6263,Paragon's Coordination III,Increases the wielder's Coordination by 3 points.,3,5400,723,80,Creature Enchantment,0.15,8,16,5,0.25,1
+6264,Paragon's Coordination IV,Increases the wielder's Coordination by 4 points.,4,5400,723,80,Creature Enchantment,0.15,8,16,5,0.25,1
+6265,Paragon's Coordination V,Increases the wielder's Coordination by 5 points.,5,5400,723,80,Creature Enchantment,0.15,8,16,5,0.25,1
+6266,Paragon's Endurance I,Increases the wielder's Endurance by 1 point.,1,5400,704,80,Creature Enchantment,0.15,10,16,5,0.25,1
+6267,Paragon's Endurance II,Increases the wielder's Endurance by 2 points.,2,5400,704,80,Creature Enchantment,0.15,10,16,5,0.25,1
+6268,Paragon's Endurance III,Increases the wielder's Endurance by 3 points.,3,5400,704,80,Creature Enchantment,0.15,10,16,5,0.25,1
+6269,Paragon's Endurance IV,Increases the wielder's Endurance by 4 points.,4,5400,704,80,Creature Enchantment,0.15,10,16,5,0.25,1
+6270,Paragon's Endurance V,Increases the wielder's Endurance by 5 points.,5,5400,704,80,Creature Enchantment,0.15,10,16,5,0.25,1
+6271,Paragon's Focus I,Increases the wielder's Focus by 1 point.,1,5400,725,80,Creature Enchantment,0.15,16,16,5,0.25,1
+6272,Paragon's Focus II,Increases the wielder's Focus by 2 points.,2,5400,725,80,Creature Enchantment,0.15,16,16,5,0.25,1
+6273,Paragon's Focus III,Increases the wielder's Focus by 3 points.,3,5400,725,80,Creature Enchantment,0.15,16,16,5,0.25,1
+6274,Paragon's Focus IV,Increases the wielder's Focus by 4 points.,4,5400,725,80,Creature Enchantment,0.15,16,16,5,0.25,1
+6275,Paragon's Focus V,Increases the wielder's Focus by 5 points.,5,5400,725,80,Creature Enchantment,0.15,16,16,5,0.25,1
+6276,Paragon Quickness I,Increases the wielder's Quickness by 1 point.,1,5400,724,80,Creature Enchantment,0.15,12,16,5,0.25,1
+6277,Paragon Quickness II,Increases the wielder's Quickness by 2 points.,2,5400,724,80,Creature Enchantment,0.15,12,16,5,0.25,1
+6278,Paragon Quickness III,Increases the wielder's Quickness by 3 points.,3,5400,724,80,Creature Enchantment,0.15,12,16,5,0.25,1
+6279,Paragon Quickness IV,Increases the wielder's Quickness by 4 points.,4,5400,724,80,Creature Enchantment,0.15,12,16,5,0.25,1
+6280,Paragon Quickness V,Increases the wielder's Quickness by 5 points.,5,5400,724,80,Creature Enchantment,0.15,12,16,5,0.25,1
+6281,Paragon's Strength I,Increases the wielder's Strength by 1 point.,1,5400,722,80,Creature Enchantment,0.15,6,16,5,0.25,1
+6282,Paragon's Strength II,Increases the wielder's Strength by 2 points.,2,5400,722,80,Creature Enchantment,0.15,6,16,5,0.25,1
+6283,Paragon's Strength III,Increases the wielder's Strength by 3 points.,3,5400,722,80,Creature Enchantment,0.15,6,16,5,0.25,1
+6284,Paragon's Strength IV,Increases the wielder's Strength by 4 points.,4,5400,722,80,Creature Enchantment,0.15,6,16,5,0.25,1
+6285,Paragon's Strength V,Increases the wielder's Strength by 5 points.,5,5400,722,80,Creature Enchantment,0.15,6,16,5,0.25,1
+6286,Paragon's Willpower I,Increases the wielder's Self by 1 point.,1,5400,726,80,Creature Enchantment,0.15,14,16,5,0.25,1
+6287,Paragon's Willpower II,Increases the wielder's Self by 2 points.,2,5400,726,80,Creature Enchantment,0.15,14,16,5,0.25,1
+6288,Paragon's Willpower III,Increases the wielder's Self by 3 points.,3,5400,726,80,Creature Enchantment,0.15,14,16,5,0.25,1
+6289,Paragon's Willpower IV,Increases the wielder's Self by 4 points.,4,5400,726,80,Creature Enchantment,0.15,14,16,5,0.25,1
+6290,Paragon's Stamina V,Increases maximum stamina by 10 points.,10,5400,706,70,Life Magic,0.3,35,16,0,0,1
+6291,Paragon's Critical Boost I,The critical damage rating of the wielder is increased by 1.,1,5400,713,70,Life Magic,0.3,162,16,0,0,1
+6292,Paragon's Critical Damage Boost II,The critical damage rating of the wielder is increased by 2.,2,5400,713,70,Life Magic,0.3,162,16,0,0,1
+6293,Paragon's Critical Damage Boost III,The critical damage rating of the wielder is increased by 3.,3,5400,713,70,Life Magic,0.3,162,16,0,0,1
+6294,Paragon's Critical Damage Boost IV,The damage rating of the wielder is increased by 4.,4,5400,713,70,Life Magic,0.3,162,16,0,0,1
+6295,Paragon's Critical Damage Boost V,The critical damage rating of the wielder is increased by 5.,5,5400,713,70,Life Magic,0.3,162,16,0,0,1
+6296,Paragon's Critical Damage Reduction I,The critical damage reduction rating of the wielder is increased by 1.,1,5400,714,70,Life Magic,0.3,163,16,0,0,1
+6297,Paragon's Critical Damage Reduction II,The critical damage reduction rating of the wielder is increased by 2.,2,5400,714,70,Life Magic,0.3,163,16,0,0,1
+6298,Paragon's Critical Damage Reduction III,The critical damage reduction rating of the wielder is increased by 3.,3,5400,714,70,Life Magic,0.3,163,16,0,0,1
+6299,Paragon's Critical Damage Reduction IV,The critical damage reduction rating of the wielder is increased by 4.,4,5400,714,70,Life Magic,0.3,163,16,0,0,1
+6300,Paragon's Critical Damage Reduction V,The critical damage reduction rating of the wielder is increased by 5.,5,5400,714,70,Life Magic,0.3,163,16,0,0,1
+6301,Paragon's Damage Boost I,The damage rating of the wielder is increased by 1.,1,5400,711,70,Life Magic,0.3,162,16,0,0,1
+6302,Paragon's Damage Boost II,The damage rating of the wielder is increased by 2.,2,5400,711,70,Life Magic,0.3,162,16,0,0,1
+6303,Paragon's Damage Boost III,The damage rating of the wielder is increased by 3.,3,5400,711,70,Life Magic,0.3,162,16,0,0,1
+6304,Paragon's Damage Boost IV,The damage rating of the wielder is increased by 4.,4,5400,711,70,Life Magic,0.3,162,16,0,0,1
+6305,Paragon's Damage Boost V,The damage rating of the wielder is increased by 5.,5,5400,711,70,Life Magic,0.3,162,16,0,0,1
+6306,Paragon's Damage Reduction I,The damage reduction rating of the wielder is increased by 1.,1,5400,712,70,Life Magic,0.3,163,16,0,0,1
+6307,Paragon's Damage Reduction II,The damage reduction rating of the wielder is increased by 2.,2,5400,712,70,Life Magic,0.3,163,16,0,0,1
+6308,Paragon's Damage Reduction III,The damage reduction rating of the wielder is increased by 3.,3,5400,712,70,Life Magic,0.3,163,16,0,0,1
+6309,Paragon's Damage Reduction IV,The damage reduction rating of the wielder is increased by 4.,4,5400,712,70,Life Magic,0.3,163,16,0,0,1
+6310,Paragon's Damage Reduction V,The damage reduction rating of the wielder is increased by 5.,5,5400,712,70,Life Magic,0.3,163,16,0,0,1
+6311,Paragon's Mana I,Increases maximum mana by 2 points.,2,5400,705,70,Life Magic,0.3,33,16,0,0,1
+6312,Paragon's Mana II,Increases maximum mana by 4 points.,4,5400,705,70,Life Magic,0.3,33,16,0,0,1
+6313,Paragon's Mana III,Increases maximum mana by 6 points.,6,5400,705,70,Life Magic,0.3,33,16,0,0,1
+6314,Paragon's Mana IV,Increases maximum mana by 8 points.,8,5400,705,70,Life Magic,0.3,33,16,0,0,1
+6315,Paragon's Mana V,Increases maximum mana by 10 points.,10,5400,705,70,Life Magic,0.3,33,16,0,0,1
+6316,Paragon's Stamina I,Increases maximum stamina by 2 points.,2,5400,706,70,Life Magic,0.3,35,16,0,0,1
+6317,Paragon's Stamina II,Increases maximum stamina by 4 points.,4,5400,706,70,Life Magic,0.3,35,16,0,0,1
+6318,Paragon's Stamina III,Increases maximum stamina by 6 points.,6,5400,706,70,Life Magic,0.3,35,16,0,0,1
+6319,Paragon's Stamina IV,Increases maximum stamina by 8 points.,8,5400,706,70,Life Magic,0.3,35,16,0,0,1
+6320,Ring of Skulls II,Shoots eight nether skulls outward from the caster. Each skull does 109-172 points of nether damage to the first thing it hits.,300,-1,641,90,Void Magic,0.2,0,0,4.5,0,1
+6321,Viridian Rise Recall,Transports the target to the specified destination.,250,-1,214,150,Item Enchantment,0.25,16,16,0,0,1
+6322,Viridian Rise Great Tree Recall,Transports the target to the specified destination.,250,-1,214,150,Item Enchantment,0.25,16,16,0,0,1
+6323,Gauntlet Imperil Self,Decreases the caster's natural armor by 300 points.,400,1800,116,80,Life Magic,0.15,56,16,0,0,1
+6324,Gauntlet Vulnerability Self,Increases damage the caster takes from Fire by 210%.,400,1800,110,80,Life Magic,0.15,44,16,0,0,1
+6325,Celestial Hand Stronghold Recall,Sends the caster to the Stronghold of the Celestial Hand.,150,-1,214,50,Item Enchantment,0.25,0,16,0,0,1
+6326,Eldrytch Web Stronghold Recall,Sends the caster to the Stronghold of the Eldrytch Web.,150,-1,214,50,Item Enchantment,0.25,0,16,0,0,1
+6327,Radiant Blood Stronghold Recall,Sends the caster to the Stronghold of the Radiant Blood.,150,-1,214,50,Item Enchantment,0.25,0,16,0,0,1
+6328,Gauntlet Critical Damage Boost I,Your critical damage rating is increased by 1.,1,10800,732,70,Life Magic,0.3,35,16,0,0,1
+6329,Gauntlet Critical Damage Boost II,Your critical damage rating is increased by 2.,1,10800,732,70,Life Magic,0.3,35,16,0,0,1
+6330,Gauntlet Damage Boost I,Your damage rating is increased by 1.,1,10800,729,70,Life Magic,0.3,35,16,0,0,1
+6331,Gauntlet Damage Boost II,Your damage rating is increased by 2.,1,10800,729,70,Life Magic,0.3,35,16,0,0,1
+6332,Gauntlet Damage Reduction I,Your damage reduction rating is increased by 1.,1,10800,728,70,Life Magic,0.3,35,16,0,0,1
+6333,Gauntlet Damage Reduction II,Your damage reduction rating is increased by 2.,1,10800,728,70,Life Magic,0.3,35,16,0,0,1
+6334,Gauntlet Critical Damage Reduction I,Your critical damage reduction rating is increased by 1.,1,10800,733,70,Life Magic,0.3,35,16,0,0,1
+6335,Gauntlet Critical Damage Reduction II,Your critical damage reduction rating is increased by 2.,1,10800,733,70,Life Magic,0.3,35,16,0,0,1
+6336,Gauntlet Healing Boost I,Your healing rating is increased by 1.,1,10800,730,70,Life Magic,0.3,35,16,0,0,1
+6337,Gauntlet Healing Boost II,Your healing rating is increased by 2.,1,10800,730,70,Life Magic,0.3,35,16,0,0,1
+6338,Gauntlet Vitality I,Your vitality is increased by 1.,1,10800,731,70,Life Magic,0.3,35,16,0,0,1
+6339,Gauntlet Vitality II,Your vitality is increased by 2.,1,10800,731,70,Life Magic,0.3,35,16,0,0,1
+6340,Gauntlet Vitality III,Your vitality is increased by 3.,1,10800,731,70,Life Magic,0.3,35,16,0,0,1
