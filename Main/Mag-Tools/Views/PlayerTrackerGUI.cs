@@ -19,6 +19,8 @@ namespace MagTools.Views
 		readonly ITracker<TrackedPlayer> tracker;
 		readonly HudList hudList;
 
+		DateTime lastSortTime = DateTime.MinValue;
+
 		public PlayerTrackerGUI(ITracker<TrackedPlayer> tracker, HudList hudList)
 		{
 			try
@@ -39,7 +41,6 @@ namespace MagTools.Views
 				((HudStaticText)newRow[2]).Text = "Coords";
 				((HudStaticText)newRow[3]).Text = "Id";
 
-				//tracker.ItemAdded += new Action<TrackedPlayer>(playerTracker_ItemAdded);
 				tracker.ItemsAdded += new Action<ICollection<TrackedPlayer>>(playerTracker_ItemsAdded);
 				tracker.ItemChanged += new Action<TrackedPlayer>(playerTracker_ItemChanged);
 				tracker.ItemRemoved += new Action<TrackedPlayer>(playerTracker_ItemRemoved);
@@ -68,7 +69,6 @@ namespace MagTools.Views
 			{
 				if (disposing)
 				{
-					//tracker.ItemAdded -= new Action<TrackedPlayer>(playerTracker_ItemAdded);
 					tracker.ItemsAdded -= new Action<ICollection<TrackedPlayer>>(playerTracker_ItemsAdded);
 					tracker.ItemChanged -= new Action<TrackedPlayer>(playerTracker_ItemChanged);
 					tracker.ItemRemoved -= new Action<TrackedPlayer>(playerTracker_ItemRemoved);
@@ -148,6 +148,11 @@ namespace MagTools.Views
 			if (hudList.RowCount < 1)
 				return;
 
+			// Some people report lag while using Mag-Tools in populated areas.
+			// This will keep the list from sorting less too often
+			if (DateTime.Now - lastSortTime <= TimeSpan.FromSeconds(2))
+				return;
+
 			for (int row = 1; row < hudList.RowCount - 1; row++)
 			{
 				for (int compareRow = row + 1; compareRow < hudList.RowCount; compareRow++)
@@ -186,6 +191,8 @@ namespace MagTools.Views
 					}
 				}
 			}
+
+			lastSortTime = DateTime.Now;
 		}
 
 		void hudList_Click(object sender, int row, int col)

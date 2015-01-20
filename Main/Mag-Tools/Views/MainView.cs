@@ -208,6 +208,7 @@ namespace MagTools.Views
 				ClipboardInventoryInfo = view != null ? (HudButton)view["ClipboardInventoryInfo"] : new HudButton();
 
 				InventorySearch = view != null ? (HudTextBox)view["InventorySearch"] : new HudTextBox();
+				InventorySearch.Hit += (s, e) => { if (InventorySearch.Text == "regex search string") InventorySearch.Text = String.Empty; };
 				InventoryList = view != null ? (HudList)view["InventoryList"] : new HudList();
 				InventoryItemText = view != null ? (HudStaticText)view["InventoryItemText"] : new HudStaticText();
 
