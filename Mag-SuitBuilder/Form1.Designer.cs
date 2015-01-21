@@ -40,6 +40,8 @@ namespace Mag_SuitBuilder
 			this.cmdResizeColumns = new System.Windows.Forms.Button();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.equipmentGrid = new System.Windows.Forms.DataGridView();
+			this.equipmentGridContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.copyItemsToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.filtersControl1 = new Mag_SuitBuilder.Equipment.FiltersControl();
 			this.CharactersTreeView = new System.Windows.Forms.TreeView();
 			this.CharactersTreeViewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -74,15 +76,13 @@ namespace Mag_SuitBuilder
 			this.coveragePiece8 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece10 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece9 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.equipmentGridContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.copyItemsToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tabControl1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.equipmentGrid)).BeginInit();
+			this.equipmentGridContextMenu.SuspendLayout();
 			this.CharactersTreeViewContextMenu.SuspendLayout();
 			this.tabPage1.SuspendLayout();
-			this.equipmentGridContextMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -118,7 +118,7 @@ namespace Mag_SuitBuilder
 			// cmdResizeColumns
 			// 
 			this.cmdResizeColumns.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.cmdResizeColumns.Location = new System.Drawing.Point(1260, 7);
+			this.cmdResizeColumns.Location = new System.Drawing.Point(1260, 6);
 			this.cmdResizeColumns.Name = "cmdResizeColumns";
 			this.cmdResizeColumns.Size = new System.Drawing.Size(97, 23);
 			this.cmdResizeColumns.TabIndex = 38;
@@ -155,6 +155,20 @@ namespace Mag_SuitBuilder
 			this.equipmentGrid.Size = new System.Drawing.Size(706, 715);
 			this.equipmentGrid.TabIndex = 28;
 			this.equipmentGrid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.equipmentGrid_CellPainting);
+			// 
+			// equipmentGridContextMenu
+			// 
+			this.equipmentGridContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyItemsToClipboardToolStripMenuItem});
+			this.equipmentGridContextMenu.Name = "equipmentGridContextMenu";
+			this.equipmentGridContextMenu.Size = new System.Drawing.Size(207, 48);
+			// 
+			// copyItemsToClipboardToolStripMenuItem
+			// 
+			this.copyItemsToClipboardToolStripMenuItem.Name = "copyItemsToClipboardToolStripMenuItem";
+			this.copyItemsToClipboardToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+			this.copyItemsToClipboardToolStripMenuItem.Text = "Copy Items To Clipboard";
+			this.copyItemsToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyItemsToClipboardToolStripMenuItem_Click);
 			// 
 			// filtersControl1
 			// 
@@ -224,7 +238,7 @@ namespace Mag_SuitBuilder
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtInventoryRootPath.Location = new System.Drawing.Point(227, 9);
 			this.txtInventoryRootPath.Name = "txtInventoryRootPath";
-			this.txtInventoryRootPath.Size = new System.Drawing.Size(1254, 20);
+			this.txtInventoryRootPath.Size = new System.Drawing.Size(1027, 20);
 			this.txtInventoryRootPath.TabIndex = 34;
 			// 
 			// btnHelp
@@ -502,20 +516,6 @@ namespace Mag_SuitBuilder
 			this.coveragePiece9.Size = new System.Drawing.Size(153, 133);
 			this.coveragePiece9.TabIndex = 8;
 			// 
-			// equipmentGridContextMenu
-			// 
-			this.equipmentGridContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyItemsToClipboardToolStripMenuItem});
-			this.equipmentGridContextMenu.Name = "equipmentGridContextMenu";
-			this.equipmentGridContextMenu.Size = new System.Drawing.Size(207, 48);
-			// 
-			// copyItemsToClipboardToolStripMenuItem
-			// 
-			this.copyItemsToClipboardToolStripMenuItem.Name = "copyItemsToClipboardToolStripMenuItem";
-			this.copyItemsToClipboardToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-			this.copyItemsToClipboardToolStripMenuItem.Text = "Copy Items To Clipboard";
-			this.copyItemsToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyItemsToClipboardToolStripMenuItem_Click);
-			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -531,9 +531,9 @@ namespace Mag_SuitBuilder
 			this.tabPage3.PerformLayout();
 			this.panel1.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.equipmentGrid)).EndInit();
+			this.equipmentGridContextMenu.ResumeLayout(false);
 			this.CharactersTreeViewContextMenu.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
-			this.equipmentGridContextMenu.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
