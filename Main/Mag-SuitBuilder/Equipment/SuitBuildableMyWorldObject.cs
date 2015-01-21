@@ -4,10 +4,9 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
-using Mag_SuitBuilder.Spells;
-
 using Mag.Shared;
 using Mag.Shared.Constants;
+using Mag.Shared.Spells;
 
 namespace Mag_SuitBuilder.Equipment
 {
@@ -72,8 +71,8 @@ namespace Mag_SuitBuilder.Equipment
 
 				foreach (var spell in Spells)
 				{
-					if (Spell.IsAKnownSpell(spell))
-						spellList.Add(Spell.GetSpell(spell));
+					if (SpellTools.IsAKnownSpell(spell))
+						spellList.Add(SpellTools.GetSpell(spell));
 
 				}
 				List<Spell> spellsInOrder = new List<Spell>();
@@ -125,7 +124,7 @@ namespace Mag_SuitBuilder.Equipment
 			{
 				try
 				{
-					Spell spell = Spell.GetSpell(spellId);
+					Spell spell = SpellTools.GetSpell(spellId);
 					cachedSpells.Add(spell);
 				}
 				catch (ArgumentException)
@@ -147,41 +146,45 @@ namespace Mag_SuitBuilder.Equipment
 		[Browsable(false)]
 		public IList<Spell> CachedSpells { get { return cachedSpells; } }
 
-		/// <summary>
-		/// Is this item surpassed by something else in the group?
-		/// </summary>
-		[XmlIgnore]
-		[Browsable(false)]
-		public bool IsSurpassed { get; set; }
-
-
-
 		[XmlIgnore]
 		[Browsable(false)]
 		public List<Spell> SpellsToUseInSearch = new List<Spell>();
 
 
+		readonly Dictionary<SuitBuildableMyWorldObject, bool> surpassedCache = new Dictionary<SuitBuildableMyWorldObject, bool>();
 
 		public bool IsSurpassedBy(SuitBuildableMyWorldObject compareItem)
 		{
-			BuiltItemSearchCache();
-			compareItem.BuiltItemSearchCache();
-
 			if (compareItem.Exclude)
 				return false;
 
+			if (surpassedCache.ContainsKey(compareItem))
+				return surpassedCache[compareItem];
+
+			BuiltItemSearchCache();
+			compareItem.BuiltItemSearchCache();
+
 			// Items must be of the same armor set
 			if (compareItem.ItemSetId != ItemSetId)
+			{
+				surpassedCache.Add(compareItem, false);
 				return false;
+			}
 
 			// This checks to see that the compare item covers at least all the slots that the passed item does
 			if (compareItem.Coverage.IsBodyArmor() && Coverage.IsBodyArmor())
 			{
 				if ((compareItem.Coverage & Coverage) != Coverage)
+				{
+					surpassedCache.Add(compareItem, false);
 					return false;
+				}
 			}
 			else if ((compareItem.EquippableSlots & EquippableSlots) != EquippableSlots)
+			{
+				surpassedCache.Add(compareItem, false);
 				return false;
+			}
 
 			// Find the highest level spell on this item
 			Spell.CantripLevels highestCantrip = Spell.CantripLevels.None;
@@ -201,29 +204,37 @@ namespace Mag_SuitBuilder.Equipment
 				foreach (Spell compareSpell in compareItem.cachedSpells)
 				{
 					if (compareSpell.Surpasses(itemSpell))
+					{
+						surpassedCache.Add(compareItem, true);
 						return true;
+					}
 
 					if (compareSpell.IsSameOrSurpasses(itemSpell))
 						goto next;
 				}
 
+				surpassedCache.Add(compareItem, false);
 				return false;
 
 				next:;
 			}
 
 			if (compareItem.CalcedStartingArmorLevel > CalcedStartingArmorLevel)
+			{
+				surpassedCache.Add(compareItem, true);
 				return true;
+			}
 
-			if (compareItem.DamRating > DamRating && DamRating > 0) return true;
-			if (compareItem.DamResistRating > DamResistRating && DamResistRating > 0) return true;
-			if (compareItem.CritRating > CritRating && CritRating > 0) return true;
-			if (compareItem.CritResistRating > CritResistRating && CritResistRating > 0) return true;
-			if (compareItem.CritDamRating > CritDamRating && CritDamRating > 0) return true;
-			if (compareItem.CritDamResistRating > CritDamResistRating && CritDamResistRating > 0) return true;
-			if (compareItem.HealBoostRating > HealBoostRating && HealBoostRating > 0) return true;
-			if (compareItem.VitalityRating > VitalityRating && VitalityRating > 0) return true;
+			if (compareItem.DamRating > DamRating && DamRating > 0) { surpassedCache.Add(compareItem, true); return true; }
+			if (compareItem.DamResistRating > DamResistRating && DamResistRating > 0) { surpassedCache.Add(compareItem, true); return true; }
+			if (compareItem.CritRating > CritRating && CritRating > 0) { surpassedCache.Add(compareItem, true); return true; }
+			if (compareItem.CritResistRating > CritResistRating && CritResistRating > 0) { surpassedCache.Add(compareItem, true); return true; }
+			if (compareItem.CritDamRating > CritDamRating && CritDamRating > 0) { surpassedCache.Add(compareItem, true); return true; }
+			if (compareItem.CritDamResistRating > CritDamResistRating && CritDamResistRating > 0) { surpassedCache.Add(compareItem, true); return true; }
+			if (compareItem.HealBoostRating > HealBoostRating && HealBoostRating > 0) { surpassedCache.Add(compareItem, true); return true; }
+			if (compareItem.VitalityRating > VitalityRating && VitalityRating > 0) { surpassedCache.Add(compareItem, true); return true; }
 
+			surpassedCache.Add(compareItem, false);
 			return false;
 		}
 	}

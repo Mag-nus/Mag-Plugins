@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
-
-using Mag_SuitBuilder.Spells;
 
 using Mag.Shared;
 using Mag.Shared.Constants;
+using Mag.Shared.Spells;
 
 namespace Mag_SuitBuilder.Equipment
 {
@@ -59,6 +59,31 @@ namespace Mag_SuitBuilder.Equipment
 				FiltersChanged();
 		}
 
+		private void cmdCheckAllCheckboxes_Click(object sender, EventArgs e)
+		{
+			suspendChangedEvent = true;
+
+			foreach (var control in Controls)
+			{
+				if (control == checkRemoveEquipped || control == chkRemoveUnequipped)
+					continue;
+
+				if (control is CheckBox)
+					(control as CheckBox).Checked = true;
+			}
+
+			suspendChangedEvent = false;
+
+			if (FiltersChanged != null)
+				FiltersChanged();
+		}
+
+		private void cmdApplyRegexStringMatch_Click(object sender, EventArgs e)
+		{
+			if (FiltersChanged != null)
+				FiltersChanged();
+		}
+
 		public void UpdateArmorSets(IDictionary<string, int> armorSets)
 		{
 			suspendChangedEvent = true;
@@ -94,19 +119,19 @@ namespace Mag_SuitBuilder.Equipment
 
 			int value;
 			int.TryParse(txtMinimumBaseArmorLevel.Text, out value);
-			if ((mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel < value && mwo.EquippableSlots.IsCoreBodyArmor())
+			if ((mwo.ObjClass == ObjectClass.Armor || mwo.ObjClass == ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel < value && mwo.EquippableSlots.IsCoreBodyArmor())
 				return false;
 
 			int.TryParse(txtMaximumBaseArmorLevel.Text, out value);
-			if ((mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel > value && mwo.EquippableSlots.IsCoreBodyArmor())
+			if ((mwo.ObjClass == ObjectClass.Armor || mwo.ObjClass == ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel > value && mwo.EquippableSlots.IsCoreBodyArmor())
 				return false;
 
 			int.TryParse(txtMinimumExtremityArmorLevel.Text, out value);
-			if ((mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel < value && mwo.EquippableSlots.IsExtremityBodyArmor())
+			if ((mwo.ObjClass == ObjectClass.Armor || mwo.ObjClass == ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel < value && mwo.EquippableSlots.IsExtremityBodyArmor())
 				return false;
 
 			int.TryParse(txtMaximumExtremityArmorLevel.Text, out value);
-			if ((mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel > value && mwo.EquippableSlots.IsExtremityBodyArmor())
+			if ((mwo.ObjClass == ObjectClass.Armor || mwo.ObjClass == ObjectClass.Clothing) && mwo.CalcedStartingArmorLevel > value && mwo.EquippableSlots.IsExtremityBodyArmor())
 				return false;
 
 
@@ -118,7 +143,7 @@ namespace Mag_SuitBuilder.Equipment
 			{
 				if (!chkShirtPants.Checked) return false;
 			}
-			else if (mwo.ObjectClass == (int)ObjectClass.Jewelry)
+			else if (mwo.ObjClass == ObjectClass.Jewelry)
 			{
 				if (!chkJewelry.Checked) return false;
 
@@ -127,7 +152,7 @@ namespace Mag_SuitBuilder.Equipment
 				if (!chkJewelryBracelet.Checked && mwo.EquippableSlots == (EquippableSlotFlags.LeftBracelet | EquippableSlotFlags.RightBracelet)) return false;
 				if (!chkJewelryRing.Checked && mwo.EquippableSlots == (EquippableSlotFlags.LeftRing | EquippableSlotFlags.RightRing)) return false;
 			}
-			else if (mwo.ObjectClass == (int)ObjectClass.MeleeWeapon)
+			else if (mwo.ObjClass == ObjectClass.MeleeWeapon)
 			{
 				if (!chkMeleeWeapon.Checked) return false;
 
@@ -144,7 +169,7 @@ namespace Mag_SuitBuilder.Equipment
 				if (!chkMasteryDagger.Checked && mwo.Mastery == "Dagger") return false;
 				if (!chkMasteryStaff.Checked && mwo.Mastery == "Staff") return false;
 			}
-			else if (mwo.ObjectClass == (int)ObjectClass.MissileWeapon)
+			else if (mwo.ObjClass == ObjectClass.MissileWeapon)
 			{
 				if (!chkMissileWeapon.Checked) return false;
 
@@ -152,26 +177,26 @@ namespace Mag_SuitBuilder.Equipment
 				if (!chkMasteryCrossbow.Checked && mwo.Mastery == "Crossbow") return false;
 				if (!chkMasteryThrown.Checked && mwo.Mastery == "Thrown") return false;
 			}
-			else if (mwo.ObjectClass == (int)ObjectClass.WandStaffOrb)
+			else if (mwo.ObjClass == ObjectClass.WandStaffOrb)
 			{
 				if (!chkWandStaffOrb.Checked) return false;
 
 				if (!chkWandStaffOrbWar.Checked && mwo.IntValues.ContainsKey(158) && mwo.IntValues[158] == 2 && mwo.IntValues.ContainsKey(159) && mwo.IntValues[159] == 0x22) return false;
 				if (!chkWandStaffOrbVoid.Checked && mwo.IntValues.ContainsKey(158) && mwo.IntValues[158] == 2 && mwo.IntValues.ContainsKey(159) && mwo.IntValues[159] == 0x2B) return false;
 			}
-			else if (mwo.ObjectClass == (int)ObjectClass.Salvage)
+			else if (mwo.ObjClass == ObjectClass.Salvage)
 			{
 				if (!chkSalvage.Checked) return false;
 			}
-			else if (mwo.ObjectClass == (int)ObjectClass.Container || mwo.ObjectClass == (int)ObjectClass.Foci)
+			else if (mwo.ObjClass == ObjectClass.Container || mwo.ObjClass == ObjectClass.Foci)
 			{
 				if (!chkContainersFoci.Checked) return false;
 			}
-			else if (mwo.ObjectClass == (int)ObjectClass.Money || mwo.ObjectClass == (int)ObjectClass.TradeNote || mwo.ObjectClass == (int)ObjectClass.Key)
+			else if (mwo.ObjClass == ObjectClass.Money || mwo.ObjClass == ObjectClass.TradeNote || mwo.ObjClass == ObjectClass.Key)
 			{
 				if (!chkMoneyNotesKeys.Checked) return false;
 			}
-			else if (mwo.ObjectClass == (int)ObjectClass.SpellComponent || mwo.ObjectClass == (int)ObjectClass.HealingKit || mwo.ObjectClass == (int)ObjectClass.Food || mwo.ObjectClass == (int)ObjectClass.ManaStone)
+			else if (mwo.ObjClass == ObjectClass.SpellComponent || mwo.ObjClass == ObjectClass.HealingKit || mwo.ObjClass == ObjectClass.Food || mwo.ObjClass == ObjectClass.ManaStone)
 			{
 				if (!chkCompsKitsFoodManaStones.Checked) return false;
 			}
@@ -179,7 +204,7 @@ namespace Mag_SuitBuilder.Equipment
 			{
 				if (!chkPets.Checked) return false;
 			}
-			else if (mwo.ObjectClass != 0) // All Else
+			else if (mwo.ObjClass != 0) // All Else
 			{
 				if (!chkAllElseObjectClasses.Checked) return false;
 			}
@@ -196,6 +221,17 @@ namespace Mag_SuitBuilder.Equipment
 					if (PrimaryArmorSetId != mwo.ItemSetId && SecondaryArmorSetId != mwo.ItemSetId)
 						return false;
 				}
+			}
+
+
+			// Regex String Match
+			if (!String.IsNullOrEmpty(txtRegexStringMatch.Text))
+			{
+				var regex = new Regex(txtRegexStringMatch.Text, RegexOptions.IgnoreCase);
+
+				var itemInfo = new ItemInfo(mwo);
+
+				if (!regex.IsMatch(itemInfo.ToString())) return false;
 			}
 
 
@@ -226,9 +262,9 @@ namespace Mag_SuitBuilder.Equipment
 
 
 			// Ratings
-			if (mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing || mwo.ObjectClass == (int)ObjectClass.Jewelry)
+			if (mwo.ObjClass == ObjectClass.Armor || mwo.ObjClass == ObjectClass.Clothing || mwo.ObjClass == ObjectClass.Jewelry)
 			{
-				if (mwo.ObjectClass == (int)ObjectClass.Armor || mwo.ObjectClass == (int)ObjectClass.Clothing)
+				if (mwo.ObjClass == ObjectClass.Armor || mwo.ObjClass == ObjectClass.Clothing)
 				{
 					if (int.TryParse(txtMinOffensiveRating.Text, out value))
 					{
@@ -255,7 +291,7 @@ namespace Mag_SuitBuilder.Equipment
 					}
 				}
 
-				if (mwo.ObjectClass == (int)ObjectClass.Jewelry)
+				if (mwo.ObjClass == ObjectClass.Jewelry)
 				{
 					if (int.TryParse(txtMinOtherRating.Text, out value))
 					{

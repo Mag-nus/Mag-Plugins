@@ -79,6 +79,38 @@ namespace Mag.Shared
 			}
 		}
 
+		public bool Values(BoolValueKey key, bool defaultValue = false)
+		{
+			if (BoolValues.ContainsKey((int)key))
+				return BoolValues[(int)key];
+
+			return defaultValue;
+		}
+
+		public double Values(DoubleValueKey key, double defaultValue = 0)
+		{
+			if (DoubleValues.ContainsKey((int)key))
+				return DoubleValues[(int)key];
+
+			return defaultValue;
+		}
+
+		public int Values(IntValueKey key, int defaultValue = 0)
+		{
+			if (IntValues.ContainsKey((int)key))
+				return IntValues[(int)key];
+
+			return defaultValue;
+		}
+
+		public string Values(StringValueKey key, string defaultValue = null)
+		{
+			if (StringValues.ContainsKey((int)key))
+				return StringValues[(int)key];
+
+			return defaultValue;
+		}
+
 
 		public string Material { get { if (IntValues.ContainsKey(131)) return Dictionaries.MaterialInfo.ContainsKey(IntValues[131]) ? Dictionaries.MaterialInfo[IntValues[131]] : IntValues[131].ToString(CultureInfo.InvariantCulture); return null; } }
 		

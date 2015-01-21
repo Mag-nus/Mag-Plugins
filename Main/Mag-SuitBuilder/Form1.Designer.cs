@@ -74,12 +74,15 @@ namespace Mag_SuitBuilder
 			this.coveragePiece8 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece10 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece9 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.equipmentGridContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.copyItemsToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tabControl1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.equipmentGrid)).BeginInit();
 			this.CharactersTreeViewContextMenu.SuspendLayout();
 			this.tabPage1.SuspendLayout();
+			this.equipmentGridContextMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -144,13 +147,13 @@ namespace Mag_SuitBuilder
 			this.equipmentGrid.AllowUserToResizeRows = false;
 			dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(234)))));
 			this.equipmentGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			this.equipmentGrid.ContextMenuStrip = this.equipmentGridContextMenu;
 			this.equipmentGrid.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.equipmentGrid.Location = new System.Drawing.Point(736, 0);
 			this.equipmentGrid.Name = "equipmentGrid";
+			this.equipmentGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
 			this.equipmentGrid.Size = new System.Drawing.Size(706, 715);
 			this.equipmentGrid.TabIndex = 28;
-			this.equipmentGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.equipmentGrid_CellEndEdit);
-			this.equipmentGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.equipmentGrid_CellFormatting);
 			this.equipmentGrid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.equipmentGrid_CellPainting);
 			// 
 			// filtersControl1
@@ -221,7 +224,7 @@ namespace Mag_SuitBuilder
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtInventoryRootPath.Location = new System.Drawing.Point(227, 9);
 			this.txtInventoryRootPath.Name = "txtInventoryRootPath";
-			this.txtInventoryRootPath.Size = new System.Drawing.Size(1027, 20);
+			this.txtInventoryRootPath.Size = new System.Drawing.Size(1254, 20);
 			this.txtInventoryRootPath.TabIndex = 34;
 			// 
 			// btnHelp
@@ -306,7 +309,7 @@ namespace Mag_SuitBuilder
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.treeView1.Location = new System.Drawing.Point(962, 8);
 			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(478, 733);
+			this.treeView1.Size = new System.Drawing.Size(0, 0);
 			this.treeView1.TabIndex = 35;
 			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
 			// 
@@ -499,6 +502,20 @@ namespace Mag_SuitBuilder
 			this.coveragePiece9.Size = new System.Drawing.Size(153, 133);
 			this.coveragePiece9.TabIndex = 8;
 			// 
+			// equipmentGridContextMenu
+			// 
+			this.equipmentGridContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyItemsToClipboardToolStripMenuItem});
+			this.equipmentGridContextMenu.Name = "equipmentGridContextMenu";
+			this.equipmentGridContextMenu.Size = new System.Drawing.Size(207, 48);
+			// 
+			// copyItemsToClipboardToolStripMenuItem
+			// 
+			this.copyItemsToClipboardToolStripMenuItem.Name = "copyItemsToClipboardToolStripMenuItem";
+			this.copyItemsToClipboardToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+			this.copyItemsToClipboardToolStripMenuItem.Text = "Copy Items To Clipboard";
+			this.copyItemsToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyItemsToClipboardToolStripMenuItem_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -516,6 +533,7 @@ namespace Mag_SuitBuilder
 			((System.ComponentModel.ISupportInitialize)(this.equipmentGrid)).EndInit();
 			this.CharactersTreeViewContextMenu.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
+			this.equipmentGridContextMenu.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -561,6 +579,8 @@ namespace Mag_SuitBuilder
 		private System.Windows.Forms.Button cmdResizeColumns;
 		private System.Windows.Forms.ContextMenuStrip CharactersTreeViewContextMenu;
 		private System.Windows.Forms.ToolStripMenuItem ShowEquipmentUpgradesMenuItem;
+		private System.Windows.Forms.ContextMenuStrip equipmentGridContextMenu;
+		private System.Windows.Forms.ToolStripMenuItem copyItemsToClipboardToolStripMenuItem;
 	}
 }
 
