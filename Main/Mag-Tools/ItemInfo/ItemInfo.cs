@@ -8,6 +8,8 @@ using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 using Decal.Filters;
 
+using DoubleValueKey = Decal.Adapter.Wrappers.DoubleValueKey;
+
 namespace MagTools.ItemInfo
 {
 	/// <summary>

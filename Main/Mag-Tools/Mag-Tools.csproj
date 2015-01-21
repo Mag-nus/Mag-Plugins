@@ -74,8 +74,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\Constants\BoolValueKey.cs">
+      <Link>Shared\Constants\BoolValueKey.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\Constants\Dictionaries.cs">
       <Link>Shared\Constants\Dictionaries.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Constants\DoubleValueKey.cs">
+      <Link>Shared\Constants\DoubleValueKey.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Constants\IntValueKey.cs">
+      <Link>Shared\Constants\IntValueKey.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Constants\StringValueKey.cs">
+      <Link>Shared\Constants\StringValueKey.cs</Link>
     </Compile>
     <Compile Include="..\Shared\Debug.cs">
       <Link>Shared\Debug.cs</Link>
