@@ -365,6 +365,7 @@ namespace MagTools.Views
 				AddOption(OptionList, Settings.SettingsManager.Misc.MaximizeChatOnLogin);
 				AddOption(OptionList, Settings.SettingsManager.Misc.LogOutOnDeath);
 				AddOption(OptionList, Settings.SettingsManager.Misc.DebuggingEnabled);
+				AddOption(OptionList, Settings.SettingsManager.Misc.VerboseDebuggingEnabled);
 
 				OutputWindow.Text = Settings.SettingsManager.Misc.OutputTargetWindow.Value.ToString(CultureInfo.InvariantCulture);
 				OutputWindow.Change += (s, e) =>

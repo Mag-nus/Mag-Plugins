@@ -49,11 +49,16 @@ namespace MagTools.Trackers.Inventory
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 				CoreManager.Current.WorldFilter.ReleaseObject += new EventHandler<Decal.Adapter.Wrappers.ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
 
+				var startTime = DateTime.Now;
+
 				foreach (WorldObject inventoryObject in CoreManager.Current.WorldFilter.GetInventory())
 					ProcessObject(inventoryObject);
 
+				if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
+					Debug.WriteToChat("Loaded Inventory Tracker: " + (DateTime.Now - startTime).TotalMilliseconds.ToString("N0") + "ms");
+
 				timer.Tick += new EventHandler(timer_Tick);
-				timer.Interval = 1000;
+				timer.Interval = 500;
 				timer.Start();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -185,7 +190,7 @@ namespace MagTools.Trackers.Inventory
 			{
 				if (trackedItem.Name == name)
 				{
-					trackedItem.AddCount(DateTime.Now, count);
+					trackedItem.AddSnapShot(DateTime.Now, count);
 
 					if (ItemChanged != null)
 					{
@@ -219,22 +224,21 @@ namespace MagTools.Trackers.Inventory
 		{
 			try
 			{
+				if (ItemChanged == null)
+					return;
+
 				foreach (var trackedItem in trackedItems)
 				{
-					if (lastChangeRaised.ContainsKey(trackedItem) && DateTime.Now - lastChangeRaised[trackedItem] < TimeSpan.FromSeconds(2))
-						continue;
+					if (lastChangeRaised.ContainsKey(trackedItem) && DateTime.Now - lastChangeRaised[trackedItem] < TimeSpan.FromSeconds(1))
+						return;
 
-					if (ItemChanged != null)
-					{
-						ItemChanged(trackedItem);
+					ItemChanged(trackedItem);
 
-						if (lastChangeRaised.ContainsKey(trackedItem))
-							lastChangeRaised[trackedItem] = DateTime.Now;
-						else
-							lastChangeRaised.Add(trackedItem, DateTime.Now);
-					}
+					if (lastChangeRaised.ContainsKey(trackedItem))
+						lastChangeRaised[trackedItem] = DateTime.Now;
+					else
+						lastChangeRaised.Add(trackedItem, DateTime.Now);
 				}
-
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}

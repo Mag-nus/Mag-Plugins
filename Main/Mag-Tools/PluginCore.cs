@@ -520,22 +520,37 @@ namespace MagTools
 				// Load Persistent Stats
 				try
 				{
+					var startTime = DateTime.Now;
+
 					if (Settings.SettingsManager.CombatTracker.Persistent.Value)
 						combatTrackerPersistent.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
+
+					if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
+						Debug.WriteToChat("Loaded Persistent Combat Tracker: " + (DateTime.Now - startTime).TotalMilliseconds.ToString("N0") + "ms");
 				}
 				catch (Exception ex) { Debug.LogException(ex); }
 
 				try
 				{
+					var startTime = DateTime.Now;
+
 					if (Settings.SettingsManager.CorpseTracker.Persistent.Value)
 						corpseTracker.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CorpseTracker.xml");
+
+					if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
+						Debug.WriteToChat("Loaded Persistent Corpse Trackers: " + (DateTime.Now - startTime).TotalMilliseconds.ToString("N0") + "ms");
 				}
 				catch (Exception ex) { Debug.LogException(ex); }
 
 				try
 				{
+					var startTime = DateTime.Now;
+
 					if (Settings.SettingsManager.PlayerTracker.Persistent.Value)
 						playerTracker.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".PlayerTracker.xml");
+
+					if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
+						Debug.WriteToChat("Loaded Persistent Player Tracker: " + (DateTime.Now - startTime).TotalMilliseconds.ToString("N0") + "ms");
 				}
 				catch (Exception ex) { Debug.LogException(ex); }
 
@@ -545,12 +560,17 @@ namespace MagTools
 				{
 					if (Settings.SettingsManager.ChatLogger.Persistent.Value)
 					{
+						var startTime = DateTime.Now;
+
 						chatLogFileWriter.FileName = PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChatLogger.txt";
 
 						List<ILoggerTarget<Loggers.Chat.LoggedChat>> chatLoggers = new List<ILoggerTarget<Loggers.Chat.LoggedChat>>();
 						chatLoggers.Add(chatLoggerGroup1GUI);
 						chatLoggers.Add(chatLoggerGroup2GUI);
-						Loggers.Chat.ChatLogImporter.Import(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChatLogger.txt", chatLoggers);					
+						Loggers.Chat.ChatLogImporter.Import(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChatLogger.txt", chatLoggers);
+
+						if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
+							Debug.WriteToChat("Loaded Persistent Chat: " + (DateTime.Now - startTime).TotalMilliseconds.ToString("N0") + "ms");
 					}
 				}
 				catch (Exception ex) { Debug.LogException(ex); }

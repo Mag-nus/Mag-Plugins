@@ -151,8 +151,17 @@ namespace MagTools.Views
 		{
 			foreach (CombatInfo combatInfo in obj)
 			{
-				combatTracker_CombatInfoUpdated(combatInfo);
+				AddNamesToList(combatInfo.SourceName, combatInfo.TargetName, false);
+
+				if (!String.IsNullOrEmpty(combatInfo.SourceName) && combatInfo.SourceName != CoreManager.Current.CharacterFilter.Name)
+					loadInfoForName(combatInfo.SourceName);
+
+				if (!String.IsNullOrEmpty(combatInfo.TargetName) && combatInfo.TargetName != CoreManager.Current.CharacterFilter.Name)
+					loadInfoForName(combatInfo.TargetName);
 			}
+
+			if (Settings.SettingsManager.CombatTracker.SortAlphabetically.Value)
+				SortListAlphabetically();
 		}
 
 		void combatTracker_CombatInfoUpdated(CombatInfo obj)
@@ -188,7 +197,7 @@ namespace MagTools.Views
 				loadInfoForName(obj.TargetName);
 		}
 
-		void AddNamesToList(string sourceName, string targetName)
+		void AddNamesToList(string sourceName, string targetName, bool allowSorting = true)
 		{
 			if (String.IsNullOrEmpty(sourceName) && String.IsNullOrEmpty(targetName))
 				return;
@@ -220,7 +229,7 @@ namespace MagTools.Views
 					((HudStaticText)newRow[4]).TextAlignment = VirindiViewService.WriteTextFormats.Right;
 
 					// Sort the list
-					if (Settings.SettingsManager.CombatTracker.SortAlphabetically.Value)
+					if (allowSorting && Settings.SettingsManager.CombatTracker.SortAlphabetically.Value)
 						SortListAlphabetically();
 
 					break;

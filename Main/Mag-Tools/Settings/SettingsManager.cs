@@ -282,6 +282,8 @@ namespace MagTools.Settings
 
 			public static readonly Setting<bool> DebuggingEnabled = new Setting<bool>("Misc/DebuggingEnabled", "Debugging Enabled", true);
 
+			public static readonly Setting<bool> VerboseDebuggingEnabled = new Setting<bool>("Misc/VerboseDebuggingEnabled", "Verbose Debugging Enabled");
+
 			public static readonly Setting<int> OutputTargetWindow = new Setting<int>("Misc/OutputTargetWindow", "Output Window", 1);
 
 			public static Collection<Client.WindowPosition> WindowPositions
