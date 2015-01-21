@@ -49,8 +49,10 @@ namespace MagTools.Trackers.ProfitLoss
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 				CoreManager.Current.WorldFilter.ReleaseObject += new EventHandler<Decal.Adapter.Wrappers.ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
 
-				foreach (WorldObject inventoryObject in CoreManager.Current.WorldFilter.GetInventory())
-					ProcessObject(inventoryObject);
+				ProcessPeas();
+				ProcessComps();
+				ProcessSalvage();
+				ProcessNetProfit();
 
 				timer.Tick += new EventHandler(timer_Tick);
 				timer.Interval = 1000;
