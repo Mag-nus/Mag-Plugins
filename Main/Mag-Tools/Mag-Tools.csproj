@@ -122,11 +122,13 @@
     <Compile Include="Macros\LoginActions.cs" />
     <Compile Include="Macros\LogOutOnDeath.cs" />
     <Compile Include="Macros\PeriodicCommands.cs" />
+    <Compile Include="Trackers\ProfitLoss\ProfitLossTracker.cs" />
+    <Compile Include="Trackers\ProfitLoss\TrackedProfitLoss.cs" />
     <Compile Include="Views\AccountServerCharacterGUI.cs" />
     <Compile Include="Views\InventoryToolsView.cs" />
     <Compile Include="Views\TinkeringToolsView.cs" />
-    <Compile Include="Trackers\Consumable\ConsumableTracker.cs" />
-    <Compile Include="Trackers\Consumable\TrackedConsumable.cs" />
+    <Compile Include="Trackers\Inventory\InventoryTracker.cs" />
+    <Compile Include="Trackers\Inventory\TrackedInventory.cs" />
     <Compile Include="Trackers\Corpse\CorpseTracker.cs" />
     <Compile Include="Trackers\Corpse\CorpseTrackerExporter.cs" />
     <Compile Include="Trackers\Corpse\CorpseTrackerImporter.cs" />
@@ -138,7 +140,7 @@
     <Compile Include="Trackers\Player\PlayerType.cs" />
     <Compile Include="Trackers\Player\TrackedPlayer.cs" />
     <Compile Include="Views\ChatLoggerGUI.cs" />
-    <Compile Include="Views\ConsumableTrackerGUI.cs" />
+    <Compile Include="Views\InventoryTrackerGUI.cs" />
     <Compile Include="Views\CorpseTrackerGUI.cs" />
     <Compile Include="Views\HUD.cs" />
     <Compile Include="Inventory\InventoryExporter.cs" />
