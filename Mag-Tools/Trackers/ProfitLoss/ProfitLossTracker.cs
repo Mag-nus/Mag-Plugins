@@ -49,13 +49,18 @@ namespace MagTools.Trackers.ProfitLoss
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 				CoreManager.Current.WorldFilter.ReleaseObject += new EventHandler<Decal.Adapter.Wrappers.ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
 
+				var startTime = DateTime.Now;
+
 				ProcessPeas();
 				ProcessComps();
 				ProcessSalvage();
 				ProcessNetProfit();
 
+				if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
+					Debug.WriteToChat("Loaded Profit/Loss Tracker: " + (DateTime.Now - startTime).TotalMilliseconds.ToString("N0") + "ms");
+
 				timer.Tick += new EventHandler(timer_Tick);
-				timer.Interval = 1000;
+				timer.Interval = 500;
 				timer.Start();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -228,7 +233,7 @@ namespace MagTools.Trackers.ProfitLoss
 			{
 				if (trackedItem.Name == name)
 				{
-					trackedItem.AddValue(DateTime.Now, value);
+					trackedItem.AddSnapShot(DateTime.Now, value);
 
 					if (ItemChanged != null)
 					{
@@ -262,22 +267,21 @@ namespace MagTools.Trackers.ProfitLoss
 		{
 			try
 			{
+				if (ItemChanged == null)
+					return;
+
 				foreach (var trackedItem in trackedItems)
 				{
-					if (lastChangeRaised.ContainsKey(trackedItem) && DateTime.Now - lastChangeRaised[trackedItem] < TimeSpan.FromSeconds(2))
-						continue;
+					if (lastChangeRaised.ContainsKey(trackedItem) && DateTime.Now - lastChangeRaised[trackedItem] < TimeSpan.FromSeconds(1))
+						return;
 
-					if (ItemChanged != null)
-					{
-						ItemChanged(trackedItem);
+					ItemChanged(trackedItem);
 
-						if (lastChangeRaised.ContainsKey(trackedItem))
-							lastChangeRaised[trackedItem] = DateTime.Now;
-						else
-							lastChangeRaised.Add(trackedItem, DateTime.Now);
-					}
+					if (lastChangeRaised.ContainsKey(trackedItem))
+						lastChangeRaised[trackedItem] = DateTime.Now;
+					else
+						lastChangeRaised.Add(trackedItem, DateTime.Now);
 				}
-
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}

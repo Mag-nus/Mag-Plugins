@@ -1,29 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using Decal.Adapter.Wrappers;
 
 namespace MagTools.Trackers.Inventory
 {
-	class TrackedInventory
+	class TrackedInventory : TrackedSnapShot<int>
 	{
 		public readonly string Name;
 		public readonly ObjectClass ObjectClass;
 		public readonly int Icon;
 		public readonly int ItemValue;
-
-		class SnapShot
-		{
-			public readonly DateTime TimeStamp;
-			public readonly int Count;
-
-			public SnapShot(DateTime timeStamp, int count)
-			{
-				TimeStamp = timeStamp;
-				Count = count;
-			}
-		}
-		private readonly List<SnapShot> snapShots = new List<SnapShot>();
 
 		public TrackedInventory(string name, ObjectClass objectClass, int icon, int itemValue)
 		{
@@ -35,31 +21,15 @@ namespace MagTools.Trackers.Inventory
 
 		public TrackedInventory(string name, ObjectClass objectClass, int icon, int itemValue, DateTime timeAtCount, int count) : this(name, objectClass, icon, itemValue)
 		{
-			snapShots.Add(new SnapShot(timeAtCount, count));
-		}
-
-		public void AddCount(DateTime timeAtCount, int count)
-		{
-			for (int i = 0 ; i< snapShots.Count ; i++)
-			{
-				if (snapShots[i].TimeStamp == timeAtCount)
-				{
-					snapShots[i] = new SnapShot(timeAtCount, count);
-					return;
-				}
-			}
-
-			snapShots.Add(new SnapShot(timeAtCount, count));
-
-			// We should reduce the history a bit here. Older times should have less resolution
+			SnapShots.Add(new SnapShot(timeAtCount, count));
 		}
 
 		public int LastKnownCount
 		{
 			get
 			{
-				if (snapShots.Count > 0)
-					return snapShots[snapShots.Count - 1].Count;
+				if (SnapShots.Count > 0)
+					return SnapShots[SnapShots.Count - 1].Value;
 
 				return 0;
 			}
@@ -70,12 +40,12 @@ namespace MagTools.Trackers.Inventory
 		/// </summary>
 		public double GetItemsCountDifference(TimeSpan historyPeriod, TimeSpan usagePeriod)
 		{
-			if (snapShots.Count == 1)
+			if (SnapShots.Count == 1)
 				return 0;
 
 			var closestPastTarget = GetSnapShotClosestToTime(DateTime.Now - historyPeriod);
 
-			return (LastKnownCount - closestPastTarget.Count) * (usagePeriod.TotalMinutes / (DateTime.Now - closestPastTarget.TimeStamp).TotalMinutes);
+			return (LastKnownCount - closestPastTarget.Value) * (usagePeriod.TotalMinutes / (DateTime.Now - closestPastTarget.TimeStamp).TotalMinutes);
 		}
 
 		/// <summary>
@@ -83,28 +53,15 @@ namespace MagTools.Trackers.Inventory
 		/// </summary>
 		public TimeSpan GetTimeToDepletion(TimeSpan period)
 		{
-			if (snapShots.Count == 1 || LastKnownCount == 0)
+			if (SnapShots.Count == 1 || LastKnownCount == 0)
 				return TimeSpan.Zero;
 
 			var closestPastTarget = GetSnapShotClosestToTime(DateTime.Now - period);
 
-			if (LastKnownCount >= closestPastTarget.Count)
+			if (LastKnownCount >= closestPastTarget.Value)
 				return TimeSpan.MaxValue;
 
-			return TimeSpan.FromSeconds(LastKnownCount / ((closestPastTarget.Count - LastKnownCount) / (DateTime.Now - closestPastTarget.TimeStamp).TotalSeconds));
-		}
-
-		private SnapShot GetSnapShotClosestToTime(DateTime time)
-		{
-			SnapShot closestPastTarget = snapShots[snapShots.Count - 1];
-
-			for (int i = snapShots.Count - 2; i >= 0; i--)
-			{
-				if (Math.Abs((time - snapShots[i].TimeStamp).TotalMinutes) < Math.Abs((time - closestPastTarget.TimeStamp).TotalMinutes))
-					closestPastTarget = snapShots[i];
-			}
-
-			return closestPastTarget;
+			return TimeSpan.FromSeconds(LastKnownCount / ((closestPastTarget.Value - LastKnownCount) / (DateTime.Now - closestPastTarget.TimeStamp).TotalSeconds));
 		}
 	}
 }

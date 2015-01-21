@@ -19,6 +19,7 @@ namespace MagTools.Views
 		readonly ITracker<TrackedPlayer> tracker;
 		readonly HudList hudList;
 
+		Dictionary<string, DateTime> lastSeenTimes = new Dictionary<string, DateTime>();
 		DateTime lastSortTime = DateTime.MinValue;
 
 		public PlayerTrackerGUI(ITracker<TrackedPlayer> tracker, HudList hudList)
@@ -112,6 +113,11 @@ namespace MagTools.Views
 
 		void UpdateItem(TrackedPlayer item)
 		{
+			if (lastSeenTimes.ContainsKey(item.Name))
+				lastSeenTimes[item.Name] = item.LastSeen;
+			else
+				lastSeenTimes.Add(item.Name, item.LastSeen);
+
 			for (int row = 1; row <= hudList.RowCount; row++)
 			{
 				if (((HudStaticText)hudList[row - 1][1]).Text == item.Name)
@@ -137,6 +143,9 @@ namespace MagTools.Views
 						hudList.RemoveRow(row - 1);
 
 						row--;
+
+						if (lastSeenTimes.ContainsKey(item.Name))
+							lastSeenTimes.Remove(item.Name);
 					}
 				}
 			}
@@ -150,31 +159,18 @@ namespace MagTools.Views
 
 			// Some people report lag while using Mag-Tools in populated areas.
 			// This will keep the list from sorting less too often
-			if (DateTime.Now - lastSortTime <= TimeSpan.FromSeconds(2))
+			if (DateTime.Now - lastSortTime <= TimeSpan.FromSeconds(10))
 				return;
-
-			// DateTime.TryParseExact is also very slow, so we cache the timestamps here
-			List<DateTime> timeStamps = new List<DateTime>();
-			timeStamps.Add(DateTime.MinValue); // This is just a placeholder to line up the indexes with hudList
-
-			for (int row = 1; row < hudList.RowCount; row++)
-			{
-				DateTime timeStamp;
-
-				DateTime.TryParseExact(((HudStaticText)hudList[row][0]).Text, "yy/MM/dd HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out timeStamp);
-
-				timeStamps.Add(timeStamp);
-			}
 
 			for (int row = 1; row < hudList.RowCount - 1; row++)
 			{
 				for (int compareRow = row + 1; compareRow < hudList.RowCount; compareRow++)
 				{
 					string rowName = ((HudStaticText)hudList[row][1]).Text;
-					DateTime rowDateTime = timeStamps[row];
+					DateTime rowDateTime = lastSeenTimes[rowName];
 
 					string compareName = ((HudStaticText)hudList[compareRow][1]).Text;
-					DateTime compareDateTime = timeStamps[compareRow];
+					DateTime compareDateTime = lastSeenTimes[compareName];
 
 					if (rowDateTime < compareDateTime || (rowDateTime == compareDateTime && String.Compare(rowName, compareName, StringComparison.Ordinal) > 0))
 					{
@@ -189,10 +185,6 @@ namespace MagTools.Views
 						string obj3 = ((HudStaticText)hudList[row][2]).Text;
 						((HudStaticText)hudList[row][2]).Text = ((HudStaticText)hudList[compareRow][2]).Text;
 						((HudStaticText)hudList[compareRow][2]).Text = obj3;
-
-						DateTime obj4 = timeStamps[row];
-						timeStamps[row] = timeStamps[compareRow];
-						timeStamps[compareRow] = obj4;
 					}
 				}
 			}

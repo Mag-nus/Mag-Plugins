@@ -124,6 +124,7 @@
     <Compile Include="Macros\PeriodicCommands.cs" />
     <Compile Include="Trackers\ProfitLoss\ProfitLossTracker.cs" />
     <Compile Include="Trackers\ProfitLoss\TrackedProfitLoss.cs" />
+    <Compile Include="Trackers\TrackedSnapShot.cs" />
     <Compile Include="Views\AccountServerCharacterGUI.cs" />
     <Compile Include="Views\InventoryToolsView.cs" />
     <Compile Include="Views\TinkeringToolsView.cs" />
