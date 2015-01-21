@@ -101,7 +101,7 @@ namespace Mag.Shared.Spells
 			int.TryParse(splitLine[durationIndex], out duration);
 
 			int family;
-			int.TryParse(splitLine[durationIndex], out family);
+			int.TryParse(splitLine[familyIndex], out family);
 
 			var spell = new Spell(id, name, difficulty, duration, family);
 
