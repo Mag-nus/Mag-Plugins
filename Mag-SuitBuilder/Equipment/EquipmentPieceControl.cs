@@ -2,9 +2,8 @@
 using System.Globalization;
 using System.Windows.Forms;
 
-using Mag_SuitBuilder.Spells;
-
 using Mag.Shared.Constants;
+using Mag.Shared.Spells;
 
 namespace Mag_SuitBuilder.Equipment
 {

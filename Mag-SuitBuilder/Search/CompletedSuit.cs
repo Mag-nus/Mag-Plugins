@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Mag_SuitBuilder.Equipment;
-using Mag_SuitBuilder.Spells;
 
 using Mag.Shared.Constants;
+using Mag.Shared.Spells;
 
 namespace Mag_SuitBuilder.Search
 {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -8,7 +7,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
@@ -16,9 +14,10 @@ using System.Xml.Serialization;
 using Mag_SuitBuilder.Equipment;
 using Mag_SuitBuilder.Properties;
 using Mag_SuitBuilder.Search;
-using Mag_SuitBuilder.Spells;
 
+using Mag.Shared;
 using Mag.Shared.Constants;
+using Mag.Shared.Spells;
 
 // Bugs
 // Spell compare is too slow, should be a hash compare
@@ -60,15 +59,6 @@ namespace Mag_SuitBuilder
 			}
 
 			filtersControl1.FiltersChanged += () => UpdateBoundListFromTreeViewNodes(CharactersTreeView.Nodes);
-
-			boundList.ListChanged += (s, e2) =>
-			{
-				//foreach (var item in boundList)
-				//	item.IsSurpassed = boundList.ItemIsSurpassed(item);
-				Parallel.ForEach(boundList, item => item.IsSurpassed = boundList.ItemIsSurpassed(item));
-
-				equipmentGrid.Invalidate();
-			};
 
 			base.OnLoad(e);
 		}
@@ -278,25 +268,30 @@ namespace Mag_SuitBuilder
 		{
 			MessageBox.Show("All columns can be sorted. Some column cells can be edited." + Environment.NewLine + Environment.NewLine +
 				"Use the [Locked] checkbox for pieces you want your suit built around." + Environment.NewLine + Environment.NewLine +
-				"Rows in dark gray are equipment pieces that will be removed from the search as they are surpassed by another item." + Environment.NewLine + Environment.NewLine +
 				"[Load Inventory] loads all Charname.Inventory.xml files from MyDocuments\\Decal Plugins\\Mag-Tools\\ServerName(s) from all servers." + Environment.NewLine +
 				"Enable inventory logging in Mag-Tools under Misc->Options->Inventory Logger Enabled" + Environment.NewLine + Environment.NewLine +
 				"If items are showing up in your results that you do not want, simply check the [Exclude] column.");
 		}
 
-		private void equipmentGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+		private void copyItemsToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			foreach (var item in boundList)
-				item.IsSurpassed = boundList.ItemIsSurpassed(item);
+			var sb = new StringBuilder();
 
-			equipmentGrid.Invalidate();
-		}
+			if (equipmentGrid.SelectedRows.Count == 0)
+				return;
 
-		private void equipmentGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-		{
-			//if (boundList.ItemIsSurpassed(boundList[e.RowIndex])) // This method is real time but slow
-			if (boundList[e.RowIndex].IsSurpassed)
-				e.CellStyle.BackColor = Color.DarkGray;
+			foreach (DataGridViewRow row in equipmentGrid.SelectedRows)
+			{
+				var rowAsMyWorldObject = row.DataBoundItem as MyWorldObject;
+
+				if (rowAsMyWorldObject != null)
+				{
+					var itemInfo = new ItemInfo(rowAsMyWorldObject);
+					sb.AppendLine(itemInfo.ToString());
+				}
+			}
+
+			Clipboard.SetText(sb.ToString());
 		}
 
 		private void equipmentGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -390,7 +385,7 @@ namespace Mag_SuitBuilder
 
 				foreach (Spell spell in piece.CachedSpells)
 				{
-					if (config.SpellPassesRules(spell) && !spell.IsOfSameFamilyAndGroup(Spell.GetSpell("Epic Impenetrability")))
+					if (config.SpellPassesRules(spell) && !spell.IsOfSameFamilyAndGroup(SpellTools.GetSpell(4667))) // Epic Impenetrability
 						piece.SpellsToUseInSearch.Add(spell);
 				}
 			}
