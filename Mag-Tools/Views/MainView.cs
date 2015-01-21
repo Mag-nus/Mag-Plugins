@@ -58,8 +58,8 @@ namespace MagTools.Views
 		HudCheckBox PlayerTrackerEnabled { get; set; }
 		HudCheckBox PlayerTrackerPersistent { get; set; }
 
-		// Consumable Tracker
-		public HudList ConsumableTrackerList { get; private set; }
+		// Item Count Tracker
+		public HudList InventoryTrackerList { get; private set; }
 
 
 		// Chat Logger
@@ -187,8 +187,8 @@ namespace MagTools.Views
 				PlayerTrackerEnabled = view != null ? (HudCheckBox)view["PlayerTrackerEnabled"] : new HudCheckBox();
 				PlayerTrackerPersistent = view != null ? (HudCheckBox)view["PlayerTrackerPersistent"] : new HudCheckBox();
 
-				// Consumable Tracker
-				ConsumableTrackerList = view != null ? (HudList)view["ConsumableTrackerList"] : new HudList();
+				// Item Count Tracker
+				InventoryTrackerList = view != null ? (HudList)view["InventoryTrackerList"] : new HudList();
 
 
 				// Chat Logger

@@ -90,8 +90,8 @@
           </control>
         </page>
 
-        <page label="Consumables">
-          <control progid="DecalControls.List" name="ConsumableTrackerList" left="0" top="0" width="320" height="460" />
+        <page label=" Inv. Items ">
+          <control progid="DecalControls.List" name="InventoryTrackerList" left="0" top="0" width="320" height="460" />
         </page>
         
       </control>

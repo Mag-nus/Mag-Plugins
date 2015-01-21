@@ -112,7 +112,8 @@ namespace MagTools
 		Trackers.Combat.CombatTracker combatTrackerPersistent;
 		Trackers.Corpse.CorpseTracker corpseTracker;
 		Trackers.Player.PlayerTracker playerTracker;
-		Trackers.Consumable.ConsumableTracker consumableTracker;
+		Trackers.Inventory.InventoryTracker inventoryTracker;
+		Trackers.ProfitLoss.ProfitLossTracker profitLossTracker;
 
 		// Loggers
 		Loggers.Chat.ChatLogger chatLogger;
@@ -149,7 +150,7 @@ namespace MagTools
 		CombatTrackerGUI combatTrackerGUIPersistent;
 		CorpseTrackerGUI corpseTrackerGUI;
 		PlayerTrackerGUI playerTrackerGUI;
-		ConsumableTrackerGUI consumableTrackerGUI;
+		InventoryTrackerGUI inventoryTrackerGUI;
 
 		ChatLoggerGUI chatLoggerGroup1GUI;
 		ChatLoggerGUI chatLoggerGroup2GUI;
@@ -211,7 +212,8 @@ namespace MagTools
 				combatTrackerPersistent = new Trackers.Combat.CombatTracker();
 				corpseTracker = new Trackers.Corpse.CorpseTracker();
 				playerTracker = new Trackers.Player.PlayerTracker();
-				consumableTracker = new Trackers.Consumable.ConsumableTracker();
+				inventoryTracker = new Trackers.Inventory.InventoryTracker();
+				profitLossTracker = new Trackers.ProfitLoss.ProfitLossTracker();
 
 				// Loggers
 				chatLogger = new Loggers.Chat.ChatLogger();
@@ -305,7 +307,7 @@ namespace MagTools
 					combatTrackerGUIPersistent = new CombatTrackerGUI(combatTrackerPersistent, mainView.CombatTrackerMonsterListPersistent, mainView.CombatTrackerDamageListPersistent);
 					corpseTrackerGUI = new CorpseTrackerGUI(corpseTracker, mainView.CorpseTrackerList);
 					playerTrackerGUI = new PlayerTrackerGUI(playerTracker, mainView.PlayerTrackerList);
-					consumableTrackerGUI = new ConsumableTrackerGUI(consumableTracker, mainView.ConsumableTrackerList);
+					inventoryTrackerGUI = new InventoryTrackerGUI(profitLossTracker, inventoryTracker, mainView.InventoryTrackerList);
 
 					chatLoggerGroup1GUI = new ChatLoggerGUI(chatLogger, Settings.SettingsManager.ChatLogger.Groups[0], mainView.ChatLogger1List);
 					chatLoggerGroup2GUI = new ChatLoggerGUI(chatLogger, Settings.SettingsManager.ChatLogger.Groups[1], mainView.ChatLogger2List);
@@ -367,7 +369,7 @@ namespace MagTools
 				if (chatLoggerGroup1GUI != null) chatLoggerGroup1GUI.Dispose();
 				if (chatLoggerGroup2GUI != null) chatLoggerGroup2GUI.Dispose();
 
-				if (consumableTrackerGUI != null) consumableTrackerGUI.Dispose();
+				if (inventoryTrackerGUI != null) inventoryTrackerGUI.Dispose();
 				if (playerTrackerGUI != null) playerTrackerGUI.Dispose();
 				if (corpseTrackerGUI != null) corpseTrackerGUI.Dispose();
 				if (combatTrackerGUIPersistent != null) combatTrackerGUIPersistent.Dispose();
@@ -406,7 +408,8 @@ namespace MagTools
 				if (combatTrackerPersistent != null) combatTrackerPersistent.Dispose();
 				if (corpseTracker != null) corpseTracker.Dispose();
 				if (playerTracker != null) playerTracker.Dispose();
-				if (consumableTracker != null) consumableTracker.Dispose();
+				if (inventoryTracker != null) inventoryTracker.Dispose();
+				if (profitLossTracker != null) profitLossTracker.Dispose();
 
 				// Macros
 				if (loginActions != null) loginActions.Dispose();
