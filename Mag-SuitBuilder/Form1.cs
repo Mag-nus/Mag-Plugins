@@ -291,7 +291,11 @@ namespace Mag_SuitBuilder
 				}
 			}
 
-			Clipboard.SetText(sb.ToString());
+			try
+			{
+				Clipboard.SetText(sb.ToString());
+			}
+			catch { }
 		}
 
 		private void equipmentGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -619,6 +623,91 @@ namespace Mag_SuitBuilder
 			//	cntrlSuitCantrips.Add(spell);
 
 			cntrlSuitCantrips.Refresh();
+		}
+
+		private void cmdCopyToClipboard_Click(object sender, EventArgs e)
+		{
+			var sb = new StringBuilder();
+
+			CompletedSuitTreeNode node = treeView1.SelectedNode as CompletedSuitTreeNode;
+
+			if (node == null)
+				return;
+
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Head], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Chest], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Abdomen], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.UpperArms], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LowerArms], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Hands], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.UpperLegs], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LowerLegs], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Feet], sb);
+			sb.AppendLine();
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.ShirtChest], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.PantsAbdomen], sb);
+			sb.AppendLine();
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Necklace], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Trinket], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LeftBracelet], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.RightBracelet], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LeftRing], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.RightRing], sb);
+			sb.AppendLine();
+			sb.AppendLine("Total Effective Legendaries: ".PadRight(30) + node.Suit.TotalEffectiveLegendaries);
+			sb.AppendLine("Total Effective Epics: ".PadRight(30) + node.Suit.TotalEffectiveEpics);
+			sb.AppendLine("Total Effective Majors: ".PadRight(30) + node.Suit.TotalEffectiveMajors);
+			sb.AppendLine("Total Base Armor Level: ".PadRight(30) + node.Suit.TotalBaseArmorLevel);
+			sb.AppendLine();
+
+			var spells = new List<Spell>();
+
+			foreach (var kvp in node.Suit)
+			{
+				foreach (var spell in kvp.Value.CachedSpells)
+					spells.Add(spell);
+			}
+
+			spells.Sort((a, b) =>
+				            {
+								if (a.CantripLevel == Spell.CantripLevels.None && b.CantripLevel != Spell.CantripLevels.None)
+									return 1;
+								if (a.CantripLevel != Spell.CantripLevels.None && b.CantripLevel == Spell.CantripLevels.None)
+									return -1;
+								if (a.CantripLevel != Spell.CantripLevels.None && b.CantripLevel != Spell.CantripLevels.None)
+								{
+									if (a.CantripLevel == b.CantripLevel)
+										return String.Compare(b.Name, a.Name, StringComparison.OrdinalIgnoreCase);
+
+									return b.CantripLevel.CompareTo(a.CantripLevel);
+								}
+
+								if (a.BuffLevel == b.BuffLevel)
+									return String.Compare(b.Name, a.Name, StringComparison.OrdinalIgnoreCase);
+
+					            return b.BuffLevel.CompareTo(a.BuffLevel);
+				            });
+
+			foreach (var spell in spells)
+				sb.AppendLine(spell.ToString());
+
+			try
+			{
+				Clipboard.SetText(sb.ToString());
+			} catch {};
+		}
+
+		void AddEquipmentPieceToClipboard(SuitBuildableMyWorldObject mwo, StringBuilder sb)
+		{
+			if (mwo == null)
+			{
+				sb.AppendLine();
+				return;
+			}
+
+			var itemInfo = new ItemInfo(mwo);
+
+			sb.AppendLine(mwo.Owner.PadRight(20) + ", " + itemInfo);
 		}
 
 		private void cmdExpandAll_Click(object sender, EventArgs e)

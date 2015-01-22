@@ -76,6 +76,7 @@ namespace Mag_SuitBuilder
 			this.coveragePiece8 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece10 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece9 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
+			this.cmdCopyToClipboard = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			this.panel1.SuspendLayout();
@@ -87,11 +88,9 @@ namespace Mag_SuitBuilder
 			// 
 			// tabControl1
 			// 
-			this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
 			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Controls.Add(this.tabPage1);
+			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
@@ -264,6 +263,7 @@ namespace Mag_SuitBuilder
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.cmdCopyToClipboard);
 			this.tabPage1.Controls.Add(this.cmdCollapseAll);
 			this.tabPage1.Controls.Add(this.cmdExpandAll);
 			this.tabPage1.Controls.Add(this.treeView1);
@@ -323,7 +323,7 @@ namespace Mag_SuitBuilder
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.treeView1.Location = new System.Drawing.Point(962, 8);
 			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(0, 0);
+			this.treeView1.Size = new System.Drawing.Size(476, 733);
 			this.treeView1.TabIndex = 35;
 			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
 			// 
@@ -516,6 +516,16 @@ namespace Mag_SuitBuilder
 			this.coveragePiece9.Size = new System.Drawing.Size(153, 133);
 			this.coveragePiece9.TabIndex = 8;
 			// 
+			// cmdCopyToClipboard
+			// 
+			this.cmdCopyToClipboard.Location = new System.Drawing.Point(485, 257);
+			this.cmdCopyToClipboard.Name = "cmdCopyToClipboard";
+			this.cmdCopyToClipboard.Size = new System.Drawing.Size(139, 23);
+			this.cmdCopyToClipboard.TabIndex = 38;
+			this.cmdCopyToClipboard.Text = "Copy to Clipboard";
+			this.cmdCopyToClipboard.UseVisualStyleBackColor = true;
+			this.cmdCopyToClipboard.Click += new System.EventHandler(this.cmdCopyToClipboard_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -581,6 +591,7 @@ namespace Mag_SuitBuilder
 		private System.Windows.Forms.ToolStripMenuItem ShowEquipmentUpgradesMenuItem;
 		private System.Windows.Forms.ContextMenuStrip equipmentGridContextMenu;
 		private System.Windows.Forms.ToolStripMenuItem copyItemsToClipboardToolStripMenuItem;
+		private System.Windows.Forms.Button cmdCopyToClipboard;
 	}
 }
 
