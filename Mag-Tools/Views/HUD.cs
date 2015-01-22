@@ -83,9 +83,9 @@ namespace MagTools.Views
 
 				var nextItemToBeDepleted = inventoryTracker.NextItemToBeDepleted(TimeSpan.FromHours(1));
 				if (nextItemToBeDepleted == null)
-					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "Comps Time", "");
+					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "Comps Time 1h", "");
 				else
-					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "Comps Time", nextItemToBeDepleted.GetTimeToDepletion(TimeSpan.FromHours(1)).TotalHours.ToString("N1") + "h");
+					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "Comps Time 1h", nextItemToBeDepleted.GetTimeToDepletion(TimeSpan.FromHours(1)).TotalHours.ToString("N1") + "h");
 
 				var freePackSlots = Util.GetFreePackSlots(CoreManager.Current.CharacterFilter.Id);
 				if (freePackSlots == 0)
@@ -103,8 +103,11 @@ namespace MagTools.Views
 			{
 				if (item.Name == "Net Profit")
 				{
+					double valuePerHourOverFiveMinutes = item.GetValueDifference(TimeSpan.FromMinutes(5), TimeSpan.FromHours(1));
+					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "Net Profit 5m", valuePerHourOverFiveMinutes == 0 ? String.Empty : (valuePerHourOverFiveMinutes / 250000).ToString("N1") + "/h");
+
 					double valuePerHourOverOneHour = item.GetValueDifference(TimeSpan.FromHours(1), TimeSpan.FromHours(1));
-					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "Net Profit", valuePerHourOverOneHour == 0 ? String.Empty : (valuePerHourOverOneHour / 250000).ToString("N1") + "/h");
+					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "Net Profit 1h", valuePerHourOverOneHour == 0 ? String.Empty : (valuePerHourOverOneHour / 250000).ToString("N1") + "/h");
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
