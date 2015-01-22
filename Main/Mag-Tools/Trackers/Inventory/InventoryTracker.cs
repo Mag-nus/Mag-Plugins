@@ -242,5 +242,29 @@ namespace MagTools.Trackers.Inventory
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
+
+		/// <summary>
+		/// This will return the next item to be depleated over period, or null if no items exist or everything is depleted.
+		/// </summary>
+		public TrackedInventory NextItemToBeDepleted(TimeSpan period)
+		{
+			if (trackedItems.Count == 0)
+				return null;
+
+			TrackedInventory nextItemToBeDepleted = null;
+
+			foreach (var item in trackedItems)
+			{
+				var remaining = item.GetTimeToDepletion(period);
+
+				if (remaining <= TimeSpan.Zero || remaining == TimeSpan.MaxValue)
+					continue;
+
+				if (nextItemToBeDepleted == null || remaining < nextItemToBeDepleted.GetTimeToDepletion(period))
+					nextItemToBeDepleted = item;
+			}
+
+			return nextItemToBeDepleted;
+		}
 	}
 }

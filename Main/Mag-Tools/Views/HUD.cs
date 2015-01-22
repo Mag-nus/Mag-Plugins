@@ -1,37 +1,37 @@
 ﻿using System;
-using System.Drawing;
-
-using MagTools.Trackers.Equipment;
-
-using Mag.Shared;
-
-using VirindiViewService;
-using VirindiViewService.Controls;
+using System.Globalization;
 
 using Decal.Adapter;
+
+using MagTools.Trackers.Equipment;
+using MagTools.Trackers.Inventory;
+using MagTools.Trackers.ProfitLoss;
+
+using Mag.Shared;
 
 namespace MagTools.Views
 {
 	class HUD : IDisposable
 	{
-		System.Windows.Forms.Timer hudUpdateTimer = new System.Windows.Forms.Timer();
-
 		readonly EquipmentTracker equipmentTracker;
+		readonly InventoryTracker inventoryTracker;
+		readonly ProfitLossTracker profitLossTracker;
 
-		HudView hudView;
-		HudList hudListHead;
+		readonly System.Windows.Forms.Timer hudUpdateTimer = new System.Windows.Forms.Timer();
 
-		public HUD(EquipmentTracker equipmentTracker)
+		public HUD(EquipmentTracker equipmentTracker, InventoryTracker inventoryTracker, ProfitLossTracker profitLossTracker)
 		{
 			try
 			{
-				return;
-				hudUpdateTimer.Tick += new EventHandler(hudUpdateTimer_Tick);
-
-				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete);
-				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
-
 				this.equipmentTracker = equipmentTracker;
+				this.inventoryTracker = inventoryTracker;
+				this.profitLossTracker = profitLossTracker;
+
+				profitLossTracker.ItemChanged += new Action<TrackedProfitLoss>(profitLossTracker_ItemChanged);
+
+				hudUpdateTimer.Tick += new EventHandler(hudUpdateTimer_Tick);
+				hudUpdateTimer.Interval = 1000;
+				hudUpdateTimer.Start();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -55,82 +55,57 @@ namespace MagTools.Views
 			{
 				if (disposing)
 				{
-					CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
-					CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
+					profitLossTracker.ItemChanged -= new Action<TrackedProfitLoss>(profitLossTracker_ItemChanged);
+
+					hudUpdateTimer.Tick -= new EventHandler(hudUpdateTimer_Tick);
+					hudUpdateTimer.Dispose();
 				}
 
 				// Indicate that the instance has been disposed.
 				disposed = true;
 			}
-
-		}
-
-		void CharacterFilter_LoginComplete(object sender, EventArgs e)
-		{
-			try
-			{
-				hudView = new HudView("Mag-HUD", 200, 80, new ACImage(Color.Black), false);
-
-				hudView.Visible = true;
-				hudView.UserMinimizable = false;
-				hudView.ShowIcon = false;
-				hudView.UserResizeable = true;
-				//View.ClickThrough = true;
-				hudView.Theme = HudViewDrawStyle.GetThemeByName("Minimalist Transparent");
-
-				hudView.LoadUserSettings();
-
-				hudListHead = new HudList();
-				hudView.Controls.HeadControl = hudListHead;
-
-				hudListHead.Padding = 0; // Default: 1
-				hudListHead.WPadding = 0; // Default: 7
-				hudListHead.WPaddingOuter = 0; // Default: 3
-
-				hudListHead.AddColumn(typeof(HudPictureBox), 16, null);
-				hudListHead.AddColumn(typeof(HudStaticText), 999, null);
-
-				HudList.HudListRowAccessor newRow = hudListHead.AddRow();
-				((HudPictureBox)newRow[0]).Image = new ACImage(13107); // Major Mana Stone
-				//((HudStaticText)newRow[1]).Text = "Cool Stuff Here 0 1 2 3 45 6 7 8sdf 8asdf 8asdf8asdf8asdf";
-
-				hudUpdateTimer.Interval = 1000;
-				hudUpdateTimer.Start();
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
-		}
-
-		void CharacterFilter_Logoff(object sender, Decal.Adapter.Wrappers.LogoffEventArgs e)
-		{
-			try
-			{
-				hudUpdateTimer.Stop();
-
-				if (hudView != null)
-				{
-					hudView.Dispose();
-					hudView = null;
-				}
-
-				if (hudListHead != null)
-				{
-					hudListHead.Dispose();
-					hudListHead = null;
-				}
-			}
-			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
 		void hudUpdateTimer_Tick(object sender, EventArgs e)
 		{
 			try
 			{
-				/*((HudStaticText)hudListHead[0][1]).Text = new DateTime(equipmentTracker.RemainingTimeBeforeNextEmptyItem.Ticks).ToString("H:mm.ss") + " remaining, " + equipmentTracker.ManaNeededToRefillItems + " to refill";
+				if (equipmentTracker.RemainingTimeBeforeNextEmptyItem == TimeSpan.MaxValue)
+					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "Mana", "");
+				else
+					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "Mana", (equipmentTracker.NumberOfInactiveItems > 0 ? "*" : "") + string.Format("{0:d}h{1:d2}m", (int)equipmentTracker.RemainingTimeBeforeNextEmptyItem.TotalHours, equipmentTracker.RemainingTimeBeforeNextEmptyItem.Minutes));
 
-				if (equipmentTracker.NumberOfInactiveItems > 0 || equipmentTracker.NumberOfUnretainedItems > 0)
+				var itemsInIDQueue = CoreManager.Current.IDQueue.ActionCount;
+				if (itemsInIDQueue == 0)
+					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "ID Queue", "");
+				else
+					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "ID Queue", itemsInIDQueue.ToString(CultureInfo.InvariantCulture));
+
+				var nextItemToBeDepleted = inventoryTracker.NextItemToBeDepleted(TimeSpan.FromHours(1));
+				if (nextItemToBeDepleted == null)
+					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "Comps Time", "");
+				else
+					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "Comps Time", nextItemToBeDepleted.GetTimeToDepletion(TimeSpan.FromHours(1)).TotalHours.ToString("N1") + "h");
+
+				var freePackSlots = Util.GetFreePackSlots(CoreManager.Current.CharacterFilter.Id);
+				if (freePackSlots == 0)
+					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "Pack Slots", "");
+				else
+					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "Pack Slots", freePackSlots.ToString(CultureInfo.InvariantCulture));
+
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void profitLossTracker_ItemChanged(TrackedProfitLoss item)
+		{
+			try
+			{
+				if (item.Name == "Net Profit")
 				{
-					
-				}*/
+					double valuePerHourOverOneHour = item.GetValueDifference(TimeSpan.FromHours(1), TimeSpan.FromHours(1));
+					VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", "Net Profit", valuePerHourOverOneHour == 0 ? String.Empty : (valuePerHourOverOneHour / 250000).ToString("N1") + "/h");
+				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}

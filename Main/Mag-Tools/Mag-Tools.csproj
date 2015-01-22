@@ -60,6 +60,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Binaries\VirindiPlugins\VirindiHotkeySystem.dll</HintPath>
     </Reference>
+    <Reference Include="VirindiHUDs">
+      <HintPath>..\..\Binaries\VirindiPlugins\VirindiHUDs.dll</HintPath>
+    </Reference>
     <Reference Include="VirindiItemTool, Version=1.0.0.10, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Binaries\VirindiPlugins\VirindiItemTool.dll</HintPath>
