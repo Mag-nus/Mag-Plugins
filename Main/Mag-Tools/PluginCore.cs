@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Collections.ObjectModel;
-
+using System.Reflection;
 using MagTools.Client;
 using MagTools.Inventory;
 using MagTools.Loggers;
@@ -633,9 +633,11 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		readonly Dictionary<string, object> rememberedSettings = new Dictionary<string, object>();
+
 		public bool ProcessMTCommand(string mtCommand)
 		{
-			string lower = mtCommand.ToLower();
+			string lower = mtCommand.ToLower().Trim();
 
 			if (lower.StartsWith("/mt test"))
 			{
@@ -1019,7 +1021,230 @@ namespace MagTools
 
 			if (lower.StartsWith("/mt dumpspells")) { Util.ExportSpells(@"c:\mt spelldump.txt"); return true; }
 
+			if (lower.StartsWith("/mt opt "))
+			{
+				var settingsManagerType = Assembly.GetExecutingAssembly().GetType("MagTools.Settings.SettingsManager", false);
+
+				if (settingsManagerType == null)
+				{
+					Debug.WriteToChat("Failed to find type: MagTools.Settings.SettingsManager");
+					return false;
+				}
+
+				if (lower.StartsWith("/mt opt list"))
+				{
+					foreach (var nestedType in settingsManagerType.GetNestedTypes())
+					{
+						foreach (var nestedField in nestedType.GetFields())
+						{
+							if (nestedField.FieldType == typeof(Mag.Shared.Settings.Setting<bool>))
+								Debug.WriteToChat(nestedType.Name + "." + nestedField.Name + " <bool>");
+							else if (nestedField.FieldType == typeof(Mag.Shared.Settings.Setting<int>))
+								Debug.WriteToChat(nestedType.Name + "." + nestedField.Name + " <int>");
+							else if (nestedField.FieldType == typeof(Mag.Shared.Settings.Setting<double>))
+								Debug.WriteToChat(nestedType.Name + "." + nestedField.Name + " <double>");
+							else if (nestedField.FieldType == typeof(Mag.Shared.Settings.Setting<string>))
+								Debug.WriteToChat(nestedType.Name + "." + nestedField.Name + " <string>");
+						}
+					}
+
+					return true;
+				}
+				
+				if (lower.StartsWith("/mt opt get "))
+				{
+					string optionName = lower.Substring(12, lower.Length - 12);
+					var optionField = GetOptionField(optionName);
+
+					if (optionField == null)
+						return false;
+
+					if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<bool>))
+						Debug.WriteToChat(optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<bool>)optionField.GetValue(null)).Value);
+					else if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<int>))
+						Debug.WriteToChat(optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<int>)optionField.GetValue(null)).Value);
+					else if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<double>))
+						Debug.WriteToChat(optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<double>)optionField.GetValue(null)).Value);
+					else if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<string>))
+						Debug.WriteToChat(optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<string>)optionField.GetValue(null)).Value);
+					else
+					{
+						Debug.WriteToChat("Failed to Get " + optionName);
+						return false;
+					}
+
+					return true;
+				}
+				
+				if (lower.StartsWith("/mt opt remember "))
+				{
+					string optionName = lower.Substring(17, lower.Length - 17);
+
+					var optionField = GetOptionField(optionName);
+
+					if (optionField == null)
+						return false;
+
+					if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<bool>))
+					{
+						if (!rememberedSettings.ContainsKey(optionField.Name + "." + optionField.Name))
+							rememberedSettings.Add(optionField.Name + "." + optionField.Name, null);
+						rememberedSettings[optionField.Name + "." + optionField.Name] = ((Mag.Shared.Settings.Setting<bool>)optionField.GetValue(null)).Value;
+						Debug.WriteToChat("Remembered " + optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<bool>)optionField.GetValue(null)).Value);
+					}
+					else if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<int>))
+					{
+						if (!rememberedSettings.ContainsKey(optionField.Name + "." + optionField.Name))
+							rememberedSettings.Add(optionField.Name + "." + optionField.Name, null);
+						rememberedSettings[optionField.Name + "." + optionField.Name] = ((Mag.Shared.Settings.Setting<int>)optionField.GetValue(null)).Value;
+						Debug.WriteToChat("Remembered " + optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<int>)optionField.GetValue(null)).Value);
+					}
+					else if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<double>))
+					{
+						if (!rememberedSettings.ContainsKey(optionField.Name + "." + optionField.Name))
+							rememberedSettings.Add(optionField.Name + "." + optionField.Name, null);
+						rememberedSettings[optionField.Name + "." + optionField.Name] = ((Mag.Shared.Settings.Setting<double>)optionField.GetValue(null)).Value;
+						Debug.WriteToChat("Remembered " + optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<double>)optionField.GetValue(null)).Value);
+					}
+					else if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<string>))
+					{
+						if (!rememberedSettings.ContainsKey(optionField.Name + "." + optionField.Name))
+							rememberedSettings.Add(optionField.Name + "." + optionField.Name, null);
+						rememberedSettings[optionField.Name + "." + optionField.Name] = ((Mag.Shared.Settings.Setting<string>)optionField.GetValue(null)).Value;
+						Debug.WriteToChat("Remembered " + optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<string>)optionField.GetValue(null)).Value);
+					}
+					else
+					{
+						Debug.WriteToChat("Failed to Remember " + optionName);
+						return false;
+					}
+
+					return true;
+				}
+				
+				if (lower.StartsWith("/mt opt restore "))
+				{
+					string optionName = lower.Substring(16, lower.Length - 16);
+
+					var optionField = GetOptionField(optionName);
+
+					if (optionField == null)
+						return false;
+
+					if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<bool>))
+					{
+						if (rememberedSettings.ContainsKey(optionField.Name + "." + optionField.Name))
+						{
+							((Mag.Shared.Settings.Setting<bool>)optionField.GetValue(null)).Value = (bool)rememberedSettings[optionField.Name + "." + optionField.Name];
+							Debug.WriteToChat("Restored " + optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<bool>)optionField.GetValue(null)).Value);
+							return true;
+						}
+					}
+					else if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<int>))
+					{
+						if (rememberedSettings.ContainsKey(optionField.Name + "." + optionField.Name))
+						{
+							((Mag.Shared.Settings.Setting<int>)optionField.GetValue(null)).Value = (int)rememberedSettings[optionField.Name + "." + optionField.Name];
+							Debug.WriteToChat("Restored " + optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<int>)optionField.GetValue(null)).Value);
+							return true;
+						}
+					}
+					else if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<double>))
+					{
+						if (rememberedSettings.ContainsKey(optionField.Name + "." + optionField.Name))
+						{
+							((Mag.Shared.Settings.Setting<double>)optionField.GetValue(null)).Value = (double)rememberedSettings[optionField.Name + "." + optionField.Name];
+							Debug.WriteToChat("Restored " + optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<double>)optionField.GetValue(null)).Value);
+							return true;
+						}
+					}
+					else if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<string>))
+					{
+						if (rememberedSettings.ContainsKey(optionField.Name + "." + optionField.Name))
+						{
+							((Mag.Shared.Settings.Setting<string>)optionField.GetValue(null)).Value = (string)rememberedSettings[optionField.Name + "." + optionField.Name];
+							Debug.WriteToChat("Restored " + optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<string>)optionField.GetValue(null)).Value);
+							return true;
+						}
+					}
+
+					Debug.WriteToChat("Failed to Restore " + optionName);
+					return false;
+				}
+				
+				if (lower.StartsWith("/mt opt set "))
+				{
+					string optionName = lower.Substring(12, lower.Length - 12 - (lower.Length - lower.LastIndexOf(' '))).Trim();
+					string optionValue = lower.Substring(lower.LastIndexOf(' ') + 1, lower.Length - lower.LastIndexOf(' ') - 1).Trim();
+
+					var optionField = GetOptionField(optionName);
+
+					if (optionField == null)
+						return false;
+
+					if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<bool>))
+					{
+						bool result;
+						if (bool.TryParse(optionValue, out result))
+						{
+							((Mag.Shared.Settings.Setting<bool>)optionField.GetValue(null)).Value = result;
+							Debug.WriteToChat("Set " + optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<bool>)optionField.GetValue(null)).Value);
+							return true;
+						}
+					}
+					else if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<int>))
+					{
+						int result;
+						if (int.TryParse(optionValue, out result))
+						{
+							((Mag.Shared.Settings.Setting<int>)optionField.GetValue(null)).Value = result;
+							Debug.WriteToChat("Set " + optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<int>)optionField.GetValue(null)).Value);
+							return true;
+						}
+					}
+					else if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<double>))
+					{
+						double result;
+						if (double.TryParse(optionValue, out result))
+						{
+							((Mag.Shared.Settings.Setting<double>)optionField.GetValue(null)).Value = result;
+							Debug.WriteToChat("Set " + optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<double>)optionField.GetValue(null)).Value);
+							return true;
+						}
+					}
+					else if (optionField.FieldType == typeof(Mag.Shared.Settings.Setting<string>))
+					{
+						((Mag.Shared.Settings.Setting<string>)optionField.GetValue(null)).Value = optionValue;
+						Debug.WriteToChat("Set " + optionField.Name + "." + optionField.Name + " = " + ((Mag.Shared.Settings.Setting<string>)optionField.GetValue(null)).Value);
+						return true;
+					}
+
+					Debug.WriteToChat("Failed to Set " + optionName + " to " + optionValue);
+					return false;
+				}
+
+				return false;
+			}
 			return false;
+		}
+
+		FieldInfo GetOptionField(string path)
+		{
+			var settingsManagerType = Assembly.GetExecutingAssembly().GetType("MagTools.Settings.SettingsManager", false);
+
+			if (settingsManagerType == null)
+				return null;
+
+			foreach (var nestedType in settingsManagerType.GetNestedTypes())
+			{
+				foreach (var nestedField in nestedType.GetFields())
+				{
+					if (String.Equals(nestedType.Name + "." + nestedField.Name, path, StringComparison.OrdinalIgnoreCase))
+						return nestedField;
+				}
+			}
+
+			return null;
 		}
 
 		int FindIdForName(string name, bool searchInInventory, bool searchOpenContainer, bool searchEnvironment, bool partialMatch, int idToSkip = 0)
