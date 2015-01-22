@@ -160,7 +160,7 @@ namespace MagTools
 
 		AccountServerCharacterGUI accountServerCharacterGUI;
 
-		//HUD hud;
+		HUD hud;
 
 
 		readonly Collection<string> startupErrors = new Collection<string>();
@@ -185,6 +185,7 @@ namespace MagTools
 				CoreManager.Current.PluginInitComplete += new EventHandler<EventArgs>(Current_PluginInitComplete_VTank);
 				CoreManager.Current.PluginInitComplete += new EventHandler<EventArgs>(Current_PluginInitComplete_VVS);
 				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete_VHS);
+				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete_VHUD);
 				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 				CoreManager.Current.CommandLineText += new EventHandler<ChatParserInterceptEventArgs>(Current_CommandLineText);
@@ -330,8 +331,6 @@ namespace MagTools
 					System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
 					System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
 					mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
-
-					//hud = new HUD(equipmentTracker);
 				}
 				catch (FileNotFoundException ex) { startupErrors.Add("Views failed to load: " + ex.Message + Environment.NewLine + "Is Virindi View Service Running?"); }
 				catch (Exception ex) { Debug.LogException(ex); }
@@ -353,6 +352,7 @@ namespace MagTools
 				CoreManager.Current.PluginInitComplete -= new EventHandler<EventArgs>(Current_PluginInitComplete_VTank);
 				CoreManager.Current.PluginInitComplete -= new EventHandler<EventArgs>(Current_PluginInitComplete_VVS);
 				CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete_VHS);
+				CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete_VHUD);
 				CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 				CoreManager.Current.CommandLineText -= new EventHandler<ChatParserInterceptEventArgs>(Current_CommandLineText);
@@ -360,11 +360,12 @@ namespace MagTools
 
 				// Views, depends on VirindiViewService.dll
 				// We dispose these before our other objects (Trackers/Macros) as these probably reference those other objects.
-				//if (hud != null) hud.Dispose();
+				if (hud != null) hud.Dispose();
 
 				if (accountServerCharacterGUI != null) accountServerCharacterGUI.Dispose();
 
 				if (tinkeringToolsView != null) tinkeringToolsView.Dispose();
+				//if (inventoryToolsView != null) inventoryToolsView.Dispose();
 
 				if (chatLoggerGroup1GUI != null) chatLoggerGroup1GUI.Dispose();
 				if (chatLoggerGroup2GUI != null) chatLoggerGroup2GUI.Dispose();
@@ -510,6 +511,16 @@ namespace MagTools
 				};
 			}
 			catch (FileNotFoundException ex) { startupErrors.Add("Hotkey failed to bind: " + ex.Message + ". Is Virindi Hotkey System running?"); }
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		void CharacterFilter_LoginComplete_VHUD(object sender, EventArgs e)
+		{
+			try
+			{
+				hud = new HUD(equipmentTracker, inventoryTracker, profitLossTracker);
+			}
+			catch (FileNotFoundException ex) { startupErrors.Add("HUD failed to bind: " + ex.Message + ". Is Virindi HUDs running?"); }
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
@@ -1173,6 +1184,8 @@ namespace MagTools
 
 		void ExportPersistentStats()
 		{
+			var startTime = DateTime.Now;
+
 			if (Settings.SettingsManager.CombatTracker.Persistent.Value)
 				combatTrackerPersistent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
 
@@ -1181,6 +1194,9 @@ namespace MagTools
 
 			if (Settings.SettingsManager.PlayerTracker.Persistent.Value)
 				playerTracker.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".PlayerTracker.xml");
+
+			if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
+				Debug.WriteToChat("Export Persistent Stats: " + (DateTime.Now - startTime).TotalMilliseconds.ToString("N0") + "ms");
 		}
 	}
 }
