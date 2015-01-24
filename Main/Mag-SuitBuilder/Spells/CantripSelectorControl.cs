@@ -238,6 +238,7 @@ namespace Mag_SuitBuilder.Spells
 					Add(SpellTools.GetSpell(6101));
 					break;
 
+				case "Generic":
 				case "Missile":
 				case "Heavy":
 				case "Light":
@@ -263,6 +264,7 @@ namespace Mag_SuitBuilder.Spells
 			// Wards
 			switch (skill)
 			{
+				case "Generic":
 				case "War":
 				case "Void":
 				case "Missile":
@@ -287,6 +289,7 @@ namespace Mag_SuitBuilder.Spells
 			// Magic/Melee/Armor
 			switch (skill)
 			{
+				case "Generic":
 				case "War":
 				case "Void":
 				case "Missile":
