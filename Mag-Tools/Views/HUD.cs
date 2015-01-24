@@ -48,8 +48,10 @@ namespace MagTools.Views
 				paddedNames.Add("Comps Time 1h",	"Comps Time 1h.");
 				paddedNames.Add("Net Profit 5m",	"Net Profit 5m  .");
 				paddedNames.Add("Net Profit 1h",	"Net Profit 1h   ");
+				paddedNames.Add("DPS Out 1m",		"DPS Out 1m  .");
 				paddedNames.Add("DPS Out 5m",		"DPS Out 5m  .");
 				paddedNames.Add("DPS Out 1h",		"DPS Out 1h   ");
+				paddedNames.Add("DPS In 1m",		"DPS In 1m    ");
 				paddedNames.Add("DPS In 5m",		"DPS In 5m    ");
 				paddedNames.Add("DPS In 1h",		"DPS In 1h    .");
 				paddedNames.Add("Players",			"Players        ");
@@ -142,6 +144,9 @@ namespace MagTools.Views
 				VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", paddedNames["Pack Slots"], (freePackSlots == 0) ? "" : freePackSlots.ToString(CultureInfo.InvariantCulture));
 
 				// DPS Given
+				var dpsGivenOverOneMinute = combatTracker.GetDamageGivenOverTime(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(1));
+				VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", paddedNames["DPS Out 1m"], (dpsGivenOverOneMinute == 0) ? "" : dpsGivenOverOneMinute.ToString("N0"));
+
 				var dpsGivenOverFiveMinutes = combatTracker.GetDamageGivenOverTime(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(1));
 				VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", paddedNames["DPS Out 5m"], (dpsGivenOverFiveMinutes == 0) ? "" : dpsGivenOverFiveMinutes.ToString("N0"));
 
@@ -149,6 +154,9 @@ namespace MagTools.Views
 				VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", paddedNames["DPS Out 1h"], (dpsGivenOverOneHour == 0) ? "" : dpsGivenOverOneHour.ToString("N0"));
 
 				// DPS Received
+				var dpsReceivedOverOneMinute = combatTracker.GetDamageReceivedOverTime(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(1));
+				VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", paddedNames["DPS In 1m"], (dpsReceivedOverOneMinute == 0) ? "" : dpsReceivedOverOneMinute.ToString("N0"));
+
 				var dpsReceivedOverFiveMinutes = combatTracker.GetDamageReceivedOverTime(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(1));
 				VirindiHUDs.UIs.StatusModel.UpdateEntry("Mag-Tools", paddedNames["DPS In 5m"], (dpsReceivedOverFiveMinutes == 0) ? "" : dpsReceivedOverFiveMinutes.ToString("N0"));
 
