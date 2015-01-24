@@ -67,9 +67,9 @@
     <Compile Include="FastQuit.cs" />
     <Compile Include="FilterCore.cs" />
     <Compile Include="LoginCharacterTools.cs" />
-    <Compile Include="LoginMessageQueueManager.cs" />
+    <Compile Include="LoginCompleteMessageQueueManager.cs" />
     <Compile Include="LoginNextCharacterManager.cs" />
-    <Compile Include="OnLoginCompleteMessageQueueManager.cs" />
+    <Compile Include="AfterLoginCompleteMessageQueueManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\SettingsManager.cs" />
   </ItemGroup>
