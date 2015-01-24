@@ -32,7 +32,7 @@ namespace Mag_SuitBuilder.Search
 		}
 
 		int highestCountSuitBuilt;
-		Dictionary<int, List<int>> highestEpicuitsBuilt;
+		Dictionary<int, List<int>> highestEffectiveSpellsSuitBuilt;
 		List<CompletedSuit> completedSuits;
 
 		protected override void StartSearch()
@@ -63,9 +63,9 @@ namespace Mag_SuitBuilder.Search
 
 			// Reset our variables
 			highestCountSuitBuilt = 0;
-			highestEpicuitsBuilt = new Dictionary<int, List<int>>();
+			highestEffectiveSpellsSuitBuilt = new Dictionary<int, List<int>>();
 			for (int i = 1; i <= 17; i++)
-				highestEpicuitsBuilt.Add(i, new List<int>(5));
+				highestEffectiveSpellsSuitBuilt.Add(i, new List<int>(5));
 			completedSuits = new List<CompletedSuit>();
 
 			// Do the actual search here
@@ -102,7 +102,7 @@ namespace Mag_SuitBuilder.Search
 				CompletedSuit newSuit = SuitBuilder.CreateCompletedSuit();
 
 				// We should keep track of the highest epic suits we built for every number of item count suits built, and only push out ones that fall within our top X
-				List<int> list = highestEpicuitsBuilt[SuitBuilder.Count];
+				List<int> list = highestEffectiveSpellsSuitBuilt[SuitBuilder.Count];
 				if (list.Count < list.Capacity)
 				{
 					list.Add(newSuit.TotalEffectiveEpics);
