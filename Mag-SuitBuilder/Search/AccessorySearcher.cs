@@ -135,7 +135,7 @@ namespace Mag_SuitBuilder.Search
 			//for (int i = 0; i < buckets[index].Count ; i++)
 			foreach (SuitBuildableMyWorldObject piece in buckets[index]) // Using foreach: 10.85s, for: 11s
 			{
-				if (SuitBuilder.SlotIsOpen(buckets[index].Slot) && SuitBuilder.CanGetBeneficialSpellFrom(piece))
+				if (SuitBuilder.CanGetBeneficialSpellFrom(piece))
 				{
 					SuitBuilder.Push(piece, buckets[index].Slot);
 
