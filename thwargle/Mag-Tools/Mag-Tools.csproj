@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C2880823-67E7-4B3D-A481-9ADC9847C39C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MagTools</RootNamespace>
+    <AssemblyName>MagTools</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;VVS_REFERENCED</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;VVS_REFERENCED</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Decal.Adapter, Version=2.9.7.2, Culture=neutral, PublicKeyToken=bd1c8ce002ce221e, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Binaries\Decal\2.9.7.2\Decal.Adapter.dll</HintPath>
+    </Reference>
+    <Reference Include="Decal.FileService, Version=2.9.7.2, Culture=neutral, PublicKeyToken=bd1c8ce002ce221e, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Binaries\Decal\2.9.7.2\Decal.FileService.dll</HintPath>
+    </Reference>
+    <Reference Include="Decal.Interop.Core, Version=2.9.7.2, Culture=neutral, PublicKeyToken=481f17d392f1fb65, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\Binaries\Decal\2.9.7.2\.NET 2.0 PIA\Decal.Interop.Core.DLL</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="utank2-i, Version=0.3.1.148, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Binaries\VirindiPlugins\utank2-i.dll</HintPath>
+    </Reference>
+    <Reference Include="VirindiHotkeySystem, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Binaries\VirindiPlugins\VirindiHotkeySystem.dll</HintPath>
+    </Reference>
+    <Reference Include="VirindiHUDs">
+      <HintPath>..\..\Binaries\VirindiPlugins\VirindiHUDs.dll</HintPath>
+    </Reference>
+    <Reference Include="VirindiItemTool, Version=1.0.0.10, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Binaries\VirindiPlugins\VirindiItemTool.dll</HintPath>
+    </Reference>
+    <Reference Include="VirindiViewService, Version=1.0.0.47, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Binaries\VirindiPlugins\VirindiViewService.dll</HintPath>
+    </Reference>
+    <Reference Include="VTClassic, Version=1.0.1.6, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Binaries\VirindiPlugins\VTClassic.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Shared\Constants\BoolValueKey.cs">
+      <Link>Shared\Constants\BoolValueKey.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Constants\Dictionaries.cs">
+      <Link>Shared\Constants\Dictionaries.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Constants\DoubleValueKey.cs">
+      <Link>Shared\Constants\DoubleValueKey.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Constants\IntValueKey.cs">
+      <Link>Shared\Constants\IntValueKey.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Constants\StringValueKey.cs">
+      <Link>Shared\Constants\StringValueKey.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Debug.cs">
+      <Link>Shared\Debug.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\DecalProxy.cs">
+      <Link>Shared\DecalProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\MyWorldObject.cs">
+      <Link>Shared\MyWorldObject.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\MyWorldObjectCreator.cs">
+      <Link>Shared\MyWorldObjectCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\PostMessageTools.cs">
+      <Link>Shared\PostMessageTools.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\SerializableDictionary.cs">
+      <Link>Shared\SerializableDictionary.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Settings\Setting.cs">
+      <Link>Shared\Settings\Setting.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Settings\SettingsFile.cs">
+      <Link>Shared\Settings\SettingsFile.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\User32.cs">
+      <Link>Shared\User32.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Util.cs">
+      <Link>Shared\Util.cs</Link>
+    </Compile>
+    <Compile Include="Client\ChatSizeManager.cs" />
+    <Compile Include="ChatFilter.cs" />
+    <Compile Include="Client\NoFocusFPSManager.cs" />
+    <Compile Include="Client\WindowPosition.cs" />
+    <Compile Include="Loggers\Chat\BufferedChatLogFileWriter.cs" />
+    <Compile Include="Loggers\Chat\ChatLogger.cs" />
+    <Compile Include="Loggers\Chat\ChatLogImporter.cs" />
+    <Compile Include="Loggers\Chat\LoggedChat.cs" />
+    <Compile Include="Loggers\ILogger.cs" />
+    <Compile Include="Loggers\ILoggerTarget.cs" />
+    <Compile Include="Macros\AutoPercentConfirmation.cs" />
+    <Compile Include="Macros\IdleActionManager.cs" />
+    <Compile Include="Macros\LoginActions.cs" />
+    <Compile Include="Macros\LogOutOnDeath.cs" />
+    <Compile Include="Macros\PeriodicCommands.cs" />
+    <Compile Include="Trackers\ProfitLoss\ProfitLossTracker.cs" />
+    <Compile Include="Trackers\ProfitLoss\TrackedProfitLoss.cs" />
+    <Compile Include="Trackers\SnapShot.cs" />
+    <Compile Include="Trackers\SnapShotGroup.cs" />
+    <Compile Include="Trackers\ValueSnapShotGroup.cs" />
+    <Compile Include="Views\AccountServerCharacterGUI.cs" />
+    <Compile Include="Views\InventoryToolsView.cs" />
+    <Compile Include="Views\TinkeringToolsView.cs" />
+    <Compile Include="Trackers\Inventory\InventoryTracker.cs" />
+    <Compile Include="Trackers\Inventory\TrackedInventory.cs" />
+    <Compile Include="Trackers\Corpse\CorpseTracker.cs" />
+    <Compile Include="Trackers\Corpse\CorpseTrackerExporter.cs" />
+    <Compile Include="Trackers\Corpse\CorpseTrackerImporter.cs" />
+    <Compile Include="Trackers\Corpse\TrackedCorpse.cs" />
+    <Compile Include="Trackers\IItemTracker.cs" />
+    <Compile Include="Trackers\Player\PlayerTracker.cs" />
+    <Compile Include="Trackers\Player\PlayerTrackerExporter.cs" />
+    <Compile Include="Trackers\Player\PlayerTrackerImporter.cs" />
+    <Compile Include="Trackers\Player\PlayerType.cs" />
+    <Compile Include="Trackers\Player\TrackedPlayer.cs" />
+    <Compile Include="Views\ChatLoggerGUI.cs" />
+    <Compile Include="Views\InventoryTrackerGUI.cs" />
+    <Compile Include="Views\CorpseTrackerGUI.cs" />
+    <Compile Include="Views\HUD.cs" />
+    <Compile Include="Inventory\InventoryExporter.cs" />
+    <Compile Include="Inventory\InventoryLogger.cs" />
+    <Compile Include="IPluginCore.cs" />
+    <Compile Include="ItemInfo\ILootRuleProcessor.cs" />
+    <Compile Include="ItemInfo\ItemInfo.cs" />
+    <Compile Include="ItemInfo\ItemInfoCallBack.cs" />
+    <Compile Include="ItemInfo\ItemInfoIdentArgs.cs" />
+    <Compile Include="ItemInfo\VirindiTankLootRuleProcessor.cs" />
+    <Compile Include="Macros\AutoBuySell.cs" />
+    <Compile Include="Incomplete\AutoGive.cs" />
+    <Compile Include="Macros\AutoRecharge.cs" />
+    <Compile Include="Macros\Looter.cs" />
+    <Compile Include="Macros\ILooter.cs" />
+    <Compile Include="Macros\InventoryPacker.cs" />
+    <Compile Include="Macros\AutoTradeAccept.cs" />
+    <Compile Include="Macros\AutoTradeAdd.cs" />
+    <Compile Include="Macros\IInventoryPacker.cs" />
+    <Compile Include="Macros\ManaRecharger.cs" />
+    <Compile Include="Macros\MaximizeChatOnLogin.cs" />
+    <Compile Include="Macros\OneTouchHeal.cs" />
+    <Compile Include="Macros\OpenMainPackOnLogin.cs" />
+    <Compile Include="Settings\SettingsManager.cs" />
+    <Compile Include="ItemInfo\ItemInfoPrinter.cs" />
+    <Compile Include="ItemInfo\DetectItemsInContainers.cs" />
+    <Compile Include="Trackers\Combat\AetheriaInfo.cs" />
+    <Compile Include="Trackers\Combat\Aetheria\AetheriaTracker.cs" />
+    <Compile Include="Trackers\Combat\Aetheria\SurgeEventArgs.cs" />
+    <Compile Include="Trackers\Combat\CloakInfo.cs" />
+    <Compile Include="Trackers\Combat\Cloaks\SurgeEventArgs.cs" />
+    <Compile Include="Trackers\Combat\Cloaks\CloakTracker.cs" />
+    <Compile Include="Trackers\Combat\Cloaks\SurgeType.cs" />
+    <Compile Include="Trackers\Combat\CombatInfo.cs" />
+    <Compile Include="Trackers\Combat\CombatTracker.cs" />
+    <Compile Include="Trackers\Combat\CombatTrackerExporter.cs" />
+    <Compile Include="Trackers\Combat\CombatTrackerImporter.cs" />
+    <Compile Include="Trackers\Combat\Standard\CombatEventArgs.cs" />
+    <Compile Include="Trackers\Combat\Standard\CombatMessages.cs" />
+    <Compile Include="Trackers\Combat\Standard\StandardTracker.cs" />
+    <Compile Include="Views\CombatTrackerGUIInfo.cs" />
+    <Compile Include="Views\CombatTrackerGUI.cs" />
+    <Compile Include="Trackers\Combat\Standard\DamageElement.cs" />
+    <Compile Include="Trackers\Combat\Standard\AttackType.cs" />
+    <Compile Include="Trackers\Combat\Aetheria\SurgeType.cs" />
+    <Compile Include="Trackers\Equipment\IEquipmentTrackedItem.cs" />
+    <Compile Include="Trackers\Equipment\IEquipmentTracker.cs" />
+    <Compile Include="Trackers\Equipment\EquipmentTrackedItem.cs" />
+    <Compile Include="Trackers\Equipment\EquipmentTrackedItemState.cs" />
+    <Compile Include="Views\ManaTrackerGUI.cs" />
+    <Compile Include="Views\MainView.cs" />
+    <Compile Include="Trackers\Equipment\EquipmentTracker.cs" />
+    <Compile Include="PluginCore.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ItemInfo\DetectItemsIdentifiedByUser.cs" />
+    <Compile Include="Incomplete\Util.cs" />
+    <Compile Include="Incomplete\VHS_Connector.cs" />
+    <Compile Include="Client\WindowFrameRemover.cs" />
+    <Compile Include="Client\WindowMover.cs" />
+    <Compile Include="Views\PlayerTrackerGUI.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\mainView.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

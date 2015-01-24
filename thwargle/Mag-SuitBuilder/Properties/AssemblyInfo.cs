@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Mag-Tools")]
+[assembly: AssemblyTitle("Mag-SuitBuilder")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Mag-Tools")]
-[assembly: AssemblyCopyright("Copyright © Mag-nus")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Mag-SuitBuilder")]
+[assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("959d5ca6-0bd5-48a2-9ad2-f95f94dcdc3e")]
+[assembly: Guid("985d94b7-e299-4c9a-8c3a-f1c15b9c5515")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,4 +32,4 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("2.0.5")]
+[assembly: AssemblyFileVersion("2.0.2")]

@@ -125,6 +125,9 @@ namespace MagTools.Trackers
 		{
 			actualHistoryPeriodUsed = TimeSpan.Zero;
 
+			if (SnapShots.Count == 1)
+				return 0;
+
 			int total = 0;
 
 			for (int i = SnapShots.Count - 1 ; i >= 0 ; i--)
