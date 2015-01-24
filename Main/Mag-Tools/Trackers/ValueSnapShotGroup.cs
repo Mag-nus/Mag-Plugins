@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Mag.Shared;
 
 namespace MagTools.Trackers
 {
@@ -60,6 +61,10 @@ namespace MagTools.Trackers
 				for (DateTime time = DateTime.Now; time >= SnapShots[0].TimeStamp; time -= timeSpanIncrement)
 				{
 					var closest = GetSnapShotClosestToTime(time, snapShotsToKeep[snapShotsToKeep.Count - 1]);
+
+					if (closest == null)
+						continue;
+
 					snapShotsToKeep.Add(closest);
 
 					var timeDifference = DateTime.Now.Subtract(time);
@@ -78,6 +83,9 @@ namespace MagTools.Trackers
 					if (!snapShotsToKeep.Contains(SnapShots[i]))
 					{
 						var closest = GetSnapShotClosestToTime(SnapShots[i].TimeStamp, SnapShots[i]);
+
+						if (closest == null)
+							continue;
 
 						for (int j = 0 ; j < SnapShots.Count ; j++)
 						{

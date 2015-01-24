@@ -62,6 +62,8 @@ namespace MagTools.Trackers
 				for (DateTime time = DateTime.Now ; time >= SnapShots[0].TimeStamp ; time -= timeSpanIncrement)
 				{
 					var closest = GetSnapShotClosestToTime(time, snapShotsToKeep[snapShotsToKeep.Count - 1]);
+					if (closest == null)
+						continue;
 					snapShotsToKeep.Add(closest);
 
 					var timeDifference = DateTime.Now.Subtract(time);
@@ -84,18 +86,19 @@ namespace MagTools.Trackers
 		}
 
 		/// <summary>
-		/// This will get the SnapShot closest to the time.
+		/// This will get the SnapShot closest to the time.<para />
+		/// This function can return null if no SnapShots are present, or the only one present is excludeSnapShot.
 		/// </summary>
 		protected SnapShot<T> GetSnapShotClosestToTime(DateTime time, SnapShot<T> excludeSnapShot = null)
 		{
-			var closestPastTarget = SnapShots[SnapShots.Count - 1];
+			SnapShot<T> closestPastTarget = null;
 
-			for (int i = SnapShots.Count - 2; i >= 0; i--)
+			for (int i = SnapShots.Count - 1; i >= 0; i--)
 			{
 				if (excludeSnapShot != null && SnapShots[i] == excludeSnapShot)
 					continue;
 
-				if (Math.Abs((time - SnapShots[i].TimeStamp).TotalMinutes) < Math.Abs((time - closestPastTarget.TimeStamp).TotalMinutes))
+				if (closestPastTarget == null || Math.Abs((time - SnapShots[i].TimeStamp).TotalMinutes) < Math.Abs((time - closestPastTarget.TimeStamp).TotalMinutes))
 					closestPastTarget = SnapShots[i];
 			}
 
