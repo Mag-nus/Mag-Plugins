@@ -185,14 +185,15 @@
 			this.defaultsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.defaultsComboBox.FormattingEnabled = true;
 			this.defaultsComboBox.Items.AddRange(new object[] {
-            "War",
-            "Void",
+            "Finesse",
+            "Generic",
             "Heavy",
             "Light",
-            "Finesse",
             "Missile",
+            "Tinker",
             "Two Hand",
-            "Tinker"});
+            "Void",
+            "War"});
 			this.defaultsComboBox.Location = new System.Drawing.Point(114, 5);
 			this.defaultsComboBox.Name = "defaultsComboBox";
 			this.defaultsComboBox.Size = new System.Drawing.Size(154, 21);

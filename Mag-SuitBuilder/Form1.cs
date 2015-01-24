@@ -362,6 +362,12 @@ namespace Mag_SuitBuilder
 
 		private void btnCalculatePossibilities_Click(object sender, System.EventArgs e)
 		{
+			if (filtersControl1.CantripsToLookFor.Count == 0)
+			{
+				if (MessageBox.Show("You have no spells selected. Your search results won't be very useful. Would you like to go ahead anyway?" + Environment.NewLine + Environment.NewLine + "To select spells, load defsults or click the spells you want on the bottom of the filters group on Tab labeled 'Step 1. Add Inventory'", "No Spells Selected", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+					return;
+			}
+
 			btnCalculatePossibilities.Enabled = false;
 
 			treeView1.Nodes.Clear();
