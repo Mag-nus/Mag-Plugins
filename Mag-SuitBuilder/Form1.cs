@@ -370,7 +370,7 @@ namespace Mag_SuitBuilder
 			if (armorSearcher != null)
 			{
 				armorSearcher.SuitCreated -= new Action<CompletedSuit>(armorSearcher_SuitCreated);
-				armorSearcher.SearchCompleted -= new Action(armorSearcher_SearchCompleted);
+				armorSearcher.SearchCompleted -= new Action(ThreadFinished);
 			}
 
 			accessorySearchers.Clear();
@@ -450,14 +450,19 @@ namespace Mag_SuitBuilder
 			armorSearcher = new ArmorSearcher(config, boundList, baseSuit);
 
 			armorSearcher.SuitCreated += new Action<CompletedSuit>(armorSearcher_SuitCreated);
-			armorSearcher.SearchCompleted += new Action(armorSearcher_SearchCompleted);
+			armorSearcher.SearchCompleted += new Action(ThreadFinished);
 
 			new Thread(() =>
 			{
 				//DateTime startTime = DateTime.Now;
 
 				// Do the actual search here
+				armorSearcherCounter = 1;
+
 				armorSearcher.Start();
+
+				Interlocked.Decrement(ref armorSearcherCounter);
+				ThreadFinished();
 
 				//DateTime endTime = DateTime.Now;
 
@@ -479,20 +484,30 @@ namespace Mag_SuitBuilder
 			}
 		}
 
+		long armorSearcherCounter;
+
 		void armorSearcher_SuitCreated(CompletedSuit obj)
 		{
 			BeginInvoke((MethodInvoker)(() => AddCompletedSuitToTreeView(obj)));
 
+			Interlocked.Increment(ref armorSearcherCounter);
+
 			ThreadPool.QueueUserWorkItem(delegate
 			{
 				if (abortedSearch)
+				{
+					Interlocked.Decrement(ref armorSearcherCounter);
 					return;
+				}
 
 				AccessorySearcher accSearcher = new AccessorySearcher(new SearcherConfiguration(), boundList, obj);
 				accessorySearchers.Add(accSearcher);
 				accSearcher.SuitCreated += new Action<CompletedSuit>(accSearcher_SuitCreated);
 				accSearcher.Start();
 				accSearcher.SuitCreated -= new Action<CompletedSuit>(accSearcher_SuitCreated);
+
+				Interlocked.Decrement(ref armorSearcherCounter);
+				ThreadFinished();
 			});
 		}
 
@@ -552,15 +567,18 @@ namespace Mag_SuitBuilder
 		[DllImport("user32.dll")]
 		static extern bool FlashWindow(IntPtr hwnd, bool bInvert);
 
-		void armorSearcher_SearchCompleted()
+		void ThreadFinished()
 		{
-			BeginInvoke((MethodInvoker)(() =>
+			if (Interlocked.Read(ref armorSearcherCounter) == 0)
 			{
-				progressBar1.Style = ProgressBarStyle.Blocks;
-				btnStopCalculating.Enabled = false;
-				btnCalculatePossibilities.Enabled = true;
-				FlashWindow(this.Handle, true);
-			}));
+				BeginInvoke((MethodInvoker)(() =>
+				{
+					progressBar1.Style = ProgressBarStyle.Blocks;
+					btnStopCalculating.Enabled = false;
+					btnCalculatePossibilities.Enabled = true;
+					FlashWindow(this.Handle, true);
+				}));
+			}
 
 			// Accessory searchers could still be running...
 		}
