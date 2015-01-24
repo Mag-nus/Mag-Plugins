@@ -36,10 +36,7 @@ namespace MagFilter
 			if (state == 0)
 			{
 				// Click the OK button
-				// The reason why we click at both of these positions is some clients will be running windowed, and some windowless.
-				// This will hit both locations
-				Mag.Shared.PostMessageTools.SendMouseClick(400, 331);
-				Mag.Shared.PostMessageTools.SendMouseClick(400, 325);
+				Mag.Shared.PostMessageTools.ClickOK();
 
 				state = 1;
 			}
