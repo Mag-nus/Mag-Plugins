@@ -18,10 +18,7 @@ namespace MagFilter
 				if (e.Msg == 0x0100 && e.WParam == 0x0000001B && e.LParam == 0x00010001) // Esc Key
 				{
 					// Click the Yes button
-					// The reason why we click at both of these positions is some clients will be running windowed, and some windowless.
-					// This will hit both locations
-					Mag.Shared.PostMessageTools.SendMouseClick(400 - 80, 331);
-					Mag.Shared.PostMessageTools.SendMouseClick(400 - 80, 325);
+					Mag.Shared.PostMessageTools.ClickYes();
 				}
 			}
 		}
