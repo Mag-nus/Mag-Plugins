@@ -9,7 +9,7 @@ using Mag.Shared;
 
 namespace MagTools.Trackers.ProfitLoss
 {
-	class ProfitLossTracker : ITracker<TrackedProfitLoss>, IDisposable
+	class ProfitLossTracker : IItemTracker<TrackedProfitLoss>, IDisposable
 	{
 		/// <summary>
 		/// TThis is raised when one or more items have been added to the tracker.
@@ -233,7 +233,7 @@ namespace MagTools.Trackers.ProfitLoss
 			{
 				if (trackedItem.Name == name)
 				{
-					trackedItem.AddSnapShot(DateTime.Now, value);
+					trackedItem.AddSnapShot(DateTime.Now, value, SnapShotGroup<int>.PruneMethod.DecreaseResolution);
 
 					if (ItemChanged != null)
 					{
@@ -249,7 +249,9 @@ namespace MagTools.Trackers.ProfitLoss
 				}
 			}
 
-			var trackedProfitLoss = new TrackedProfitLoss(name, DateTime.Now, value);
+			var trackedProfitLoss = new TrackedProfitLoss(name);
+			trackedProfitLoss.AddSnapShot(DateTime.Now, value, SnapShotGroup<int>.PruneMethod.DecreaseResolution);
+
 			trackedItems.Add(trackedProfitLoss);
 
 			if (ItemsAdded != null)

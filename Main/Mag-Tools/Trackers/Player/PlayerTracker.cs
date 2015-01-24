@@ -8,7 +8,7 @@ using Decal.Adapter.Wrappers;
 
 namespace MagTools.Trackers.Player
 {
-	class PlayerTracker : ITracker<TrackedPlayer>, IDisposable
+	class PlayerTracker : IItemTracker<TrackedPlayer>, IDisposable
 	{
 		/// <summary>
 		/// This is raised when one or more items have been added to the tracker.

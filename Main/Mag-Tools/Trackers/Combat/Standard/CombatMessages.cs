@@ -39,12 +39,23 @@ namespace MagTools.Trackers.Combat.Standard
 			// Annihilator grazes your upper arm for 3 points of bludgeoning damage!
 			// Viamontian Mercenary scratches your foot for 3 points of slashing damage! Your Critical Protection augmentation allows you to avoid a critical hit!
 			MeleeMissileReceivedAttacks.Add(new Regex("^(?<targetname>.+) [\\w]+ your .+ for (?<points>.+) point.* of .+ damage.*$"));
+// Incoming sneak attack + crit sneak
+// recklessness crit sneak?
 			
 			// Melee/Missile given
 			// Critical hit!  You scorch Annihilator for 685 points of fire damage!
 			MeleeMissileGivenAttacks.Add(new Regex("^Critical hit!  You [\\w]+ (?<targetname>.*) for (?<points>.+) point.* of .+ damage.*$"));
 			// You scorch Annihilator for 805 points of fire damage!
 			MeleeMissileGivenAttacks.Add(new Regex("^You [\\w]+ (?<targetname>.*) for (?<points>.+) point.* of .+ damage.*$"));
+			// Critical hit!  Sneak Attack! You chill Biaka for 402 points of cold damage!
+			MeleeMissileGivenAttacks.Add(new Regex("^Critical hit!  Sneak Attack! You [\\w]+ (?<targetname>.*) for (?<points>.+) point.* of .+ damage.*$"));
+			// Sneak Attack! You chill Biaka for 357 points of cold damage!
+			MeleeMissileGivenAttacks.Add(new Regex("^Sneak Attack! You [\\w]+ (?<targetname>.*) for (?<points>.+) point.* of .+ damage.*$"));
+// Recklessness! You burn Rampager for 213 points of fire damage!
+// recklessness crit sneak?
+//23:16:41 Sneak Attack! Recklessness! You scratch Reviath for 9 points of slashing damage!
+//23:16:41 Recklessness! You scratch Reviath for 7 points of slashing damage!
+
 
 			// Magic received
 			// Critical hit! Overpower! Virindi Rival shocks you for 96 points with Incantation of Lightning Arc.

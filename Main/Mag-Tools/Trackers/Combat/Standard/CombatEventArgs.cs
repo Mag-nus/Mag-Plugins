@@ -13,11 +13,13 @@ namespace MagTools.Trackers.Combat.Standard
 		public bool IsFailedAttack { get; private set; }
 		public bool IsCriticalHit { get; private set; }
 		public bool IsOverpower { get; private set; }
+		public bool IsSneakAttack { get; private set; }
+		public bool IsRecklessness { get; private set; }
 		public bool IsKillingBlow { get; private set; }
 
 		public int DamageAmount { get; private set; }
 
-		public CombatEventArgs(string sourceName, string targetName, AttackType attackType, DamageElement damageElemenet, bool isFailedAttack, bool isCriticalHit, bool isOverpower, bool isKillingBlow, int damageAmount)
+		public CombatEventArgs(string sourceName, string targetName, AttackType attackType, DamageElement damageElemenet, bool isFailedAttack, bool isCriticalHit, bool isOverpower, bool isSneakAttack, bool isRecklessness, bool isKillingBlow, int damageAmount)
 		{
 			SourceName = sourceName;
 			TargetName = targetName;
@@ -28,6 +30,8 @@ namespace MagTools.Trackers.Combat.Standard
 			IsFailedAttack = isFailedAttack;
 			IsCriticalHit = isCriticalHit;
 			IsOverpower = isOverpower;
+			IsSneakAttack = isSneakAttack;
+			IsRecklessness = isRecklessness;
 			IsKillingBlow = isKillingBlow;
 
 			DamageAmount = damageAmount;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MagTools.Trackers
 {
-	public interface ITracker<T>
+	public interface IItemTracker<T>
 	{
 		/// <summary>
 		/// This is raised when one or more items have been added to the tracker.

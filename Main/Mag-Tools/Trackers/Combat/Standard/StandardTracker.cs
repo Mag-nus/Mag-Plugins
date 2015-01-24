@@ -66,6 +66,8 @@ namespace MagTools.Trackers.Combat.Standard
 				bool isFailedAttack = false;
 				bool isCriticalHit = e.Text.Contains("Critical hit!");
 				bool isOverpower = e.Text.Contains("Overpower!");
+				bool isSneakAttack = e.Text.Contains("Sneak Attack!");
+				bool isRecklessness = e.Text.Contains("Recklessness!");
 				bool isKillingBlow = false;
 
 				int damageAmount = 0;
@@ -226,7 +228,7 @@ namespace MagTools.Trackers.Combat.Standard
 				if (!isKillingBlow && !isFailedAttack && damageElemenet == DamageElement.Unknown)
 					Debug.WriteToChat("Unable to parse damage element from: " + e.Text);
 
-				CombatEventArgs combatEventArgs = new CombatEventArgs(sourceName, targetName, attackType, damageElemenet, isFailedAttack, isCriticalHit, isOverpower, isKillingBlow, damageAmount);
+				CombatEventArgs combatEventArgs = new CombatEventArgs(sourceName, targetName, attackType, damageElemenet, isFailedAttack, isCriticalHit, isOverpower, isSneakAttack, isRecklessness, isKillingBlow, damageAmount);
 
 				if (CombatEvent != null)
 					CombatEvent(combatEventArgs);

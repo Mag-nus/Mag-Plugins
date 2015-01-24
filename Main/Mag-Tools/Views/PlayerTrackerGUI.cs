@@ -16,13 +16,13 @@ namespace MagTools.Views
 {
 	class PlayerTrackerGUI : IDisposable
 	{
-		readonly ITracker<TrackedPlayer> tracker;
+		readonly IItemTracker<TrackedPlayer> tracker;
 		readonly HudList hudList;
 
 		Dictionary<string, DateTime> lastSeenTimes = new Dictionary<string, DateTime>();
 		DateTime lastSortTime = DateTime.MinValue;
 
-		public PlayerTrackerGUI(ITracker<TrackedPlayer> tracker, HudList hudList)
+		public PlayerTrackerGUI(IItemTracker<TrackedPlayer> tracker, HudList hudList)
 		{
 			try
 			{

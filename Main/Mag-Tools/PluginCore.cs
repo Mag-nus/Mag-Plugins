@@ -328,7 +328,7 @@ namespace MagTools
 
 					mainView.ChatLoggerClearHistory.Hit += new EventHandler(ChatLoggerClearHistory_Hit);
 
-					System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+					Assembly assembly = Assembly.GetExecutingAssembly();
 					System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
 					mainView.VersionLabel.Text = "Version: " + fvi.ProductVersion;
 				}
@@ -518,7 +518,7 @@ namespace MagTools
 		{
 			try
 			{
-				hud = new HUD(equipmentTracker, inventoryTracker, profitLossTracker);
+				hud = new HUD(equipmentTracker, inventoryTracker, profitLossTracker, combatTrackerCurrent);
 			}
 			catch (FileNotFoundException ex) { startupErrors.Add("HUD failed to bind: " + ex.Message + ". Is Virindi HUDs running?"); }
 			catch (Exception ex) { Debug.LogException(ex); }

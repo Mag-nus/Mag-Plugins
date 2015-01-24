@@ -65,6 +65,9 @@ namespace MagTools.Trackers.Combat
 		readonly List<AetheriaInfo> aetheriaInfos = new List<AetheriaInfo>();
 		readonly List<CloakInfo> cloakInfos = new List<CloakInfo>();
 
+		readonly ValueSnapShotGroup damageOutgoing = new ValueSnapShotGroup();
+		readonly ValueSnapShotGroup damageIncoming = new ValueSnapShotGroup();
+
 		void standardTracker_CombatEvent(CombatEventArgs obj)
 		{
 			//Debug.WriteToChat("Combat: SourceName: " + obj.SourceName + ", TargetName: " + obj.TargetName + ", AttackType: " + obj.AttackType + ", DamageElemenet: " + obj.DamageElemenet + ", IsKillingBlow: " + obj.IsKillingBlow + ", IsCriticalHit: " + obj.IsCriticalHit + ", IsFailedAttack: " + obj.IsFailedAttack + ", DamageAmount: " + obj.DamageAmount);
@@ -86,6 +89,16 @@ namespace MagTools.Trackers.Combat
 
 			if (CombatInfoUpdated != null)
 				CombatInfoUpdated(combatInfo);
+
+			// Add this to the DoT trackers
+			if (obj.DamageAmount > 0)
+			{
+				if (obj.SourceName == CoreManager.Current.CharacterFilter.Name)
+					damageOutgoing.AddSnapShot(DateTime.Now, obj.DamageAmount, ValueSnapShotGroup.CombineMethod.DecreaseResolution);
+
+				if (obj.TargetName == CoreManager.Current.CharacterFilter.Name)
+					damageIncoming.AddSnapShot(DateTime.Now, obj.DamageAmount, ValueSnapShotGroup.CombineMethod.DecreaseResolution);
+			}
 		}
 
 		void aetheriaTracker_SurgeEvent(Aetheria.SurgeEventArgs obj)
@@ -186,6 +199,34 @@ namespace MagTools.Trackers.Combat
 
 			if (showMessage)
 				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Stats exported to: " + xmlFileName, 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
+		}
+
+		/// <summary>
+		/// Returns the calculated amount overPeriod using the history of period.
+		/// </summary>
+		public double GetDamageGivenOverTime(TimeSpan historyPeriod, TimeSpan overPeriod)
+		{
+			TimeSpan actualHistoryPeriodUsed;
+			var total = damageOutgoing.GetValueTotal(historyPeriod, out actualHistoryPeriodUsed);
+
+			if (total == 0)
+				return 0;
+
+			return total * (overPeriod.TotalSeconds / actualHistoryPeriodUsed.TotalSeconds);
+		}
+
+		/// <summary>
+		/// Returns the calculated amount overPeriod using the history of period.
+		/// </summary>
+		public double GetDamageReceivedOverTime(TimeSpan historyPeriod, TimeSpan overPeriod)
+		{
+			TimeSpan actualHistoryPeriodUsed;
+			var total = damageIncoming.GetValueTotal(historyPeriod, out actualHistoryPeriodUsed);
+
+			if (total == 0)
+				return 0;
+
+			return total * (overPeriod.TotalSeconds / actualHistoryPeriodUsed.TotalSeconds);
 		}
 	}
 }

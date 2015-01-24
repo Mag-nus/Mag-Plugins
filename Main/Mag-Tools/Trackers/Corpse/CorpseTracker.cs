@@ -8,7 +8,7 @@ using Mag.Shared;
 
 namespace MagTools.Trackers.Corpse
 {
-	class CorpseTracker : ITracker<TrackedCorpse>, IDisposable
+	class CorpseTracker : IItemTracker<TrackedCorpse>, IDisposable
 	{
 		/// <summary>
 		/// This is raised when one or more items have been added to the tracker.
