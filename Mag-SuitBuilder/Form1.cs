@@ -457,11 +457,11 @@ namespace Mag_SuitBuilder
 				//DateTime startTime = DateTime.Now;
 
 				// Do the actual search here
-				armorSearcherCounter = 1;
+				threadCounter = 1;
 
 				armorSearcher.Start();
 
-				Interlocked.Decrement(ref armorSearcherCounter);
+				Interlocked.Decrement(ref threadCounter);
 				ThreadFinished();
 
 				//DateTime endTime = DateTime.Now;
@@ -484,19 +484,19 @@ namespace Mag_SuitBuilder
 			}
 		}
 
-		long armorSearcherCounter;
+		long threadCounter;
 
 		void armorSearcher_SuitCreated(CompletedSuit obj)
 		{
 			BeginInvoke((MethodInvoker)(() => AddCompletedSuitToTreeView(obj)));
 
-			Interlocked.Increment(ref armorSearcherCounter);
+			Interlocked.Increment(ref threadCounter);
 
 			ThreadPool.QueueUserWorkItem(delegate
 			{
 				if (abortedSearch)
 				{
-					Interlocked.Decrement(ref armorSearcherCounter);
+					Interlocked.Decrement(ref threadCounter);
 					return;
 				}
 
@@ -506,7 +506,7 @@ namespace Mag_SuitBuilder
 				accSearcher.Start();
 				accSearcher.SuitCreated -= new Action<CompletedSuit>(accSearcher_SuitCreated);
 
-				Interlocked.Decrement(ref armorSearcherCounter);
+				Interlocked.Decrement(ref threadCounter);
 				ThreadFinished();
 			});
 		}
@@ -569,7 +569,7 @@ namespace Mag_SuitBuilder
 
 		void ThreadFinished()
 		{
-			if (Interlocked.Read(ref armorSearcherCounter) == 0)
+			if (Interlocked.Read(ref threadCounter) == 0)
 			{
 				BeginInvoke((MethodInvoker)(() =>
 				{
