@@ -51,6 +51,7 @@ namespace Mag.Shared.Constants
 		}
 
 		public static bool IsBodyArmor(this CoverageFlags value) { return ((int)value & 0x0001FF00) != 0; }
+		public static bool IsRobe(this CoverageFlags value) { return ((int)value == 0x00013F00); }
 		public static bool IsUnderwear(this CoverageFlags value) { return ((int)value & 0x0000007F) != 0; }
 		public static bool IsShirt(this CoverageFlags value) { return ((int)value & 0x00000078) != 0; }
 		public static bool IsPants(this CoverageFlags value) { return ((int)value & 0x00000017) != 0; }
@@ -59,7 +60,7 @@ namespace Mag.Shared.Constants
 		{
 			List<CoverageFlags> options = new List<CoverageFlags>();
 
-			if (value.GetTotalBitsSet() <= 1 || !value.IsBodyArmor())
+			if (value.GetTotalBitsSet() <= 1 || !value.IsBodyArmor() || value.IsRobe())
 				options.Add(value);
 			else
 			{
@@ -78,6 +79,8 @@ namespace Mag.Shared.Constants
 				else if (value == (CoverageFlags.Chest | CoverageFlags.Abdomen | CoverageFlags.UpperArms))
 					options.Add(CoverageFlags.Chest);
 				else if (value == (CoverageFlags.Chest | CoverageFlags.UpperArms | CoverageFlags.LowerArms))
+					options.Add(CoverageFlags.Chest);
+				else if (value == (CoverageFlags.Chest | CoverageFlags.UpperArms))
 					options.Add(CoverageFlags.Chest);
 				else if (value == (CoverageFlags.Abdomen | CoverageFlags.UpperLegs | CoverageFlags.LowerLegs))
 				{
