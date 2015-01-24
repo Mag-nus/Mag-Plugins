@@ -7,17 +7,27 @@ using Decal.Adapter;
 
 namespace MagFilter
 {
-	class LoginMessageQueueManager
+	class LoginCompleteMessageQueueManager
 	{
+		bool freshLogin;
+
 		readonly Queue<string> loginMessageQueue = new Queue<string>();
 		bool sendingLastEnter;
 
 		public void FilterCore_ClientDispatch(object sender, NetworkMessageEventArgs e)
 		{
-			if (loginMessageQueue.Count > 0 && e.Message.Type == 0xF7B1 && Convert.ToInt32(e.Message["action"]) == 0xA1)
+			if (e.Message.Type == 0xF7C8) // Enter Game
+				freshLogin = true;
+
+			if (freshLogin && e.Message.Type == 0xF7B1 && Convert.ToInt32(e.Message["action"]) == 0xA1) // Character Materialize (Any time is done portalling in, login or portal)
 			{
-				sendingLastEnter = false;
-				CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
+				freshLogin = false;
+
+				if (loginMessageQueue.Count > 0)
+				{
+					sendingLastEnter = false;
+					CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
+				}
 			}
 		}
 
@@ -48,17 +58,24 @@ namespace MagFilter
 
 		public void FilterCore_CommandLineText(object sender, ChatParserInterceptEventArgs e)
 		{
-			if (e.Text.StartsWith("/mf lmq add "))
+			if (e.Text.StartsWith("/mf lcmq add "))
 			{
-				loginMessageQueue.Enqueue(e.Text.Substring(12, e.Text.Length - 12));
-				Debug.WriteToChat("Login Message Queue added: " + e.Text);
+				loginMessageQueue.Enqueue(e.Text.Substring(13, e.Text.Length - 13));
+				Debug.WriteToChat("Login Complete Message Queue added: " + e.Text);
 
 				e.Eat = true;
 			}
-			else if (e.Text == "/mf lmq clear")
+			else if (e.Text.StartsWith("/mf lmq add ")) // Backwards Compatability
+			{
+				loginMessageQueue.Enqueue(e.Text.Substring(12, e.Text.Length - 12));
+				Debug.WriteToChat("Login Complete Message Queue added: " + e.Text);
+
+				e.Eat = true;
+			}
+			else if (e.Text == "/mf lcmq clear" || e.Text == "/mf lmq clear")
 			{
 				loginMessageQueue.Clear();
-				Debug.WriteToChat("Login Message Queue cleared");
+				Debug.WriteToChat("Login Complete Message Queue cleared");
 
 				e.Eat = true;
 			}

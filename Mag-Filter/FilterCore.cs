@@ -38,8 +38,8 @@ namespace MagFilter
 		readonly AutoRetryLogin autoRetryLogin = new AutoRetryLogin();
 		readonly LoginCharacterTools loginCharacterTools = new LoginCharacterTools();
 		readonly FastQuit fastQuit = new FastQuit();
-		readonly LoginMessageQueueManager loginMessageQueueManager = new LoginMessageQueueManager();
-		readonly OnLoginCompleteMessageQueueManager onLoginCompleteMessageQueueManager = new OnLoginCompleteMessageQueueManager();
+		readonly LoginCompleteMessageQueueManager loginCompleteMessageQueueManager = new LoginCompleteMessageQueueManager();
+		readonly AfterLoginCompleteMessageQueueManager afterLoginCompleteMessageQueueManager = new AfterLoginCompleteMessageQueueManager();
 
 		DefaultFirstCharacterManager defaultFirstCharacterManager;
 		LoginNextCharacterManager loginNextCharacterManager;
@@ -73,8 +73,8 @@ namespace MagFilter
 			try
 			{
 				autoRetryLogin.FilterCore_ClientDispatch(sender, e);
-				loginMessageQueueManager.FilterCore_ClientDispatch(sender, e);
-				onLoginCompleteMessageQueueManager.FilterCore_ClientDispatch(sender, e);
+				loginCompleteMessageQueueManager.FilterCore_ClientDispatch(sender, e);
+				afterLoginCompleteMessageQueueManager.FilterCore_ClientDispatch(sender, e);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -105,8 +105,8 @@ namespace MagFilter
 		{
 			try
 			{
-				loginMessageQueueManager.FilterCore_CommandLineText(sender, e);
-				onLoginCompleteMessageQueueManager.FilterCore_CommandLineText(sender, e);
+				loginCompleteMessageQueueManager.FilterCore_CommandLineText(sender, e);
+				afterLoginCompleteMessageQueueManager.FilterCore_CommandLineText(sender, e);
 
 				defaultFirstCharacterManager.FilterCore_CommandLineText(sender, e);
 				loginNextCharacterManager.FilterCore_CommandLineText(sender, e);
