@@ -100,6 +100,7 @@ namespace Mag_SuitBuilder.Spells
 		readonly Collection<Spell> items = new Collection<Spell>();
 
 		public event NotifyCollectionChangedEventHandler CollectionChanged;
+		private bool suspendChangedEvent;
 
 		public IEnumerator<Spell> GetEnumerator()
 		{
@@ -124,7 +125,7 @@ namespace Mag_SuitBuilder.Spells
 		
 			items.Add(item);
 
-			if (CollectionChanged != null)
+			if (!suspendChangedEvent && CollectionChanged != null)
 				CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
 
 			foreach (DataGridViewRow row in dataGridView1.Rows)
@@ -162,7 +163,7 @@ namespace Mag_SuitBuilder.Spells
 		{
 			items.Clear();
 
-			if (CollectionChanged != null)
+			if (!suspendChangedEvent && CollectionChanged != null)
 				CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 
 			foreach (DataGridViewRow row in dataGridView1.Rows)
@@ -191,7 +192,7 @@ namespace Mag_SuitBuilder.Spells
 
 			if (result)
 			{
-				if (CollectionChanged != null)
+				if (!suspendChangedEvent && CollectionChanged != null)
 					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
 			}
 
@@ -221,6 +222,8 @@ namespace Mag_SuitBuilder.Spells
 
 		public void LoadDefaults(string skill)
 		{
+			suspendChangedEvent = true;
+
 			Clear();
 
 			// Attributes
@@ -345,6 +348,11 @@ namespace Mag_SuitBuilder.Spells
 					Add(SpellTools.GetSpell(6040));
 					break;
 			}
+
+			if (CollectionChanged != null)
+				CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+
+			suspendChangedEvent = false;
 		}
 
 		private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
