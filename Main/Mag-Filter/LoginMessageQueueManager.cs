@@ -52,11 +52,15 @@ namespace MagFilter
 			{
 				loginMessageQueue.Enqueue(e.Text.Substring(12, e.Text.Length - 12));
 				Debug.WriteToChat("Login Message Queue added: " + e.Text);
+
+				e.Eat = true;
 			}
 			else if (e.Text == "/mf lmq clear")
 			{
 				loginMessageQueue.Clear();
 				Debug.WriteToChat("Login Message Queue cleared");
+
+				e.Eat = true;
 			}
 		}
 	}
