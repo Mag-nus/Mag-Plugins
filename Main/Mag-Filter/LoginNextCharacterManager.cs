@@ -41,21 +41,16 @@ namespace MagFilter
 
 			if (lower.StartsWith("/mf lnc set "))
 			{
-				nextCharByInt = -1;
 				nextCharacter = lower.Substring(12, lower.Length - 12);
-				Debug.WriteToChat("Login Next Character set to: " + nextCharacter);
+				nextCharByInt = -1;
 
-				e.Eat = true;
-			}
-			else if (lower == "/mf lnc clear")
-			{
-				nextCharacter = null;
-				Debug.WriteToChat("Login Next Character cleared");
+				Debug.WriteToChat("Login Next Character set to: " + nextCharacter);
 
 				e.Eat = true;
 			}
 			else if (lower.StartsWith("/mf lncbi set "))
 			{
+				nextCharacter = null;
 				nextCharByInt = int.Parse(lower.Substring(14, lower.Length - 14));
 
 				if (nextCharByInt > 10)
@@ -69,10 +64,16 @@ namespace MagFilter
 					Debug.WriteToChat("Login Next Character failed with input too small: " + nextCharByInt);
 				}
 				else
-				{
 					Debug.WriteToChat("Login Next Character set to index: " + nextCharByInt);
-					nextCharacter = null;
-				}
+
+				e.Eat = true;
+			}
+			else if (lower == "/mf lnc clear" || lower == "/mf lncbi clear")
+			{
+				nextCharacter = null;
+				nextCharByInt = -1;
+
+				Debug.WriteToChat("Login Next Character cleared");
 
 				e.Eat = true;
 			}
