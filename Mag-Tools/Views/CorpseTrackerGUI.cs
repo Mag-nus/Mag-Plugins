@@ -15,10 +15,10 @@ namespace MagTools.Views
 {
 	class CorpseTrackerGUI : IDisposable
 	{
-		readonly ITracker<TrackedCorpse> tracker;
+		readonly IItemTracker<TrackedCorpse> tracker;
 		readonly HudList hudList;
 
-		public CorpseTrackerGUI(ITracker<TrackedCorpse> tracker, HudList hudList)
+		public CorpseTrackerGUI(IItemTracker<TrackedCorpse> tracker, HudList hudList)
 		{
 			try
 			{

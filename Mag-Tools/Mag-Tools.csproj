@@ -139,7 +139,9 @@
     <Compile Include="Macros\PeriodicCommands.cs" />
     <Compile Include="Trackers\ProfitLoss\ProfitLossTracker.cs" />
     <Compile Include="Trackers\ProfitLoss\TrackedProfitLoss.cs" />
-    <Compile Include="Trackers\TrackedSnapShot.cs" />
+    <Compile Include="Trackers\SnapShot.cs" />
+    <Compile Include="Trackers\SnapShotGroup.cs" />
+    <Compile Include="Trackers\ValueSnapShotGroup.cs" />
     <Compile Include="Views\AccountServerCharacterGUI.cs" />
     <Compile Include="Views\InventoryToolsView.cs" />
     <Compile Include="Views\TinkeringToolsView.cs" />
@@ -149,7 +151,7 @@
     <Compile Include="Trackers\Corpse\CorpseTrackerExporter.cs" />
     <Compile Include="Trackers\Corpse\CorpseTrackerImporter.cs" />
     <Compile Include="Trackers\Corpse\TrackedCorpse.cs" />
-    <Compile Include="Trackers\ITracker.cs" />
+    <Compile Include="Trackers\IItemTracker.cs" />
     <Compile Include="Trackers\Player\PlayerTracker.cs" />
     <Compile Include="Trackers\Player\PlayerTrackerExporter.cs" />
     <Compile Include="Trackers\Player\PlayerTrackerImporter.cs" />

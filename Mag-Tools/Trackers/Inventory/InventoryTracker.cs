@@ -9,7 +9,7 @@ using Mag.Shared;
 
 namespace MagTools.Trackers.Inventory
 {
-	class InventoryTracker : ITracker<TrackedInventory>, IDisposable
+	class InventoryTracker : IItemTracker<TrackedInventory>, IDisposable
 	{
 		/// <summary>
 		/// TThis is raised when one or more items have been added to the tracker.
@@ -190,7 +190,7 @@ namespace MagTools.Trackers.Inventory
 			{
 				if (trackedItem.Name == name)
 				{
-					trackedItem.AddSnapShot(DateTime.Now, count);
+					trackedItem.AddSnapShot(DateTime.Now, count, SnapShotGroup<int>.PruneMethod.DecreaseResolution);
 
 					if (ItemChanged != null)
 					{
@@ -206,7 +206,9 @@ namespace MagTools.Trackers.Inventory
 				}
 			}
 
-			var trackedInventory = new TrackedInventory(name, obj.ObjectClass, obj.Icon, itemValue, DateTime.Now, count);
+			var trackedInventory = new TrackedInventory(name, obj.ObjectClass, obj.Icon, itemValue);
+			trackedInventory.AddSnapShot(DateTime.Now, count, SnapShotGroup<int>.PruneMethod.DecreaseResolution);
+
 			trackedItems.Add(trackedInventory);
 
 			if (ItemsAdded != null)

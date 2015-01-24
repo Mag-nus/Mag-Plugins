@@ -15,11 +15,11 @@ namespace MagTools.Views
 {
 	class InventoryTrackerGUI : IDisposable
 	{
-		readonly ITracker<TrackedProfitLoss> profitLossTracker;
-		readonly ITracker<TrackedInventory> inventoryTracker;
+		readonly IItemTracker<TrackedProfitLoss> profitLossTracker;
+		readonly IItemTracker<TrackedInventory> inventoryTracker;
 		readonly HudList hudList;
 
-		public InventoryTrackerGUI(ITracker<TrackedProfitLoss> profitLossTracker, ITracker<TrackedInventory> inventoryTracker, HudList hudList)
+		public InventoryTrackerGUI(IItemTracker<TrackedProfitLoss> profitLossTracker, IItemTracker<TrackedInventory> inventoryTracker, HudList hudList)
 		{
 			try
 			{
@@ -229,9 +229,9 @@ namespace MagTools.Views
 			{
 				if (((HudStaticText)hudList[row - 1][1]).Text == item.Name)
 				{
-					((HudStaticText)hudList[row - 1][2]).Text = item.LastKnownCount.ToString(CultureInfo.InvariantCulture);
+					((HudStaticText)hudList[row - 1][2]).Text = item.LastKnownValue.ToString(CultureInfo.InvariantCulture);
 
-					if (item.LastKnownCount == 0)
+					if (item.LastKnownValue == 0)
 					{
 						((HudStaticText)hudList[row - 1][3]).Text = String.Empty;
 						((HudStaticText)hudList[row - 1][4]).Text = String.Empty;
@@ -239,10 +239,10 @@ namespace MagTools.Views
 					}
 					else
 					{
-						var oneHourItemCountDifferenceOverFiveMinutes = item.GetItemsCountDifference(TimeSpan.FromMinutes(5), TimeSpan.FromHours(1));
+						var oneHourItemCountDifferenceOverFiveMinutes = item.GetValueDifference(TimeSpan.FromMinutes(5), TimeSpan.FromHours(1));
 						((HudStaticText)hudList[row - 1][3]).Text = oneHourItemCountDifferenceOverFiveMinutes == 0 ? String.Empty : oneHourItemCountDifferenceOverFiveMinutes.ToString("N1");
 
-						var oneHourItemCountDifferenceOverOneHour = item.GetItemsCountDifference(TimeSpan.FromHours(1), TimeSpan.FromHours(1));
+						var oneHourItemCountDifferenceOverOneHour = item.GetValueDifference(TimeSpan.FromHours(1), TimeSpan.FromHours(1));
 						((HudStaticText)hudList[row - 1][4]).Text = oneHourItemCountDifferenceOverOneHour == 0 ? String.Empty : oneHourItemCountDifferenceOverOneHour.ToString("N1");
 
 						var hoursRemaining = item.GetTimeToDepletion(TimeSpan.FromHours(1));
