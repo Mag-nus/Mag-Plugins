@@ -10,7 +10,7 @@ namespace Mag_SuitBuilder.Search
 	{
 		public bool PutItemInBuckets(SuitBuildableMyWorldObject piece)
 		{
-			return PutItemInBuckets(piece, piece.EquippableSlots);
+			return PutItemInBuckets(piece, piece.CachedEquippableSlots);
 		}
 
 		public bool PutItemInBuckets(SuitBuildableMyWorldObject piece, EquippableSlotFlags slot)

@@ -49,11 +49,11 @@ namespace Mag_SuitBuilder.Search
 		/// <exception cref="ArgumentException">Trying to add an item that covers a slot already filled.</exception>
 		public bool AddItem(SuitBuildableMyWorldObject item)
 		{
-			EquippableSlotFlags slotToAddTo = item.EquippableSlots;
+			EquippableSlotFlags slotToAddTo = item.CachedEquippableSlots;
 
-			if (item.EquippableSlots == (EquippableSlotFlags.Feet | EquippableSlotFlags.PantsLowerLegs)) // Some armor boots
+			if (item.CachedEquippableSlots == (EquippableSlotFlags.Feet | EquippableSlotFlags.PantsLowerLegs)) // Some armor boots
 				slotToAddTo = EquippableSlotFlags.Feet;
-			else if (item.EquippableSlots == (EquippableSlotFlags.LeftBracelet | EquippableSlotFlags.RightBracelet))
+			else if (item.CachedEquippableSlots == (EquippableSlotFlags.LeftBracelet | EquippableSlotFlags.RightBracelet))
 			{
 				if (this[EquippableSlotFlags.LeftBracelet] == null)
 					slotToAddTo = EquippableSlotFlags.LeftBracelet;
@@ -62,7 +62,7 @@ namespace Mag_SuitBuilder.Search
 				else
 					return false;
 			}
-			else if (item.EquippableSlots == (EquippableSlotFlags.LeftRing | EquippableSlotFlags.RightRing))
+			else if (item.CachedEquippableSlots == (EquippableSlotFlags.LeftRing | EquippableSlotFlags.RightRing))
 			{
 				if (this[EquippableSlotFlags.LeftRing] == null)
 					slotToAddTo = EquippableSlotFlags.LeftRing;
@@ -71,9 +71,9 @@ namespace Mag_SuitBuilder.Search
 				else
 					return false;
 			}
-			else if (item.EquippableSlots.IsShirt())
+			else if (item.CachedEquippableSlots.IsShirt())
 				slotToAddTo = EquippableSlotFlags.ShirtChest;
-			else if (item.EquippableSlots.IsPants())
+			else if (item.CachedEquippableSlots.IsPants())
 				slotToAddTo = EquippableSlotFlags.PantsUpperLegs;
 
 			if (this[slotToAddTo] != null)
@@ -97,8 +97,8 @@ namespace Mag_SuitBuilder.Search
 			items.Add(slots, item);
 			piecesHashSet.Add(item);
 
-			if (item.CalcedStartingArmorLevel > 0)
-				TotalBaseArmorLevel += (item.CalcedStartingArmorLevel * slots.GetTotalBitsSet());
+			if (item.CachedCalcedStartingArmorLevel > 0)
+				TotalBaseArmorLevel += (item.CachedCalcedStartingArmorLevel * slots.GetTotalBitsSet());
 
 			foreach (Spell itemSpell in item.SpellsToUseInSearch)
 			{

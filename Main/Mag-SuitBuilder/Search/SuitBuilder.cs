@@ -2,7 +2,6 @@
 using Mag_SuitBuilder.Equipment;
 
 using Mag.Shared.Constants;
-using Mag.Shared.Spells;
 
 namespace Mag_SuitBuilder.Search
 {
@@ -10,24 +9,24 @@ namespace Mag_SuitBuilder.Search
 	{
 		public SuitBuilder()
 		{
-			for (int i = 0; i < cache.Length; i++)
-				cache[i] = new PieceSlotCache();
+			for (int i = 0; i < slotCache.Length; i++)
+				slotCache[i] = new PieceSlotCache();
 		}
 
 		private class PieceSlotCache
 		{
 			public SuitBuildableMyWorldObject Piece;
 			public EquippableSlotFlags Slot;
-			public int SpellCount;
 		}
 
-		readonly PieceSlotCache[] cache = new PieceSlotCache[17];
+		readonly PieceSlotCache[] slotCache = new PieceSlotCache[17];
+		readonly int[] spellBitmaps = new int[17];
 		int nextOpenCacheIndex;
 
 		EquippableSlotFlags occupiedSlots = EquippableSlotFlags.None;
 
-		readonly Spell[] spells = new Spell[17 * 6];
-		int nextOpenSpellIndex;
+		//readonly Spell[] spells = new Spell[17 * 6]; // Used for the old search compare method
+		//int nextOpenSpellIndex;
 
 		readonly int[] armorSetCountById = new int[256];
 
@@ -37,25 +36,30 @@ namespace Mag_SuitBuilder.Search
 
 		public void Push(SuitBuildableMyWorldObject item, EquippableSlotFlags slot)
 		{
-			cache[nextOpenCacheIndex].Piece = item;
-			cache[nextOpenCacheIndex].Slot = slot;
-			cache[nextOpenCacheIndex].SpellCount = item.SpellsToUseInSearch.Count;
+			slotCache[nextOpenCacheIndex].Piece = item;
+			slotCache[nextOpenCacheIndex].Slot = slot;
 
 			occupiedSlots |= slot;
 
-			for (int i = 0; i < item.SpellsToUseInSearch.Count; i++)
+			// Used for the old search compare method
+			/*for (int i = 0; i < item.SpellsToUseInSearch.Count; i++)
 			{
 				spells[nextOpenSpellIndex] = item.SpellsToUseInSearch[i];
 				nextOpenSpellIndex++;
-			}
+			}*/
+
+			if (nextOpenCacheIndex == 0)
+				spellBitmaps[nextOpenCacheIndex] = item.SpellBitmap;
+			else
+				spellBitmaps[nextOpenCacheIndex] = spellBitmaps[nextOpenCacheIndex - 1] | item.SpellBitmap;
 
 			nextOpenCacheIndex++;
 
 			if (item.ItemSetId != -1)
 				armorSetCountById[item.ItemSetId]++;
 
-			if (item.CalcedStartingArmorLevel > 0)
-				TotalBaseArmorLevel += (item.CalcedStartingArmorLevel * slot.GetTotalBitsSet());
+			if (item.CachedCalcedStartingArmorLevel > 0)
+				TotalBaseArmorLevel += (item.CachedCalcedStartingArmorLevel * slot.GetTotalBitsSet());
 
 			if (slot.IsBodyArmor())
 				TotalBodyArmorPieces++;
@@ -63,20 +67,20 @@ namespace Mag_SuitBuilder.Search
 
 		public void Pop()
 		{
-			occupiedSlots ^= cache[nextOpenCacheIndex - 1].Slot;
+			occupiedSlots ^= slotCache[nextOpenCacheIndex - 1].Slot;
 
-			nextOpenSpellIndex -= cache[nextOpenCacheIndex - 1].SpellCount;
+			//nextOpenSpellIndex -= cache[nextOpenCacheIndex - 1].SpellCount; // Used for the old search compare method
 
-			armorSetCountById[cache[nextOpenCacheIndex - 1].Piece.ItemSetId]--;
+			armorSetCountById[slotCache[nextOpenCacheIndex - 1].Piece.ItemSetId]--;
 
-			if (cache[nextOpenCacheIndex - 1].Piece.CalcedStartingArmorLevel > 0)
-				TotalBaseArmorLevel -= (cache[nextOpenCacheIndex - 1].Piece.CalcedStartingArmorLevel * cache[nextOpenCacheIndex - 1].Slot.GetTotalBitsSet());
+			if (slotCache[nextOpenCacheIndex - 1].Piece.CachedCalcedStartingArmorLevel > 0)
+				TotalBaseArmorLevel -= (slotCache[nextOpenCacheIndex - 1].Piece.CachedCalcedStartingArmorLevel * slotCache[nextOpenCacheIndex - 1].Slot.GetTotalBitsSet());
 
-			if (cache[nextOpenCacheIndex - 1].Slot.IsBodyArmor())
+			if (slotCache[nextOpenCacheIndex - 1].Slot.IsBodyArmor())
 				TotalBodyArmorPieces--;
 
 			nextOpenCacheIndex--;
-	}
+		}
 
 		public bool SlotIsOpen(EquippableSlotFlags slot)
 		{
@@ -102,10 +106,16 @@ namespace Mag_SuitBuilder.Search
 
 		public bool CanGetBeneficialSpellFrom(SuitBuildableMyWorldObject item)
 		{
+			if (nextOpenCacheIndex == 0)
+				return true;
+
+			return (spellBitmaps[nextOpenCacheIndex - 1] | item.SpellBitmap) != spellBitmaps[nextOpenCacheIndex - 1];
+
+			// Used for the old search compare method
 			// This whole approach needs to be optimized.
 			// This is the biggest time waster in the entire search process.
 
-			foreach (Spell itemSpell in item.SpellsToUseInSearch)
+			/*foreach (Spell itemSpell in item.SpellsToUseInSearch)
 			//for (int i = 0 ; i < item.Spells.Count ; i++) // This is actually slower
 			{
 				for (int j = 0; j < nextOpenSpellIndex; j++) // For here is faster than foreach
@@ -119,7 +129,7 @@ namespace Mag_SuitBuilder.Search
 				end: ;
 			}
 
-			return false;
+			return false;*/
 		}
 
 		public int Count
@@ -132,7 +142,7 @@ namespace Mag_SuitBuilder.Search
 			SuitBuilder newSuit = new SuitBuilder();
 
 			for (int i = 0; i < nextOpenCacheIndex; i++)
-				newSuit.Push(cache[i].Piece, cache[i].Slot);
+				newSuit.Push(slotCache[i].Piece, slotCache[i].Slot);
 
 			return newSuit;
 		}
@@ -142,7 +152,7 @@ namespace Mag_SuitBuilder.Search
 			CompletedSuit suit = new CompletedSuit();
 
 			for (int i = 0; i < nextOpenCacheIndex; i++)
-				suit.AddItem(cache[i].Slot, cache[i].Piece);
+				suit.AddItem(slotCache[i].Slot, slotCache[i].Piece);
 
 			return suit;
 		}

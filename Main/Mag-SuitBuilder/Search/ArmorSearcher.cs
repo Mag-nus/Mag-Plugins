@@ -17,12 +17,12 @@ namespace Mag_SuitBuilder.Search
 		public ArmorSearcher(SearcherConfiguration config, IEnumerable<SuitBuildableMyWorldObject> pieces, CompletedSuit startingSuit = null) : base(config, pieces, startingSuit)
 		{
 			// Sort the list with the highest armor first
-			Equipment.Sort((a, b) => b.CalcedStartingArmorLevel.CompareTo(a.CalcedStartingArmorLevel));
+			Equipment.Sort((a, b) => b.CachedCalcedStartingArmorLevel.CompareTo(a.CachedCalcedStartingArmorLevel));
 
 			// Remove any pieces that have no armor
 			for (int i = Equipment.Count - 1 ; i >= 0 ; i--)
 			{
-				if (Equipment[i].CalcedStartingArmorLevel <= 0)
+				if (Equipment[i].CachedCalcedStartingArmorLevel <= 0)
 					Equipment.RemoveAt(i);
 			}
 		}
@@ -197,27 +197,33 @@ namespace Mag_SuitBuilder.Search
 				{
 					SuitBuilder clone = builder.Clone();
 
-					if (clone.SlotIsOpen(buckets[index].Slot) && (!piece.EquippableSlots.IsBodyArmor() || clone.HasRoomForArmorSet(Config.PrimaryArmorSet, Config.SecondaryArmorSet, piece.ItemSetId)) && clone.CanGetBeneficialSpellFrom(piece))
+					if (clone.SlotIsOpen(buckets[index].Slot))
 					{
-						clone.Push(piece, buckets[index].Slot);
+						if ((!piece.CachedEquippableSlots.IsBodyArmor() || clone.HasRoomForArmorSet(Config.PrimaryArmorSet, Config.SecondaryArmorSet, piece.ItemSetId)) && clone.CanGetBeneficialSpellFrom(piece))
+						{
+							clone.Push(piece, buckets[index].Slot);
 
-						SearchThroughBuckets(clone, index + 1);
+							SearchThroughBuckets(clone, index + 1);
 
-						clone.Pop();
+							clone.Pop();
+						}
 					}
 				});
 			}
 			else
 			{
-				foreach (SuitBuildableMyWorldObject piece in buckets[index])
+				if (builder.SlotIsOpen(buckets[index].Slot))
 				{
-					if (builder.SlotIsOpen(buckets[index].Slot) && (!piece.EquippableSlots.IsBodyArmor() || builder.HasRoomForArmorSet(Config.PrimaryArmorSet, Config.SecondaryArmorSet, piece.ItemSetId)) && builder.CanGetBeneficialSpellFrom(piece))
+					foreach (SuitBuildableMyWorldObject piece in buckets[index])
 					{
-						builder.Push(piece, buckets[index].Slot);
+						if (builder.CanGetBeneficialSpellFrom(piece) && (!piece.CachedEquippableSlots.IsBodyArmor() || builder.HasRoomForArmorSet(Config.PrimaryArmorSet, Config.SecondaryArmorSet, piece.ItemSetId)))
+						{
+							builder.Push(piece, buckets[index].Slot);
 
-						SearchThroughBuckets(builder, index + 1);
+							SearchThroughBuckets(builder, index + 1);
 
-						builder.Pop();
+							builder.Pop();
+						}
 					}
 				}
 			}

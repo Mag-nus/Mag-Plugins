@@ -388,6 +388,8 @@ namespace Mag_SuitBuilder
 			config.PrimaryArmorSet = filtersControl1.PrimaryArmorSetId;
 			config.SecondaryArmorSet = filtersControl1.SecondaryArmorSetId;
 
+			var possibleSpells = new List<Spell>();
+
 			// Go through our Equipment and remove/disable any extra spells that we're not looking for
 			foreach (var piece in boundList)
 			{
@@ -396,7 +398,59 @@ namespace Mag_SuitBuilder
 				foreach (Spell spell in piece.CachedSpells)
 				{
 					if (config.SpellPassesRules(spell) && !spell.IsOfSameFamilyAndGroup(SpellTools.GetSpell(4667))) // Epic Impenetrability
+					{
 						piece.SpellsToUseInSearch.Add(spell);
+
+						if (!possibleSpells.Contains(spell))
+							possibleSpells.Add(spell);
+					}
+				}
+			}
+
+			// Go through our possible spells and make sure they are all unique. This will also keep the lowest level spell that passed our rules
+			for (int i = possibleSpells.Count - 1; i >= 0 ; i--)
+			{
+				for (int j = 0; j < i ; j++)
+				{
+					if (possibleSpells[j].IsOfSameFamilyAndGroup(possibleSpells[i]))
+					{
+						if (possibleSpells[j].Surpasses(possibleSpells[i]))
+							possibleSpells.RemoveAt(j);
+						else
+							possibleSpells.RemoveAt(j);
+
+						goto next;
+					}
+				}
+
+				next:;
+			}
+
+			// Now, we create our bitmapped spell map
+			if (possibleSpells.Count > 32)
+			{
+				MessageBox.Show("Too many spells.");
+				btnCalculatePossibilities.Enabled = false;
+				return;
+			}
+
+			Dictionary<Spell, int> spellMap = new Dictionary<Spell, int>();
+
+			for (int i = 0; i < possibleSpells.Count; i++)
+				spellMap.Add(possibleSpells[i], 1 << i);
+
+			// Now, we update each item with the new spell map
+			foreach (var piece in boundList)
+			{
+				piece.SpellBitmap = 0;
+
+				foreach (var spell in piece.SpellsToUseInSearch)
+				{
+					foreach (var kvp in spellMap)
+					{
+						if (spell.IsOfSameFamilyAndGroup(kvp.Key))
+							piece.SpellBitmap |= kvp.Value;
+					}
 				}
 			}
 
@@ -460,7 +514,7 @@ namespace Mag_SuitBuilder
 
 			new Thread(() =>
 			{
-				//DateTime startTime = DateTime.Now;
+				startTime = DateTime.Now;
 
 				// Do the actual search here
 				threadCounter = 1;
@@ -469,10 +523,6 @@ namespace Mag_SuitBuilder
 
 				Interlocked.Decrement(ref threadCounter);
 				ThreadFinished();
-
-				//DateTime endTime = DateTime.Now;
-
-				//MessageBox.Show((endTime - startTime).TotalSeconds.ToString());
 			}).Start();
 
 			btnStopCalculating.Enabled = true;
@@ -490,6 +540,7 @@ namespace Mag_SuitBuilder
 			}
 		}
 
+		DateTime startTime;
 		long threadCounter;
 
 		void armorSearcher_SuitCreated(CompletedSuit obj)
@@ -583,6 +634,8 @@ namespace Mag_SuitBuilder
 					btnStopCalculating.Enabled = false;
 					btnCalculatePossibilities.Enabled = true;
 					FlashWindow(this.Handle, true);
+
+					MessageBox.Show((DateTime.Now - startTime).TotalSeconds.ToString());
 				}));
 			}
 
