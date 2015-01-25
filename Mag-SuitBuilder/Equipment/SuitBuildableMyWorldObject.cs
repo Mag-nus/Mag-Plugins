@@ -111,7 +111,10 @@ namespace Mag_SuitBuilder.Equipment
 			}
 		}
 
-		private EquippableSlotFlags cachedEquippableSlots;
+		[XmlIgnore]
+		[Browsable(false)]
+		public EquippableSlotFlags CachedEquippableSlots;
+
 		private CoverageFlags cachedCoverage;
 
 		[XmlIgnore]
@@ -128,9 +131,17 @@ namespace Mag_SuitBuilder.Equipment
 		[Browsable(false)]
 		public List<Spell> SpellsToUseInSearch = new List<Spell>();
 
+		[XmlIgnore]
+		[Browsable(false)]
+		public int SpellBitmap;
+
+		[XmlIgnore]
+		[Browsable(false)]
+		public int CachedCalcedStartingArmorLevel;
+
 		public void BuiltItemSearchCache()
 		{
-			cachedEquippableSlots = EquippableSlots;
+			CachedEquippableSlots = EquippableSlots;
 
 			cachedCoverage = Coverage;
 
@@ -148,6 +159,8 @@ namespace Mag_SuitBuilder.Equipment
 					MessageBox.Show("Unable to cache spell id: " + spellId + " on item: " + Name + ". Spell ID not found in the master table.");
 				}
 			}
+
+			CachedCalcedStartingArmorLevel = CalcedStartingArmorLevel;
 		}
 
 		/// <summary>
@@ -170,7 +183,7 @@ namespace Mag_SuitBuilder.Equipment
 				if ((compareItem.cachedCoverage & cachedCoverage) != cachedCoverage)
 					return false;
 			}
-			else if ((compareItem.cachedEquippableSlots & cachedEquippableSlots) != cachedEquippableSlots)
+			else if ((compareItem.CachedEquippableSlots & CachedEquippableSlots) != CachedEquippableSlots)
 				return false;
 
 			// Find the highest level spell on this item
@@ -202,7 +215,7 @@ namespace Mag_SuitBuilder.Equipment
 				next:;
 			}
 
-			if (compareItem.CalcedStartingArmorLevel > CalcedStartingArmorLevel)
+			if (compareItem.CachedCalcedStartingArmorLevel > CachedCalcedStartingArmorLevel)
 				return true;
 
 			if (compareItem.DamRating > DamRating && DamRating > 0) return true;

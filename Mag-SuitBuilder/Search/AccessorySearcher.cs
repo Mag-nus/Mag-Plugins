@@ -17,16 +17,16 @@ namespace Mag_SuitBuilder.Search
 			// As a temp fix we just sort based on spell count
 			Equipment.Sort((a, b) =>
 			{
-				if (a.CalcedStartingArmorLevel > 0 && b.CalcedStartingArmorLevel > 0) return b.CalcedStartingArmorLevel.CompareTo(a.CalcedStartingArmorLevel);
-				if (a.CalcedStartingArmorLevel > 0 && b.CalcedStartingArmorLevel == 0) return -1;
-				if (a.CalcedStartingArmorLevel == 0 && b.CalcedStartingArmorLevel > 0) return 1;
+				if (a.CachedCalcedStartingArmorLevel > 0 && b.CachedCalcedStartingArmorLevel > 0) return b.CachedCalcedStartingArmorLevel.CompareTo(a.CachedCalcedStartingArmorLevel);
+				if (a.CachedCalcedStartingArmorLevel > 0 && b.CachedCalcedStartingArmorLevel == 0) return -1;
+				if (a.CachedCalcedStartingArmorLevel == 0 && b.CachedCalcedStartingArmorLevel > 0) return 1;
 				return b.SpellsToUseInSearch.Count.CompareTo(a.SpellsToUseInSearch.Count);
 			});
 
 			// Remove any pieces that have armor
 			for (int i = Equipment.Count - 1; i >= 0; i--)
 			{
-				if (Equipment[i].CalcedStartingArmorLevel > 0)
+				if (Equipment[i].CachedCalcedStartingArmorLevel > 0)
 					Equipment.RemoveAt(i);
 			}
 		}

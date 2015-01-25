@@ -54,13 +54,13 @@ namespace Mag_SuitBuilder.Search
 			// Remove pieces we can't add to our base suit
 			for (int i = Equipment.Count - 1; i >= 0; i--)
 			{
-				if (!SuitBuilder.SlotIsOpen(Equipment[i].EquippableSlots))
+				if (!SuitBuilder.SlotIsOpen(Equipment[i].CachedEquippableSlots))
 				{
-					if (Equipment[i].EquippableSlots.GetTotalBitsSet() == 1)
+					if (Equipment[i].CachedEquippableSlots.GetTotalBitsSet() == 1)
 						Equipment.RemoveAt(i);
 					else
 					{
-						if (Equipment[i].EquippableSlots.IsBodyArmor())
+						if (Equipment[i].CachedEquippableSlots.IsBodyArmor())
 						{
 							var reductionOptions = Equipment[i].Coverage.ReductionOptions();
 
@@ -78,8 +78,8 @@ namespace Mag_SuitBuilder.Search
 						}
 						else
 						{
-							if ((Equipment[i].EquippableSlots.HasFlag(EquippableSlotFlags.LeftRing) || Equipment[i].EquippableSlots.HasFlag(EquippableSlotFlags.RightRing)) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.LeftRing) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.RightRing)) { Equipment.RemoveAt(i); goto end; }
-							if ((Equipment[i].EquippableSlots.HasFlag(EquippableSlotFlags.LeftBracelet) || Equipment[i].EquippableSlots.HasFlag(EquippableSlotFlags.RightBracelet)) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.LeftBracelet) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.RightBracelet)) { Equipment.RemoveAt(i); goto end; }
+							if ((Equipment[i].CachedEquippableSlots.HasFlag(EquippableSlotFlags.LeftRing) || Equipment[i].CachedEquippableSlots.HasFlag(EquippableSlotFlags.RightRing)) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.LeftRing) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.RightRing)) { Equipment.RemoveAt(i); goto end; }
+							if ((Equipment[i].CachedEquippableSlots.HasFlag(EquippableSlotFlags.LeftBracelet) || Equipment[i].CachedEquippableSlots.HasFlag(EquippableSlotFlags.RightBracelet)) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.LeftBracelet) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.RightBracelet)) { Equipment.RemoveAt(i); goto end; }
 						}
 					}
 				}
