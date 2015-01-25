@@ -635,7 +635,7 @@ namespace Mag_SuitBuilder
 					btnCalculatePossibilities.Enabled = true;
 					FlashWindow(this.Handle, true);
 
-					MessageBox.Show((DateTime.Now - startTime).TotalSeconds.ToString());
+					//MessageBox.Show((DateTime.Now - startTime).TotalSeconds.ToString());
 				}));
 			}
 
