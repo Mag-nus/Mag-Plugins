@@ -52,6 +52,10 @@ namespace Mag_SuitBuilder
 			this.btnHelp = new System.Windows.Forms.Button();
 			this.btnLoadFromDB = new System.Windows.Forms.Button();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.lblAccessorizerRunningThreads = new System.Windows.Forms.Label();
+			this.lblAccessorizerQueuedThreads = new System.Windows.Forms.Label();
+			this.lblArmorSearchThreads = new System.Windows.Forms.Label();
+			this.cmdCopyToClipboard = new System.Windows.Forms.Button();
 			this.cmdCollapseAll = new System.Windows.Forms.Button();
 			this.cmdExpandAll = new System.Windows.Forms.Button();
 			this.treeView1 = new System.Windows.Forms.TreeView();
@@ -76,7 +80,7 @@ namespace Mag_SuitBuilder
 			this.coveragePiece8 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece10 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece9 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.cmdCopyToClipboard = new System.Windows.Forms.Button();
+			this.timerCalculatorUpdator = new System.Windows.Forms.Timer(this.components);
 			this.tabControl1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			this.panel1.SuspendLayout();
@@ -263,6 +267,9 @@ namespace Mag_SuitBuilder
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.lblAccessorizerRunningThreads);
+			this.tabPage1.Controls.Add(this.lblAccessorizerQueuedThreads);
+			this.tabPage1.Controls.Add(this.lblArmorSearchThreads);
 			this.tabPage1.Controls.Add(this.cmdCopyToClipboard);
 			this.tabPage1.Controls.Add(this.cmdCollapseAll);
 			this.tabPage1.Controls.Add(this.cmdExpandAll);
@@ -296,9 +303,46 @@ namespace Mag_SuitBuilder
 			this.tabPage1.Text = "Step 2. Generate Suits";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
+			// lblAccessorizerRunningThreads
+			// 
+			this.lblAccessorizerRunningThreads.AutoSize = true;
+			this.lblAccessorizerRunningThreads.Location = new System.Drawing.Point(772, 78);
+			this.lblAccessorizerRunningThreads.Name = "lblAccessorizerRunningThreads";
+			this.lblAccessorizerRunningThreads.Size = new System.Drawing.Size(155, 13);
+			this.lblAccessorizerRunningThreads.TabIndex = 41;
+			this.lblAccessorizerRunningThreads.Text = "Accessorizer Running Threads:";
+			// 
+			// lblAccessorizerQueuedThreads
+			// 
+			this.lblAccessorizerQueuedThreads.AutoSize = true;
+			this.lblAccessorizerQueuedThreads.Location = new System.Drawing.Point(772, 56);
+			this.lblAccessorizerQueuedThreads.Name = "lblAccessorizerQueuedThreads";
+			this.lblAccessorizerQueuedThreads.Size = new System.Drawing.Size(153, 13);
+			this.lblAccessorizerQueuedThreads.TabIndex = 40;
+			this.lblAccessorizerQueuedThreads.Text = "Accessorizer Queued Threads:";
+			// 
+			// lblArmorSearchThreads
+			// 
+			this.lblArmorSearchThreads.AutoSize = true;
+			this.lblArmorSearchThreads.Location = new System.Drawing.Point(772, 34);
+			this.lblArmorSearchThreads.Name = "lblArmorSearchThreads";
+			this.lblArmorSearchThreads.Size = new System.Drawing.Size(116, 13);
+			this.lblArmorSearchThreads.TabIndex = 39;
+			this.lblArmorSearchThreads.Text = "Armor Search Threads:";
+			// 
+			// cmdCopyToClipboard
+			// 
+			this.cmdCopyToClipboard.Location = new System.Drawing.Point(485, 257);
+			this.cmdCopyToClipboard.Name = "cmdCopyToClipboard";
+			this.cmdCopyToClipboard.Size = new System.Drawing.Size(139, 23);
+			this.cmdCopyToClipboard.TabIndex = 38;
+			this.cmdCopyToClipboard.Text = "Copy to Clipboard";
+			this.cmdCopyToClipboard.UseVisualStyleBackColor = true;
+			this.cmdCopyToClipboard.Click += new System.EventHandler(this.cmdCopyToClipboard_Click);
+			// 
 			// cmdCollapseAll
 			// 
-			this.cmdCollapseAll.Location = new System.Drawing.Point(881, 147);
+			this.cmdCollapseAll.Location = new System.Drawing.Point(881, 189);
 			this.cmdCollapseAll.Name = "cmdCollapseAll";
 			this.cmdCollapseAll.Size = new System.Drawing.Size(75, 23);
 			this.cmdCollapseAll.TabIndex = 37;
@@ -308,7 +352,7 @@ namespace Mag_SuitBuilder
 			// 
 			// cmdExpandAll
 			// 
-			this.cmdExpandAll.Location = new System.Drawing.Point(881, 118);
+			this.cmdExpandAll.Location = new System.Drawing.Point(881, 160);
 			this.cmdExpandAll.Name = "cmdExpandAll";
 			this.cmdExpandAll.Size = new System.Drawing.Size(75, 23);
 			this.cmdExpandAll.TabIndex = 36;
@@ -323,7 +367,7 @@ namespace Mag_SuitBuilder
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.treeView1.Location = new System.Drawing.Point(962, 8);
 			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(476, 733);
+			this.treeView1.Size = new System.Drawing.Size(476, 735);
 			this.treeView1.TabIndex = 35;
 			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
 			// 
@@ -516,15 +560,10 @@ namespace Mag_SuitBuilder
 			this.coveragePiece9.Size = new System.Drawing.Size(153, 133);
 			this.coveragePiece9.TabIndex = 8;
 			// 
-			// cmdCopyToClipboard
+			// timerCalculatorUpdator
 			// 
-			this.cmdCopyToClipboard.Location = new System.Drawing.Point(485, 257);
-			this.cmdCopyToClipboard.Name = "cmdCopyToClipboard";
-			this.cmdCopyToClipboard.Size = new System.Drawing.Size(139, 23);
-			this.cmdCopyToClipboard.TabIndex = 38;
-			this.cmdCopyToClipboard.Text = "Copy to Clipboard";
-			this.cmdCopyToClipboard.UseVisualStyleBackColor = true;
-			this.cmdCopyToClipboard.Click += new System.EventHandler(this.cmdCopyToClipboard_Click);
+			this.timerCalculatorUpdator.Interval = 500;
+			this.timerCalculatorUpdator.Tick += new System.EventHandler(this.timerCalculatorUpdator_Tick);
 			// 
 			// Form1
 			// 
@@ -544,6 +583,7 @@ namespace Mag_SuitBuilder
 			this.equipmentGridContextMenu.ResumeLayout(false);
 			this.CharactersTreeViewContextMenu.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
+			this.tabPage1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -592,6 +632,10 @@ namespace Mag_SuitBuilder
 		private System.Windows.Forms.ContextMenuStrip equipmentGridContextMenu;
 		private System.Windows.Forms.ToolStripMenuItem copyItemsToClipboardToolStripMenuItem;
 		private System.Windows.Forms.Button cmdCopyToClipboard;
+		private System.Windows.Forms.Label lblAccessorizerQueuedThreads;
+		private System.Windows.Forms.Label lblArmorSearchThreads;
+		private System.Windows.Forms.Label lblAccessorizerRunningThreads;
+		private System.Windows.Forms.Timer timerCalculatorUpdator;
 	}
 }
 
