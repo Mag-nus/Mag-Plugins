@@ -28,7 +28,7 @@ namespace Mag_SuitBuilder.Search
 		public int SecondaryArmorSet { get; set; }
 
 
-		public bool ItemPassesRules(SuitBuildableMyWorldObject item)
+		public bool ItemPassesRules(ExtendedMyWorldObject item)
 		{
 			if (CantripsToLookFor.Count > 0)
 			{

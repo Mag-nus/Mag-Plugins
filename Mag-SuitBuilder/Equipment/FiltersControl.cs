@@ -108,7 +108,7 @@ namespace Mag_SuitBuilder.Equipment
 				FiltersChanged();
 		}
 
-		public bool ItemPassesFilters(SuitBuildableMyWorldObject mwo)
+		public bool ItemPassesFilters(ExtendedMyWorldObject mwo)
 		{
 			if (checkRemoveEquipped.Checked && mwo.EquippedSlot != EquippableSlotFlags.None)
 				return false;

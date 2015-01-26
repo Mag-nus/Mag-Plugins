@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using Mag_SuitBuilder.Equipment;
-
 using Mag.Shared.Constants;
 
 namespace Mag_SuitBuilder.Search
@@ -11,22 +9,22 @@ namespace Mag_SuitBuilder.Search
 	/// </summary>
 	class AccessorySearcher : Searcher
 	{
-		public AccessorySearcher(SearcherConfiguration config, IEnumerable<SuitBuildableMyWorldObject> accessories, CompletedSuit startingSuit = null) : base(config, accessories, startingSuit)
+		public AccessorySearcher(SearcherConfiguration config, IEnumerable<LeanMyWorldObject> accessories, CompletedSuit startingSuit = null) : base(config, accessories, startingSuit)
 		{
 			// Sort the list with the highest amount of epics
 			// As a temp fix we just sort based on spell count
 			Equipment.Sort((a, b) =>
 			{
-				if (a.CachedCalcedStartingArmorLevel > 0 && b.CachedCalcedStartingArmorLevel > 0) return b.CachedCalcedStartingArmorLevel.CompareTo(a.CachedCalcedStartingArmorLevel);
-				if (a.CachedCalcedStartingArmorLevel > 0 && b.CachedCalcedStartingArmorLevel == 0) return -1;
-				if (a.CachedCalcedStartingArmorLevel == 0 && b.CachedCalcedStartingArmorLevel > 0) return 1;
+				if (a.CalcedStartingArmorLevel > 0 && b.CalcedStartingArmorLevel > 0) return b.CalcedStartingArmorLevel.CompareTo(a.CalcedStartingArmorLevel);
+				if (a.CalcedStartingArmorLevel > 0 && b.CalcedStartingArmorLevel == 0) return -1;
+				if (a.CalcedStartingArmorLevel == 0 && b.CalcedStartingArmorLevel > 0) return 1;
 				return b.SpellsToUseInSearch.Count.CompareTo(a.SpellsToUseInSearch.Count);
 			});
 
 			// Remove any pieces that have armor
 			for (int i = Equipment.Count - 1; i >= 0; i--)
 			{
-				if (Equipment[i].CachedCalcedStartingArmorLevel > 0)
+				if (Equipment[i].CalcedStartingArmorLevel > 0)
 					Equipment.RemoveAt(i);
 			}
 		}
@@ -37,7 +35,7 @@ namespace Mag_SuitBuilder.Search
 
 		protected override void StartSearch()
 		{
-			BucketSorter sorter = new BucketSorter();
+			List<Bucket> sorter = new List<Bucket>();
 
 			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Trinket))		sorter.Add(new Bucket(EquippableSlotFlags.Trinket));
 
@@ -51,7 +49,7 @@ namespace Mag_SuitBuilder.Search
 			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.LeftRing))		sorter.Add(new Bucket(EquippableSlotFlags.LeftRing));
 
 			// Put all of our inventory into its appropriate bucket
-			foreach (SuitBuildableMyWorldObject piece in Equipment)
+			foreach (var piece in Equipment)
 				sorter.PutItemInBuckets(piece);
 
 			// Remove any empty buckets
@@ -125,6 +123,7 @@ namespace Mag_SuitBuilder.Search
 					if (newSuit.IsSubsetOf(suit))
 						return;
 				}
+
 				completedSuits.Add(newSuit);
 
 				OnSuitCreated(newSuit);
@@ -133,7 +132,7 @@ namespace Mag_SuitBuilder.Search
 			}
 
 			//for (int i = 0; i < buckets[index].Count ; i++)
-			foreach (SuitBuildableMyWorldObject piece in buckets[index]) // Using foreach: 10.85s, for: 11s
+			foreach (var piece in buckets[index]) // Using foreach: 10.85s, for: 11s
 			{
 				if (SuitBuilder.CanGetBeneficialSpellFrom(piece))
 				{

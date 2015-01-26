@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using Mag_SuitBuilder.Equipment;
-
 using Mag.Shared.Constants;
 using Mag.Shared.Spells;
 
@@ -20,11 +18,11 @@ namespace Mag_SuitBuilder.Search
 	/// When enumerating, keep in mind that SlotFlags could have one or more slot bits set for any piece.
 	/// No pieces should have overlapping slots.
 	/// </summary>
-	class CompletedSuit : IEnumerable<KeyValuePair<EquippableSlotFlags, SuitBuildableMyWorldObject>>
+	class CompletedSuit : IEnumerable<KeyValuePair<EquippableSlotFlags, LeanMyWorldObject>>
 	{
-		readonly Dictionary<EquippableSlotFlags, SuitBuildableMyWorldObject> items = new Dictionary<EquippableSlotFlags, SuitBuildableMyWorldObject>();
+		readonly Dictionary<EquippableSlotFlags, LeanMyWorldObject> items = new Dictionary<EquippableSlotFlags, LeanMyWorldObject>();
 
-		readonly HashSet<SuitBuildableMyWorldObject> piecesHashSet = new HashSet<SuitBuildableMyWorldObject>();
+		readonly HashSet<LeanMyWorldObject> piecesHashSet = new HashSet<LeanMyWorldObject>();
 
 		/// <summary>
 		/// Gets the number of equipment pieces in the suit.
@@ -47,13 +45,13 @@ namespace Mag_SuitBuilder.Search
 		/// <param name="item"></param>
 		/// <returns></returns>
 		/// <exception cref="ArgumentException">Trying to add an item that covers a slot already filled.</exception>
-		public bool AddItem(SuitBuildableMyWorldObject item)
+		public bool AddItem(LeanMyWorldObject item)
 		{
-			EquippableSlotFlags slotToAddTo = item.CachedEquippableSlots;
+			EquippableSlotFlags slotToAddTo = item.EquippableSlots;
 
-			if (item.CachedEquippableSlots == (EquippableSlotFlags.Feet | EquippableSlotFlags.PantsLowerLegs)) // Some armor boots
+			if (item.EquippableSlots == (EquippableSlotFlags.Feet | EquippableSlotFlags.PantsLowerLegs)) // Some armor boots
 				slotToAddTo = EquippableSlotFlags.Feet;
-			else if (item.CachedEquippableSlots == (EquippableSlotFlags.LeftBracelet | EquippableSlotFlags.RightBracelet))
+			else if (item.EquippableSlots == (EquippableSlotFlags.LeftBracelet | EquippableSlotFlags.RightBracelet))
 			{
 				if (this[EquippableSlotFlags.LeftBracelet] == null)
 					slotToAddTo = EquippableSlotFlags.LeftBracelet;
@@ -62,7 +60,7 @@ namespace Mag_SuitBuilder.Search
 				else
 					return false;
 			}
-			else if (item.CachedEquippableSlots == (EquippableSlotFlags.LeftRing | EquippableSlotFlags.RightRing))
+			else if (item.EquippableSlots == (EquippableSlotFlags.LeftRing | EquippableSlotFlags.RightRing))
 			{
 				if (this[EquippableSlotFlags.LeftRing] == null)
 					slotToAddTo = EquippableSlotFlags.LeftRing;
@@ -71,9 +69,9 @@ namespace Mag_SuitBuilder.Search
 				else
 					return false;
 			}
-			else if (item.CachedEquippableSlots.IsShirt())
+			else if (item.EquippableSlots.IsShirt())
 				slotToAddTo = EquippableSlotFlags.ShirtChest;
-			else if (item.CachedEquippableSlots.IsPants())
+			else if (item.EquippableSlots.IsPants())
 				slotToAddTo = EquippableSlotFlags.PantsUpperLegs;
 
 			if (this[slotToAddTo] != null)
@@ -85,7 +83,7 @@ namespace Mag_SuitBuilder.Search
 		}
 
 		/// <exception cref="ArgumentException">Trying to add an item that covers a slot already filled.</exception>
-		public void AddItem(EquippableSlotFlags slots, SuitBuildableMyWorldObject item)
+		public void AddItem(EquippableSlotFlags slots, LeanMyWorldObject item)
 		{
 			// Make sure we don't overlap a slot
 			foreach (var o in this)
@@ -97,8 +95,8 @@ namespace Mag_SuitBuilder.Search
 			items.Add(slots, item);
 			piecesHashSet.Add(item);
 
-			if (item.CachedCalcedStartingArmorLevel > 0)
-				TotalBaseArmorLevel += (item.CachedCalcedStartingArmorLevel * slots.GetTotalBitsSet());
+			if (item.CalcedStartingArmorLevel > 0)
+				TotalBaseArmorLevel += (item.CalcedStartingArmorLevel * slots.GetTotalBitsSet());
 
 			foreach (Spell itemSpell in item.SpellsToUseInSearch)
 			{
@@ -135,11 +133,11 @@ namespace Mag_SuitBuilder.Search
 			}
 		}
 
-		public SuitBuildableMyWorldObject this[EquippableSlotFlags slot]
+		public LeanMyWorldObject this[EquippableSlotFlags slot]
 		{
 			get
 			{
-				foreach (KeyValuePair<EquippableSlotFlags, SuitBuildableMyWorldObject> kvp in items)
+				foreach (KeyValuePair<EquippableSlotFlags, LeanMyWorldObject> kvp in items)
 				{
 					if ((kvp.Key & slot) != 0)
 						return kvp.Value;
@@ -169,7 +167,7 @@ namespace Mag_SuitBuilder.Search
 			return piecesHashSet.IsSupersetOf(other.piecesHashSet);
 		}
 
-		public IEnumerator<KeyValuePair<EquippableSlotFlags, SuitBuildableMyWorldObject>> GetEnumerator()
+		public IEnumerator<KeyValuePair<EquippableSlotFlags, LeanMyWorldObject>> GetEnumerator()
 		{
 			return items.GetEnumerator();
 		}
