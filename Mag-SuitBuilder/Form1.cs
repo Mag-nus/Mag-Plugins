@@ -352,11 +352,18 @@ namespace Mag_SuitBuilder
 
 
 
-
 		List<LeanMyWorldObject> searchItems;
+
+		DateTime startTime;
+
 		ArmorSearcher armorSearcher;
+		long armorThreadCounter;
 		int armorSearcherHighestItemCount;
+
 		readonly ConcurrentDictionary<Searcher, int> accessorySearchers = new ConcurrentDictionary<Searcher, int>(); // We use this list to stop accessory searchers when the user stops the build.
+		long accessoryThreadQueueCounter;
+		long accessoryThreadRunningCounter;
+
 		bool abortedSearch;
 
 		private void btnCalculatePossibilities_Click(object sender, System.EventArgs e)
@@ -439,7 +446,7 @@ namespace Mag_SuitBuilder
 			if (possibleSpells.Count > 32)
 			{
 				MessageBox.Show("Too many spells.");
-				btnCalculatePossibilities.Enabled = false;
+				btnCalculatePossibilities.Enabled = true;
 				return;
 			}
 
@@ -522,17 +529,20 @@ namespace Mag_SuitBuilder
 			armorSearcher.SuitCreated += new Action<CompletedSuit>(armorSearcher_SuitCreated);
 			armorSearcher.SearchCompleted += new Action(ThreadFinished);
 
+			startTime = DateTime.Now;
+
+			armorThreadCounter = 1;
+			accessoryThreadQueueCounter = 0;
+			accessoryThreadRunningCounter = 0;
+
+			timerCalculatorUpdator.Start();
+
 			new Thread(() =>
 			{
-				startTime = DateTime.Now;
-
 				// Do the actual search here
-				threadCounter = 1;
-
 				armorSearcher.Start();
 
-				Interlocked.Decrement(ref threadCounter);
-				ThreadFinished();
+				Interlocked.Decrement(ref armorThreadCounter);
 			}).Start();
 
 			btnStopCalculating.Enabled = true;
@@ -550,49 +560,57 @@ namespace Mag_SuitBuilder
 			}
 		}
 
-		DateTime startTime;
-		long threadCounter;
+		readonly Object lockObject = new Object();
 
 		void armorSearcher_SuitCreated(CompletedSuit obj)
 		{
 			BeginInvoke((MethodInvoker)(() => AddCompletedSuitToTreeView(obj)));
 
-			// We don't accessorise suits that have less items than our best suit
-			if (obj.Count < armorSearcherHighestItemCount)
-				return;
-
-			if (obj.Count > armorSearcherHighestItemCount)
+			lock (lockObject)
 			{
-				armorSearcherHighestItemCount = obj.Count;
+				// We don't accessorise suits that have less items than our best suit
+				if (obj.Count < armorSearcherHighestItemCount)
+					return;
 
-				// Disable previous accessory searchers that have a lower initial item count
-				foreach (var kvp in accessorySearchers)
+				if (obj.Count > armorSearcherHighestItemCount)
 				{
-					if (kvp.Value < armorSearcherHighestItemCount && kvp.Key != null && kvp.Key.Running)
+					armorSearcherHighestItemCount = obj.Count;
+
+					// Disable previous accessory searchers that have a lower initial item count
+					foreach (var kvp in accessorySearchers)
 					{
-						kvp.Key.Stop();
-						Interlocked.Decrement(ref threadCounter);
+						if (kvp.Value < armorSearcherHighestItemCount && kvp.Key != null && kvp.Key.Running)
+							kvp.Key.Stop();
 					}
 				}
 			}
 
-			Interlocked.Increment(ref threadCounter);
+			Interlocked.Increment(ref accessoryThreadQueueCounter);
 
 			ThreadPool.QueueUserWorkItem(delegate
 			{
-				if (abortedSearch || obj.Count < armorSearcherHighestItemCount)
+				AccessorySearcher accSearcher;
+
+				lock (lockObject)
 				{
-					Interlocked.Decrement(ref threadCounter);
-					return;
+					if (abortedSearch || obj.Count < armorSearcherHighestItemCount)
+					{
+						Interlocked.Decrement(ref accessoryThreadQueueCounter);
+						return;
+					}
+
+					Interlocked.Increment(ref accessoryThreadRunningCounter);
+
+					accSearcher = new AccessorySearcher(new SearcherConfiguration(), searchItems, obj);
+					accessorySearchers.TryAdd(accSearcher, obj.Count);
 				}
 
-				AccessorySearcher accSearcher = new AccessorySearcher(new SearcherConfiguration(), searchItems, obj);
-				accessorySearchers.TryAdd(accSearcher, obj.Count);
 				accSearcher.SuitCreated += new Action<CompletedSuit>(accSearcher_SuitCreated);
 				accSearcher.Start();
 				accSearcher.SuitCreated -= new Action<CompletedSuit>(accSearcher_SuitCreated);
 
-				Interlocked.Decrement(ref threadCounter);
+				Interlocked.Decrement(ref accessoryThreadRunningCounter);
+				Interlocked.Decrement(ref accessoryThreadQueueCounter);
 				ThreadFinished();
 			});
 		}
@@ -628,10 +646,22 @@ namespace Mag_SuitBuilder
 						break;
 					}
 
-					if ((nodeAsSuit.Suit.TotalBaseArmorLevel == suit.TotalBaseArmorLevel) && ((nodeAsSuit.Suit.TotalEffectiveLegendaries < suit.TotalEffectiveLegendaries) || (nodeAsSuit.Suit.TotalEffectiveEpics == suit.TotalEffectiveEpics && nodeAsSuit.Suit.TotalEffectiveMajors < suit.TotalEffectiveMajors)))
+					if (nodeAsSuit.Suit.Count == suit.Count)
 					{
-						nodes.Insert(i, newNode);
-						break;
+						if (nodeAsSuit.Suit.TotalBaseArmorLevel < suit.TotalBaseArmorLevel)
+						{
+							nodes.Insert(i, newNode);
+							break;
+						}
+
+						if (nodeAsSuit.Suit.TotalBaseArmorLevel == suit.TotalBaseArmorLevel)
+						{
+							if ((nodeAsSuit.Suit.TotalEffectiveLegendaries < suit.TotalEffectiveLegendaries) || (nodeAsSuit.Suit.TotalEffectiveLegendaries == suit.TotalEffectiveLegendaries && nodeAsSuit.Suit.TotalEffectiveEpics < suit.TotalEffectiveEpics))
+							{
+								nodes.Insert(i, newNode);
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -655,7 +685,7 @@ namespace Mag_SuitBuilder
 
 		void ThreadFinished()
 		{
-			if (Interlocked.Read(ref threadCounter) == 0)
+			if (Interlocked.Read(ref armorThreadCounter) == 0 && Interlocked.Read(ref accessoryThreadQueueCounter) == 0)
 			{
 				BeginInvoke((MethodInvoker)(() =>
 				{
@@ -686,7 +716,19 @@ namespace Mag_SuitBuilder
 
 			accessorySearchers.Clear();
 
+			Thread.Sleep(500); // Give the threads time to stop
+
+			timerCalculatorUpdator_Tick(null, null);
+			timerCalculatorUpdator.Stop();
+
 			btnCalculatePossibilities.Enabled = true;
+		}
+
+		private void timerCalculatorUpdator_Tick(object sender, EventArgs e)
+		{
+			lblArmorSearchThreads.Text = "Armor Search Threads: " + Interlocked.Read(ref armorThreadCounter);
+			lblAccessorizerQueuedThreads.Text = "Accessorizer Queued Threads: " + (Interlocked.Read(ref accessoryThreadQueueCounter) - Interlocked.Read(ref accessoryThreadRunningCounter));
+			lblAccessorizerRunningThreads.Text = "Accessorizer Running Threads: " + Interlocked.Read(ref accessoryThreadRunningCounter);
 		}
 
 		private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
