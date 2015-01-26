@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using Mag_SuitBuilder.Equipment;
-
 using Mag.Shared.Constants;
 
 namespace Mag_SuitBuilder.Search
@@ -14,20 +12,20 @@ namespace Mag_SuitBuilder.Search
 	/// </summary>
 	internal class ArmorSearcher : Searcher
 	{
-		public ArmorSearcher(SearcherConfiguration config, IEnumerable<SuitBuildableMyWorldObject> pieces, CompletedSuit startingSuit = null) : base(config, pieces, startingSuit)
+		public ArmorSearcher(SearcherConfiguration config, IEnumerable<LeanMyWorldObject> pieces, CompletedSuit startingSuit = null) : base(config, pieces, startingSuit)
 		{
 			// Sort the list with the highest armor first
-			Equipment.Sort((a, b) => b.CachedCalcedStartingArmorLevel.CompareTo(a.CachedCalcedStartingArmorLevel));
+			Equipment.Sort((a, b) => b.CalcedStartingArmorLevel.CompareTo(a.CalcedStartingArmorLevel));
 
 			// Remove any pieces that have no armor
 			for (int i = Equipment.Count - 1 ; i >= 0 ; i--)
 			{
-				if (Equipment[i].CachedCalcedStartingArmorLevel <= 0)
+				if (Equipment[i].CalcedStartingArmorLevel <= 0)
 					Equipment.RemoveAt(i);
 			}
 		}
 
-		BucketSorter buckets;
+		List<Bucket> buckets;
 
 		int totalArmorBucketsWithItems;
 		int highestArmorCountSuitBuilt;
@@ -36,7 +34,7 @@ namespace Mag_SuitBuilder.Search
 
 		protected override void StartSearch()
 		{
-			buckets = new BucketSorter();
+			buckets = new List<Bucket>();
 
 			// All these slots can have armor
 			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Head))		buckets.Add(new Bucket(EquippableSlotFlags.Head));
@@ -199,7 +197,7 @@ namespace Mag_SuitBuilder.Search
 
 					if (clone.SlotIsOpen(buckets[index].Slot))
 					{
-						if ((!piece.CachedEquippableSlots.IsBodyArmor() || clone.HasRoomForArmorSet(Config.PrimaryArmorSet, Config.SecondaryArmorSet, piece.ItemSetId)) && clone.CanGetBeneficialSpellFrom(piece))
+						if ((!piece.EquippableSlots.IsBodyArmor() || clone.HasRoomForArmorSet(Config.PrimaryArmorSet, Config.SecondaryArmorSet, piece.ItemSetId)) && clone.CanGetBeneficialSpellFrom(piece))
 						{
 							clone.Push(piece, buckets[index].Slot);
 
@@ -214,9 +212,9 @@ namespace Mag_SuitBuilder.Search
 			{
 				if (builder.SlotIsOpen(buckets[index].Slot))
 				{
-					foreach (SuitBuildableMyWorldObject piece in buckets[index])
+					foreach (var piece in buckets[index])
 					{
-						if (builder.CanGetBeneficialSpellFrom(piece) && (!piece.CachedEquippableSlots.IsBodyArmor() || builder.HasRoomForArmorSet(Config.PrimaryArmorSet, Config.SecondaryArmorSet, piece.ItemSetId)))
+						if (builder.CanGetBeneficialSpellFrom(piece) && (!piece.EquippableSlots.IsBodyArmor() || builder.HasRoomForArmorSet(Config.PrimaryArmorSet, Config.SecondaryArmorSet, piece.ItemSetId)))
 						{
 							builder.Push(piece, buckets[index].Slot);
 

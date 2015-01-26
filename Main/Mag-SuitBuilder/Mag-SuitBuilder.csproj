@@ -93,8 +93,7 @@
     <Compile Include="EquipmentUpgradesForm.Designer.cs">
       <DependentUpon>EquipmentUpgradesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Obsolete\Constants.cs" />
-    <Compile Include="Obsolete\ArmorSet.cs" />
+    <Compile Include="Equipment\ExtendedMyWorldObjectExtensions.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -102,7 +101,7 @@
     </Compile>
     <Compile Include="Search\AccessorySearcher.cs" />
     <Compile Include="Search\Bucket.cs" />
-    <Compile Include="Search\BucketSorter.cs" />
+    <Compile Include="Search\BucketExtensions.cs" />
     <Compile Include="Search\CompletedSuit.cs" />
     <Compile Include="Equipment\FiltersControl.cs">
       <SubType>UserControl</SubType>
@@ -110,6 +109,8 @@
     <Compile Include="Equipment\FiltersControl.Designer.cs">
       <DependentUpon>FiltersControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Search\LeanMyWorldObject.cs" />
+    <Compile Include="Search\LeanMyWorldObjectExtensions.cs" />
     <Compile Include="Search\Searcher.cs" />
     <Compile Include="Spells\CantripSelectorControl.cs">
       <SubType>UserControl</SubType>
@@ -124,8 +125,6 @@
     <Compile Include="Equipment\EquipmentPieceControl.Designer.cs">
       <DependentUpon>EquipmentPieceControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Equipment\EquipmentGroup.cs" />
-    <Compile Include="Obsolete\EquipmentPiece.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -136,7 +135,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\ArmorSearcher.cs" />
     <Compile Include="Search\SearcherConfiguration.cs" />
-    <Compile Include="Equipment\SuitBuildableMyWorldObject.cs" />
+    <Compile Include="Equipment\ExtendedMyWorldObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="EquipmentUpgradesForm.resx">

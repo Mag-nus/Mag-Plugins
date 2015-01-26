@@ -4,6 +4,7 @@ using System.Windows.Forms;
 
 using Mag_SuitBuilder.Equipment;
 
+using Mag.Shared;
 using Mag.Shared.Constants;
 
 namespace Mag_SuitBuilder
@@ -15,10 +16,10 @@ namespace Mag_SuitBuilder
 			InitializeComponent();
 		}
 
-		public void Update(Dictionary<SuitBuildableMyWorldObject, List<SuitBuildableMyWorldObject>> upgrades)
+		public void Update(Dictionary<ExtendedMyWorldObject, List<ExtendedMyWorldObject>> upgrades)
 		{
-			EquipmentGroup obsoleteEquipment = new EquipmentGroup();
-			EquipmentGroup upgradeEquipment = new EquipmentGroup();
+			var obsoleteEquipment = new SortableBindingList<ExtendedMyWorldObject>();
+			var upgradeEquipment = new SortableBindingList<ExtendedMyWorldObject>();
 
 			foreach (var kvp in upgrades)
 			{
@@ -31,7 +32,7 @@ namespace Mag_SuitBuilder
 			Update(obsoleteEquipment, upgradeEquipment);
 		}
 
-		public void Update(EquipmentGroup obsoleteEquipment, EquipmentGroup upgradeEquipment)
+		public void Update(SortableBindingList<ExtendedMyWorldObject> obsoleteEquipment, SortableBindingList<ExtendedMyWorldObject> upgradeEquipment)
 		{
 			currentEquipmentGrid.DataSource = obsoleteEquipment;
 			currentEquipmentGrid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);

@@ -15,14 +15,14 @@ namespace Mag_SuitBuilder.Equipment
 		}
 
 		public EquippableSlotFlags EquippableSlots { get; set; }
-		SuitBuildableMyWorldObject mwo;
+		ExtendedMyWorldObject mwo;
 
-		public bool CanEquip(SuitBuildableMyWorldObject piece)
+		public bool CanEquip(ExtendedMyWorldObject piece)
 		{
 			return (piece.EquippableSlots & EquippableSlots) == EquippableSlots;
 		}
 
-		public void SetEquipmentPiece(SuitBuildableMyWorldObject piece)
+		public void SetEquipmentPiece(ExtendedMyWorldObject piece)
 		{
 			mwo = null;
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -19,14 +20,11 @@ using Mag.Shared;
 using Mag.Shared.Constants;
 using Mag.Shared.Spells;
 
-// Bugs
-// Spell compare is too slow, should be a hash compare
-
 namespace Mag_SuitBuilder
 {
 	public partial class Form1 : Form
 	{
-		readonly EquipmentGroup boundList = new EquipmentGroup();
+		readonly SortableBindingList<ExtendedMyWorldObject> boundList = new SortableBindingList<ExtendedMyWorldObject>();
 
 		public Form1()
 		{
@@ -126,7 +124,7 @@ namespace Mag_SuitBuilder
 		{
 			this.Enabled = false;
 
-			XmlSerializer serializer = new XmlSerializer(typeof(List<SuitBuildableMyWorldObject>));
+			XmlSerializer serializer = new XmlSerializer(typeof(List<ExtendedMyWorldObject>));
 
 			CharactersTreeView.Nodes.Clear();
 			boundList.Clear();
@@ -155,19 +153,19 @@ namespace Mag_SuitBuilder
 
 					TreeNode characterNode = serverNode.Nodes.Add(characterName);
 
-					List<SuitBuildableMyWorldObject> myWorldObjects;
+					List<ExtendedMyWorldObject> myWorldObjects;
 
 					// This is pretty hacked. SuitBuildableMyWorldObject is a derived class of MyWorldObject. It extends properties for the binding list.
 					// Mag-Tools serializes MyWorldObjects.
 					// I don't know how to deserialize those objects out as SuitBuildableMyWorldObjects.
 					var fileContents = File.ReadAllText(characterFilePaths[j]);
-					fileContents = fileContents.Replace("MyWorldObject", "SuitBuildableMyWorldObject");
+					fileContents = fileContents.Replace("MyWorldObject", "ExtendedMyWorldObject");
 
 					try
 					{
 						using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContents)))
 						using (XmlReader reader = XmlReader.Create(stream))
-							myWorldObjects = (List<SuitBuildableMyWorldObject>) serializer.Deserialize(reader);
+							myWorldObjects = (List<ExtendedMyWorldObject>) serializer.Deserialize(reader);
 
 						foreach (var mwo in myWorldObjects)
 						{
@@ -236,9 +234,9 @@ namespace Mag_SuitBuilder
 
 			foreach (TreeNode node in nodes)
 			{
-				if (node.Tag is List<SuitBuildableMyWorldObject>)
+				if (node.Tag is List<ExtendedMyWorldObject>)
 				{
-					foreach (SuitBuildableMyWorldObject piece in (node.Tag as List<SuitBuildableMyWorldObject>))
+					foreach (ExtendedMyWorldObject piece in (node.Tag as List<ExtendedMyWorldObject>))
 					{
 						if (node.Checked && (piece.Locked || filtersControl1.ItemPassesFilters(piece)))
 							boundList.Add(piece);
@@ -323,8 +321,8 @@ namespace Mag_SuitBuilder
 			if (CharactersTreeView.SelectedNode == null)
 				return;
 
-			EquipmentGroup characterEquipment = new EquipmentGroup();
-			EquipmentGroup muleEquipment = new EquipmentGroup();
+			var characterEquipment = new List<ExtendedMyWorldObject>();
+			var muleEquipment = new List<ExtendedMyWorldObject>();
 
 			foreach (var item in boundList)
 			{
@@ -355,9 +353,10 @@ namespace Mag_SuitBuilder
 
 
 
-
+		List<LeanMyWorldObject> searchItems;
 		ArmorSearcher armorSearcher;
-		List<Searcher> accessorySearchers = new List<Searcher>(); // We use this list to stop accessory searchers when the user stops the build.
+		int armorSearcherHighestItemCount;
+		readonly ConcurrentDictionary<Searcher, int> accessorySearchers = new ConcurrentDictionary<Searcher, int>(); // We use this list to stop accessory searchers when the user stops the build.
 		bool abortedSearch;
 
 		private void btnCalculatePossibilities_Click(object sender, System.EventArgs e)
@@ -388,14 +387,24 @@ namespace Mag_SuitBuilder
 			config.PrimaryArmorSet = filtersControl1.PrimaryArmorSetId;
 			config.SecondaryArmorSet = filtersControl1.SecondaryArmorSetId;
 
+			// Build the list of items we're going to use in our search
+			searchItems = new List<LeanMyWorldObject>();
+
+			// Only add items that meet our minimum requirements
+			foreach (var piece in boundList)
+			{
+				if (piece.Locked || (!piece.Exclude && config.ItemPassesRules(piece)))
+					searchItems.Add(new LeanMyWorldObject(piece));
+			}
+
 			var possibleSpells = new List<Spell>();
 
 			// Go through our Equipment and remove/disable any extra spells that we're not looking for
-			foreach (var piece in boundList)
+			foreach (var piece in searchItems)
 			{
 				piece.SpellsToUseInSearch.Clear();
 
-				foreach (Spell spell in piece.CachedSpells)
+				foreach (Spell spell in piece.ExtendedMyWorldObject.CachedSpells)
 				{
 					if (config.SpellPassesRules(spell) && !spell.IsOfSameFamilyAndGroup(SpellTools.GetSpell(4667))) // Epic Impenetrability
 					{
@@ -440,7 +449,7 @@ namespace Mag_SuitBuilder
 				spellMap.Add(possibleSpells[i], 1 << i);
 
 			// Now, we update each item with the new spell map
-			foreach (var piece in boundList)
+			foreach (var piece in searchItems)
 			{
 				piece.SpellBitmap = 0;
 
@@ -460,7 +469,7 @@ namespace Mag_SuitBuilder
 			// Add locked pieces in order of slots covered, starting with the fewest
 			for (int slotCount = 1; slotCount <= 5; slotCount++)
 			{
-				foreach (SuitBuildableMyWorldObject item in boundList)
+				foreach (var item in searchItems)
 				{
 					// Don't add items that we don't care about
 					if (item.EquippableSlots == EquippableSlotFlags.None || item.EquippableSlots == EquippableSlotFlags.MeleeWeapon || item.EquippableSlots == EquippableSlotFlags.MissileWeapon || item.EquippableSlots == EquippableSlotFlags.TwoHandWeapon || item.EquippableSlots == EquippableSlotFlags.Wand || item.EquippableSlots == EquippableSlotFlags.MissileAmmo)
@@ -468,11 +477,11 @@ namespace Mag_SuitBuilder
 					if (item.EquippableSlots == EquippableSlotFlags.Cloak || item.EquippableSlots == EquippableSlotFlags.BlueAetheria || item.EquippableSlots == EquippableSlotFlags.YellowAetheria || item.EquippableSlots == EquippableSlotFlags.RedAetheria)
 						continue;
 
-					if (item.Locked && item.EquippableSlots.GetTotalBitsSet() == slotCount)
+					if (item.ExtendedMyWorldObject.Locked && item.EquippableSlots.GetTotalBitsSet() == slotCount)
 					{
 						try
 						{
-							if (item.EquippableSlots.GetTotalBitsSet() > 1 && item.EquippableSlots.IsBodyArmor() && MessageBox.Show(item.Name + " covers multiple slots. Would you like to reduce it?", "Add Item", MessageBoxButtons.YesNo) == DialogResult.Yes)
+							if (item.EquippableSlots.GetTotalBitsSet() > 1 && item.EquippableSlots.IsBodyArmor() && MessageBox.Show(item.ExtendedMyWorldObject.Name + " covers multiple slots. Would you like to reduce it?", "Add Item", MessageBoxButtons.YesNo) == DialogResult.Yes)
 							{
 								var reductionOptions = item.Coverage.ReductionOptions();
 
@@ -494,11 +503,11 @@ namespace Mag_SuitBuilder
 									baseSuit.AddItem(slotFlag, item);
 							}
 							else if (!baseSuit.AddItem(item))
-								MessageBox.Show("Failed to add " + item.Name + " to base suit of armor.");
+								MessageBox.Show("Failed to add " + item.ExtendedMyWorldObject.Name + " to base suit of armor.");
 						}
 						catch (ArgumentException) // Item failed to add
 						{
-							MessageBox.Show("Failed to add " + item.Name + " to base suit of armor. It overlaps another piece");
+							MessageBox.Show("Failed to add " + item.ExtendedMyWorldObject.Name + " to base suit of armor. It overlaps another piece");
 						}
 					}
 				}
@@ -507,7 +516,8 @@ namespace Mag_SuitBuilder
 			if (baseSuit.Count > 0)
 				AddCompletedSuitToTreeView(baseSuit);
 
-			armorSearcher = new ArmorSearcher(config, boundList, baseSuit);
+			armorSearcher = new ArmorSearcher(config, searchItems, baseSuit);
+			armorSearcherHighestItemCount = 0;
 
 			armorSearcher.SuitCreated += new Action<CompletedSuit>(armorSearcher_SuitCreated);
 			armorSearcher.SearchCompleted += new Action(ThreadFinished);
@@ -547,18 +557,37 @@ namespace Mag_SuitBuilder
 		{
 			BeginInvoke((MethodInvoker)(() => AddCompletedSuitToTreeView(obj)));
 
+			// We don't accessorise suits that have less items than our best suit
+			if (obj.Count < armorSearcherHighestItemCount)
+				return;
+
+			if (obj.Count > armorSearcherHighestItemCount)
+			{
+				armorSearcherHighestItemCount = obj.Count;
+
+				// Disable previous accessory searchers that have a lower initial item count
+				foreach (var kvp in accessorySearchers)
+				{
+					if (kvp.Value < armorSearcherHighestItemCount && kvp.Key != null && kvp.Key.Running)
+					{
+						kvp.Key.Stop();
+						Interlocked.Decrement(ref threadCounter);
+					}
+				}
+			}
+
 			Interlocked.Increment(ref threadCounter);
 
 			ThreadPool.QueueUserWorkItem(delegate
 			{
-				if (abortedSearch)
+				if (abortedSearch || obj.Count < armorSearcherHighestItemCount)
 				{
 					Interlocked.Decrement(ref threadCounter);
 					return;
 				}
 
-				AccessorySearcher accSearcher = new AccessorySearcher(new SearcherConfiguration(), boundList, obj);
-				accessorySearchers.Add(accSearcher);
+				AccessorySearcher accSearcher = new AccessorySearcher(new SearcherConfiguration(), searchItems, obj);
+				accessorySearchers.TryAdd(accSearcher, obj.Count);
 				accSearcher.SuitCreated += new Action<CompletedSuit>(accSearcher_SuitCreated);
 				accSearcher.Start();
 				accSearcher.SuitCreated -= new Action<CompletedSuit>(accSearcher_SuitCreated);
@@ -593,13 +622,13 @@ namespace Mag_SuitBuilder
 				//if (nodeAsSuit != null && (nodeAsSuit.Suit.Count < suit.Count || (nodeAsSuit.Suit.Count == suit.Count && nodeAsSuit.Suit.TotalBaseArmorLevel < suit.TotalBaseArmorLevel)))
 				if (nodeAsSuit != null)
 				{
-					if (nodeAsSuit.Suit.TotalBaseArmorLevel < suit.TotalBaseArmorLevel)
+					if (nodeAsSuit.Suit.Count < suit.Count)
 					{
 						nodes.Insert(i, newNode);
 						break;
 					}
-					
-					if ((nodeAsSuit.Suit.TotalBaseArmorLevel == suit.TotalBaseArmorLevel) && ((nodeAsSuit.Suit.TotalEffectiveEpics < suit.TotalEffectiveEpics) || (nodeAsSuit.Suit.TotalEffectiveEpics == suit.TotalEffectiveEpics && nodeAsSuit.Suit.TotalEffectiveMajors < suit.TotalEffectiveMajors)))
+
+					if ((nodeAsSuit.Suit.TotalBaseArmorLevel == suit.TotalBaseArmorLevel) && ((nodeAsSuit.Suit.TotalEffectiveLegendaries < suit.TotalEffectiveLegendaries) || (nodeAsSuit.Suit.TotalEffectiveEpics == suit.TotalEffectiveEpics && nodeAsSuit.Suit.TotalEffectiveMajors < suit.TotalEffectiveMajors)))
 					{
 						nodes.Insert(i, newNode);
 						break;
@@ -638,8 +667,6 @@ namespace Mag_SuitBuilder
 					//MessageBox.Show((DateTime.Now - startTime).TotalSeconds.ToString());
 				}));
 			}
-
-			// Accessory searchers could still be running...
 		}
 
 		private void btnStopCalculating_Click(object sender, EventArgs e)
@@ -651,11 +678,12 @@ namespace Mag_SuitBuilder
 
 			armorSearcher.Stop();
 
-			foreach (Searcher searcher in accessorySearchers)
+			foreach (Searcher searcher in accessorySearchers.Keys)
 			{
 				if (searcher != null && searcher.Running)
 					searcher.Stop();
 			}
+
 			accessorySearchers.Clear();
 
 			btnCalculatePossibilities.Enabled = true;
@@ -680,7 +708,7 @@ namespace Mag_SuitBuilder
 				{
 					EquipmentPieceControl coveragePiece = cntrl as EquipmentPieceControl;
 
-					coveragePiece.SetEquipmentPiece(suit[coveragePiece.EquippableSlots]);
+					coveragePiece.SetEquipmentPiece(suit[coveragePiece.EquippableSlots] == null ? null : suit[coveragePiece.EquippableSlots].ExtendedMyWorldObject);
 
 					cntrl.Refresh();
 				}
@@ -691,7 +719,7 @@ namespace Mag_SuitBuilder
 			// This method adds every spell for all the items of the suit
 			foreach (var kvp in suit)
 			{
-				foreach (var spell in kvp.Value.CachedSpells)
+				foreach (var spell in kvp.Value.ExtendedMyWorldObject.CachedSpells)
 					cntrlSuitCantrips.Add(spell);
 			}
 
@@ -711,25 +739,25 @@ namespace Mag_SuitBuilder
 			if (node == null)
 				return;
 
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Head], sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Chest], sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Abdomen], sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.UpperArms], sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LowerArms], sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Hands], sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.UpperLegs], sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LowerLegs], sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Feet], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Head] == null ? null : node.Suit[EquippableSlotFlags.Head].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Chest] == null ? null : node.Suit[EquippableSlotFlags.Chest].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Abdomen] == null ? null : node.Suit[EquippableSlotFlags.Abdomen].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.UpperArms] == null ? null : node.Suit[EquippableSlotFlags.UpperArms].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LowerArms] == null ? null : node.Suit[EquippableSlotFlags.LowerArms].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Hands] == null ? null : node.Suit[EquippableSlotFlags.Hands].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.UpperLegs] == null ? null : node.Suit[EquippableSlotFlags.UpperLegs].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LowerLegs] == null ? null : node.Suit[EquippableSlotFlags.LowerLegs].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Feet] == null ? null : node.Suit[EquippableSlotFlags.Feet].ExtendedMyWorldObject, sb);
 			sb.AppendLine();
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.ShirtChest], sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.PantsAbdomen], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.ShirtChest] == null ? null : node.Suit[EquippableSlotFlags.ShirtChest].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.PantsAbdomen] == null ? null : node.Suit[EquippableSlotFlags.PantsAbdomen].ExtendedMyWorldObject, sb);
 			sb.AppendLine();
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Necklace], sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Trinket], sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LeftBracelet], sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.RightBracelet], sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LeftRing], sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.RightRing], sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Necklace] == null ? null : node.Suit[EquippableSlotFlags.Necklace].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Trinket] == null ? null : node.Suit[EquippableSlotFlags.Trinket].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LeftBracelet] == null ? null : node.Suit[EquippableSlotFlags.LeftBracelet].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.RightBracelet] == null ? null : node.Suit[EquippableSlotFlags.RightBracelet].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LeftRing] == null ? null : node.Suit[EquippableSlotFlags.LeftRing].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.RightRing] == null ? null : node.Suit[EquippableSlotFlags.RightRing].ExtendedMyWorldObject, sb);
 			sb.AppendLine();
 			sb.AppendLine("Total Effective Legendaries: ".PadRight(30) + node.Suit.TotalEffectiveLegendaries);
 			sb.AppendLine("Total Effective Epics: ".PadRight(30) + node.Suit.TotalEffectiveEpics);
@@ -741,7 +769,7 @@ namespace Mag_SuitBuilder
 
 			foreach (var kvp in node.Suit)
 			{
-				foreach (var spell in kvp.Value.CachedSpells)
+				foreach (var spell in kvp.Value.ExtendedMyWorldObject.CachedSpells)
 					spells.Add(spell);
 			}
 
@@ -774,7 +802,7 @@ namespace Mag_SuitBuilder
 			} catch {};
 		}
 
-		void AddEquipmentPieceToClipboard(SuitBuildableMyWorldObject mwo, StringBuilder sb)
+		void AddEquipmentPieceToClipboard(ExtendedMyWorldObject mwo, StringBuilder sb)
 		{
 			if (mwo == null)
 			{
