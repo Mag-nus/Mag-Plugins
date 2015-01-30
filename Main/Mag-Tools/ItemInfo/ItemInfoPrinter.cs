@@ -94,7 +94,7 @@ namespace MagTools.ItemInfo
 			{
 				ItemInfo itemInfo = new ItemInfo(e.IdentifiedItem);
 
-				MyClasses.VCS_Connector.SendChatTextCategorized("CommandLine", itemInfo.ToString(), 14, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
+				MyClasses.VCS_Connector.SendChatTextCategorized("IDs", itemInfo.ToString(), 14, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 
 				if (allowAutoClipboard && Settings.SettingsManager.ItemInfoOnIdent.AutoClipboard.Value)
 				{
