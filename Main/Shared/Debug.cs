@@ -32,9 +32,9 @@ namespace Mag.Shared
 				//	return;
 
 				if (note != null)
-					CoreManager.Current.Actions.AddChatText("<{" + _pluginName + "}>: " + "Exception caught: " + ex.Message + Environment.NewLine + ex.Source + Environment.NewLine + ex.StackTrace + Environment.NewLine + "Note: " + note, 5);
+					MyClasses.VCS_Connector.SendChatTextCategorized("Errors", "<{" + _pluginName + "}>: " + "Exception caught: " + ex.Message + Environment.NewLine + ex.Source + Environment.NewLine + ex.StackTrace + Environment.NewLine + "Note: " + note, 5);
 				else
-					CoreManager.Current.Actions.AddChatText("<{" + _pluginName + "}>: " + "Exception caught: " + ex.Message + Environment.NewLine + ex.Source + Environment.NewLine + ex.StackTrace, 5);
+					MyClasses.VCS_Connector.SendChatTextCategorized("Errors", "<{" + _pluginName + "}>: " + "Exception caught: " + ex.Message + Environment.NewLine + ex.Source + Environment.NewLine + ex.StackTrace, 5);
 
 				if (String.IsNullOrEmpty(_errorLogPath))
 					return;
@@ -72,7 +72,7 @@ namespace Mag.Shared
 				//if (!Settings.SettingsManager.Misc.DebuggingEnabled.Value)
 				//	return;
 
-				CoreManager.Current.Actions.AddChatText("<{" + _pluginName + "}>: " + "Log Text: " + text, 5);
+				MyClasses.VCS_Connector.SendChatTextCategorized("CommandLine", "<{" + _pluginName + "}>: " + "Log Text: " + text, 5);
 
 				if (String.IsNullOrEmpty(_errorLogPath))
 					return;
@@ -104,7 +104,7 @@ namespace Mag.Shared
 				//if (!Settings.SettingsManager.Misc.DebuggingEnabled.Value)
 				//	return;
 
-				CoreManager.Current.Actions.AddChatText("<{" + _pluginName + "}>: " + message, color, target);
+				MyClasses.VCS_Connector.SendChatTextCategorized("CommandLine", "<{" + _pluginName + "}>: " + message, color, target);
 			}
 			catch (Exception ex) { LogException(ex); }
 		}

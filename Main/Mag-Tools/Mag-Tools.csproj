@@ -56,6 +56,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Binaries\VirindiPlugins\utank2-i.dll</HintPath>
     </Reference>
+    <Reference Include="VCS5">
+      <HintPath>..\..\Binaries\VirindiPlugins\VCS5.dll</HintPath>
+    </Reference>
     <Reference Include="VirindiHotkeySystem, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Binaries\VirindiPlugins\VirindiHotkeySystem.dll</HintPath>
@@ -121,6 +124,9 @@
     </Compile>
     <Compile Include="..\Shared\Util.cs">
       <Link>Shared\Util.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\VCS_Connector.cs">
+      <Link>Shared\VCS_Connector.cs</Link>
     </Compile>
     <Compile Include="Client\ChatSizeManager.cs" />
     <Compile Include="ChatFilter.cs" />

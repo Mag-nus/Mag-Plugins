@@ -38,7 +38,7 @@ namespace MagTools.Inventory
 			exportGroups = groups;
 			idsRequested = false;
 
-			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Copying all inventory item info to clipboard...", 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
+			MyClasses.VCS_Connector.SendChatTextCategorized("CommandLine", "<{" + PluginCore.PluginName + "}>: " + "Copying all inventory item info to clipboard...", 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 
 			CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
 		}
@@ -52,7 +52,7 @@ namespace MagTools.Inventory
 
 			CoreManager.Current.RenderFrame -= new EventHandler<EventArgs>(Current_RenderFrame);
 
-			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "All inventory item info has been copied to the clipboard.", 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
+			MyClasses.VCS_Connector.SendChatTextCategorized("CommandLine", "<{" + PluginCore.PluginName + "}>: " + "All inventory item info has been copied to the clipboard.", 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 		}
 
 		DateTime lastThought = DateTime.MinValue;
