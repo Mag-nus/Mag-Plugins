@@ -81,7 +81,7 @@ namespace MagTools.Macros
 
 				Start(fileInfo);
 			}
-			catch (FileNotFoundException) { CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Unable to start Auto Add to Trade. Is Virindi Tank running?", 5); }
+			catch (FileNotFoundException) { MyClasses.VCS_Connector.SendChatTextCategorized("Errors", "<{" + PluginCore.PluginName + "}>: " + "Unable to start Auto Add to Trade. Is Virindi Tank running?", 5); }
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
@@ -229,7 +229,7 @@ namespace MagTools.Macros
 			if (waitingForIds)
 				return;
 
-			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Add To Trade - Inventory scan complete.", 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
+			MyClasses.VCS_Connector.SendChatTextCategorized("CommandLine", "<{" + PluginCore.PluginName + "}>: " + "Auto Add To Trade - Inventory scan complete.", 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 
 			Stop();
 		}

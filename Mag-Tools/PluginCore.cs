@@ -250,6 +250,12 @@ namespace MagTools
 				}
 				catch (FileNotFoundException ex) { startupErrors.Add("chatFilter failed to load: " + ex.Message); }
 				catch (Exception ex) { Debug.LogException(ex); }
+
+				//These are already wrapped and shouldn't throw.
+				MyClasses.VCS_Connector.Initialize(Host, "MagTools");
+				MyClasses.VCS_Connector.InitializeCategory("CommandLine", "Generic plugin text");
+				MyClasses.VCS_Connector.InitializeCategory("Errors", "Error messages");
+				MyClasses.VCS_Connector.InitializeCategory("IDs", "ID messages");
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -453,7 +459,7 @@ namespace MagTools
 							if (!CoreManager.Current.Actions.ChatState || keyInfo.AltState || keyInfo.ControlState)
 								InventoryPacker.Start();
 						}
-						catch (FileNotFoundException) { CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Unable to start Inventory Packer. Is Virindi Tank running?", 5); }
+						catch (FileNotFoundException) { MyClasses.VCS_Connector.SendChatTextCategorized("Errors", "<{" + PluginName + "}>: " + "Unable to start Inventory Packer. Is Virindi Tank running?", 5); }
 						catch (Exception ex) { Debug.LogException(ex); }
 					};
 				}
@@ -588,12 +594,12 @@ namespace MagTools
 
 
 				foreach (string startupError in startupErrors)
-					CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: Startup Error: " + startupError, 5);
+					MyClasses.VCS_Connector.SendChatTextCategorized("Errors", "<{" + PluginName + "}>: Startup Error: " + startupError, 5);
 
 				startupErrors.Clear();
 
 
-				CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
+				MyClasses.VCS_Connector.SendChatTextCategorized("CommandLine", "<{" + PluginName + "}>: " + "Plugin now online. Server population: " + Core.CharacterFilter.ServerPopulation, 5);
 
 				savePersistentStatsTimer.Start();
 
@@ -1336,7 +1342,7 @@ namespace MagTools
 				{
 					fileInfo.Delete();
 
-					CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "File deleted: " + fileInfo.FullName, 5);
+					MyClasses.VCS_Connector.SendChatTextCategorized("CommandLine", "<{" + PluginName + "}>: " + "File deleted: " + fileInfo.FullName, 5);
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -1354,7 +1360,7 @@ namespace MagTools
 				{
 					fileInfo.Delete();
 
-					CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "File deleted: " + fileInfo.FullName, 5);
+					MyClasses.VCS_Connector.SendChatTextCategorized("CommandLine", "<{" + PluginName + "}>: " + "File deleted: " + fileInfo.FullName, 5);
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -1372,7 +1378,7 @@ namespace MagTools
 				{
 					fileInfo.Delete();
 
-					CoreManager.Current.Actions.AddChatText("<{" + PluginName + "}>: " + "File deleted: " + fileInfo.FullName, 5);
+					MyClasses.VCS_Connector.SendChatTextCategorized("CommandLine", "<{" + PluginName + "}>: " + "File deleted: " + fileInfo.FullName, 5);
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }

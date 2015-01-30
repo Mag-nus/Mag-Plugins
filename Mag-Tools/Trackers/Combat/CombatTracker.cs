@@ -198,7 +198,7 @@ namespace MagTools.Trackers.Combat
 			exporter.Export(xmlFileName);
 
 			if (showMessage)
-				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Stats exported to: " + xmlFileName, 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
+				MyClasses.VCS_Connector.SendChatTextCategorized("CommandLine", "<{" + PluginCore.PluginName + "}>: " + "Stats exported to: " + xmlFileName, 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 		}
 
 		/// <summary>

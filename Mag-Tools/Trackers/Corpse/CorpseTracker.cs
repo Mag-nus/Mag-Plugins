@@ -320,7 +320,7 @@ namespace MagTools.Trackers.Corpse
 			CorpseTrackerExporter.Export(xmlFileName, exportList);
 
 			if (showMessage)
-				CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Stats exported to: " + xmlFileName, 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
+				MyClasses.VCS_Connector.SendChatTextCategorized("CommandLine", "<{" + PluginCore.PluginName + "}>: " + "Stats exported to: " + xmlFileName, 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 		}
 	}
 }

@@ -97,7 +97,7 @@ namespace MagTools.Macros
 					return;
 			}
 
-			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Started.", 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
+			MyClasses.VCS_Connector.SendChatTextCategorized("CommandLine", "<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Started.", 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 
 			// Load our loot profile
 			((VTClassic.LootCore)lootProfile).LoadProfile(fileInfo.FullName, false);
@@ -122,7 +122,7 @@ namespace MagTools.Macros
 
 			started = false;
 
-			CoreManager.Current.Actions.AddChatText("<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Completed.", 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
+			MyClasses.VCS_Connector.SendChatTextCategorized("CommandLine", "<{" + PluginCore.PluginName + "}>: " + "Auto Pack - Completed.", 5, Settings.SettingsManager.Misc.OutputTargetWindow.Value);
 		}
 
 		DateTime lastThought = DateTime.MinValue;
