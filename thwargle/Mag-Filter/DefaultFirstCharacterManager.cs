@@ -38,7 +38,9 @@ namespace MagFilter
 			// F7E5 - Unknown? (we only get this the first time we connect), E5 F7 00 00 01 00 00 00 01 00 00 00 01 00 00 00 02 00 00 00 00 00 00 00 01 00 00 00 
 
 			if (e.Message.Type == 0xF7EA) // Unknown? (we only get this the first time we connect), EA F7 00 0
-				defaultFirstCharTimer.Start();
+			{
+			    defaultFirstCharTimer.Start();
+			}
 		}
 
 		public void FilterCore_CommandLineText(object sender, ChatParserInterceptEventArgs e)
@@ -49,11 +51,15 @@ namespace MagFilter
 			{
 				Settings.SettingsManager.CharacterSelectionScreen.SetDefaultFirstCharacter(new DefaultFirstCharacter(server, zonename, CoreManager.Current.CharacterFilter.Name));
 				Debug.WriteToChat("Default Login Character set to: " + CoreManager.Current.CharacterFilter.Name);
+
+				e.Eat = true;
 			}
 			else if (lower == "/mf dlc clear")
 			{
 				Settings.SettingsManager.CharacterSelectionScreen.DeleteDefaultFirstCharacter(server, zonename);
 				Debug.WriteToChat("Default Login Character cleared");
+
+				e.Eat = true;
 			}
 		}
 

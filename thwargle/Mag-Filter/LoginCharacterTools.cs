@@ -7,14 +7,30 @@ namespace MagFilter
 {
 	class LoginCharacterTools
 	{
+	    private string server;
+	    private string zonename;
 		int characterSlots;
+	    private bool written;
 
-		readonly List<Character> characters = new List<Character>();
+		public readonly List<Character> characters = new List<Character>();
 
 		internal void FilterCore_ServerDispatch(object sender, NetworkMessageEventArgs e)
 		{
+            if (e.Message.Type == 0xF658) // Zone Name
+            {
+                zonename = Convert.ToString(e.Message["zonename"]);
+                log.writeLogs(string.Format("zonename: '{0}'", zonename));
+            }
+
+            if (e.Message.Type == 0xF7E1) // Server Name
+            {
+                server = Convert.ToString(e.Message["server"]);
+                log.writeLogs(string.Format("server: '{0}'", server));
+            }
+
 			if (e.Message.Type == 0xF658) // Character List
 			{
+                log.writeLogs("Inside ServerDispatch. 0xF658");
 				characterSlots = Convert.ToInt32(e.Message["slotCount"]);
 
 				characters.Clear();
@@ -28,10 +44,20 @@ namespace MagFilter
 					int deleteTimeout = Convert.ToInt32(charactersStruct.Struct(i)["deleteTimeout"]);
 
 					characters.Add(new Character(character, name, deleteTimeout));
+                    log.writeLogs(character.ToString() + " " + name + " " + deleteTimeout.ToString());
 				}
 
 				characters.Sort((a, b) => String.Compare(a.Name, b.Name, StringComparison.Ordinal));
 			}
+            if (!written)
+            {
+                if (server != null && zonename != null && characters.Count > 0)
+                {
+                    CharacterManager mgr = CharacterManager.ReadCharacters();
+			        mgr.WriteCharacters(server: server, zonename: zonename, characters: characters);
+                    written = true;
+			    }
+            }
 		}
 
 		public bool LoginCharacter(int id)

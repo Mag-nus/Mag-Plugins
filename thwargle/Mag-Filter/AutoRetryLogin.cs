@@ -36,8 +36,7 @@ namespace MagFilter
 			if (state == 0)
 			{
 				// Click the OK button
-				Mag.Shared.PostMessageTools.SendMouseClick(400, 331);
-				Mag.Shared.PostMessageTools.SendMouseClick(400, 325);
+				Mag.Shared.PostMessageTools.ClickOK();
 
 				state = 1;
 			}
