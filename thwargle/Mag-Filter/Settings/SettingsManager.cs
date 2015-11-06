@@ -27,7 +27,7 @@ namespace MagFilter.Settings
 								DefaultFirstCharacter character;
 
 								character.Server = childNode.Attributes["Server"].Value;
-								character.AccountName = childNode.Attributes["AccountName"].Value;
+								character.ZoneId = childNode.Attributes["ZoneId"].Value;
 
 								character.CharacterName = childNode.Attributes["CharacterName"].Value;
 
@@ -48,7 +48,7 @@ namespace MagFilter.Settings
 
 				for (int i = 0; i < characters.Count; i++)
 				{
-					if (characters[i].Server == newDefaultFirstCharacter.Server && characters[i].AccountName == newDefaultFirstCharacter.AccountName)
+					if (characters[i].Server == newDefaultFirstCharacter.Server && characters[i].ZoneId == newDefaultFirstCharacter.ZoneId)
 					{
 						characters.RemoveAt(i);
 
@@ -63,7 +63,7 @@ namespace MagFilter.Settings
 					Dictionary<string, string> attributes = new Dictionary<string, string>();
 
 					attributes.Add("Server", character.Server);
-					attributes.Add("AccountName", character.AccountName);
+					attributes.Add("ZoneId", character.ZoneId);
 
 					attributes.Add("CharacterName", character.CharacterName);
 
@@ -73,7 +73,7 @@ namespace MagFilter.Settings
 				Dictionary<string, string> newAttributes = new Dictionary<string, string>();
 
 				newAttributes.Add("Server", newDefaultFirstCharacter.Server);
-				newAttributes.Add("AccountName", newDefaultFirstCharacter.AccountName);
+				newAttributes.Add("ZoneId", newDefaultFirstCharacter.ZoneId);
 
 				newAttributes.Add("CharacterName", newDefaultFirstCharacter.CharacterName);
 
@@ -82,7 +82,7 @@ namespace MagFilter.Settings
 				SettingsFile.SetNodeChilderen("CharacterSelectionScreen/DefaultLoginChars", "DefaultLoginChar", collection);
 			}
 
-			public static void DeleteDefaultFirstCharacter(string server, string accountName)
+			public static void DeleteDefaultFirstCharacter(string server, string zoneId)
 			{
 				SettingsFile.ReloadXmlDocument();
 
@@ -90,7 +90,7 @@ namespace MagFilter.Settings
 
 				for (int i = 0; i < characters.Count; i++)
 				{
-					if (characters[i].Server == server && characters[i].AccountName == accountName)
+					if (characters[i].Server == server && characters[i].ZoneId == zoneId)
 					{
 						characters.RemoveAt(i);
 
@@ -101,7 +101,7 @@ namespace MagFilter.Settings
 							Dictionary<string, string> attributes = new Dictionary<string, string>();
 
 							attributes.Add("Server", character.Server);
-							attributes.Add("AccountName", character.AccountName);
+							attributes.Add("ZoneId", character.ZoneId);
 
 							attributes.Add("CharacterName", character.CharacterName);
 

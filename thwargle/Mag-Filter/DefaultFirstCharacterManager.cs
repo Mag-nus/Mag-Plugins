@@ -69,16 +69,26 @@ namespace MagFilter
 			{
 				var defaultFirstCharacters = Settings.SettingsManager.CharacterSelectionScreen.DefaultFirstCharacters;
 
+                // Override - instead of using the plugin xml, use the launch file
+                var launchInfo = (new LaunchControl()).GetLaunchInfo();
+                defaultFirstCharacters.Clear();
+                defaultFirstCharacters.Add(new DefaultFirstCharacter(launchInfo.ServerName, zonename, launchInfo.CharacterName));
+
+                log.writeLogs(string.Format("defaultFirstCharTimer_Tick: character: '{0}'", launchInfo.CharacterName));
+
 				foreach (var character in defaultFirstCharacters)
 				{
-					if (character.AccountName == zonename && character.Server == server)
+					if (character.ZoneId == zonename && character.Server == server)
 					{
 						// Bypass movies/logos
 						if (state == 1 || state == 2)
 							PostMessageTools.SendMouseClick(350, 100);
 
 						if (state == 3)
-							loginCharacterTools.LoginCharacter(character.CharacterName);
+						{
+                            loginCharacterTools.LoginCharacter(character.CharacterName);
+                            log.writeLogs(string.Format("defaultFirstCharTimer_Tick-state3: character: '{0}'", character.CharacterName));
+						}
 
 						break;
 					}

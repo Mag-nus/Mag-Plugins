@@ -15,24 +15,6 @@ namespace MagFilter
 		[DllImport("user32.dll", CharSet = CharSet.Auto)]
 		internal static extern bool PostMessage(int hhwnd, uint msg, IntPtr wparam, UIntPtr lparam);
 
-		internal static string PluginName = "Mag-Filter";
-
-		internal static DirectoryInfo PluginPersonalFolder
-		{
-			get
-			{
-				DirectoryInfo pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\" + PluginName);
-
-				try
-				{
-					if (!pluginPersonalFolder.Exists)
-						pluginPersonalFolder.Create();
-				}
-				catch (Exception ex) { Debug.LogException(ex); }
-
-				return pluginPersonalFolder;
-			}
-		}
 
 		readonly AutoRetryLogin autoRetryLogin = new AutoRetryLogin();
 		readonly LoginCharacterTools loginCharacterTools = new LoginCharacterTools();
@@ -43,10 +25,11 @@ namespace MagFilter
 		DefaultFirstCharacterManager defaultFirstCharacterManager;
 		LoginNextCharacterManager loginNextCharacterManager;
 
+        private string PluginName { get { return FileLocations.PluginName; } }
 		protected override void Startup()
 		{
-			Debug.Init(PluginPersonalFolder.FullName + @"\Exceptions.txt", PluginName);
-			SettingsFile.Init(PluginPersonalFolder.FullName + @"\" + PluginName + ".xml", PluginName);
+            Debug.Init(FileLocations.PluginPersonalFolder.FullName + @"\Exceptions.txt", PluginName);
+            SettingsFile.Init(FileLocations.GetPluginSettingsFile(), PluginName);
 
 			defaultFirstCharacterManager = new DefaultFirstCharacterManager(loginCharacterTools);
 			loginNextCharacterManager = new LoginNextCharacterManager(loginCharacterTools);
