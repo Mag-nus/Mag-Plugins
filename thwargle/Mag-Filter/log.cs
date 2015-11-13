@@ -7,7 +7,7 @@ namespace MagFilter
 {
     class log
     {
-        public static void writeLogs(string logText)
+        public static void WriteLogMsg(string logText)
         {
             // Write the string to a file.
             string path = FileLocations.PluginPersonalFolder.FullName + @"\MagFilter_Log.txt";

@@ -31,7 +31,7 @@ namespace MagFilter
             string specificFolder = Path.Combine(folder, "ACAccountManager");
 
             string path = Path.Combine(specificFolder, "characters.txt");
-            log.writeLogs("Path: " + path); // TODO - delete
+            log.WriteLogMsg("Path: " + path); // TODO - delete
 
             return path;
         }

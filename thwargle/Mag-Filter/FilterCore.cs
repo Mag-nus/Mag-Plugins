@@ -30,6 +30,7 @@ namespace MagFilter
 		{
             Debug.Init(FileLocations.PluginPersonalFolder.FullName + @"\Exceptions.txt", PluginName);
             SettingsFile.Init(FileLocations.GetPluginSettingsFile(), PluginName);
+		    LogStartup();
 
 			defaultFirstCharacterManager = new DefaultFirstCharacterManager(loginCharacterTools);
 			loginNextCharacterManager = new LoginNextCharacterManager(loginCharacterTools);
@@ -40,6 +41,17 @@ namespace MagFilter
 
 			CommandLineText += new EventHandler<ChatParserInterceptEventArgs>(FilterCore_CommandLineText);
 		}
+        private void LogStartup()
+        {
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+
+            log.WriteLogMsg(string.Format(
+                "MagFilter.Startup, AssemblyVer: {0}, AssemblyFileVer: {1}",
+                assembly.GetName().Version,
+                System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location)
+                                ));
+
+        }
 
 		protected override void Shutdown()
 		{

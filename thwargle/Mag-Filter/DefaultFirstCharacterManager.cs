@@ -68,13 +68,20 @@ namespace MagFilter
 			try
 			{
 				var defaultFirstCharacters = Settings.SettingsManager.CharacterSelectionScreen.DefaultFirstCharacters;
+                defaultFirstCharacters.Clear();
 
                 // Override - instead of using the plugin xml, use the launch file
                 var launchInfo = (new LaunchControl()).GetLaunchInfo();
-                defaultFirstCharacters.Clear();
-                defaultFirstCharacters.Add(new DefaultFirstCharacter(launchInfo.ServerName, zonename, launchInfo.CharacterName));
-
-                log.writeLogs(string.Format("defaultFirstCharTimer_Tick: character: '{0}'", launchInfo.CharacterName));
+                if (launchInfo.IsValid)
+                {
+                    defaultFirstCharacters.Add(new DefaultFirstCharacter(launchInfo.ServerName, zonename, launchInfo.CharacterName));
+                    log.WriteLogMsg("defaultFirstCharTimer_Tick: LaunchInfo valid");
+                    log.WriteLogMsg("Character: " + launchInfo.CharacterName);
+                }
+                else
+                {
+                    log.WriteLogMsg("defaultFirstCharTimer_Tick: LaunchInfo not valid");
+                }
 
 				foreach (var character in defaultFirstCharacters)
 				{
@@ -87,7 +94,6 @@ namespace MagFilter
 						if (state == 3)
 						{
                             loginCharacterTools.LoginCharacter(character.CharacterName);
-                            log.writeLogs(string.Format("defaultFirstCharTimer_Tick-state3: character: '{0}'", character.CharacterName));
 						}
 
 						break;
