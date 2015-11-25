@@ -68,20 +68,6 @@ namespace MagFilter
 			try
 			{
 				var defaultFirstCharacters = Settings.SettingsManager.CharacterSelectionScreen.DefaultFirstCharacters;
-                defaultFirstCharacters.Clear();
-
-                // Override - instead of using the plugin xml, use the launch file
-                var launchInfo = (new LaunchControl()).GetLaunchInfo();
-                if (launchInfo.IsValid)
-                {
-                    defaultFirstCharacters.Add(new DefaultFirstCharacter(launchInfo.ServerName, zonename, launchInfo.CharacterName));
-                    log.WriteLogMsg("defaultFirstCharTimer_Tick: LaunchInfo valid");
-                    log.WriteLogMsg("Character: " + launchInfo.CharacterName);
-                }
-                else
-                {
-                    log.WriteLogMsg("defaultFirstCharTimer_Tick: LaunchInfo not valid");
-                }
 
 				foreach (var character in defaultFirstCharacters)
 				{

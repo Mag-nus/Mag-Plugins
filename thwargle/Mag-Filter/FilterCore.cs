@@ -23,6 +23,7 @@ namespace MagFilter
 		readonly AfterLoginCompleteMessageQueueManager afterLoginCompleteMessageQueueManager = new AfterLoginCompleteMessageQueueManager();
 
 		DefaultFirstCharacterManager defaultFirstCharacterManager;
+	    private LauncherChooseCharacterManager chooseCharacterManager;
 		LoginNextCharacterManager loginNextCharacterManager;
 
         private string PluginName { get { return FileLocations.PluginName; } }
@@ -33,6 +34,7 @@ namespace MagFilter
 		    LogStartup();
 
 			defaultFirstCharacterManager = new DefaultFirstCharacterManager(loginCharacterTools);
+            chooseCharacterManager = new LauncherChooseCharacterManager(loginCharacterTools);
 			loginNextCharacterManager = new LoginNextCharacterManager(loginCharacterTools);
 
 			ClientDispatch += new EventHandler<NetworkMessageEventArgs>(FilterCore_ClientDispatch);
@@ -81,6 +83,7 @@ namespace MagFilter
 				loginCharacterTools.FilterCore_ServerDispatch(sender, e);
 
 				defaultFirstCharacterManager.FilterCore_ServerDispatch(sender, e);
+                chooseCharacterManager.FilterCore_ServerDispatch(sender, e);
 				loginNextCharacterManager.FilterCore_ServerDispatch(sender, e);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -103,6 +106,7 @@ namespace MagFilter
 				afterLoginCompleteMessageQueueManager.FilterCore_CommandLineText(sender, e);
 
 				defaultFirstCharacterManager.FilterCore_CommandLineText(sender, e);
+                chooseCharacterManager.FilterCore_CommandLineText(sender, e);
 				loginNextCharacterManager.FilterCore_CommandLineText(sender, e);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }

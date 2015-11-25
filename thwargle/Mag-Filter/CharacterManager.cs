@@ -87,7 +87,6 @@ namespace MagFilter
             log.WriteLogMsg("Q22-start ReadCharactersImpl");
 
             if (!File.Exists(path)) { return new CharacterManager(); }
-            log.WriteLogMsg("Q24"); // TODO - delete Q log calls
             using (var file = new StreamReader(path))
             {
                 string contents = file.ReadToEnd();

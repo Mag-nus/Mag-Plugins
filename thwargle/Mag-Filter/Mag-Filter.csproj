@@ -72,6 +72,7 @@
     <Compile Include="AutoRetryLogin.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="CharacterManager.cs" />
+    <Compile Include="LauncherChooseCharacterManager.cs" />
     <Compile Include="DefaultFirstCharacter.cs" />
     <Compile Include="DefaultFirstCharacterManager.cs" />
     <Compile Include="FastQuit.cs" />
