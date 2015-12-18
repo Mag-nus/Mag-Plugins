@@ -207,6 +207,9 @@ namespace Mag.Shared
 
 			User32.GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
 
+			// The reason why we click at both of these positions is some clients will be running windowed, and some windowless. This will hit both locations
+			SendMouseClick(rect.Width / 2, rect.Height / 2 + 18);
+			SendMouseClick(rect.Width / 2, rect.Height / 2 + 25);
 			SendMouseClick(rect.Width / 2, rect.Height / 2 + 31);
 		}
 
@@ -218,6 +221,9 @@ namespace Mag.Shared
 
 			// 800x600 +32 works, +33 does not work on single/double/tripple line boxes
 			// 1600x1200 +31 works, +32 does not work on single/double/tripple line boxes
+			// The reason why we click at both of these positions is some clients will be running windowed, and some windowless. This will hit both locations
+			SendMouseClick(rect.Width / 2 - 80, rect.Height / 2 + 18);
+			SendMouseClick(rect.Width / 2 - 80, rect.Height / 2 + 25);
 			SendMouseClick(rect.Width / 2 - 80, rect.Height / 2 + 31);
 		}
 
@@ -227,6 +233,9 @@ namespace Mag.Shared
 
 			User32.GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
 
+			// The reason why we click at both of these positions is some clients will be running windowed, and some windowless. This will hit both locations
+			SendMouseClick(rect.Width / 2 + 80, rect.Height / 2 + 18);
+			SendMouseClick(rect.Width / 2 + 80, rect.Height / 2 + 25);
 			SendMouseClick(rect.Width / 2 + 80, rect.Height / 2 + 31);
 		}
 
