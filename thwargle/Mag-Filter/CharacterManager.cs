@@ -95,22 +95,6 @@ namespace MagFilter
                 log.WriteLogMsg("Q28 - succeeded ReadCharactersImpl");
                 return charMgr;
             }
-            /*
-            string line = file.ReadLine();
-            if (!line.Contains("Server")) { throw new Exception("bad config file");}
-            while (true)
-            {
-                line = file.ReadLine();
-                if (line == null)
-                {
-                    break;
-                }
-                string[] parts = line.Split(',');
-                var dude = new Character(id: int.Parse(parts[0]), name: parts[1], timeout: 999);
-                characters.Add(dude);
-            }
-            return characters;
-             * */
         }
     }
 }
