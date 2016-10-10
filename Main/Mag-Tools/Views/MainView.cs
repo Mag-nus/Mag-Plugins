@@ -360,6 +360,7 @@ namespace MagTools.Views
 				AddOption(OptionList, Settings.SettingsManager.InventoryManagement.HeartCarver);
 				AddOption(OptionList, Settings.SettingsManager.InventoryManagement.ShatteredKeyFixer);
 				AddOption(OptionList, Settings.SettingsManager.InventoryManagement.KeyRinger);
+				AddOption(OptionList, Settings.SettingsManager.InventoryManagement.KeyDeringer);
 
 				AddOption(OptionList, Settings.SettingsManager.Misc.OpenMainPackOnLogin);
 				AddOption(OptionList, Settings.SettingsManager.Misc.MaximizeChatOnLogin);

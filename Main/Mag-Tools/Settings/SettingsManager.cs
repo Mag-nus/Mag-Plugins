@@ -86,6 +86,8 @@ namespace MagTools.Settings
 			public static readonly Setting<bool> ShatteredKeyFixer = new Setting<bool>("InventoryManagement/ShatteredKeyFixer", "Auto Fix Shattered Keys");
 
 			public static readonly Setting<bool> KeyRinger = new Setting<bool>("InventoryManagement/KeyRinger", "Auto Ring Keys");
+
+			public static readonly Setting<bool> KeyDeringer = new Setting<bool>("InventoryManagement/KeyDeringer", "Auto Dering Keys");
 		}
 
 		public static class ItemInfoOnIdent
