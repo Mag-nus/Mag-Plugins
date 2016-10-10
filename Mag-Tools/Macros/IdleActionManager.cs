@@ -21,6 +21,7 @@ namespace MagTools.Macros
 
 				CoreManager.Current.WorldFilter.CreateObject += new EventHandler<CreateObjectEventArgs>(WorldFilter_CreateObject);
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+				CoreManager.Current.WorldFilter.ReleaseObject += new EventHandler<ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
 				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<LogoffEventArgs>(CharacterFilter_Logoff);
 				CoreManager.Current.EchoFilter.ServerDispatch += new EventHandler<NetworkMessageEventArgs>(EchoFilter_ServerDispatch);
 			}
@@ -48,6 +49,7 @@ namespace MagTools.Macros
 				{
 					CoreManager.Current.WorldFilter.CreateObject -= new EventHandler<CreateObjectEventArgs>(WorldFilter_CreateObject);
 					CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
+					CoreManager.Current.WorldFilter.ReleaseObject -= new EventHandler<ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
 					CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<LogoffEventArgs>(CharacterFilter_Logoff);
 					CoreManager.Current.EchoFilter.ServerDispatch -= new EventHandler<NetworkMessageEventArgs>(EchoFilter_ServerDispatch);
 				}
@@ -78,6 +80,12 @@ namespace MagTools.Macros
 					if (e.New.ObjectClass == ObjectClass.Key && e.New.Name == "Aged Legendary Key")
 						timer.Start();
 				}
+
+				if (Settings.SettingsManager.InventoryManagement.KeyDeringer.Value)
+				{
+					if (e.New.ObjectClass == ObjectClass.Misc && e.New.Name == "Burning Sands Keyring")
+						CoreManager.Current.Actions.RequestId(e.New.Id);
+				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -106,6 +114,30 @@ namespace MagTools.Macros
 					}
 
 					if (e.Changed.ObjectClass == ObjectClass.Key && e.Changed.Name == "Aged Legendary Key")
+						timer.Start();
+				}
+
+				if (Settings.SettingsManager.InventoryManagement.KeyDeringer.Value)
+				{
+					if (e.Changed.ObjectClass == ObjectClass.Misc && e.Changed.Name == "Burning Sands Keyring")
+					{
+						if (e.Change == WorldChangeType.IdentReceived)
+							timer.Start();
+						else
+							CoreManager.Current.Actions.RequestId(e.Changed.Id);
+					}
+				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		private void WorldFilter_ReleaseObject(object sender, ReleaseObjectEventArgs e)
+		{
+			try
+			{
+				if (Settings.SettingsManager.InventoryManagement.KeyDeringer.Value)
+				{
+					if (e.Released.ObjectClass == ObjectClass.Key && e.Released.Name == "Aged Legendary Key")
 						timer.Start();
 				}
 			}
@@ -203,6 +235,35 @@ namespace MagTools.Macros
 						}
 						if (bestKeyRing != null)
 							toolId = bestKeyRing.Id;
+					}
+				}
+
+				if ((toolId == 0 || targetId == 0) && Settings.SettingsManager.InventoryManagement.KeyDeringer.Value && CoreManager.Current.Actions.OpenedContainer == 0)
+				{
+					// Make sure we're by a chest
+					var closestChest = Util.GetClosestObject(" Chest", true);
+
+					if (closestChest != null && Util.GetDistanceFromPlayer(closestChest) <= 10)
+					{
+						toolId = 0; targetId = 0; couldRequireConfirmation = false;
+
+						foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
+						{
+							if (wo.ObjectClass == ObjectClass.Misc && wo.Name == "Intricate Carving Tool") toolId = wo.Id;
+
+							// If we have a key in inventory, we're good
+							if (String.Compare(wo.Name, "Aged Legendary Key", StringComparison.OrdinalIgnoreCase) == 0)
+								return;
+						}
+
+						foreach (var wo in CoreManager.Current.WorldFilter.GetInventory())
+						{
+							if (wo.HasIdData && wo.ObjectClass == ObjectClass.Misc && wo.Name == "Burning Sands Keyring" && wo.Values(LongValueKey.KeysHeld) > 0)
+							{
+								targetId = wo.Id;
+								break;
+							}
+						}
 					}
 				}
 
