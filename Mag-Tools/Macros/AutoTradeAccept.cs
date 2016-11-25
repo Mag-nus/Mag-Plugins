@@ -57,10 +57,10 @@ namespace MagTools.Macros
 
 				// We only auto accept the trade every 2 seconds to avoid double spamming it from our own TradeAccept() action.
 				// This also prevents us from respamming TradeAccept() on the char where the user accepted the trade.
-				if (DateTime.Now - lastTradeAcceptTime < TimeSpan.FromSeconds(2))
+				if (DateTime.UtcNow - lastTradeAcceptTime < TimeSpan.FromSeconds(2))
 					return;
 
-				lastTradeAcceptTime = DateTime.Now;
+				lastTradeAcceptTime = DateTime.UtcNow;
 
 				if (e.TargetId == CoreManager.Current.CharacterFilter.Id)
 					return;

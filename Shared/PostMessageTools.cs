@@ -134,7 +134,7 @@ namespace Mag.Shared
 					_spaceReleaseTimer.Interval = 1;
 				}
 
-				_spaceSendTime = DateTime.Now;
+				_spaceSendTime = DateTime.UtcNow;
 				_spaceHoldTimeMilliseconds = msToHoldDown;
 				_spaceAddShift = addShift;
 				_spaceAddW = addW;
@@ -147,7 +147,7 @@ namespace Mag.Shared
 
 		static void SpaceReleaseTimer_Tick(object sender, EventArgs e)
 		{
-			if (_spaceSendTime.AddMilliseconds(_spaceHoldTimeMilliseconds) <= DateTime.Now)
+			if (_spaceSendTime.AddMilliseconds(_spaceHoldTimeMilliseconds) <= DateTime.UtcNow)
 			{
 				_spaceReleaseTimer.Stop();
 				if (_spaceAddShift)	User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)VK_SHIFT,		(UIntPtr)0x002A0001);

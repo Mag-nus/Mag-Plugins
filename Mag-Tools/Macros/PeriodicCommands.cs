@@ -71,10 +71,10 @@ namespace MagTools.Macros
 			try
 			{
 				// Make sure we don't run this minutes commands twice
-				if (lastTick.Minute == DateTime.Now.Minute)
+				if (lastTick.Minute == DateTime.UtcNow.Minute)
 					return;
 
-				lastTick = DateTime.Now;
+				lastTick = DateTime.UtcNow;
 
 				var periodicCommands = Settings.SettingsManager.AccountServerCharacter.GetPeriodicCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name);
 

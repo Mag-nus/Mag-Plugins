@@ -131,10 +131,10 @@ namespace MagTools.Macros
 		{
 			try
 			{
-				if (DateTime.Now - lastThought < TimeSpan.FromMilliseconds(100))
+				if (DateTime.UtcNow - lastThought < TimeSpan.FromMilliseconds(100))
 					return;
 
-				lastThought = DateTime.Now;
+				lastThought = DateTime.UtcNow;
 
 				Think();
 
@@ -215,11 +215,11 @@ namespace MagTools.Macros
 					if (currentWorkingId != item.Id)
 					{
 						currentWorkingId = item.Id;
-						currentWorkingIdFirstAttempt = DateTime.Now;
+						currentWorkingIdFirstAttempt = DateTime.UtcNow;
 					}
 					else
 					{
-						if (DateTime.Now - currentWorkingIdFirstAttempt > TimeSpan.FromSeconds(10))
+						if (DateTime.UtcNow - currentWorkingIdFirstAttempt > TimeSpan.FromSeconds(10))
 						{
 							Debug.WriteToChat("Blacklisting item: " + item.Id + ", " + item.Name);
 							blackLitedItems.Add(item.Id);
@@ -378,11 +378,11 @@ namespace MagTools.Macros
 						if (currentWorkingId != item.Id)
 						{
 							currentWorkingId = item.Id;
-							currentWorkingIdFirstAttempt = DateTime.Now;
+							currentWorkingIdFirstAttempt = DateTime.UtcNow;
 						}
 						else
 						{
-							if (DateTime.Now - currentWorkingIdFirstAttempt > TimeSpan.FromSeconds(10))
+							if (DateTime.UtcNow - currentWorkingIdFirstAttempt > TimeSpan.FromSeconds(10))
 							{
 								Debug.WriteToChat("Blacklisting item: " + item.Id + ", " + item.Name);
 								blackLitedItems.Add(item.Id);

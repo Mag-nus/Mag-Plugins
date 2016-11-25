@@ -278,7 +278,7 @@ namespace MagTools.Macros
 					CoreManager.Current.Actions.SelectItem(targetId);
 					CoreManager.Current.Actions.UseItem(toolId, 1, targetId);
 					if (couldRequireConfirmation)
-						lastActionThatCouldRequireConfirmation = DateTime.Now;
+						lastActionThatCouldRequireConfirmation = DateTime.UtcNow;
 					return;
 				}
 
@@ -291,7 +291,7 @@ namespace MagTools.Macros
 		{
 			try
 			{ 
-				if (lastActionThatCouldRequireConfirmation != DateTime.MinValue && DateTime.Now - lastActionThatCouldRequireConfirmation < TimeSpan.FromSeconds(5))
+				if (lastActionThatCouldRequireConfirmation != DateTime.MinValue && DateTime.UtcNow - lastActionThatCouldRequireConfirmation < TimeSpan.FromSeconds(5))
 				{
 					if (e.Message.Type == 0xF7B0 && (int)e.Message["event"] == 0x0274 && e.Message.Value<int>("type") == 5) // 0x0274 = Confirmation Panel
 					{

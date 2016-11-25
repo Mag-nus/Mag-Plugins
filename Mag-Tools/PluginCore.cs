@@ -1447,7 +1447,10 @@ namespace MagTools
 
 		void ExportPersistentStats()
 		{
-			var startTime = DateTime.Now;
+			var stopWatch = new System.Diagnostics.Stopwatch();
+
+			if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
+				stopWatch.Start();
 
 			if (Settings.SettingsManager.CombatTracker.Persistent.Value)
 				combatTrackerPersistent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
@@ -1459,7 +1462,10 @@ namespace MagTools
 				playerTracker.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".PlayerTracker.xml");
 
 			if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
-				Debug.WriteToChat("Export Persistent Stats: " + (DateTime.Now - startTime).TotalMilliseconds.ToString("N0") + "ms");
+			{
+				stopWatch.Stop();
+				Debug.WriteToChat("Export Persistent Stats: " + stopWatch.Elapsed.TotalMilliseconds.ToString("N0") + "ms");
+			}
 		}
 	}
 }

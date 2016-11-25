@@ -43,7 +43,7 @@ namespace MagTools.Trackers
 			{
 				for (int i = 0; i < SnapShots.Count; i++)
 				{
-					if (DateTime.Now - SnapShots[i].TimeStamp <= TimeSpan.FromMinutes(minutesToRetain))
+					if (DateTime.UtcNow - SnapShots[i].TimeStamp <= TimeSpan.FromMinutes(minutesToRetain))
 						break;
 
 					SnapShots.RemoveAt(i);
@@ -59,14 +59,14 @@ namespace MagTools.Trackers
 
 				var timeSpanIncrement = TimeSpan.FromSeconds(1);
 
-				for (DateTime time = DateTime.Now ; time >= SnapShots[0].TimeStamp ; time -= timeSpanIncrement)
+				for (DateTime time = DateTime.UtcNow; time >= SnapShots[0].TimeStamp ; time -= timeSpanIncrement)
 				{
 					var closest = GetSnapShotClosestToTime(time, snapShotsToKeep[snapShotsToKeep.Count - 1]);
 					if (closest == null)
 						continue;
 					snapShotsToKeep.Add(closest);
 
-					var timeDifference = DateTime.Now.Subtract(time);
+					var timeDifference = DateTime.UtcNow.Subtract(time);
 
 					if (timeDifference > TimeSpan.FromMinutes(1))
 					{

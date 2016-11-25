@@ -61,7 +61,7 @@ namespace MagTools.ItemInfo
 			try
 			{
 				if (e.Msg == WM_LBUTTONDOWN)
-					lastLeftClick = DateTime.Now;
+					lastLeftClick = DateTime.UtcNow;
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -79,11 +79,11 @@ namespace MagTools.ItemInfo
 					return;
 
 				if (itemsSelected.ContainsKey(e.ItemGuid))
-					itemsSelected[e.ItemGuid] = DateTime.Now;
+					itemsSelected[e.ItemGuid] = DateTime.UtcNow;
 				else
-					itemsSelected.Add(e.ItemGuid, DateTime.Now);
+					itemsSelected.Add(e.ItemGuid, DateTime.UtcNow);
 
-				if (Settings.SettingsManager.ItemInfoOnIdent.LeftClickIdent.Value && DateTime.Now - lastLeftClick < TimeSpan.FromSeconds(1))
+				if (Settings.SettingsManager.ItemInfoOnIdent.LeftClickIdent.Value && DateTime.UtcNow - lastLeftClick < TimeSpan.FromSeconds(1))
 				{
 					CoreManager.Current.Actions.RequestId(e.ItemGuid);
 					lastLeftClick = DateTime.MinValue;
@@ -109,7 +109,7 @@ namespace MagTools.ItemInfo
 
 					foreach (KeyValuePair<int, DateTime> pair in itemsSelected)
 					{
-						if (pair.Value + TimeSpan.FromSeconds(10) < DateTime.Now)
+						if (pair.Value + TimeSpan.FromSeconds(10) < DateTime.UtcNow)
 						{
 							idToRemove = pair.Key;
 							break;

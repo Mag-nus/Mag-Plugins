@@ -76,10 +76,10 @@ namespace MagTools.Macros
 		{
 			try
 			{
-				if (DateTime.Now - lastThought < TimeSpan.FromMilliseconds(100))
+				if (DateTime.UtcNow - lastThought < TimeSpan.FromMilliseconds(100))
 					return;
 
-				lastThought = DateTime.Now;
+				lastThought = DateTime.UtcNow;
 
 				Think();
 			}
@@ -105,11 +105,11 @@ namespace MagTools.Macros
 				if (obj.Values(LongValueKey.CurrentMana) > 0)
 				{
 					// If we're trying to use a different stone than our last attempt, make sure we've waited 5 seconds for the stone to actually work and trigger Stop()
-					if (lastChargeId != obj.Id && DateTime.Now - lastChargeAttempTime < TimeSpan.FromSeconds(5))
+					if (lastChargeId != obj.Id && DateTime.UtcNow - lastChargeAttempTime < TimeSpan.FromSeconds(5))
 						return;
 
 					lastChargeId = obj.Id;
-					lastChargeAttempTime = DateTime.Now;
+					lastChargeAttempTime = DateTime.UtcNow;
 
 					CoreManager.Current.Actions.ApplyItem(obj.Id, CoreManager.Current.CharacterFilter.Id);
 
@@ -151,11 +151,11 @@ namespace MagTools.Macros
 			if (smallestCharge != null)
 			{
 				// If we're trying to use a different stone than our last attempt, make sure we've waited 5 seconds for the stone to actually work and trigger Stop()
-				if (lastChargeId != smallestCharge.Id && DateTime.Now - lastChargeAttempTime < TimeSpan.FromSeconds(5))
+				if (lastChargeId != smallestCharge.Id && DateTime.UtcNow - lastChargeAttempTime < TimeSpan.FromSeconds(5))
 					return;
 
 				lastChargeId = smallestCharge.Id;
-				lastChargeAttempTime = DateTime.Now;
+				lastChargeAttempTime = DateTime.UtcNow;
 
 				CoreManager.Current.Actions.ApplyItem(smallestCharge.Id, CoreManager.Current.CharacterFilter.Id);
 			}

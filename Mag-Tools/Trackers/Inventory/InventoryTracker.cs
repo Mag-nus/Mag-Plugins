@@ -193,16 +193,16 @@ namespace MagTools.Trackers.Inventory
 			{
 				if (trackedItem.Name == name)
 				{
-					trackedItem.AddSnapShot(DateTime.Now, count, SnapShotGroup<int>.PruneMethod.DecreaseResolution);
+					trackedItem.AddSnapShot(DateTime.UtcNow, count, SnapShotGroup<int>.PruneMethod.DecreaseResolution);
 
 					if (ItemChanged != null)
 					{
 						ItemChanged(trackedItem);
 
 						if (lastChangeRaised.ContainsKey(trackedItem))
-							lastChangeRaised[trackedItem] = DateTime.Now;
+							lastChangeRaised[trackedItem] = DateTime.UtcNow;
 						else
-							lastChangeRaised.Add(trackedItem, DateTime.Now);
+							lastChangeRaised.Add(trackedItem, DateTime.UtcNow);
 					}
 
 					return;
@@ -210,7 +210,7 @@ namespace MagTools.Trackers.Inventory
 			}
 
 			var trackedInventory = new TrackedInventory(name, obj.ObjectClass, obj.Icon, itemValue);
-			trackedInventory.AddSnapShot(DateTime.Now, count, SnapShotGroup<int>.PruneMethod.DecreaseResolution);
+			trackedInventory.AddSnapShot(DateTime.UtcNow, count, SnapShotGroup<int>.PruneMethod.DecreaseResolution);
 
 			trackedItems.Add(trackedInventory);
 
@@ -219,9 +219,9 @@ namespace MagTools.Trackers.Inventory
 				ItemsAdded(new List<TrackedInventory> { trackedInventory });
 
 				if (lastChangeRaised.ContainsKey(trackedInventory))
-					lastChangeRaised[trackedInventory] = DateTime.Now;
+					lastChangeRaised[trackedInventory] = DateTime.UtcNow;
 				else
-					lastChangeRaised.Add(trackedInventory, DateTime.Now);
+					lastChangeRaised.Add(trackedInventory, DateTime.UtcNow);
 			}
 		}
 
@@ -234,15 +234,15 @@ namespace MagTools.Trackers.Inventory
 
 				foreach (var trackedItem in trackedItems)
 				{
-					if (lastChangeRaised.ContainsKey(trackedItem) && DateTime.Now - lastChangeRaised[trackedItem] < TimeSpan.FromSeconds(1))
+					if (lastChangeRaised.ContainsKey(trackedItem) && DateTime.UtcNow - lastChangeRaised[trackedItem] < TimeSpan.FromSeconds(1))
 						return;
 
 					ItemChanged(trackedItem);
 
 					if (lastChangeRaised.ContainsKey(trackedItem))
-						lastChangeRaised[trackedItem] = DateTime.Now;
+						lastChangeRaised[trackedItem] = DateTime.UtcNow;
 					else
-						lastChangeRaised.Add(trackedItem, DateTime.Now);
+						lastChangeRaised.Add(trackedItem, DateTime.UtcNow);
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
