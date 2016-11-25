@@ -11,6 +11,7 @@ namespace MagTools.Macros
 	class IdleActionManager : IDisposable
 	{
 		readonly Timer timer = new Timer();
+		readonly Timer timerWithChestOpen = new Timer();
 
 		public IdleActionManager()
 		{
@@ -18,6 +19,9 @@ namespace MagTools.Macros
 			{
 				timer.Tick += new EventHandler(timer_Tick);
 				timer.Interval = 4000;
+
+				timerWithChestOpen.Tick += new EventHandler(timerWithChestOpen_Tick);
+				timerWithChestOpen.Interval = 2000;
 
 				CoreManager.Current.WorldFilter.CreateObject += new EventHandler<CreateObjectEventArgs>(WorldFilter_CreateObject);
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
@@ -34,15 +38,13 @@ namespace MagTools.Macros
 		{
 			Dispose(true);
 
-			// Use SupressFinalize in case a subclass
-			// of this type implements a finalizer.
+			// Use SupressFinalize in case a subclass of this type implements a finalizer.
 			GC.SuppressFinalize(this);
 		}
 
 		protected virtual void Dispose(bool disposing)
 		{
-			// If you need thread safety, use a lock around these 
-			// operations, as well as in your methods that use the resource.
+			// If you need thread safety, use a lock around these operations, as well as in your methods that use the resource.
 			if (!disposed)
 			{
 				if (disposing)
@@ -149,6 +151,7 @@ namespace MagTools.Macros
 			try
 			{
 				timer.Stop();
+				timerWithChestOpen.Stop();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -165,7 +168,10 @@ namespace MagTools.Macros
 				try
 				{
 					if (CoreManager.Current.Actions.OpenedContainer != 0)
+					{
+						timerWithChestOpen.Start();
 						return;
+					}
 				} 
 				/*System.AccessViolationException: Attempted to read or write protected memory. This is often an indication that other memory is corrupt.
 					at Decal.Interop.Core.ACHooksClass.get_OpenedContainer()
@@ -252,7 +258,7 @@ namespace MagTools.Macros
 							if (wo.ObjectClass == ObjectClass.Misc && wo.Name == "Intricate Carving Tool") toolId = wo.Id;
 
 							// If we have a key in inventory, we're good
-							if (String.Compare(wo.Name, "Aged Legendary Key", StringComparison.OrdinalIgnoreCase) == 0)
+							if (wo.ObjectClass == ObjectClass.Key && wo.Name == "Aged Legendary Key")
 								return;
 						}
 
@@ -293,6 +299,83 @@ namespace MagTools.Macros
 						PostMessageTools.ClickYes();
 					}
 				}
+			}
+			catch (Exception ex) { Debug.LogException(ex); }
+		}
+
+		/// <summary>
+		/// This timer will get started from timer_Tick, when an open container is detected.
+		/// If this function detects that no container is opened, it will stop itself.
+		/// </summary>
+		void timerWithChestOpen_Tick(object sender, EventArgs e)
+		{
+			try
+			{
+				if (CoreManager.Current.Actions.CombatMode != CombatState.Peace)
+					return;
+
+				try
+				{
+					if (CoreManager.Current.Actions.OpenedContainer == 0)
+					{
+						timerWithChestOpen.Stop();
+						return;
+					}
+				}
+				/*System.AccessViolationException: Attempted to read or write protected memory. This is often an indication that other memory is corrupt.
+					at Decal.Interop.Core.ACHooksClass.get_OpenedContainer()
+					at Decal.Adapter.Wrappers.HooksWrapper.get_OpenedContainer()*/
+				catch (AccessViolationException)
+				{
+					timerWithChestOpen.Stop();
+					return;
+				}
+
+				if (CoreManager.Current.Actions.BusyState != 0)
+					return;
+
+				int toolId = 0;
+				int targetId = 0;
+
+				if (Settings.SettingsManager.InventoryManagement.KeyDeringer.Value)
+				{
+					// Make sure we're by a chest
+					var closestChest = Util.GetClosestObject(" Chest", true);
+
+					if (closestChest != null && Util.GetDistanceFromPlayer(closestChest) <= 10)
+					{
+						toolId = 0; targetId = 0;
+
+						foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
+						{
+							if (wo.ObjectClass == ObjectClass.Misc && wo.Name == "Intricate Carving Tool") toolId = wo.Id;
+
+							// If we have a key in inventory, we're good
+							if (wo.ObjectClass == ObjectClass.Key && wo.Name == "Aged Legendary Key")
+								return;
+						}
+
+						foreach (var wo in CoreManager.Current.WorldFilter.GetInventory())
+						{
+							if (wo.HasIdData && wo.ObjectClass == ObjectClass.Misc && wo.Name == "Burning Sands Keyring" && wo.Values(LongValueKey.KeysHeld) > 0)
+							{
+								targetId = wo.Id;
+								break;
+							}
+						}
+					}
+					else
+						timerWithChestOpen.Stop();
+				}
+
+				if (toolId != 0 && targetId != 0)
+				{
+					CoreManager.Current.Actions.SelectItem(targetId);
+					CoreManager.Current.Actions.UseItem(toolId, 1, targetId);
+					return;
+				}
+
+				timerWithChestOpen.Stop();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
