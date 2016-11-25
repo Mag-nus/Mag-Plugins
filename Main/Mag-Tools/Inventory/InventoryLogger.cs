@@ -25,8 +25,9 @@ namespace MagTools.Inventory
 			try
 			{
 				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete);
+				CoreManager.Current.WorldFilter.CreateObject += new EventHandler<CreateObjectEventArgs>(WorldFilter_CreateObject);
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
-				CoreManager.Current.WorldFilter.MoveObject += new EventHandler<MoveObjectEventArgs>(WorldFilter_MoveObject);
+				//CoreManager.Current.WorldFilter.MoveObject += new EventHandler<MoveObjectEventArgs>(WorldFilter_MoveObject);
 				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -52,8 +53,9 @@ namespace MagTools.Inventory
 				if (disposing)
 				{
 					CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
+					CoreManager.Current.WorldFilter.CreateObject -= new EventHandler<CreateObjectEventArgs>(WorldFilter_CreateObject);
 					CoreManager.Current.WorldFilter.ChangeObject -= new EventHandler<ChangeObjectEventArgs>(WorldFilter_ChangeObject);
-					CoreManager.Current.WorldFilter.MoveObject -= new EventHandler<MoveObjectEventArgs>(WorldFilter_MoveObject);
+					//CoreManager.Current.WorldFilter.MoveObject -= new EventHandler<MoveObjectEventArgs>(WorldFilter_MoveObject);
 					CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 				}
 
@@ -62,12 +64,15 @@ namespace MagTools.Inventory
 			}
 		}
 
+		bool loginComplete;
 		bool loggedInAndWaitingForIdData;
 
 		void CharacterFilter_LoginComplete(object sender, EventArgs e)
 		{
 			try
 			{
+				loginComplete = true;
+
 				if (!Settings.SettingsManager.InventoryManagement.InventoryLogger.Value)
 					return;
 
@@ -90,8 +95,35 @@ namespace MagTools.Inventory
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		readonly List<int> requestedIds = new List<int>();
+
+		private void WorldFilter_CreateObject(object sender, CreateObjectEventArgs e)
+		{
+			// We don't run any actions until we're fully logged in
+			if (!loginComplete)
+				return;
+
+			if (!Settings.SettingsManager.InventoryManagement.InventoryLogger.Value)
+				return;
+
+			// Check if the player just received an item via give that it needs id data for
+			if (!e.New.HasIdData && ObjectClassNeedsIdent(e.New.ObjectClass, e.New.Name) && !requestedIds.Contains(e.New.Id))
+			{
+				// Make sure its in our inventory
+				if (e.New.Container == CoreManager.Current.CharacterFilter.Id)
+				{
+					requestedIds.Add(e.New.Id);
+					CoreManager.Current.Actions.RequestId(e.New.Id);
+				}
+			}
+		}
+
 		void WorldFilter_ChangeObject(object sender, ChangeObjectEventArgs e)
 		{
+			// We don't run any actions until we're fully logged in
+			if (!loginComplete)
+				return;
+
 			if (!Settings.SettingsManager.InventoryManagement.InventoryLogger.Value)
 				return;
 
@@ -115,34 +147,45 @@ namespace MagTools.Inventory
 					Debug.WriteToChat("Requesting id information for all armor/weapon inventory completed. Log file written.");
 				}
 			}
+			else
+			{
+				// Check if the player just received an item via trade that it needs id data for
+				if (!e.Changed.HasIdData && ObjectClassNeedsIdent(e.Changed.ObjectClass, e.Changed.Name) && !requestedIds.Contains(e.Changed.Id))
+				{
+					// Make sure its in our inventory
+					if (e.Changed.Container == CoreManager.Current.CharacterFilter.Id)
+					{
+						requestedIds.Add(e.Changed.Id);
+						CoreManager.Current.Actions.RequestId(e.Changed.Id);
+					}
+				}
+			}
 		}
 
-		readonly List<int> requestedIds = new List<int>();
-
-		void WorldFilter_MoveObject(object sender, MoveObjectEventArgs e)
+		/*void WorldFilter_MoveObject(object sender, MoveObjectEventArgs e)
 		{
 			try
 			{
+				// We don't run any actions until we're fully logged in
+				if (!loginComplete)
+					return;
+
 				if (!Settings.SettingsManager.InventoryManagement.InventoryLogger.Value)
 					return;
 
-				// Check if the player just received an item that it needs id data for
+				// Check if the player just received an item froma a corpse/chest that it needs id data for
 				if (!e.Moved.HasIdData && ObjectClassNeedsIdent(e.Moved.ObjectClass, e.Moved.Name) && !requestedIds.Contains(e.Moved.Id))
 				{
 					// Make sure its in our inventory
-					foreach (var invo in CoreManager.Current.WorldFilter.GetInventory())
+					if (e.Moved.Container == CoreManager.Current.CharacterFilter.Id)
 					{
-						if (invo.Id == e.Moved.Id)
-						{
-							requestedIds.Add(e.Moved.Id);
-							CoreManager.Current.Actions.RequestId(e.Moved.Id);
-							break;
-						}
+						requestedIds.Add(e.Moved.Id);
+						CoreManager.Current.Actions.RequestId(e.Moved.Id);
 					}
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
-		}
+		}*/
 
 		void CharacterFilter_Logoff(object sender, Decal.Adapter.Wrappers.LogoffEventArgs e)
 		{
