@@ -94,10 +94,10 @@ namespace MagTools.Trackers.Combat
 			if (obj.DamageAmount > 0)
 			{
 				if (obj.SourceName == CoreManager.Current.CharacterFilter.Name)
-					damageOutgoing.AddSnapShot(DateTime.Now, obj.DamageAmount, ValueSnapShotGroup.CombineMethod.DecreaseResolution);
+					damageOutgoing.AddSnapShot(DateTime.UtcNow, obj.DamageAmount, ValueSnapShotGroup.CombineMethod.DecreaseResolution);
 
 				if (obj.TargetName == CoreManager.Current.CharacterFilter.Name)
-					damageIncoming.AddSnapShot(DateTime.Now, obj.DamageAmount, ValueSnapShotGroup.CombineMethod.DecreaseResolution);
+					damageIncoming.AddSnapShot(DateTime.UtcNow, obj.DamageAmount, ValueSnapShotGroup.CombineMethod.DecreaseResolution);
 			}
 		}
 

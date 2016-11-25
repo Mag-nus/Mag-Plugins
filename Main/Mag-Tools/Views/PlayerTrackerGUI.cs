@@ -159,7 +159,7 @@ namespace MagTools.Views
 
 			// Some people report lag while using Mag-Tools in populated areas.
 			// This will keep the list from sorting less too often
-			if (DateTime.Now - lastSortTime <= TimeSpan.FromSeconds(10))
+			if (DateTime.UtcNow - lastSortTime <= TimeSpan.FromSeconds(10))
 				return;
 
 			for (int row = 1; row < hudList.RowCount - 1; row++)
@@ -189,7 +189,7 @@ namespace MagTools.Views
 				}
 			}
 
-			lastSortTime = DateTime.Now;
+			lastSortTime = DateTime.UtcNow;
 		}
 
 		void hudList_Click(object sender, int row, int col)

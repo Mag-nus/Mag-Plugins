@@ -82,7 +82,7 @@ namespace MagTools.ItemInfo
 			if (started)
 				return;
 
-			startTime = DateTime.Now;
+			startTime = DateTime.UtcNow;
 
 			CoreManager.Current.RenderFrame += new EventHandler<EventArgs>(Current_RenderFrame);
 
@@ -105,10 +105,10 @@ namespace MagTools.ItemInfo
 		{
 			try
 			{
-				if (DateTime.Now - lastThought < TimeSpan.FromMilliseconds(100))
+				if (DateTime.UtcNow - lastThought < TimeSpan.FromMilliseconds(100))
 					return;
 
-				lastThought = DateTime.Now;
+				lastThought = DateTime.UtcNow;
 
 				Think();
 
@@ -152,7 +152,7 @@ namespace MagTools.ItemInfo
 			}
 
 			// Some chests take a few seconds to print out ALL item info
-			if (DateTime.Now - startTime < TimeSpan.FromSeconds(5))
+			if (DateTime.UtcNow - startTime < TimeSpan.FromSeconds(5))
 				return;
 
 			Stop();

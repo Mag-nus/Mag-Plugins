@@ -148,10 +148,10 @@ namespace MagTools.Macros
 		{
 			try
 			{
-				if (DateTime.Now - lastThought < TimeSpan.FromMilliseconds(100))
+				if (DateTime.UtcNow - lastThought < TimeSpan.FromMilliseconds(100))
 					return;
 
-				lastThought = DateTime.Now;
+				lastThought = DateTime.UtcNow;
 
 				Think();
 
