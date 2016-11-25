@@ -68,12 +68,16 @@ namespace MagTools.Views
 
 				if (int.TryParse(((HudStaticText)inventoryList[row][2]).Text, out id))
 				{
-					CoreManager.Current.Actions.SelectItem(id);
-
 					var wo = CoreManager.Current.WorldFilter[id];
 
 					if (wo != null)
 					{
+						if (wo.Container != CoreManager.Current.CharacterFilter.Id)
+							CoreManager.Current.Actions.UseItem(wo.Container, 0);
+							//CoreManager.Current.Actions.SelectItem(wo.Container);
+
+						CoreManager.Current.Actions.SelectItem(id);
+
 						var itemInfo = new ItemInfo.ItemInfo(wo);
 						inventoryItemText.Text = itemInfo.ToString();
 					}
