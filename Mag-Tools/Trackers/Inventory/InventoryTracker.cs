@@ -49,13 +49,16 @@ namespace MagTools.Trackers.Inventory
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 				CoreManager.Current.WorldFilter.ReleaseObject += new EventHandler<Decal.Adapter.Wrappers.ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
 
-				var startTime = DateTime.Now;
+				var stopWatch = new System.Diagnostics.Stopwatch();
+
+				if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
+					stopWatch.Start();
 
 				foreach (WorldObject inventoryObject in CoreManager.Current.WorldFilter.GetInventory())
 					ProcessObject(inventoryObject);
 
 				if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
-					Debug.WriteToChat("Loaded Inventory Tracker: " + (DateTime.Now - startTime).TotalMilliseconds.ToString("N0") + "ms");
+					Debug.WriteToChat("Loaded Inventory Tracker: " + stopWatch.Elapsed.TotalMilliseconds.ToString("N0") + "ms");
 
 				timer.Tick += new EventHandler(timer_Tick);
 				timer.Interval = 500;

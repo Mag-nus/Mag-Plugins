@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Collections.ObjectModel;
 using System.Reflection;
+
 using MagTools.Client;
 using MagTools.Inventory;
 using MagTools.Loggers;
@@ -534,40 +535,63 @@ namespace MagTools
 		{
 			try
 			{
+				var stopWatch = new System.Diagnostics.Stopwatch();
+
 				// Load Persistent Stats
 				try
 				{
-					var startTime = DateTime.Now;
+					if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
+					{
+						stopWatch.Reset();
+						stopWatch.Start();
+					}
 
 					if (Settings.SettingsManager.CombatTracker.Persistent.Value)
 						combatTrackerPersistent.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker.xml");
 
 					if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
-						Debug.WriteToChat("Loaded Persistent Combat Tracker: " + (DateTime.Now - startTime).TotalMilliseconds.ToString("N0") + "ms");
+					{
+						stopWatch.Stop();
+						Debug.WriteToChat("Loaded Persistent Combat Tracker: " + stopWatch.Elapsed.TotalMilliseconds.ToString("N0") + "ms");
+					}
 				}
 				catch (Exception ex) { Debug.LogException(ex); }
 
 				try
 				{
-					var startTime = DateTime.Now;
+					if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
+					{
+						stopWatch.Reset();
+						stopWatch.Start();
+					}
 
 					if (Settings.SettingsManager.CorpseTracker.Persistent.Value)
 						corpseTracker.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CorpseTracker.xml");
 
 					if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
-						Debug.WriteToChat("Loaded Persistent Corpse Trackers: " + (DateTime.Now - startTime).TotalMilliseconds.ToString("N0") + "ms");
+					{
+						stopWatch.Stop();
+						Debug.WriteToChat("Loaded Persistent Corpse Trackers: " + stopWatch.Elapsed.TotalMilliseconds.ToString("N0") + "ms");
+					}
 				}
 				catch (Exception ex) { Debug.LogException(ex); }
 
 				try
 				{
-					var startTime = DateTime.Now;
+					if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
+					{
+						stopWatch.Reset();
+						stopWatch.Start();
+					}
 
 					if (Settings.SettingsManager.PlayerTracker.Persistent.Value)
 						playerTracker.ImportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".PlayerTracker.xml");
 
 					if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
-						Debug.WriteToChat("Loaded Persistent Player Tracker: " + (DateTime.Now - startTime).TotalMilliseconds.ToString("N0") + "ms");
+					{
+						stopWatch.Stop();
+						Debug.WriteToChat("Loaded Persistent Player Tracker: " + stopWatch.Elapsed.TotalMilliseconds.ToString("N0") + "ms");
+					}
 				}
 				catch (Exception ex) { Debug.LogException(ex); }
 
@@ -577,7 +601,11 @@ namespace MagTools
 				{
 					if (Settings.SettingsManager.ChatLogger.Persistent.Value)
 					{
-						var startTime = DateTime.Now;
+						if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
+						{
+							stopWatch.Reset();
+							stopWatch.Start();
+						}
 
 						chatLogFileWriter.FileName = PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChatLogger.txt";
 
@@ -587,7 +615,10 @@ namespace MagTools
 						Loggers.Chat.ChatLogImporter.Import(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".ChatLogger.txt", chatLoggers);
 
 						if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
-							Debug.WriteToChat("Loaded Persistent Chat: " + (DateTime.Now - startTime).TotalMilliseconds.ToString("N0") + "ms");
+						{
+							stopWatch.Stop();
+							Debug.WriteToChat("Loaded Persistent Chat: " + stopWatch.Elapsed.TotalMilliseconds.ToString("N0") + "ms");
+						}
 					}
 				}
 				catch (Exception ex) { Debug.LogException(ex); }
@@ -1231,6 +1262,7 @@ namespace MagTools
 
 				return false;
 			}
+
 			return false;
 		}
 

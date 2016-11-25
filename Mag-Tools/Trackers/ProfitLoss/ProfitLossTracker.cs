@@ -49,7 +49,10 @@ namespace MagTools.Trackers.ProfitLoss
 				CoreManager.Current.WorldFilter.ChangeObject += new EventHandler<Decal.Adapter.Wrappers.ChangeObjectEventArgs>(WorldFilter_ChangeObject);
 				CoreManager.Current.WorldFilter.ReleaseObject += new EventHandler<Decal.Adapter.Wrappers.ReleaseObjectEventArgs>(WorldFilter_ReleaseObject);
 
-				var startTime = DateTime.Now;
+				var stopWatch = new System.Diagnostics.Stopwatch();
+
+				if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
+					stopWatch.Start();
 
 				ProcessPeas();
 				ProcessComps();
@@ -57,7 +60,7 @@ namespace MagTools.Trackers.ProfitLoss
 				ProcessNetProfit();
 
 				if (Settings.SettingsManager.Misc.VerboseDebuggingEnabled.Value)
-					Debug.WriteToChat("Loaded Profit/Loss Tracker: " + (DateTime.Now - startTime).TotalMilliseconds.ToString("N0") + "ms");
+					Debug.WriteToChat("Loaded Profit/Loss Tracker: " + stopWatch.Elapsed.TotalMilliseconds.ToString("N0") + "ms");
 
 				timer.Tick += new EventHandler(timer_Tick);
 				timer.Interval = 500;
