@@ -544,6 +544,7 @@ namespace Mag_SuitBuilder
 				armorSearcher.Start();
 
 				Interlocked.Decrement(ref armorThreadCounter);
+				ThreadFinished();
 			}).Start();
 
 			btnStopCalculating.Enabled = true;
@@ -597,6 +598,7 @@ namespace Mag_SuitBuilder
 					if (abortedSearch || obj.Count < armorSearcherHighestItemCount)
 					{
 						Interlocked.Decrement(ref accessoryThreadQueueCounter);
+						ThreadFinished();
 						return;
 					}
 
@@ -695,7 +697,9 @@ namespace Mag_SuitBuilder
 					btnCalculatePossibilities.Enabled = true;
 					FlashWindow(this.Handle, true);
 
-					//MessageBox.Show((DateTime.Now - startTime).TotalSeconds.ToString());
+					#if DEBUG
+					//MessageBox.Show("Search finished in: " + (DateTime.Now - startTime).TotalSeconds + " seconds.");
+					#endif
 				}));
 			}
 		}
