@@ -193,7 +193,7 @@ namespace MagTools.Trackers.Inventory
 			{
 				if (trackedItem.Name == name)
 				{
-					trackedItem.AddSnapShot(DateTime.UtcNow, count, SnapShotGroup<int>.PruneMethod.DecreaseResolution);
+					trackedItem.AddSnapShot(DateTime.UtcNow, count);
 
 					if (ItemChanged != null)
 					{
@@ -209,8 +209,8 @@ namespace MagTools.Trackers.Inventory
 				}
 			}
 
-			var trackedInventory = new TrackedInventory(name, obj.ObjectClass, obj.Icon, itemValue);
-			trackedInventory.AddSnapShot(DateTime.UtcNow, count, SnapShotGroup<int>.PruneMethod.DecreaseResolution);
+			var trackedInventory = new TrackedInventory(name, obj.ObjectClass, obj.Icon, itemValue, 60);
+			trackedInventory.AddSnapShot(DateTime.UtcNow, count);
 
 			trackedItems.Add(trackedInventory);
 

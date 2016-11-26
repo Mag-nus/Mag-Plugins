@@ -65,8 +65,8 @@ namespace MagTools.Trackers.Combat
 		readonly List<AetheriaInfo> aetheriaInfos = new List<AetheriaInfo>();
 		readonly List<CloakInfo> cloakInfos = new List<CloakInfo>();
 
-		readonly ValueSnapShotGroup damageOutgoing = new ValueSnapShotGroup();
-		readonly ValueSnapShotGroup damageIncoming = new ValueSnapShotGroup();
+		readonly ValueSnapShotGroup damageOutgoing = new ValueSnapShotGroup(60);
+		readonly ValueSnapShotGroup damageIncoming = new ValueSnapShotGroup(60);
 
 		void standardTracker_CombatEvent(CombatEventArgs obj)
 		{
@@ -94,10 +94,10 @@ namespace MagTools.Trackers.Combat
 			if (obj.DamageAmount > 0)
 			{
 				if (obj.SourceName == CoreManager.Current.CharacterFilter.Name)
-					damageOutgoing.AddSnapShot(DateTime.UtcNow, obj.DamageAmount, ValueSnapShotGroup.CombineMethod.DecreaseResolution);
+					damageOutgoing.AddSnapShot(DateTime.UtcNow, obj.DamageAmount);
 
 				if (obj.TargetName == CoreManager.Current.CharacterFilter.Name)
-					damageIncoming.AddSnapShot(DateTime.UtcNow, obj.DamageAmount, ValueSnapShotGroup.CombineMethod.DecreaseResolution);
+					damageIncoming.AddSnapShot(DateTime.UtcNow, obj.DamageAmount);
 			}
 		}
 

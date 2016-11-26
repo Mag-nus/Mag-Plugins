@@ -236,7 +236,7 @@ namespace MagTools.Trackers.ProfitLoss
 			{
 				if (trackedItem.Name == name)
 				{
-					trackedItem.AddSnapShot(DateTime.UtcNow, value, SnapShotGroup<int>.PruneMethod.DecreaseResolution);
+					trackedItem.AddSnapShot(DateTime.UtcNow, value);
 
 					if (ItemChanged != null)
 					{
@@ -252,8 +252,8 @@ namespace MagTools.Trackers.ProfitLoss
 				}
 			}
 
-			var trackedProfitLoss = new TrackedProfitLoss(name);
-			trackedProfitLoss.AddSnapShot(DateTime.UtcNow, value, SnapShotGroup<int>.PruneMethod.DecreaseResolution);
+			var trackedProfitLoss = new TrackedProfitLoss(name, 60);
+			trackedProfitLoss.AddSnapShot(DateTime.UtcNow, value);
 
 			trackedItems.Add(trackedProfitLoss);
 
