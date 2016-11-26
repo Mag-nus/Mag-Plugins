@@ -5,7 +5,7 @@ namespace MagTools.Trackers.ProfitLoss
 	{
 		public readonly string Name;
 
-		public TrackedProfitLoss(string name)
+		public TrackedProfitLoss(string name, int minutesToRetain) : base(minutesToRetain)
 		{
 			Name = name;
 		}

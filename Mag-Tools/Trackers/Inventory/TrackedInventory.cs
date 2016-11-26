@@ -10,7 +10,7 @@ namespace MagTools.Trackers.Inventory
 		public readonly int Icon;
 		public readonly int ItemValue;
 
-		public TrackedInventory(string name, ObjectClass objectClass, int icon, int itemValue)
+		public TrackedInventory(string name, ObjectClass objectClass, int icon, int itemValue, int minutesToRetain) : base(minutesToRetain)
 		{
 			Name = name;
 			ObjectClass = objectClass;
