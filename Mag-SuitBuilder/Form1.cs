@@ -792,7 +792,7 @@ namespace Mag_SuitBuilder
 			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Feet] == null ? null : node.Suit[EquippableSlotFlags.Feet].ExtendedMyWorldObject, sb);
 			sb.AppendLine();
 			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.ShirtChest] == null ? null : node.Suit[EquippableSlotFlags.ShirtChest].ExtendedMyWorldObject, sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.PantsAbdomen] == null ? null : node.Suit[EquippableSlotFlags.PantsAbdomen].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.PantsUpperLegs] == null ? null : node.Suit[EquippableSlotFlags.PantsUpperLegs].ExtendedMyWorldObject, sb);
 			sb.AppendLine();
 			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Necklace] == null ? null : node.Suit[EquippableSlotFlags.Necklace].ExtendedMyWorldObject, sb);
 			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Trinket] == null ? null : node.Suit[EquippableSlotFlags.Trinket].ExtendedMyWorldObject, sb);
