@@ -200,7 +200,7 @@ namespace Mag_SuitBuilder.Equipment
 			{
 				if (!chkCompsKitsFoodManaStones.Checked) return false;
 			}
-			else if (mwo.ObjClass == ObjectClass.Misc && mwo.Name.Contains("Essence"))
+			else if (mwo.ObjClass == ObjectClass.Misc && mwo.Name.Contains("Essence") && !mwo.Name.Contains("Corrupted") && !mwo.Name.Contains("Degenerate"))
 			{
 				if (!chkPets.Checked) return false;
 			}
@@ -229,9 +229,28 @@ namespace Mag_SuitBuilder.Equipment
 			{
 				var regex = new Regex(txtRegexStringMatch.Text, RegexOptions.IgnoreCase);
 
-				var itemInfo = new ItemInfo(mwo);
+				bool hasSpellMatch = false;
 
-				if (!regex.IsMatch(itemInfo.ToString())) return false;
+				foreach (var spellID in mwo.Spells)
+				{
+					Spell spell = SpellTools.GetSpell(spellID);
+
+					if (spell == null)
+						continue;
+
+					if (regex.IsMatch(spell.Name))
+					{
+						hasSpellMatch = true;
+						break;
+					}
+				}
+
+				if (!hasSpellMatch)
+				{
+					var itemInfo = new ItemInfo(mwo);
+
+					if (!regex.IsMatch(itemInfo.ToString())) return false;
+				}
 			}
 
 
