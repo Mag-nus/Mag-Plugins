@@ -74,6 +74,8 @@ namespace Mag.Shared.Constants
 					options.Add(CoverageFlags.UpperLegs);
 					options.Add(CoverageFlags.LowerLegs);
 				}
+				else if (value == (CoverageFlags.LowerLegs | CoverageFlags.Feet))
+					options.Add(CoverageFlags.Feet);
 				else if (value == (CoverageFlags.Chest | CoverageFlags.Abdomen))
 					options.Add(CoverageFlags.Chest);
 				else if (value == (CoverageFlags.Chest | CoverageFlags.Abdomen | CoverageFlags.UpperArms))
