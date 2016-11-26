@@ -122,9 +122,9 @@ namespace MagTools.Views
 				combatTrackerGUIInfo.Clear();
 
 				if (selectedRow == 0 || selectedRow == 1)
-					loadInfoForName("All");
+					loadInfoForTarget("All");
 				else
-					loadInfoForName(((HudStaticText)monsterList[selectedRow][1]).Text);
+					loadInfoForTarget(((HudStaticText)monsterList[selectedRow][1]).Text);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -154,14 +154,16 @@ namespace MagTools.Views
 				AddNamesToList(combatInfo.SourceName, combatInfo.TargetName, false);
 
 				if (!String.IsNullOrEmpty(combatInfo.SourceName) && combatInfo.SourceName != CoreManager.Current.CharacterFilter.Name)
-					loadInfoForName(combatInfo.SourceName);
+					loadInfoForTarget(combatInfo.SourceName);
 
 				if (!String.IsNullOrEmpty(combatInfo.TargetName) && combatInfo.TargetName != CoreManager.Current.CharacterFilter.Name)
-					loadInfoForName(combatInfo.TargetName);
+					loadInfoForTarget(combatInfo.TargetName);
 			}
 
 			if (Settings.SettingsManager.CombatTracker.SortAlphabetically.Value)
 				SortListAlphabetically();
+
+			updateCharacterGenericStats();
 		}
 
 		void combatTracker_CombatInfoUpdated(CombatInfo obj)
@@ -169,10 +171,12 @@ namespace MagTools.Views
 			AddNamesToList(obj.SourceName, obj.TargetName);
 
 			if (!String.IsNullOrEmpty(obj.SourceName) && obj.SourceName != CoreManager.Current.CharacterFilter.Name)
-				loadInfoForName(obj.SourceName);
+				loadInfoForTarget(obj.SourceName);
 
 			if (!String.IsNullOrEmpty(obj.TargetName) && obj.TargetName != CoreManager.Current.CharacterFilter.Name)
-				loadInfoForName(obj.TargetName);
+				loadInfoForTarget(obj.TargetName);
+
+			updateCharacterGenericStats();
 		}
 
 		void combatTracker_AetheriaInfoUpdated(AetheriaInfo obj)
@@ -180,10 +184,12 @@ namespace MagTools.Views
 			AddNamesToList(obj.SourceName, obj.TargetName);
 
 			if (!String.IsNullOrEmpty(obj.SourceName) && obj.SourceName != CoreManager.Current.CharacterFilter.Name)
-				loadInfoForName(obj.SourceName);
+				loadInfoForTarget(obj.SourceName);
 
 			if (!String.IsNullOrEmpty(obj.TargetName) && obj.TargetName != CoreManager.Current.CharacterFilter.Name)
-				loadInfoForName(obj.TargetName);
+				loadInfoForTarget(obj.TargetName);
+
+			updateCharacterGenericStats();
 		}
 
 		void combatTracker_CloakInfoUpdated(CloakInfo obj)
@@ -191,10 +197,12 @@ namespace MagTools.Views
 			AddNamesToList(obj.SourceName, obj.TargetName);
 
 			if (!String.IsNullOrEmpty(obj.SourceName) && obj.SourceName != CoreManager.Current.CharacterFilter.Name)
-				loadInfoForName(obj.SourceName);
+				loadInfoForTarget(obj.SourceName);
 
 			if (!String.IsNullOrEmpty(obj.TargetName) && obj.TargetName != CoreManager.Current.CharacterFilter.Name)
-				loadInfoForName(obj.TargetName);
+				loadInfoForTarget(obj.TargetName);
+
+			updateCharacterGenericStats();
 		}
 
 		void AddNamesToList(string sourceName, string targetName, bool allowSorting = true)
@@ -275,265 +283,264 @@ namespace MagTools.Views
 			}
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
 		/// <param name="name">name should be a target name, not the current players name.</param>
-		void loadInfoForName(string name)
+		void loadInfoForTarget(string name)
 		{
-			for (int i = 1 ; i <= 2 ; i++)
+			List<CombatInfo> combatInfos = combatTracker.GetCombatInfos(name);
+
+			int killingBlows = 0;
+			int damageReceived = 0;
+			long damageGiven = 0;
+
+			foreach (CombatInfo combatInfo in combatInfos)
 			{
-				List<CombatInfo> combatInfos;
-				List<AetheriaInfo> aetheriaInfos;
-				List<CloakInfo> cloakInfos;
+				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
+					killingBlows += combatInfo.KillingBlows;
+				if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
+					damageReceived += combatInfo.Damage;
+				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
+					damageGiven += combatInfo.Damage;
+			}
 
-				if (i == 1)
+			int targetRow = 0;
+
+			for (int row = 2; row < monsterList.RowCount; row++)
+			{
+				if (((HudStaticText)monsterList[row][1]).Text == name)
 				{
-					combatInfos = combatTracker.GetCombatInfos(CoreManager.Current.CharacterFilter.Name);
-					aetheriaInfos = combatTracker.GetAetheriaInfos(CoreManager.Current.CharacterFilter.Name);
-					cloakInfos = combatTracker.GetCloakInfos(CoreManager.Current.CharacterFilter.Name);
+					targetRow = row;
+					break;
 				}
-				else
+			}
+
+			if (targetRow != 0)
+			{
+				if (killingBlows != 0)
+					((HudStaticText)monsterList[targetRow][2]).Text = Util.NumberFormatter(killingBlows, ("#,##0"), 99999);
+				if (damageReceived != 0)
+					((HudStaticText)monsterList[targetRow][3]).Text = Util.NumberFormatter(damageReceived, ("#,##0"), 9999999);
+				if (damageGiven != 0)
+					((HudStaticText)monsterList[targetRow][4]).Text = Util.NumberFormatter(damageGiven, ("#,##0"), 99999999);
+			}
+		}
+
+		private void updateCharacterGenericStats()
+		{
+			List<CombatInfo> combatInfos = combatTracker.GetCombatInfos(CoreManager.Current.CharacterFilter.Name);
+			List<AetheriaInfo> aetheriaInfos = combatTracker.GetAetheriaInfos(CoreManager.Current.CharacterFilter.Name);
+			List<CloakInfo> cloakInfos = combatTracker.GetCloakInfos(CoreManager.Current.CharacterFilter.Name);
+
+			int killingBlows = 0;
+			int damageReceived = 0;
+			long damageGiven = 0;
+
+			foreach (CombatInfo combatInfo in combatInfos)
+			{
+				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
+					killingBlows += combatInfo.KillingBlows;
+				if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
+					damageReceived += combatInfo.Damage;
+				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
+					damageGiven += combatInfo.Damage;
+			}
+
+			if (killingBlows != 0)
+				((HudStaticText)monsterList[0][2]).Text = Util.NumberFormatter(killingBlows, ("#,##0"), 99999);
+			if (damageReceived != 0)
+				((HudStaticText)monsterList[0][3]).Text = Util.NumberFormatter(damageReceived, ("#,##0"), 9999999);
+			if (damageGiven != 0)
+				((HudStaticText)monsterList[0][4]).Text = Util.NumberFormatter(damageGiven, ("#,##0"), 99999999);
+
+			// Add up our damage received totals for each type vs element
+			// This is ugly but I just wanted to get it done quickly
+			int typelessMeleeMissile = 0;
+			int typelessMagic = 0;
+			int slashMeleeMissile = 0;
+			int slashMagic = 0;
+			int pierceMeleeMissile = 0;
+			int pierceMagic = 0;
+			int bludgeMeleeMissile = 0;
+			int bludgeMagic = 0;
+			int fireMeleeMissile = 0;
+			int fireMagic = 0;
+			int coldMeleeMissile = 0;
+			int coldMagic = 0;
+			int acidMeleeMissile = 0;
+			int acidMagic = 0;
+			int electricMeleeMissile = 0;
+			int electricMagic = 0;
+
+			int totalMeleeMissile = 0;
+			int totalMagic = 0;
+
+			foreach (CombatInfo combatInfo in combatInfos)
+			{
+				// We only add up damage received here, which means the player was the target
+				if (combatInfo.TargetName != CoreManager.Current.CharacterFilter.Name)
+					continue;
+
+				foreach (KeyValuePair<AttackType, CombatInfo.DamageByAttackType> damageByAttackType in combatInfo.DamageByAttackTypes)
 				{
-					combatInfos = combatTracker.GetCombatInfos(name);
-					aetheriaInfos = combatTracker.GetAetheriaInfos(name);
-					cloakInfos = combatTracker.GetCloakInfos(name);
-				}
-
-				int killingBlows = 0;
-				int damageReceived = 0;
-				long damageGiven = 0;
-
-				foreach (CombatInfo combatInfo in combatInfos)
-				{
-					if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
-						killingBlows += combatInfo.KillingBlows;
-					if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
-						damageReceived += combatInfo.Damage;
-					if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
-						damageGiven += combatInfo.Damage;
-				}
-
-				int targetRow = 0;
-
-				if (i == 1)
-					targetRow = 1;
-				else
-				{
-					for (int row = 2 ; row < monsterList.RowCount ; row++)
+					foreach (KeyValuePair<DamageElement, CombatInfo.DamageByAttackType.DamageByElement> damageByElement in damageByAttackType.Value.DamageByElements)
 					{
-						if (((HudStaticText)monsterList[row][1]).Text == name)
+						if (damageByAttackType.Key == AttackType.MeleeMissle)
 						{
-							targetRow = row;
-							break;
-						}
-					}
-				}
+							if (damageByElement.Key == DamageElement.Typeless) typelessMeleeMissile += damageByElement.Value.Damage;
+							if (damageByElement.Key == DamageElement.Slash) slashMeleeMissile += damageByElement.Value.Damage;
+							if (damageByElement.Key == DamageElement.Pierce) pierceMeleeMissile += damageByElement.Value.Damage;
+							if (damageByElement.Key == DamageElement.Bludge) bludgeMeleeMissile += damageByElement.Value.Damage;
+							if (damageByElement.Key == DamageElement.Fire) fireMeleeMissile += damageByElement.Value.Damage;
+							if (damageByElement.Key == DamageElement.Cold) coldMeleeMissile += damageByElement.Value.Damage;
+							if (damageByElement.Key == DamageElement.Acid) acidMeleeMissile += damageByElement.Value.Damage;
+							if (damageByElement.Key == DamageElement.Electric) electricMeleeMissile += damageByElement.Value.Damage;
 
-				if (targetRow != 0)
-				{
-					if (killingBlows != 0)
-						((HudStaticText)monsterList[targetRow][2]).Text = Util.NumberFormatter(killingBlows, ("#,##0"), 99999);
-					if (damageReceived != 0)
-						((HudStaticText)monsterList[targetRow][3]).Text = Util.NumberFormatter(damageReceived, ("#,##0"), 9999999);
-					if (damageGiven != 0)
-						((HudStaticText)monsterList[targetRow][4]).Text = Util.NumberFormatter(damageGiven, ("#,##0"), 99999999);
-
-					if (targetRow == selectedRow)
-					{
-						// Add up our damage received totals for each type vs element
-						// This is ugly but I just wanted to get it done quickly
-						int typelessMeleeMissile = 0;
-						int typelessMagic = 0;
-						int slashMeleeMissile = 0;
-						int slashMagic = 0;
-						int pierceMeleeMissile = 0;
-						int pierceMagic = 0;
-						int bludgeMeleeMissile = 0;
-						int bludgeMagic = 0;
-						int fireMeleeMissile = 0;
-						int fireMagic = 0;
-						int coldMeleeMissile = 0;
-						int coldMagic = 0;
-						int acidMeleeMissile = 0;
-						int acidMagic = 0;
-						int electricMeleeMissile = 0;
-						int electricMagic = 0;
-
-						int totalMeleeMissile = 0;
-						int totalMagic = 0;
-
-						foreach (CombatInfo combatInfo in combatInfos)
-						{
-							// We only add up damage received here, which means the player was the target
-							if (combatInfo.TargetName != CoreManager.Current.CharacterFilter.Name)
-								continue;
-
-							foreach (KeyValuePair<AttackType, CombatInfo.DamageByAttackType> damageByAttackType in combatInfo.DamageByAttackTypes)
-							{
-								foreach (KeyValuePair<DamageElement, CombatInfo.DamageByAttackType.DamageByElement> damageByElement in damageByAttackType.Value.DamageByElements)
-								{
-									if (damageByAttackType.Key == AttackType.MeleeMissle)
-									{
-										if (damageByElement.Key == DamageElement.Typeless) typelessMeleeMissile += damageByElement.Value.Damage;
-										if (damageByElement.Key == DamageElement.Slash) slashMeleeMissile += damageByElement.Value.Damage;
-										if (damageByElement.Key == DamageElement.Pierce) pierceMeleeMissile += damageByElement.Value.Damage;
-										if (damageByElement.Key == DamageElement.Bludge) bludgeMeleeMissile += damageByElement.Value.Damage;
-										if (damageByElement.Key == DamageElement.Fire) fireMeleeMissile += damageByElement.Value.Damage;
-										if (damageByElement.Key == DamageElement.Cold) coldMeleeMissile += damageByElement.Value.Damage;
-										if (damageByElement.Key == DamageElement.Acid) acidMeleeMissile += damageByElement.Value.Damage;
-										if (damageByElement.Key == DamageElement.Electric) electricMeleeMissile += damageByElement.Value.Damage;
-
-										totalMeleeMissile += damageByElement.Value.Damage;
-									}
-
-									if (damageByAttackType.Key == AttackType.Magic)
-									{
-										if (damageByElement.Key == DamageElement.Typeless) typelessMagic += damageByElement.Value.Damage;
-										if (damageByElement.Key == DamageElement.Slash) slashMagic += damageByElement.Value.Damage;
-										if (damageByElement.Key == DamageElement.Pierce) pierceMagic += damageByElement.Value.Damage;
-										if (damageByElement.Key == DamageElement.Bludge) bludgeMagic += damageByElement.Value.Damage;
-										if (damageByElement.Key == DamageElement.Fire) fireMagic += damageByElement.Value.Damage;
-										if (damageByElement.Key == DamageElement.Cold) coldMagic += damageByElement.Value.Damage;
-										if (damageByElement.Key == DamageElement.Acid) acidMagic += damageByElement.Value.Damage;
-										if (damageByElement.Key == DamageElement.Electric) electricMagic += damageByElement.Value.Damage;
-
-										totalMagic += damageByElement.Value.Damage;
-									}
-								}
-							}
+							totalMeleeMissile += damageByElement.Value.Damage;
 						}
 
-						combatTrackerGUIInfo.TypelessMeleeMissile = typelessMeleeMissile;
-						combatTrackerGUIInfo.TypelessMeleeMissile = typelessMagic;
-						combatTrackerGUIInfo.SlashMeleeMissile = slashMeleeMissile;
-						combatTrackerGUIInfo.SlashMagic = slashMagic;
-						combatTrackerGUIInfo.PierceMeleeMissile = pierceMeleeMissile;
-						combatTrackerGUIInfo.PierceMagic = pierceMagic;
-						combatTrackerGUIInfo.BludgeMeleeMissile = bludgeMeleeMissile;
-						combatTrackerGUIInfo.BludgeMagic = bludgeMagic;
-						combatTrackerGUIInfo.FireMeleeMissile = fireMeleeMissile;
-						combatTrackerGUIInfo.FireMagic = fireMagic;
-						combatTrackerGUIInfo.ColdMeleeMissile = coldMeleeMissile;
-						combatTrackerGUIInfo.ColdMagic = coldMagic;
-						combatTrackerGUIInfo.AcidMeleeMissile = acidMeleeMissile;
-						combatTrackerGUIInfo.AcidMagic = acidMagic;
-						combatTrackerGUIInfo.ElectricMeleeMissile = electricMeleeMissile;
-						combatTrackerGUIInfo.ElectricMagic = electricMagic;
-
-						combatTrackerGUIInfo.TotalMeleeMissile = totalMeleeMissile;
-						combatTrackerGUIInfo.TotalMagic = totalMagic;
-
-
-						// Attacks
-						int totalAttacks = 0;
-						int failedAttacks = 0;
-						foreach (CombatInfo combatInfo in combatInfos)
+						if (damageByAttackType.Key == AttackType.Magic)
 						{
-							if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
-							{
-								totalAttacks += combatInfo.TotalAttacks;
-								failedAttacks += combatInfo.FailedAttacks;
-							}
+							if (damageByElement.Key == DamageElement.Typeless) typelessMagic += damageByElement.Value.Damage;
+							if (damageByElement.Key == DamageElement.Slash) slashMagic += damageByElement.Value.Damage;
+							if (damageByElement.Key == DamageElement.Pierce) pierceMagic += damageByElement.Value.Damage;
+							if (damageByElement.Key == DamageElement.Bludge) bludgeMagic += damageByElement.Value.Damage;
+							if (damageByElement.Key == DamageElement.Fire) fireMagic += damageByElement.Value.Damage;
+							if (damageByElement.Key == DamageElement.Cold) coldMagic += damageByElement.Value.Damage;
+							if (damageByElement.Key == DamageElement.Acid) acidMagic += damageByElement.Value.Damage;
+							if (damageByElement.Key == DamageElement.Electric) electricMagic += damageByElement.Value.Damage;
+
+							totalMagic += damageByElement.Value.Damage;
 						}
-						combatTrackerGUIInfo.SetAttacks(totalAttacks, ((totalAttacks - failedAttacks) / (float)totalAttacks) * 100);
-
-						// Evades
-						int totalMeleeDefends = 0;
-						int totalEvades = 0;
-						foreach (CombatInfo combatInfo in combatInfos)
-						{
-							if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
-							{
-								foreach (KeyValuePair<AttackType, CombatInfo.DamageByAttackType> damageByAttackType in combatInfo.DamageByAttackTypes)
-								{
-									if (damageByAttackType.Key == AttackType.MeleeMissle)
-									{
-										totalMeleeDefends += damageByAttackType.Value.TotalAttacks;
-										totalEvades += damageByAttackType.Value.FailedAttacks;
-									}
-								}
-							}
-						}
-						combatTrackerGUIInfo.SetEvades(totalMeleeDefends, (totalEvades / (float)totalMeleeDefends) * 100);
-
-						// Resists
-						int totalMagicDefends = 0;
-						int totalResists = 0;
-						foreach (CombatInfo combatInfo in combatInfos)
-						{
-							if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
-							{
-								foreach (KeyValuePair<AttackType, CombatInfo.DamageByAttackType> damageByAttackType in combatInfo.DamageByAttackTypes)
-								{
-									if (damageByAttackType.Key == AttackType.Magic)
-									{
-										totalMagicDefends += damageByAttackType.Value.TotalAttacks;
-										totalResists += damageByAttackType.Value.FailedAttacks;
-									}
-								}
-							}
-						}
-						combatTrackerGUIInfo.SetResists(totalMagicDefends, (totalResists / (float)totalMagicDefends) * 100);
-
-						// Aetheria Surges
-						int aetheriaSurges = 0;
-						foreach (AetheriaInfo aetheriaInfo in aetheriaInfos)
-						{
-							if (aetheriaInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
-								aetheriaSurges += aetheriaInfo.TotalSurges;
-						}
-						// Aetheria proc % is calc'd against total offensive attacks (hit or miss).
-						combatTrackerGUIInfo.SetAetheriaSurges(aetheriaSurges, (aetheriaSurges / (float)totalAttacks) * 100);
-
-						// Cloak Surges
-						int cloakSurges = 0;
-						foreach (CloakInfo cloakInfo in cloakInfos)
-						{
-							if (cloakInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
-								cloakSurges += cloakInfo.TotalSurges;
-						}
-						// Cloaks proc % is calc'd against all received attacks (only hits).
-						combatTrackerGUIInfo.SetCloakSurges(cloakSurges, cloakSurges / (float)((totalMeleeDefends - totalEvades) + (totalMagicDefends - totalResists)) * 100);
-
-
-						// Normal Avg/Max
-						// Crits/%
-						// Crit Avg/Max
-						long totalNormalDamage = 0;
-						int maxNormalDamage = 0;
-						int crits = 0;
-						long totalCritDamage = 0;
-						int maxCritDamage = 0;
-						foreach (CombatInfo combatInfo in combatInfos)
-						{
-							if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
-							{
-								totalNormalDamage += combatInfo.TotalNormalDamage;
-								if (maxNormalDamage < combatInfo.MaxNormalDamage)
-									maxNormalDamage = combatInfo.MaxNormalDamage;
-
-								crits += combatInfo.Crits;
-
-								totalCritDamage += combatInfo.TotalCritDamage;
-								if (maxCritDamage < combatInfo.MaxCritDamage)
-									maxCritDamage = combatInfo.MaxCritDamage;
-							}
-						}
-
-						if (totalAttacks - failedAttacks - crits - killingBlows != 0)
-							combatTrackerGUIInfo.SetAvgMax((int)(totalNormalDamage / (totalAttacks - failedAttacks - crits - killingBlows)), maxNormalDamage);
-						if (totalAttacks - failedAttacks - killingBlows != 0)
-							combatTrackerGUIInfo.SetCrits(crits, (crits / (float)(totalAttacks - failedAttacks - killingBlows)) * 100);
-						if (crits != 0)
-							combatTrackerGUIInfo.SetCritsAvgMax((int)(totalCritDamage / crits), maxCritDamage);
-
-
-						// Damage Total
-						combatTrackerGUIInfo.TotalDamage = damageGiven;
 					}
 				}
 			}
+
+			combatTrackerGUIInfo.TypelessMeleeMissile = typelessMeleeMissile;
+			combatTrackerGUIInfo.TypelessMeleeMissile = typelessMagic;
+			combatTrackerGUIInfo.SlashMeleeMissile = slashMeleeMissile;
+			combatTrackerGUIInfo.SlashMagic = slashMagic;
+			combatTrackerGUIInfo.PierceMeleeMissile = pierceMeleeMissile;
+			combatTrackerGUIInfo.PierceMagic = pierceMagic;
+			combatTrackerGUIInfo.BludgeMeleeMissile = bludgeMeleeMissile;
+			combatTrackerGUIInfo.BludgeMagic = bludgeMagic;
+			combatTrackerGUIInfo.FireMeleeMissile = fireMeleeMissile;
+			combatTrackerGUIInfo.FireMagic = fireMagic;
+			combatTrackerGUIInfo.ColdMeleeMissile = coldMeleeMissile;
+			combatTrackerGUIInfo.ColdMagic = coldMagic;
+			combatTrackerGUIInfo.AcidMeleeMissile = acidMeleeMissile;
+			combatTrackerGUIInfo.AcidMagic = acidMagic;
+			combatTrackerGUIInfo.ElectricMeleeMissile = electricMeleeMissile;
+			combatTrackerGUIInfo.ElectricMagic = electricMagic;
+
+			combatTrackerGUIInfo.TotalMeleeMissile = totalMeleeMissile;
+			combatTrackerGUIInfo.TotalMagic = totalMagic;
+
+
+			// Attacks
+			int totalAttacks = 0;
+			int failedAttacks = 0;
+			foreach (CombatInfo combatInfo in combatInfos)
+			{
+				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
+				{
+					totalAttacks += combatInfo.TotalAttacks;
+					failedAttacks += combatInfo.FailedAttacks;
+				}
+			}
+			combatTrackerGUIInfo.SetAttacks(totalAttacks, ((totalAttacks - failedAttacks) / (float)totalAttacks) * 100);
+
+			// Evades
+			int totalMeleeDefends = 0;
+			int totalEvades = 0;
+			foreach (CombatInfo combatInfo in combatInfos)
+			{
+				if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
+				{
+					foreach (KeyValuePair<AttackType, CombatInfo.DamageByAttackType> damageByAttackType in combatInfo.DamageByAttackTypes)
+					{
+						if (damageByAttackType.Key == AttackType.MeleeMissle)
+						{
+							totalMeleeDefends += damageByAttackType.Value.TotalAttacks;
+							totalEvades += damageByAttackType.Value.FailedAttacks;
+						}
+					}
+				}
+			}
+			combatTrackerGUIInfo.SetEvades(totalMeleeDefends, (totalEvades / (float)totalMeleeDefends) * 100);
+
+			// Resists
+			int totalMagicDefends = 0;
+			int totalResists = 0;
+			foreach (CombatInfo combatInfo in combatInfos)
+			{
+				if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
+				{
+					foreach (KeyValuePair<AttackType, CombatInfo.DamageByAttackType> damageByAttackType in combatInfo.DamageByAttackTypes)
+					{
+						if (damageByAttackType.Key == AttackType.Magic)
+						{
+							totalMagicDefends += damageByAttackType.Value.TotalAttacks;
+							totalResists += damageByAttackType.Value.FailedAttacks;
+						}
+					}
+				}
+			}
+			combatTrackerGUIInfo.SetResists(totalMagicDefends, (totalResists / (float)totalMagicDefends) * 100);
+
+			// Aetheria Surges
+			int aetheriaSurges = 0;
+			foreach (AetheriaInfo aetheriaInfo in aetheriaInfos)
+			{
+				if (aetheriaInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
+					aetheriaSurges += aetheriaInfo.TotalSurges;
+			}
+			// Aetheria proc % is calc'd against total offensive attacks (hit or miss).
+			combatTrackerGUIInfo.SetAetheriaSurges(aetheriaSurges, (aetheriaSurges / (float)totalAttacks) * 100);
+
+			// Cloak Surges
+			int cloakSurges = 0;
+			foreach (CloakInfo cloakInfo in cloakInfos)
+			{
+				if (cloakInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
+					cloakSurges += cloakInfo.TotalSurges;
+			}
+			// Cloaks proc % is calc'd against all received attacks (only hits).
+			combatTrackerGUIInfo.SetCloakSurges(cloakSurges, cloakSurges / (float)((totalMeleeDefends - totalEvades) + (totalMagicDefends - totalResists)) * 100);
+
+
+			// Normal Avg/Max
+			// Crits/%
+			// Crit Avg/Max
+			long totalNormalDamage = 0;
+			int maxNormalDamage = 0;
+			int crits = 0;
+			long totalCritDamage = 0;
+			int maxCritDamage = 0;
+			foreach (CombatInfo combatInfo in combatInfos)
+			{
+				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
+				{
+					totalNormalDamage += combatInfo.TotalNormalDamage;
+					if (maxNormalDamage < combatInfo.MaxNormalDamage)
+						maxNormalDamage = combatInfo.MaxNormalDamage;
+
+					crits += combatInfo.Crits;
+
+					totalCritDamage += combatInfo.TotalCritDamage;
+					if (maxCritDamage < combatInfo.MaxCritDamage)
+						maxCritDamage = combatInfo.MaxCritDamage;
+				}
+			}
+
+			if (totalAttacks - failedAttacks - crits - killingBlows != 0)
+				combatTrackerGUIInfo.SetAvgMax((int)(totalNormalDamage / (totalAttacks - failedAttacks - crits - killingBlows)), maxNormalDamage);
+			if (totalAttacks - failedAttacks - killingBlows != 0)
+				combatTrackerGUIInfo.SetCrits(crits, (crits / (float)(totalAttacks - failedAttacks - killingBlows)) * 100);
+			if (crits != 0)
+				combatTrackerGUIInfo.SetCritsAvgMax((int)(totalCritDamage / crits), maxCritDamage);
+
+
+			// Damage Total
+			combatTrackerGUIInfo.TotalDamage = damageGiven;
 		}
 	}
 }
