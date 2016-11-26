@@ -1,6 +1,6 @@
 ﻿
 using Mag.Shared.Constants;
-using Mag.Shared.Spells;
+//using Mag.Shared.Spells;
 
 namespace Mag_SuitBuilder.Search
 {
@@ -25,8 +25,8 @@ namespace Mag_SuitBuilder.Search
 
 		EquippableSlotFlags occupiedSlots = EquippableSlotFlags.None;
 
-		readonly Spell[] spells = new Spell[17 * 6]; // Used for the old search compare method
-		int nextOpenSpellIndex;
+		//readonly Spell[] spells = new Spell[17 * 6]; // Used for the old search compare method
+		//int nextOpenSpellIndex;
 
 		readonly int[] armorSetCountById = new int[256];
 
