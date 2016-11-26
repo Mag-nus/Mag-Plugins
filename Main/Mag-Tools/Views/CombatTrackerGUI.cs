@@ -345,11 +345,11 @@ namespace MagTools.Views
 			}
 
 			if (killingBlows != 0)
-				((HudStaticText)monsterList[0][2]).Text = Util.NumberFormatter(killingBlows, ("#,##0"), 99999);
+				((HudStaticText)monsterList[1][2]).Text = Util.NumberFormatter(killingBlows, ("#,##0"), 99999);
 			if (damageReceived != 0)
-				((HudStaticText)monsterList[0][3]).Text = Util.NumberFormatter(damageReceived, ("#,##0"), 9999999);
+				((HudStaticText)monsterList[1][3]).Text = Util.NumberFormatter(damageReceived, ("#,##0"), 9999999);
 			if (damageGiven != 0)
-				((HudStaticText)monsterList[0][4]).Text = Util.NumberFormatter(damageGiven, ("#,##0"), 99999999);
+				((HudStaticText)monsterList[1][4]).Text = Util.NumberFormatter(damageGiven, ("#,##0"), 99999999);
 
 			// Add up our damage received totals for each type vs element
 			// This is ugly but I just wanted to get it done quickly
