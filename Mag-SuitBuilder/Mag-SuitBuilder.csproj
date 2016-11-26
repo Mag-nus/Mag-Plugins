@@ -138,23 +138,6 @@
     <Compile Include="Equipment\ExtendedMyWorldObject.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="EquipmentUpgradesForm.resx">
-      <DependentUpon>EquipmentUpgradesForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Equipment\EquipmentPieceControl.resx">
-      <DependentUpon>EquipmentPieceControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Equipment\FiltersControl.resx">
-      <DependentUpon>FiltersControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Spells\CantripSelectorControl.resx">
-      <DependentUpon>CantripSelectorControl.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="..\Shared\Spells\Spells.csv">
       <Link>Shared\Spells\Spells.csv</Link>
     </EmbeddedResource>
