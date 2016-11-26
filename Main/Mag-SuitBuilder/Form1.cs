@@ -502,6 +502,7 @@ namespace Mag_SuitBuilder
 									if (option == CoverageFlags.Abdomen && baseSuit[EquippableSlotFlags.Abdomen] == null)		{ slotFlag = EquippableSlotFlags.Abdomen; break; }
 									if (option == CoverageFlags.UpperLegs && baseSuit[EquippableSlotFlags.UpperLegs] == null)	{ slotFlag = EquippableSlotFlags.UpperLegs; break; }
 									if (option == CoverageFlags.LowerLegs && baseSuit[EquippableSlotFlags.LowerLegs] == null)	{ slotFlag = EquippableSlotFlags.LowerLegs; break; }
+									if (option == CoverageFlags.Feet && baseSuit[EquippableSlotFlags.Feet] == null)				{ slotFlag = EquippableSlotFlags.Feet; break; }
 								}
 
 								if (slotFlag == EquippableSlotFlags.None)
