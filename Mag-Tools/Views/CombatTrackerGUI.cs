@@ -321,9 +321,9 @@ namespace MagTools.Views
 
 		private void updateCombatTrackerGUIInfo()
 		{
-			List<CombatInfo> combatInfos = null;
-			List<AetheriaInfo> aetheriaInfos = null;
-			List<CloakInfo> cloakInfos = null;
+			List<CombatInfo> combatInfos;
+			List<AetheriaInfo> aetheriaInfos;
+			List<CloakInfo> cloakInfos;
 
 			if (selectedRow == 1)
 			{
