@@ -297,11 +297,12 @@ namespace MagTools.Views
 			foreach (CombatInfo combatInfo in combatInfos)
 			{
 				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
+				{
 					killingBlows += combatInfo.KillingBlows;
-				if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
-					damageReceived += combatInfo.Damage;
-				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
 					damageGiven += combatInfo.Damage;
+				}
+				else if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
+					damageReceived += combatInfo.Damage;
 			}
 
 			if (killingBlows != 0)
@@ -324,11 +325,12 @@ namespace MagTools.Views
 			foreach (CombatInfo combatInfo in combatInfos)
 			{
 				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
+				{
 					killingBlows += combatInfo.KillingBlows;
-				if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
-					damageReceived += combatInfo.Damage;
-				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
 					damageGiven += combatInfo.Damage;
+				}
+				else if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
+					damageReceived += combatInfo.Damage;
 			}
 
 			int targetRow = 0;
@@ -378,17 +380,6 @@ namespace MagTools.Views
 				return;
 			}
 
-			int killingBlows = 0;
-			long damageGiven = 0;
-
-			foreach (CombatInfo combatInfo in combatInfos)
-			{
-				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
-					killingBlows += combatInfo.KillingBlows;
-				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
-					damageGiven += combatInfo.Damage;
-			}
-
 			// Add up our damage received totals for each type vs element
 			// This is ugly but I just wanted to get it done quickly
 			int typelessMeleeMissile = 0;
@@ -434,8 +425,7 @@ namespace MagTools.Views
 
 							totalMeleeMissile += damageByElement.Value.Damage;
 						}
-
-						if (damageByAttackType.Key == AttackType.Magic)
+						else if (damageByAttackType.Key == AttackType.Magic)
 						{
 							if (damageByElement.Key == DamageElement.Typeless) typelessMagic += damageByElement.Value.Damage;
 							if (damageByElement.Key == DamageElement.Slash) slashMagic += damageByElement.Value.Damage;
@@ -476,6 +466,13 @@ namespace MagTools.Views
 			// Attacks
 			int totalAttacks = 0;
 			int failedAttacks = 0;
+			// Evades
+			int totalMeleeDefends = 0;
+			int totalEvades = 0;
+			// Resists
+			int totalMagicDefends = 0;
+			int totalResists = 0;
+
 			foreach (CombatInfo combatInfo in combatInfos)
 			{
 				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
@@ -483,15 +480,7 @@ namespace MagTools.Views
 					totalAttacks += combatInfo.TotalAttacks;
 					failedAttacks += combatInfo.FailedAttacks;
 				}
-			}
-			combatTrackerGUIInfo.SetAttacks(totalAttacks, ((totalAttacks - failedAttacks) / (float)totalAttacks) * 100);
-
-			// Evades
-			int totalMeleeDefends = 0;
-			int totalEvades = 0;
-			foreach (CombatInfo combatInfo in combatInfos)
-			{
-				if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
+				else if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
 				{
 					foreach (KeyValuePair<AttackType, CombatInfo.DamageByAttackType> damageByAttackType in combatInfo.DamageByAttackTypes)
 					{
@@ -500,21 +489,7 @@ namespace MagTools.Views
 							totalMeleeDefends += damageByAttackType.Value.TotalAttacks;
 							totalEvades += damageByAttackType.Value.FailedAttacks;
 						}
-					}
-				}
-			}
-			combatTrackerGUIInfo.SetEvades(totalMeleeDefends, (totalEvades / (float)totalMeleeDefends) * 100);
-
-			// Resists
-			int totalMagicDefends = 0;
-			int totalResists = 0;
-			foreach (CombatInfo combatInfo in combatInfos)
-			{
-				if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
-				{
-					foreach (KeyValuePair<AttackType, CombatInfo.DamageByAttackType> damageByAttackType in combatInfo.DamageByAttackTypes)
-					{
-						if (damageByAttackType.Key == AttackType.Magic)
+						else if (damageByAttackType.Key == AttackType.Magic)
 						{
 							totalMagicDefends += damageByAttackType.Value.TotalAttacks;
 							totalResists += damageByAttackType.Value.FailedAttacks;
@@ -522,6 +497,9 @@ namespace MagTools.Views
 					}
 				}
 			}
+
+			combatTrackerGUIInfo.SetAttacks(totalAttacks, ((totalAttacks - failedAttacks) / (float)totalAttacks) * 100);
+			combatTrackerGUIInfo.SetEvades(totalMeleeDefends, (totalEvades / (float)totalMeleeDefends) * 100);
 			combatTrackerGUIInfo.SetResists(totalMagicDefends, (totalResists / (float)totalMagicDefends) * 100);
 
 			// Aetheria Surges
@@ -553,6 +531,10 @@ namespace MagTools.Views
 			int crits = 0;
 			long totalCritDamage = 0;
 			int maxCritDamage = 0;
+
+			int killingBlows = 0;
+			long damageGiven = 0;
+
 			foreach (CombatInfo combatInfo in combatInfos)
 			{
 				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
@@ -566,6 +548,9 @@ namespace MagTools.Views
 					totalCritDamage += combatInfo.TotalCritDamage;
 					if (maxCritDamage < combatInfo.MaxCritDamage)
 						maxCritDamage = combatInfo.MaxCritDamage;
+
+					killingBlows += combatInfo.KillingBlows;
+					damageGiven += combatInfo.Damage;
 				}
 			}
 
