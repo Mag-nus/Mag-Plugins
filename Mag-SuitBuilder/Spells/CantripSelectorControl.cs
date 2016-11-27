@@ -25,8 +25,8 @@ namespace Mag_SuitBuilder.Spells
 			dataGridView1[0, 5].Value = "Willpower";		dataGridView1[0, 5].Tag = new [] { SpellTools.GetSpell(6101), SpellTools.GetSpell(4227), SpellTools.GetSpell(2577), SpellTools.GetSpell(2584) };
 			//
 
-			dataGridView1[1, 0].Value = "Slashing Ward";	dataGridView1[1, 0].Tag = new [] { SpellTools.GetSpell(6085), SpellTools.GetSpell(3957), SpellTools.GetSpell(2614), SpellTools.GetSpell(2621) }; // 4678,Epic Slashing Ward
-			dataGridView1[1, 1].Value = "Piercing Ward";	dataGridView1[1, 1].Tag = new [] { SpellTools.GetSpell(6084), SpellTools.GetSpell(3956), SpellTools.GetSpell(2613), SpellTools.GetSpell(2620) }; // 4677,Epic Piercing Ward
+			dataGridView1[1, 0].Value = "Slashing Ward";	dataGridView1[1, 0].Tag = new [] { SpellTools.GetSpell(6085), SpellTools.GetSpell(4678), SpellTools.GetSpell(2614), SpellTools.GetSpell(2621) }; // 3957 Epic Slashing Ward
+			dataGridView1[1, 1].Value = "Piercing Ward";	dataGridView1[1, 1].Tag = new [] { SpellTools.GetSpell(6084), SpellTools.GetSpell(4677), SpellTools.GetSpell(2613), SpellTools.GetSpell(2620) }; // 3956 Epic Piercing Ward
 			dataGridView1[1, 2].Value = "Bludgeoning Ward"; dataGridView1[1, 2].Tag = new [] { SpellTools.GetSpell(6081), SpellTools.GetSpell(4674), SpellTools.GetSpell(2610), SpellTools.GetSpell(2617) };
 			dataGridView1[1, 3].Value = "Flame Ward";		dataGridView1[1, 3].Tag = new [] { SpellTools.GetSpell(6082), SpellTools.GetSpell(4675), SpellTools.GetSpell(2611), SpellTools.GetSpell(2618) };
 			dataGridView1[1, 4].Value = "Frost Ward";		dataGridView1[1, 4].Tag = new [] { SpellTools.GetSpell(6083), SpellTools.GetSpell(4676), SpellTools.GetSpell(2612), SpellTools.GetSpell(2619) };
