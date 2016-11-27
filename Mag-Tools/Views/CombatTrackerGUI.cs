@@ -121,10 +121,7 @@ namespace MagTools.Views
 
 				combatTrackerGUIInfo.Clear();
 
-				if (selectedRow == 0 || selectedRow == 1)
-					loadInfoForTarget("All");
-				else
-					loadInfoForTarget(((HudStaticText)monsterList[selectedRow][1]).Text);
+				updateCombatTrackerGUIInfo();
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
@@ -134,9 +131,7 @@ namespace MagTools.Views
 			combatTrackerGUIInfo.Clear();
 
 			for (int row = monsterList.RowCount - 1 ; row >= 2 ; row--)
-			{
 				monsterList.RemoveRow(row);
-			}
 
 			selectedRow = 1;
 
@@ -163,7 +158,7 @@ namespace MagTools.Views
 			if (Settings.SettingsManager.CombatTracker.SortAlphabetically.Value)
 				SortListAlphabetically();
 
-			updateCharacterGenericStats();
+			updateCombatTrackerGUIInfo();
 		}
 
 		void combatTracker_CombatInfoUpdated(CombatInfo obj)
@@ -176,7 +171,7 @@ namespace MagTools.Views
 			if (!String.IsNullOrEmpty(obj.TargetName) && obj.TargetName != CoreManager.Current.CharacterFilter.Name)
 				loadInfoForTarget(obj.TargetName);
 
-			updateCharacterGenericStats();
+			updateCombatTrackerGUIInfo();
 		}
 
 		void combatTracker_AetheriaInfoUpdated(AetheriaInfo obj)
@@ -189,7 +184,7 @@ namespace MagTools.Views
 			if (!String.IsNullOrEmpty(obj.TargetName) && obj.TargetName != CoreManager.Current.CharacterFilter.Name)
 				loadInfoForTarget(obj.TargetName);
 
-			updateCharacterGenericStats();
+			updateCombatTrackerGUIInfo();
 		}
 
 		void combatTracker_CloakInfoUpdated(CloakInfo obj)
@@ -202,7 +197,7 @@ namespace MagTools.Views
 			if (!String.IsNullOrEmpty(obj.TargetName) && obj.TargetName != CoreManager.Current.CharacterFilter.Name)
 				loadInfoForTarget(obj.TargetName);
 
-			updateCharacterGenericStats();
+			updateCombatTrackerGUIInfo();
 		}
 
 		void AddNamesToList(string sourceName, string targetName, bool allowSorting = true)
@@ -324,11 +319,30 @@ namespace MagTools.Views
 			}
 		}
 
-		private void updateCharacterGenericStats()
+		private void updateCombatTrackerGUIInfo()
 		{
-			List<CombatInfo> combatInfos = combatTracker.GetCombatInfos(CoreManager.Current.CharacterFilter.Name);
-			List<AetheriaInfo> aetheriaInfos = combatTracker.GetAetheriaInfos(CoreManager.Current.CharacterFilter.Name);
-			List<CloakInfo> cloakInfos = combatTracker.GetCloakInfos(CoreManager.Current.CharacterFilter.Name);
+			List<CombatInfo> combatInfos = null;
+			List<AetheriaInfo> aetheriaInfos = null;
+			List<CloakInfo> cloakInfos = null;
+
+			if (selectedRow == 1)
+			{
+				combatInfos = combatTracker.GetCombatInfos(CoreManager.Current.CharacterFilter.Name);
+				aetheriaInfos = combatTracker.GetAetheriaInfos(CoreManager.Current.CharacterFilter.Name);
+				cloakInfos = combatTracker.GetCloakInfos(CoreManager.Current.CharacterFilter.Name);
+			}
+			else
+			{
+				combatInfos = combatTracker.GetCombatInfos(((HudStaticText)monsterList[selectedRow][1]).Text);
+				aetheriaInfos = combatTracker.GetAetheriaInfos(((HudStaticText)monsterList[selectedRow][1]).Text);
+				cloakInfos = combatTracker.GetCloakInfos(((HudStaticText)monsterList[selectedRow][1]).Text);
+			}
+
+			if (combatInfos == null || aetheriaInfos == null || cloakInfos == null)
+			{
+				combatTrackerGUIInfo.Clear();
+				return;
+			}
 
 			int killingBlows = 0;
 			int damageReceived = 0;
