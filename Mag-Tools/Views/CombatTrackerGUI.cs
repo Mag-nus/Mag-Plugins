@@ -144,15 +144,17 @@ namespace MagTools.Views
 
 		void combatTracker_StatsLoaded(List<CombatInfo> obj)
 		{
+			updateAllRow();
+
 			foreach (CombatInfo combatInfo in obj)
 			{
 				AddNamesToList(combatInfo.SourceName, combatInfo.TargetName, false);
 
 				if (!String.IsNullOrEmpty(combatInfo.SourceName) && combatInfo.SourceName != CoreManager.Current.CharacterFilter.Name)
-					loadInfoForTarget(combatInfo.SourceName);
+					updateMonsterListRow(combatInfo.SourceName);
 
 				if (!String.IsNullOrEmpty(combatInfo.TargetName) && combatInfo.TargetName != CoreManager.Current.CharacterFilter.Name)
-					loadInfoForTarget(combatInfo.TargetName);
+					updateMonsterListRow(combatInfo.TargetName);
 			}
 
 			if (Settings.SettingsManager.CombatTracker.SortAlphabetically.Value)
@@ -163,39 +165,45 @@ namespace MagTools.Views
 
 		void combatTracker_CombatInfoUpdated(CombatInfo obj)
 		{
+			updateAllRow();
+
 			AddNamesToList(obj.SourceName, obj.TargetName);
 
 			if (!String.IsNullOrEmpty(obj.SourceName) && obj.SourceName != CoreManager.Current.CharacterFilter.Name)
-				loadInfoForTarget(obj.SourceName);
+				updateMonsterListRow(obj.SourceName);
 
 			if (!String.IsNullOrEmpty(obj.TargetName) && obj.TargetName != CoreManager.Current.CharacterFilter.Name)
-				loadInfoForTarget(obj.TargetName);
+				updateMonsterListRow(obj.TargetName);
 
 			updateCombatTrackerGUIInfo();
 		}
 
 		void combatTracker_AetheriaInfoUpdated(AetheriaInfo obj)
 		{
+			updateAllRow();
+
 			AddNamesToList(obj.SourceName, obj.TargetName);
 
 			if (!String.IsNullOrEmpty(obj.SourceName) && obj.SourceName != CoreManager.Current.CharacterFilter.Name)
-				loadInfoForTarget(obj.SourceName);
+				updateMonsterListRow(obj.SourceName);
 
 			if (!String.IsNullOrEmpty(obj.TargetName) && obj.TargetName != CoreManager.Current.CharacterFilter.Name)
-				loadInfoForTarget(obj.TargetName);
+				updateMonsterListRow(obj.TargetName);
 
 			updateCombatTrackerGUIInfo();
 		}
 
 		void combatTracker_CloakInfoUpdated(CloakInfo obj)
 		{
+			updateAllRow();
+
 			AddNamesToList(obj.SourceName, obj.TargetName);
 
 			if (!String.IsNullOrEmpty(obj.SourceName) && obj.SourceName != CoreManager.Current.CharacterFilter.Name)
-				loadInfoForTarget(obj.SourceName);
+				updateMonsterListRow(obj.SourceName);
 
 			if (!String.IsNullOrEmpty(obj.TargetName) && obj.TargetName != CoreManager.Current.CharacterFilter.Name)
-				loadInfoForTarget(obj.TargetName);
+				updateMonsterListRow(obj.TargetName);
 
 			updateCombatTrackerGUIInfo();
 		}
@@ -278,8 +286,34 @@ namespace MagTools.Views
 			}
 		}
 
+		void updateAllRow()
+		{
+			List<CombatInfo> combatInfos = combatTracker.GetCombatInfos(CoreManager.Current.CharacterFilter.Name);
+
+			int killingBlows = 0;
+			int damageReceived = 0;
+			long damageGiven = 0;
+
+			foreach (CombatInfo combatInfo in combatInfos)
+			{
+				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
+					killingBlows += combatInfo.KillingBlows;
+				if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
+					damageReceived += combatInfo.Damage;
+				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
+					damageGiven += combatInfo.Damage;
+			}
+
+			if (killingBlows != 0)
+				((HudStaticText)monsterList[1][2]).Text = Util.NumberFormatter(killingBlows, ("#,##0"), 99999);
+			if (damageReceived != 0)
+				((HudStaticText)monsterList[1][3]).Text = Util.NumberFormatter(damageReceived, ("#,##0"), 9999999);
+			if (damageGiven != 0)
+				((HudStaticText)monsterList[1][4]).Text = Util.NumberFormatter(damageGiven, ("#,##0"), 99999999);
+		}
+
 		/// <param name="name">name should be a target name, not the current players name.</param>
-		void loadInfoForTarget(string name)
+		void updateMonsterListRow(string name)
 		{
 			List<CombatInfo> combatInfos = combatTracker.GetCombatInfos(name);
 
@@ -345,25 +379,15 @@ namespace MagTools.Views
 			}
 
 			int killingBlows = 0;
-			int damageReceived = 0;
 			long damageGiven = 0;
 
 			foreach (CombatInfo combatInfo in combatInfos)
 			{
 				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
 					killingBlows += combatInfo.KillingBlows;
-				if (combatInfo.TargetName == CoreManager.Current.CharacterFilter.Name)
-					damageReceived += combatInfo.Damage;
 				if (combatInfo.SourceName == CoreManager.Current.CharacterFilter.Name)
 					damageGiven += combatInfo.Damage;
 			}
-
-			if (killingBlows != 0)
-				((HudStaticText)monsterList[1][2]).Text = Util.NumberFormatter(killingBlows, ("#,##0"), 99999);
-			if (damageReceived != 0)
-				((HudStaticText)monsterList[1][3]).Text = Util.NumberFormatter(damageReceived, ("#,##0"), 9999999);
-			if (damageGiven != 0)
-				((HudStaticText)monsterList[1][4]).Text = Util.NumberFormatter(damageGiven, ("#,##0"), 99999999);
 
 			// Add up our damage received totals for each type vs element
 			// This is ugly but I just wanted to get it done quickly
