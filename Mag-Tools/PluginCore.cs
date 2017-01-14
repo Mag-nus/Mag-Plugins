@@ -783,6 +783,23 @@ namespace MagTools
 				return true;
 			}
 
+			if (lower.StartsWith("/mt movement "))
+			{
+				int msToHoldDown = 0;
+				char key;
+
+				string[] split = lower.Split(' ');
+				if (split.Length != 4)
+					return false;
+
+				char.TryParse(split[2], out key);
+				int.TryParse(split[3], out msToHoldDown);
+
+				PostMessageTools.SendMovement(key, msToHoldDown);
+
+				return true;
+			}
+
 			if (lower.StartsWith("/mt fellow "))
 			{
 				if (lower.StartsWith("/mt fellow create ") && lower.Length > 18)

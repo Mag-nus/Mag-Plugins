@@ -164,6 +164,43 @@ namespace Mag.Shared
 			}
 		}
 
+		static Timer _movementReleaseTimer;
+		static DateTime _movementSendTime;
+		static int _movementHoldTimeMilliseconds;
+		static char _movementKey;
+
+		public static void SendMovement(char ch, int msToHoldDown = 0)
+		{
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN, (IntPtr)CharCode(ch), (UIntPtr)(0x00000001 + ScanCode(ch) * 0x10000));
+			if (msToHoldDown == 0)
+			{
+				User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP, (IntPtr)CharCode(ch), (UIntPtr)(0xC0000001 + ScanCode(ch) * 0x10000));
+			}
+			else
+			{
+				if (_movementReleaseTimer == null)
+				{
+					_movementReleaseTimer = new Timer();
+					_movementReleaseTimer.Tick += new EventHandler(MovementReleaseTimer_Tick);
+					_movementReleaseTimer.Interval = 1;
+				}
+
+				_movementSendTime = DateTime.Now;
+				_movementHoldTimeMilliseconds = msToHoldDown;
+				_movementKey = ch;
+				_movementReleaseTimer.Start();
+			}
+		}
+
+		static void MovementReleaseTimer_Tick(object sender, EventArgs e)
+		{
+			if (_movementSendTime.AddMilliseconds(_movementHoldTimeMilliseconds) <= DateTime.Now)
+			{
+				_movementReleaseTimer.Stop();
+				User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP, (IntPtr)CharCode(_movementKey), (UIntPtr)(0xC0000001 + ScanCode(_movementKey) * 0x10000));
+			}
+		}
+
 		public static void SendCntrl(char ch)
 		{
 			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)VK_CONTROL,		(UIntPtr)0x001D0001);
