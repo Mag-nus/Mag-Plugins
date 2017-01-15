@@ -33,7 +33,8 @@ namespace Mag_WorldObjectLogger
 		{
 			try
 			{
-				if (e.New.ObjectClass == ObjectClass.Player || e.New.ObjectClass == ObjectClass.Corpse || e.New.Container != 0)
+				// Spells and projectiles are ObjectClass.Unknown
+				if (e.New.ObjectClass == ObjectClass.Player || e.New.ObjectClass == ObjectClass.Corpse || e.New.ObjectClass == ObjectClass.Unknown || e.New.Container != 0)
 					return;
 
 				CoreManager.Current.Actions.RequestId(e.New.Id);
@@ -45,7 +46,8 @@ namespace Mag_WorldObjectLogger
 		{
 			try
 			{
-				if (e.Changed.ObjectClass == ObjectClass.Player || e.Changed.ObjectClass == ObjectClass.Corpse || e.Changed.Container != 0)
+				// Spells and projectiles are ObjectClass.Unknown
+				if (e.Changed.ObjectClass == ObjectClass.Player || e.Changed.ObjectClass == ObjectClass.Corpse || e.Changed.ObjectClass == ObjectClass.Unknown || e.Changed.Container != 0)
 					return;
 
 				if (e.Change == WorldChangeType.IdentReceived)
