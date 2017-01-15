@@ -11,28 +11,14 @@ namespace Mag_LootLogger
 {
 	public class Class1 : PluginBase
 	{
-		private string logFileName;
+		private DirectoryInfo pluginPersonalFolder;
 
 		protected override void Startup()
 		{
-			DirectoryInfo pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-LootLogger");
+			pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-LootLogger");
 
 			if (!pluginPersonalFolder.Exists)
 				pluginPersonalFolder.Create();
-
-			logFileName = pluginPersonalFolder.FullName + @"\Loot.csv";
-
-			FileInfo logFile = new FileInfo(logFileName);
-
-			if (!logFile.Exists)
-			{
-				using (StreamWriter writer = new StreamWriter(logFile.FullName, true))
-				{
-					writer.WriteLine("\"Timestamp\",\"ContainerName\",\"ContainerID\",\"LandCell\",\"Location\",\"JSON\"");
-
-					writer.Close();
-				}
-			}
 
 			Core.ContainerOpened += new EventHandler<ContainerOpenedEventArgs>(Core_ContainerOpened);
 		}
@@ -150,6 +136,22 @@ namespace Mag_LootLogger
 				return;
 
 			itemsLogged[item.Id] = currentOpenContainer.Name;
+
+
+			string logFileName = pluginPersonalFolder.FullName + @"\" + CoreManager.Current.Actions.Landcell.ToString("X8") +".csv";
+
+			FileInfo logFile = new FileInfo(logFileName);
+
+			if (!logFile.Exists)
+			{
+				using (StreamWriter writer = new StreamWriter(logFile.FullName, true))
+				{
+					writer.WriteLine("\"Timestamp\",\"ContainerName\",\"ContainerID\",\"LandCell\",\"Location\",\"JSON\"");
+
+					writer.Close();
+				}
+			}
+
 
 			using (StreamWriter writer = new StreamWriter(logFileName, true))
 			{
