@@ -1,9 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Collections.ObjectModel;
 using System.Text;
-
-using Mag.Shared;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
@@ -12,8 +11,29 @@ namespace Mag_LootLogger
 {
 	public class Class1 : PluginBase
 	{
+		private string logFileName;
+
 		protected override void Startup()
 		{
+			DirectoryInfo pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-LootLogger");
+
+			if (!pluginPersonalFolder.Exists)
+				pluginPersonalFolder.Create();
+
+			logFileName = pluginPersonalFolder.FullName + @"\Loot.csv";
+
+			FileInfo logFile = new FileInfo(logFileName);
+
+			if (!logFile.Exists)
+			{
+				using (StreamWriter writer = new StreamWriter(logFile.FullName, true))
+				{
+					writer.WriteLine("\"Timestamp\",\"ContainerName\",\"ContainerID\",\"LandCell\",\"Location\",\"JSON\"");
+
+					writer.Close();
+				}
+			}
+
 			Core.ContainerOpened += new EventHandler<ContainerOpenedEventArgs>(Core_ContainerOpened);
 		}
 
@@ -22,24 +42,22 @@ namespace Mag_LootLogger
 			Core.ContainerOpened -= new EventHandler<ContainerOpenedEventArgs>(Core_ContainerOpened);
 		}
 
+		private WorldObject currentOpenContainer;
+
 		void Core_ContainerOpened(object sender, ContainerOpenedEventArgs e)
 		{
 			try
 			{
-				WorldObject container = CoreManager.Current.WorldFilter[e.ItemGuid];
+				currentOpenContainer = CoreManager.Current.WorldFilter[e.ItemGuid];
 
-				if (container == null)
+				if (currentOpenContainer == null)
 					return;
 
-				// Do not loot housing chests
-				if (container.Name == "Storage")
+				// Do not log housing chests
+				if (currentOpenContainer.Name == "Storage")
 					return;
 
-				if (container.ObjectClass == ObjectClass.Corpse)
-					return;
-
-				// Only loot chests and vaults, etc...
-				if (container.Name.Contains("Chest") || container.Name.Contains("Vault") || container.Name.Contains("Reliquary"))
+				if (currentOpenContainer.ObjectClass == ObjectClass.Corpse || currentOpenContainer.Name.Contains("Chest") || currentOpenContainer.Name.Contains("Vault") || currentOpenContainer.Name.Contains("Reliquary"))
 					Start();
 			}
 			catch { }
@@ -49,7 +67,7 @@ namespace Mag_LootLogger
 
 		readonly Collection<int> idsRequested = new Collection<int>();
 
-		readonly Collection<int> itemsLogged = new Collection<int>();
+		readonly Dictionary<int, string> itemsLogged = new Dictionary<int, string>();
 
 		void Start()
 		{
@@ -105,21 +123,18 @@ namespace Mag_LootLogger
 
 			foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetByContainer(CoreManager.Current.Actions.OpenedContainer))
 			{
-				if (wo.ObjectClass == ObjectClass.MeleeWeapon || wo.ObjectClass == ObjectClass.MissileWeapon || wo.ObjectClass == ObjectClass.WandStaffOrb)
+				if (!wo.HasIdData)
 				{
-					if (!wo.HasIdData)
+					if (!idsRequested.Contains(wo.Id))
 					{
-						if (!idsRequested.Contains(wo.Id))
-						{
-							idsRequested.Add(wo.Id);
-							CoreManager.Current.Actions.RequestId(wo.Id);
-						}
-
-						stillWaiting = true;
+						idsRequested.Add(wo.Id);
+						CoreManager.Current.Actions.RequestId(wo.Id);
 					}
-					else
-						LogItem(wo);
+
+					stillWaiting = true;
 				}
+				else
+					LogItem(wo);
 			}
 
 			if (!stillWaiting)
@@ -131,95 +146,107 @@ namespace Mag_LootLogger
 
 		private void LogItem(WorldObject item)
 		{
-			if (itemsLogged.Contains(item.Id))
+			if (itemsLogged.ContainsKey(item.Id) && itemsLogged[item.Id] == currentOpenContainer.Name)
 				return;
 
-			itemsLogged.Add(item.Id);
+			itemsLogged[item.Id] = currentOpenContainer.Name;
 
-			DirectoryInfo pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-LootLogger");
-
-			if (!pluginPersonalFolder.Exists)
-				pluginPersonalFolder.Create();
-
-			FileInfo logFile = new FileInfo(pluginPersonalFolder.FullName + @"\Loot.csv");
-
-			if (!logFile.Exists)
+			using (StreamWriter writer = new StreamWriter(logFileName, true))
 			{
-				using (StreamWriter writer = new StreamWriter(logFile.FullName, true))
-				{
-					writer.WriteLine("Timestamp,Container,Id,Name,ObjectClass,EquipSkill,MasteryBonus,DamageType,Variance,MaxDamage,ElementalDmgBonus,DamageBonus,ElementalDamageVersusMonsters,AttackBonus,MeleeDefenseBonus,MagicDBonus,MissileDBonus,ManaCBonus,BuffedMaxDamage,BuffedElementalDmgBonus,BuffedDamageBonus,BuffedElementalDamageVersusMonsters,BuffedAttackBonus,BuffedMeleeDefenseBonus,BuffedManaCBonus,WieldReqValue,Work,Value,Burden");
-
-					writer.Close();
-				}
-			}
-
-			using (StreamWriter writer = new StreamWriter(logFile.FullName, true))
-			{
-				MyWorldObject mwo = MyWorldObjectCreator.Create(item);
-
+				bool needsComma = false;
+				
 				StringBuilder output = new StringBuilder();
 
-				output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+				// "Timestamp,ContainerName,ContainerID,Landcell,Location,JSON"
+				output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
+				output.Append('"' + currentOpenContainer.Name + '"' + ",");
+				output.Append('"' + currentOpenContainer.Id + '"' + ",");
+				output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
+				output.Append('"' + currentOpenContainer.Coordinates().ToString() + '"' + ",");
 
-				string containerName = CoreManager.Current.WorldFilter[item.Container] != null ? CoreManager.Current.WorldFilter[item.Container].Name : null;
-				output.Append('"' + containerName + '"' + ",");
+				output.Append("\"{");
 
-				output.Append(item.Id + ",");
-				output.Append('"' + item.Name + '"' + ",");
-				output.Append(item.ObjectClass.ToString() + ",");
+				output.Append("\"Id\":\"" + item.Id + "\",");
+				output.Append("\"ObjectClass\":\"" + item.ObjectClass + "\",");
 
-				string skillName = Constants.SkillInfo.ContainsKey(item.Values(LongValueKey.EquipSkill)) ? Constants.SkillInfo[item.Values(LongValueKey.EquipSkill)] : null;
-				output.Append((item.Values(LongValueKey.EquipSkill) > 0 ? skillName : String.Empty) + ",");
-
-				string masteryName = Constants.MasteryInfo.ContainsKey(item.Values((LongValueKey)353)) ? Constants.MasteryInfo[item.Values((LongValueKey)353)] : null;
-				output.Append((item.Values((LongValueKey)353) > 0 ? masteryName : String.Empty) + ",");
-
-				if (item.Values(LongValueKey.DamageType) > 0)
+				output.Append("\"BoolValues\":{");
+				foreach (var value in item.BoolKeys)
 				{
-					if ((item.Values(LongValueKey.DamageType) & 1) == 1) output.Append("Slash");
-					if ((item.Values(LongValueKey.DamageType) & 2) == 2) output.Append("Pierce");
-					if ((item.Values(LongValueKey.DamageType) & 4) == 4) output.Append("Bludge");
-					if ((item.Values(LongValueKey.DamageType) & 8) == 8) output.Append("Cold");
-					if ((item.Values(LongValueKey.DamageType) & 16) == 16) output.Append("Fire");
-					if ((item.Values(LongValueKey.DamageType) & 32) == 32) output.Append("Acid");
-					if ((item.Values(LongValueKey.DamageType) & 64) == 64) output.Append("Electrical");
+					if (!needsComma)
+						needsComma = true;
+					else
+						output.Append(",");
+
+					output.Append("\"" + value + "\":\"" + item.Values((BoolValueKey)value) + "\"");
 				}
-				else if (item.Values(LongValueKey.WandElemDmgType) > 0)
+				output.Append("},");
+
+				output.Append("\"DoubleValues\":{");
+				needsComma = false;
+				foreach (var value in item.DoubleKeys)
 				{
-					if ((item.Values(LongValueKey.WandElemDmgType) & 1) == 1) output.Append("Slash");
-					if ((item.Values(LongValueKey.WandElemDmgType) & 2) == 2) output.Append("Pierce");
-					if ((item.Values(LongValueKey.WandElemDmgType) & 4) == 4) output.Append("Bludge");
-					if ((item.Values(LongValueKey.WandElemDmgType) & 8) == 8) output.Append("Cold");
-					if ((item.Values(LongValueKey.WandElemDmgType) & 16) == 16) output.Append("Fire");
-					if ((item.Values(LongValueKey.WandElemDmgType) & 32) == 32) output.Append("Acid");
-					if ((item.Values(LongValueKey.WandElemDmgType) & 64) == 64) output.Append("Electrical");
+					if (!needsComma)
+						needsComma = true;
+					else
+						output.Append(",");
+
+					output.Append("\"" + value + "\":\"" + item.Values((DoubleValueKey)value) + "\"");
 				}
-				output.Append(",");
+				output.Append("},");
 
-				output.Append((item.Values(DoubleValueKey.Variance) > 0 ? item.Values(DoubleValueKey.Variance).ToString("N3") : String.Empty) + ",");
-				output.Append((item.Values(LongValueKey.MaxDamage) > 0 ? item.Values(LongValueKey.MaxDamage).ToString() : String.Empty) + ",");
-				output.Append((item.Values(LongValueKey.ElementalDmgBonus, 0) != 0 ? item.Values(LongValueKey.ElementalDmgBonus).ToString() : String.Empty) + ",");
-				output.Append((item.Values(DoubleValueKey.DamageBonus, 1) != 1 ? Math.Round(((item.Values(DoubleValueKey.DamageBonus) - 1) * 100)).ToString() : String.Empty) + ",");
-				output.Append((item.Values(DoubleValueKey.ElementalDamageVersusMonsters, 1) != 1 ? Math.Round(((item.Values(DoubleValueKey.ElementalDamageVersusMonsters) - 1) * 100)).ToString() : String.Empty) + ",");
-				output.Append((item.Values(DoubleValueKey.AttackBonus, 1) != 1 ? Math.Round(((item.Values(DoubleValueKey.AttackBonus) - 1) * 100)).ToString() : String.Empty) + ",");
-				output.Append((item.Values(DoubleValueKey.MeleeDefenseBonus, 1) != 1 ? Math.Round(((item.Values(DoubleValueKey.MeleeDefenseBonus) - 1) * 100)).ToString() : String.Empty) + ",");
-				output.Append((item.Values(DoubleValueKey.MagicDBonus, 1) != 1 ? Math.Round(((item.Values(DoubleValueKey.MagicDBonus) - 1) * 100), 1).ToString() : String.Empty) + ",");
-				output.Append((item.Values(DoubleValueKey.MissileDBonus, 1) != 1 ? Math.Round(((item.Values(DoubleValueKey.MissileDBonus) - 1) * 100), 1).ToString() : String.Empty) + ",");
-				output.Append((item.Values(DoubleValueKey.ManaCBonus) != 0 ? Math.Round((item.Values(DoubleValueKey.ManaCBonus) * 100)).ToString() : String.Empty) + ",");
+				output.Append("\"LongValues\":{");
+				needsComma = false;
+				foreach (var value in item.LongKeys)
+				{
+					if (!needsComma)
+						needsComma = true;
+					else
+						output.Append(",");
 
-				output.Append((mwo.GetBuffedIntValueKey((int)LongValueKey.MaxDamage) > 0 ? mwo.GetBuffedIntValueKey((int)LongValueKey.MaxDamage).ToString() : String.Empty) + ",");
-				output.Append((mwo.GetBuffedIntValueKey((int)LongValueKey.ElementalDmgBonus) > 0 ? mwo.GetBuffedIntValueKey((int)LongValueKey.ElementalDmgBonus).ToString() : String.Empty) + ",");
-				output.Append((mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.DamageBonus, 1) != 1 ? Math.Round(((mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.DamageBonus) - 1) * 100)).ToString() : String.Empty) + ",");
-				output.Append((mwo.BuffedElementalDamageVersusMonsters != -1 ? Math.Round(((mwo.BuffedElementalDamageVersusMonsters - 1) * 100)).ToString() : String.Empty) + ",");
-				output.Append((mwo.BuffedAttackBonus != -1 ? Math.Round(((mwo.BuffedAttackBonus - 1) * 100)).ToString() : String.Empty) + ",");
-				output.Append((mwo.BuffedMeleeDefenseBonus != -1 ? Math.Round(((mwo.BuffedMeleeDefenseBonus - 1) * 100)).ToString() : String.Empty) + ",");
-				output.Append((mwo.BuffedManaCBonus != -1 ? Math.Round(mwo.BuffedManaCBonus * 100).ToString() : String.Empty) + ",");
+					output.Append("\"" + value + "\":\"" + item.Values((LongValueKey)value) + "\"");
+				}
+				output.Append("},");
 
-				output.Append((item.Values(LongValueKey.WieldReqValue) > 0 ? item.Values(LongValueKey.WieldReqValue).ToString() : String.Empty) + ",");
+				output.Append("\"StringValues\":{");
+				needsComma = false;
+				foreach (var value in item.StringKeys)
+				{
+					if (!needsComma)
+						needsComma = true;
+					else
+						output.Append(",");
 
-				output.Append((item.Values(LongValueKey.Workmanship) > 0 ? item.Values(LongValueKey.Workmanship).ToString() : String.Empty) + ",");
-				output.Append((item.Values(LongValueKey.Value) > 0 ? item.Values(LongValueKey.Value).ToString() : String.Empty) + ",");
-				output.Append((item.Values(LongValueKey.Burden) > 0 ? item.Values(LongValueKey.Burden).ToString() : String.Empty) + ",");
+					output.Append("\"" + value + "\":\"" + item.Values((StringValueKey)value) + "\"");
+				}
+				output.Append("},");
+
+				output.Append("\"ActiveSpells\":\"");
+				needsComma = false;
+				for (int i = 0 ; i < item.ActiveSpellCount ; i++)
+				{
+					if (!needsComma)
+						needsComma = true;
+					else
+						output.Append(",");
+
+					output.Append(item.ActiveSpell(i));
+				}
+				output.Append("\",");
+
+				output.Append("\"Spells\":\"");
+				needsComma = false;
+				for (int i = 0; i < item.SpellCount; i++)
+				{
+					if (!needsComma)
+						needsComma = true;
+					else
+						output.Append(",");
+
+					output.Append(item.Spell(i));
+				}
+				output.Append("\"");
+
+				output.Append("}\"");
 
 				writer.WriteLine(output);
 

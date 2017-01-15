@@ -35,26 +35,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Decal.Adapter, Version=2.9.6.0, Culture=neutral, PublicKeyToken=bd1c8ce002ce221e, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Games\Decal 3.0\Decal.Adapter.dll</HintPath>
+    <Reference Include="Decal.Adapter">
+      <HintPath>..\..\Binaries\Decal\2.9.7.2\Decal.Adapter.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Shared\Constants.cs">
-      <Link>Shared\Constants.cs</Link>
-    </Compile>
-    <Compile Include="..\Shared\MyWorldObject.cs">
-      <Link>Shared\MyWorldObject.cs</Link>
-    </Compile>
-    <Compile Include="..\Shared\MyWorldObjectCreator.cs">
-      <Link>Shared\MyWorldObjectCreator.cs</Link>
-    </Compile>
-    <Compile Include="..\Shared\SerializableDictionary.cs">
-      <Link>Shared\SerializableDictionary.cs</Link>
-    </Compile>
     <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
