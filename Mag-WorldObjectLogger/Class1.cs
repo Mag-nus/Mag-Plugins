@@ -37,7 +37,8 @@ namespace Mag_WorldObjectLogger
 				if (e.New.ObjectClass == ObjectClass.Player || e.New.ObjectClass == ObjectClass.Corpse || e.New.ObjectClass == ObjectClass.Unknown || e.New.Container != 0)
 					return;
 
-				CoreManager.Current.Actions.RequestId(e.New.Id);
+				if (!itemsLogged.ContainsKey(e.New.Id) || itemsLogged[e.New.Id] != e.New.Name)
+					CoreManager.Current.Actions.RequestId(e.New.Id);
 			}
 			catch { }
 		}
