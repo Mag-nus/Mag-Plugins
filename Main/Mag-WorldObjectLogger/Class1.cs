@@ -51,7 +51,14 @@ namespace Mag_WorldObjectLogger
 					return;
 
 				if (e.Change == WorldChangeType.IdentReceived)
-					LogItem(e.Changed);
+				{
+					if (!itemsLogged.ContainsKey(e.Changed.Id) || itemsLogged[e.Changed.Id] != e.Changed.Name)
+					{
+						itemsLogged[e.Changed.Id] = e.Changed.Name;
+
+						LogItem(e.Changed);
+					}
+				}
 			}
 			catch { }
 		}
@@ -60,12 +67,6 @@ namespace Mag_WorldObjectLogger
 
 		private void LogItem(WorldObject item)
 		{
-			if (itemsLogged.ContainsKey(item.Id) && itemsLogged[item.Id] == item.Name)
-				return;
-
-			itemsLogged[item.Id] = item.Name;
-
-
 			string logFileName = pluginPersonalFolder.FullName + @"\" + CoreManager.Current.Actions.Landcell.ToString("X8") +".csv";
 
 			FileInfo logFile = new FileInfo(logFileName);
