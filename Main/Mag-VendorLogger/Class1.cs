@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
 using Decal.Adapter;
 using Decal.Adapter.Wrappers;
 
-namespace Mag_WorldObjectLogger
+namespace Mag_VendorLogger
 {
     public class Class1 : PluginBase
 	{
@@ -14,87 +13,70 @@ namespace Mag_WorldObjectLogger
 
 		protected override void Startup()
 		{
-			pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-WorldObjectLogger");
+			pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-VendorLogger");
 
 			if (!pluginPersonalFolder.Exists)
 				pluginPersonalFolder.Create();
 
-			Core.WorldFilter.CreateObject += WorldFilter_CreateObject;
-			Core.WorldFilter.ChangeObject += WorldFilter_ChangeObject;
+			Core.WorldFilter.ApproachVendor += WorldFilter_ApproachVendor;
 		}
 
 		protected override void Shutdown()
 		{
-			Core.WorldFilter.CreateObject -= WorldFilter_CreateObject;
-			Core.WorldFilter.ChangeObject -= WorldFilter_ChangeObject;
+			Core.WorldFilter.ApproachVendor -= WorldFilter_ApproachVendor;
 		}
 
-		private readonly Dictionary<int, string> itemsLogged = new Dictionary<int, string>();
+		private string logFileName;
 
-		private void WorldFilter_CreateObject(object sender, CreateObjectEventArgs e)
+		private void WorldFilter_ApproachVendor(object sender, ApproachVendorEventArgs e)
 		{
 			try
 			{
-				// Spells and projectiles are ObjectClass.Unknown
-				if (e.New.ObjectClass == ObjectClass.Player || e.New.ObjectClass == ObjectClass.Corpse || e.New.ObjectClass == ObjectClass.Unknown || e.New.Container != 0)
-					return;
+				logFileName = pluginPersonalFolder.FullName + @"\" + CoreManager.Current.Actions.Landcell.ToString("X8") + " " + CoreManager.Current.WorldFilter[e.MerchantId].Name + ".csv";
 
-				if (!itemsLogged.ContainsKey(e.New.Id) || itemsLogged[e.New.Id] != e.New.Name)
-					CoreManager.Current.Actions.RequestId(e.New.Id);
-			}
-			catch { }
-		}
+				FileInfo fileInfo = new FileInfo(logFileName);
 
-		private void WorldFilter_ChangeObject(object sender, ChangeObjectEventArgs e)
-		{
-			try
-			{
-				// Spells and projectiles are ObjectClass.Unknown
-				if (e.Changed.ObjectClass == ObjectClass.Player || e.Changed.ObjectClass == ObjectClass.Corpse || e.Changed.ObjectClass == ObjectClass.Unknown || e.Changed.Container != 0)
-					return;
+				if (fileInfo.Exists)
+					fileInfo.Delete();
 
-				if (e.Change == WorldChangeType.IdentReceived)
+
+				using (StreamWriter writer = new StreamWriter(fileInfo.FullName, true))
 				{
-					if (!itemsLogged.ContainsKey(e.Changed.Id) || itemsLogged[e.Changed.Id] != e.Changed.Name)
-					{
-						itemsLogged[e.Changed.Id] = e.Changed.Name;
+					// "Timestamp,ContainerName,ContainerID,Landcell,Location,JSON"
+					writer.WriteLine("\"BuyRate\",\"Categories\",\"Count\",\"MaxValue\",\"MerchantId\",,\"Quantity\",\"SellRate\"");
 
-						LogItem(e.Changed);
-					}
+					writer.WriteLine("\"" + e.Vendor.BuyRate + "\",\"" + e.Vendor.Categories + "\",\"" + e.Vendor.Count + "\",\"" + e.Vendor.MaxValue + "\",\"" + e.Vendor.MerchantId + "\",\"" + e.Vendor.Quantity + "\",\"" + e.Vendor.SellRate + "\"");
+
+					writer.Close();
 				}
+
+
+				foreach (WorldObject wo in e.Vendor)
+					LogItem(wo);
+
+				CoreManager.Current.Actions.AddChatTextRaw("<{Mag-VendorLogger}>: " + CoreManager.Current.WorldFilter[e.MerchantId].Name + " log completed.", 5);
 			}
 			catch { }
 		}
 
 		private void LogItem(WorldObject item)
 		{
-			string logFileName = pluginPersonalFolder.FullName + @"\" + CoreManager.Current.Actions.Landcell.ToString("X8") +".csv";
-
 			FileInfo logFile = new FileInfo(logFileName);
 
 			if (!logFile.Exists)
 			{
-				using (StreamWriter writer = new StreamWriter(logFile.FullName, true))
-				{
-					writer.WriteLine("\"Timestamp\",\"LandCell\",\"RawCoordinates\",\"JSON\"");
-
-					writer.Close();
-				}
+				CoreManager.Current.Actions.AddChatTextRaw("<{Mag-VendorLogger}>: Log file appears deleted...", 5);
+				return;
 			}
 
 
 			using (StreamWriter writer = new StreamWriter(logFileName, true))
 			{
 				bool needsComma = false;
-				
+
 				StringBuilder output = new StringBuilder();
 
-				// "Timestamp,Landcell,RawCoordinates,JSON"
-				output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
-				output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
-				output.Append('"' + item.RawCoordinates().X + " " + item.RawCoordinates().Y + " " + item.RawCoordinates().Z + '"' + ",");
-
-				output.Append("\"{");
+				output.Append("{");
 
 				output.Append("\"Id\":\"" + item.Id + "\",");
 				output.Append("\"ObjectClass\":\"" + item.ObjectClass + "\",");
@@ -152,7 +134,7 @@ namespace Mag_WorldObjectLogger
 
 				output.Append("\"ActiveSpells\":\"");
 				needsComma = false;
-				for (int i = 0 ; i < item.ActiveSpellCount ; i++)
+				for (int i = 0; i < item.ActiveSpellCount; i++)
 				{
 					if (!needsComma)
 						needsComma = true;
@@ -176,12 +158,12 @@ namespace Mag_WorldObjectLogger
 				}
 				output.Append("\"");
 
-				output.Append("}\"");
+				output.Append("}");
 
 				writer.WriteLine(output);
 
 				writer.Close();
 			}
 		}
-    }
+	}
 }
