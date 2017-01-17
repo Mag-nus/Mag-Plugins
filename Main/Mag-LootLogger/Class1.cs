@@ -33,8 +33,11 @@ namespace Mag_LootLogger
 		private WorldObject currentOpenContainer;
 		private bool currentOpenContainerIsSingleUseChest;
 
-		readonly Dictionary<int, string> corpseItemsLogged = new Dictionary<int, string>();
-		readonly Dictionary<int, string> chestItemsLogged = new Dictionary<int, string>();
+		/// <summary>
+		/// Item.Id, Container.Id
+		/// </summary>
+		readonly Dictionary<int, int> corpseItemsLogged = new Dictionary<int, int>();
+		readonly List<int> chestItemsLogged = new List<int>();
 
 
 		void Core_ContainerOpened(object sender, ContainerOpenedEventArgs e)
@@ -155,18 +158,17 @@ namespace Mag_LootLogger
 		{
 			if (currentOpenContainerIsSingleUseChest)
 			{
-				if (chestItemsLogged.ContainsKey(item.Id) && chestItemsLogged[item.Id] == item.Name)
+				if (chestItemsLogged.Contains(item.Id))
 					return;
 
-				chestItemsLogged[item.Id] = item.Name;
+				chestItemsLogged.Add(item.Id);
 			}
 			else
 			{
-				// If an id is reused on an item that has exactly the same name, it won't be logged.. This is a bug
-				if (corpseItemsLogged.ContainsKey(item.Id) && corpseItemsLogged[item.Id] == item.Name)
+				if (corpseItemsLogged.ContainsKey(item.Id) && corpseItemsLogged[item.Id] == item.Container)
 					return;
 
-				corpseItemsLogged[item.Id] = item.Name;
+				corpseItemsLogged[item.Id] = item.Container;
 			}
 
 
