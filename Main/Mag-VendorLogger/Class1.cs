@@ -7,7 +7,8 @@ using Decal.Adapter.Wrappers;
 
 namespace Mag_VendorLogger
 {
-    public class Class1 : PluginBase
+	[FriendlyName("Mag-VendorLogger")]
+	public class Class1 : PluginBase
 	{
 		private DirectoryInfo pluginPersonalFolder;
 

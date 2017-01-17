@@ -9,6 +9,7 @@ using Decal.Adapter.Wrappers;
 
 namespace Mag_LootLogger
 {
+	[FriendlyName("Mag-LootLogger")]
 	public class Class1 : PluginBase
 	{
 		private DirectoryInfo pluginPersonalFolder;

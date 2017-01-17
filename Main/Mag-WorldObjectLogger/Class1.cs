@@ -8,7 +8,8 @@ using Decal.Adapter.Wrappers;
 
 namespace Mag_WorldObjectLogger
 {
-    public class Class1 : PluginBase
+	[FriendlyName("Mag-WorldObjectLogger")]
+	public class Class1 : PluginBase
 	{
 		private DirectoryInfo pluginPersonalFolder;
 
