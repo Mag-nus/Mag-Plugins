@@ -29,7 +29,13 @@ namespace Mag_LootLogger
 			Core.ContainerOpened -= new EventHandler<ContainerOpenedEventArgs>(Core_ContainerOpened);
 		}
 
+
 		private WorldObject currentOpenContainer;
+		private bool currentOpenContainerIsSingleUseChest;
+
+		readonly Dictionary<int, string> corpseItemsLogged = new Dictionary<int, string>();
+		readonly Dictionary<int, string> chestItemsLogged = new Dictionary<int, string>();
+
 
 		void Core_ContainerOpened(object sender, ContainerOpenedEventArgs e)
 		{
@@ -44,17 +50,26 @@ namespace Mag_LootLogger
 				if (currentOpenContainer.Name == "Storage")
 					return;
 
-				if (currentOpenContainer.ObjectClass == ObjectClass.Corpse || currentOpenContainer.Name.Contains("Chest") || currentOpenContainer.Name.Contains("Vault") || currentOpenContainer.Name.Contains("Reliquary"))
+				if (currentOpenContainer.ObjectClass == ObjectClass.Corpse)
+				{
+					currentOpenContainerIsSingleUseChest = false;
 					Start();
+				}
+				else if (currentOpenContainer.Name.Contains("Chest") || currentOpenContainer.Name.Contains("Vault") || currentOpenContainer.Name.Contains("Reliquary"))
+				{
+					currentOpenContainerIsSingleUseChest = true;
+					chestItemsLogged.Clear();
+					Start();
+				}
 			}
 			catch { }
 		}
+
 
 		public bool IsRunning { get; private set; }
 
 		readonly Collection<int> idsRequested = new Collection<int>();
 
-		readonly Dictionary<int, string> itemsLogged = new Dictionary<int, string>();
 
 		void Start()
 		{
@@ -78,6 +93,7 @@ namespace Mag_LootLogger
 			IsRunning = false;
 		}
 
+
 		DateTime lastThought = DateTime.MinValue;
 
 		void Current_RenderFrame(object sender, EventArgs e)
@@ -94,10 +110,13 @@ namespace Mag_LootLogger
 			catch { }
 		}
 
+
 		void Think()
 		{
 			if (CoreManager.Current.Actions.OpenedContainer == 0)
 			{
+				CoreManager.Current.Actions.AddChatText("<{Mag-LootLogger}>: Container closed before all items were logged.", 5, 1);
+
 				Stop();
 				return;
 			}
@@ -131,15 +150,27 @@ namespace Mag_LootLogger
 			}
 		}
 
+
 		private void LogItem(WorldObject item)
 		{
-			if (itemsLogged.ContainsKey(item.Id) && itemsLogged[item.Id] == currentOpenContainer.Name)
-				return;
+			if (currentOpenContainerIsSingleUseChest)
+			{
+				if (chestItemsLogged.ContainsKey(item.Id) && chestItemsLogged[item.Id] == item.Name)
+					return;
 
-			itemsLogged[item.Id] = currentOpenContainer.Name;
+				chestItemsLogged[item.Id] = item.Name;
+			}
+			else
+			{
+				// If an id is reused on an item that has exactly the same name, it won't be logged.. This is a bug
+				if (corpseItemsLogged.ContainsKey(item.Id) && corpseItemsLogged[item.Id] == item.Name)
+					return;
+
+				corpseItemsLogged[item.Id] = item.Name;
+			}
 
 
-			string logFileName = pluginPersonalFolder.FullName + @"\" + CoreManager.Current.Actions.Landcell.ToString("X8") +".csv";
+			string logFileName = pluginPersonalFolder.FullName + @"\" + CoreManager.Current.Actions.Landcell.ToString("X8") + ".csv";
 
 			FileInfo logFile = new FileInfo(logFileName);
 
@@ -157,7 +188,7 @@ namespace Mag_LootLogger
 			using (StreamWriter writer = new StreamWriter(logFileName, true))
 			{
 				bool needsComma = false;
-				
+
 				StringBuilder output = new StringBuilder();
 
 				// "Timestamp,ContainerName,ContainerID,Landcell,Location,JSON"
@@ -225,7 +256,7 @@ namespace Mag_LootLogger
 
 				output.Append("\"ActiveSpells\":\"");
 				needsComma = false;
-				for (int i = 0 ; i < item.ActiveSpellCount ; i++)
+				for (int i = 0; i < item.ActiveSpellCount; i++)
 				{
 					if (!needsComma)
 						needsComma = true;
