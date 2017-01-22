@@ -186,6 +186,7 @@ namespace Mag_WorldObjectLogger
 
 
 		DateTime lastThought = DateTime.MinValue;
+		private readonly Dictionary<string, int> requestCount = new Dictionary<string, int>();
 
 		private void Core_RenderFrame(object sender, EventArgs e)
 		{
@@ -204,17 +205,35 @@ namespace Mag_WorldObjectLogger
 
 					if (GetDistanceFromPlayer(wo) < 40)
 					{
-						// These can't be ID's for some reason
-						if (wo.Name.EndsWith("Forge") || wo.Name.Contains("Warden of"))
-							continue;
+						if (wo.ObjectClass == ObjectClass.Npc)
+						{
+							// Not all NPC's have attribute data
+							if (!identAttributes.ContainsKey(wo.Id) && (!requestCount.ContainsKey(wo.Name) || requestCount[wo.Name] < 5))
+							{
+								//Core.Actions.AddChatText("Requesting id 1: " + wo.Name, 0);
 
-						if ((wo.ObjectClass == ObjectClass.Npc || wo.ObjectClass == ObjectClass.Vendor || wo.ObjectClass == ObjectClass.Monster))
+								if (!requestCount.ContainsKey(wo.Name))
+									requestCount[wo.Name] = 0;
+								requestCount[wo.Name] = requestCount[wo.Name] + 1;
+
+								CoreManager.Current.Actions.RequestId(wo.Id);
+							}
+						}
+						else if (wo.ObjectClass == ObjectClass.Vendor || wo.ObjectClass == ObjectClass.Monster)
 						{
 							if (!identAttributes.ContainsKey(wo.Id))
+							{
+								//Core.Actions.AddChatText("Requesting id 2: " + wo.Name, 0);
+
 								CoreManager.Current.Actions.RequestId(wo.Id);
+							}
 						}
 						else if (!itemsLoggedWithIdent.ContainsKey(wo.Id) || itemsLoggedWithIdent[wo.Id] != wo.Name)
+						{
+							//Core.Actions.AddChatText("Requesting id 3: " + wo.Name, 0);
+
 							CoreManager.Current.Actions.RequestId(wo.Id);
+						}
 					}
 				}
 			}
