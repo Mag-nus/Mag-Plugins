@@ -18,6 +18,8 @@ namespace Mag_CombatLogger
 	[FriendlyName("Mag-CombatLogger")]
 	public class Class1 : PluginBase
 	{
+		private readonly int FILEVERSION = 1;
+
 		private DirectoryInfo pluginPersonalFolder;
 
 		protected override void Startup()
@@ -61,6 +63,44 @@ namespace Mag_CombatLogger
 			}
 
 			return true;
+		}
+
+
+		private string CreateFileIfItDoesntExist()
+		{
+			string logFileName = pluginPersonalFolder.FullName + @"\" + Core.CharacterFilter.Server + " " + Core.CharacterFilter.Name + ".csv";
+
+			//foreach (var c in System.IO.Path.GetInvalidFileNameChars())
+			//	logFileName = logFileName.Replace(c, '_');
+
+			FileInfo logFile = new FileInfo(logFileName);
+
+			if (!logFile.Exists)
+			{
+				using (StreamWriter writer = new StreamWriter(logFile.FullName, true))
+				{
+					writer.WriteLine("Timestamp,LandCell,JSON");
+
+					writer.Close();
+				}
+			}
+
+			using (StreamWriter writer = new StreamWriter(logFileName, true))
+			{
+				StringBuilder output = new StringBuilder();
+
+				// Timestamp,Landcell,JSON
+				output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+				output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
+
+				output.Append("{\"FileVersion\":\"" + FILEVERSION + "\"}");
+
+				writer.WriteLine(output);
+
+				writer.Close();
+			}
+
+			return logFileName;
 		}
 
 
@@ -655,28 +695,6 @@ namespace Mag_CombatLogger
 			catch (Exception ex) { Core.Actions.AddChatText("<{Mag-CombatLogger}>: Exception " + ex + " parsing: " + e.Text, 5); }
 		}
 
-
-		private string CreateFileIfItDoesntExist()
-		{
-			string logFileName = pluginPersonalFolder.FullName + @"\" + Core.CharacterFilter.Server + " " + Core.CharacterFilter.Name + ".csv";
-
-			//foreach (var c in System.IO.Path.GetInvalidFileNameChars())
-			//	logFileName = logFileName.Replace(c, '_');
-
-			FileInfo logFile = new FileInfo(logFileName);
-
-			if (!logFile.Exists)
-			{
-				using (StreamWriter writer = new StreamWriter(logFile.FullName, true))
-				{
-					writer.WriteLine("Timestamp,LandCell,JSON");
-
-					writer.Close();
-				}
-			}
-
-			return logFileName;
-		}
 
 		private DateTime lastPlayerIdent = DateTime.MinValue;
 
