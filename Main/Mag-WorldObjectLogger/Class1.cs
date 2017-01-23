@@ -260,7 +260,6 @@ namespace Mag_WorldObjectLogger
 
 			using (StreamWriter writer = new StreamWriter(logFileName, true))
 			{
-			
 				StringBuilder output = new StringBuilder();
 
 				// "Timestamp,Landcell,RawCoordinates,JSON"

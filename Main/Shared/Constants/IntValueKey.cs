@@ -18,8 +18,10 @@ namespace Mag.Shared.Constants
 		NumberFollowers		= 35,
 		Unenchantable		= 36,
 		LockpickDifficulty	= 38,
+		// 40
 		Deaths				= 43,
 		WandElemDmgType		= 45,
+		// 47
 		MinLevelRestrict	= 86,
 		MaxLevelRestrict	= 87,
 		LockpickSkillBonus	= 88,
@@ -43,6 +45,8 @@ namespace Mag.Shared.Constants
 		Age					= 125,
 		XPForVPReduction	= 129,
 		Material			= 131,
+		// 134
+		// 139
 		WieldReqType		= 158,
 		WieldReqAttribute	= 159,
 		WieldReqValue		= 160,
@@ -61,15 +65,56 @@ namespace Mag.Shared.Constants
 		FishingSkill		= 192,
 		KeysHeld			= 193,
 		ElementalDmgBonus	= 204,
+		// 261
 		CleaveType			= 263,
 		ArmorSet			= 265,
 
-		CreatureDamRating	= 307,
-		//CreatureCritDamRating
-		//CreatureDamResist
-		CreatureCritDamResist = 316,
+		// 281
+		// 289
+		// 294
+		// 295
+		// 296
+		// 297
+		// 298
+		// 299
 
+		CreatureDamRating	= 307,
+		CreatureDamResist	= 308,
+		// 309
+		// 312
+		// 313
+		CreatureCritDamRating = 314,
+		// 315
+		CreatureCritDamResist = 316,
+		// 317
+		// 318
+
+		// 322
+		// 323
+		// 326
+		// 329
+		// 330
+		// 331
+		// 333
+		// 334
+		// 335
+		// 336
+		// 338
+		// 339
+		// 340
+		// 342
+		// 343
+		// 344
+
+		DoTResist			= 350,
+		// 351
 		Mastery				= 353,
+		// 354
+		// 355
+
+		// 360
+		// 361
+		// 365
 
 		SummoningGemBuffedSkillRequirement = 367,
 		SummoningGemLevelRequirement = 369,
@@ -81,7 +126,19 @@ namespace Mag.Shared.Constants
 		CritDamRating		= 374,
 		CritDamResistRating = 375,
 		HealBoostRating		= 376,
+		// 377
+		// 378
 		VitalityRating		= 379,
+
+		// 381
+		// 382
+		// 383
+		// 384
+		// 386
+		// 387
+		// 388
+		// 389
+		// 390
 
 		Type				= 218103808,
 		Icon				= 218103809,
