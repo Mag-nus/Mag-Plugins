@@ -893,6 +893,9 @@ namespace Mag_CombatLogger
 			value = Core.CharacterFilter.Burden.ToString();
 			if (!variableHistory.ContainsKey("Burden") || variableHistory["Burden"] != value) { variableHistory["Burden"] = value; changedVariables["Burden"] = value; }
 
+			value = Core.CharacterFilter.Vitae.ToString();
+			if (!variableHistory.ContainsKey("Vitae") || variableHistory["Vitae"] != value) { variableHistory["Vitae"] = value; changedVariables["Vitae"] = value; }
+
 
 			// Weapon
 			Dictionary<string, string> weaponVariables = new Dictionary<string, string>();
