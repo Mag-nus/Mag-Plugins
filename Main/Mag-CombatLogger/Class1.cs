@@ -18,7 +18,7 @@ namespace Mag_CombatLogger
 	[FriendlyName("Mag-CombatLogger")]
 	public class Class1 : PluginBase
 	{
-		private readonly int FILEVERSION = 2;
+		private readonly int FILEVERSION = 3;
 
 		private DirectoryInfo pluginPersonalFolder;
 
@@ -869,22 +869,22 @@ namespace Mag_CombatLogger
 			value = Core.Actions.CombatMode.ToString();
 			if (!variableHistory.ContainsKey("CombatMode") || variableHistory["CombatMode"] != value) { variableHistory["CombatMode"] = value; changedVariables["CombatMode"] = value; }
 
-			value = Core.CharacterFilter.Attributes[CharFilterAttributeType.Strength].ToString();
+			value = Core.CharacterFilter.Attributes[CharFilterAttributeType.Strength].Buffed.ToString();
 			if (!variableHistory.ContainsKey("Strength") || variableHistory["Strength"] != value) { variableHistory["Strength"] = value; changedVariables["Strength"] = value; }
 
-			value = Core.CharacterFilter.Attributes[CharFilterAttributeType.Endurance].ToString();
+			value = Core.CharacterFilter.Attributes[CharFilterAttributeType.Endurance].Buffed.ToString();
 			if (!variableHistory.ContainsKey("Endurance") || variableHistory["Endurance"] != value) { variableHistory["Endurance"] = value; changedVariables["Endurance"] = value; }
 
-			value = Core.CharacterFilter.Attributes[CharFilterAttributeType.Quickness].ToString();
+			value = Core.CharacterFilter.Attributes[CharFilterAttributeType.Quickness].Buffed.ToString();
 			if (!variableHistory.ContainsKey("Quickness") || variableHistory["Quickness"] != value) { variableHistory["Quickness"] = value; changedVariables["Quickness"] = value; }
 
-			value = Core.CharacterFilter.Attributes[CharFilterAttributeType.Coordination].ToString();
+			value = Core.CharacterFilter.Attributes[CharFilterAttributeType.Coordination].Buffed.ToString();
 			if (!variableHistory.ContainsKey("Coordination") || variableHistory["Coordination"] != value) { variableHistory["Coordination"] = value; changedVariables["Coordination"] = value; }
 
-			value = Core.CharacterFilter.Attributes[CharFilterAttributeType.Focus].ToString();
+			value = Core.CharacterFilter.Attributes[CharFilterAttributeType.Focus].Buffed.ToString();
 			if (!variableHistory.ContainsKey("Focus") || variableHistory["Focus"] != value) { variableHistory["Focus"] = value; changedVariables["Focus"] = value; }
 
-			value = Core.CharacterFilter.Attributes[CharFilterAttributeType.Self].ToString();
+			value = Core.CharacterFilter.Attributes[CharFilterAttributeType.Self].Buffed.ToString();
 			if (!variableHistory.ContainsKey("Self") || variableHistory["Self"] != value) { variableHistory["Self"] = value; changedVariables["Self"] = value; }
 
 			value = Core.CharacterFilter.Stamina.ToString();
