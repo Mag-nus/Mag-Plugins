@@ -37,12 +37,18 @@
     <Reference Include="Decal.Adapter">
       <HintPath>..\..\Binaries\Decal\2.9.7.2\Decal.Adapter.dll</HintPath>
     </Reference>
+    <Reference Include="Decal.FileService">
+      <HintPath>..\..\Binaries\Decal\2.9.7.2\Decal.FileService.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\Util.cs">
+      <Link>Shared\Util.cs</Link>
+    </Compile>
     <Compile Include="Class1.cs" />
+    <Compile Include="CombatMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shared\Constants\IntValueKey.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
