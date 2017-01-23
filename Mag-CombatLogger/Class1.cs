@@ -85,9 +85,9 @@ namespace Mag_CombatLogger
 						{
 							StringBuilder output = new StringBuilder();
 
-							// "Timestamp,Landcell,JSON"
-							output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
-							output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
+							// Timestamp,Landcell,JSON
+							output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+							output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
 
 							using (MemoryStream memoryStream = new MemoryStream(e.Message.RawData))
 							using (BinaryReader binaryReader = new BinaryReader(memoryStream))
@@ -96,10 +96,10 @@ namespace Mag_CombatLogger
 								binaryReader.ReadUInt32();
 								binaryReader.ReadUInt32();
 
-								output.Append("\"{\"ClientDispatch\":\"Untargeted Melee Attack\",");
+								output.Append("{\"ClientDispatch\":\"Untargeted Melee Attack\",");
 								output.Append("\"targetId\":\"" + binaryReader.ReadInt32() + "\",");
 								output.Append("\"attackHeight\":\"" + binaryReader.ReadUInt32() + "\",");
-								output.Append("\"powerLevel\":\"" + binaryReader.ReadSingle() + "\"}\"");
+								output.Append("\"powerLevel\":\"" + binaryReader.ReadSingle() + "\"}");
 							}
 
 							writer.WriteLine(output);
@@ -120,9 +120,9 @@ namespace Mag_CombatLogger
 						{
 							StringBuilder output = new StringBuilder();
 
-							// "Timestamp,Landcell,JSON"
-							output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
-							output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
+							// Timestamp,Landcell,JSON
+							output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+							output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
 
 							using (MemoryStream memoryStream = new MemoryStream(e.Message.RawData))
 							using (BinaryReader binaryReader = new BinaryReader(memoryStream))
@@ -133,15 +133,15 @@ namespace Mag_CombatLogger
 
 								var targetId = binaryReader.ReadInt32();
 
-								output.Append("\"{\"ClientDispatch\":\"Targeted Melee Attack\",");
+								output.Append("{\"ClientDispatch\":\"Targeted Melee Attack\",");
 								output.Append("\"targetId\":\"" + targetId + "\",");
 
 								var wo = Core.WorldFilter[targetId];
-								if (targetId != null)
+								if (wo != null)
 									output.Append("\"targetName\":\"" + wo .Name + "\",");
 
 								output.Append("\"attackHeight\":\"" + binaryReader.ReadUInt32() + "\",");
-								output.Append("\"powerLevel\":\"" + binaryReader.ReadSingle() + "\"}\"");
+								output.Append("\"powerLevel\":\"" + binaryReader.ReadSingle() + "\"}");
 							}
 
 							writer.WriteLine(output);
@@ -162,9 +162,9 @@ namespace Mag_CombatLogger
 						{
 							StringBuilder output = new StringBuilder();
 
-							// "Timestamp,Landcell,JSON"
-							output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
-							output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
+							// Timestamp,Landcell,JSON
+							output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+							output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
 
 							using (MemoryStream memoryStream = new MemoryStream(e.Message.RawData))
 							using (BinaryReader binaryReader = new BinaryReader(memoryStream))
@@ -173,10 +173,10 @@ namespace Mag_CombatLogger
 								binaryReader.ReadUInt32();
 								binaryReader.ReadUInt32();
 
-								output.Append("\"{\"ClientDispatch\":\"Untargeted Missile Attack\",");
+								output.Append("{\"ClientDispatch\":\"Untargeted Missile Attack\",");
 								output.Append("\"targetId\":\"" + binaryReader.ReadInt32() + "\",");
 								output.Append("\"attackHeight\":\"" + binaryReader.ReadUInt32() + "\",");
-								output.Append("\"accuracy\":\"" + binaryReader.ReadSingle() + "\"}\"");
+								output.Append("\"accuracy\":\"" + binaryReader.ReadSingle() + "\"}");
 							}
 
 							writer.WriteLine(output);
@@ -197,9 +197,9 @@ namespace Mag_CombatLogger
 						{
 							StringBuilder output = new StringBuilder();
 
-							// "Timestamp,Landcell,JSON"
-							output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
-							output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
+							// Timestamp,Landcell,JSON
+							output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+							output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
 
 							using (MemoryStream memoryStream = new MemoryStream(e.Message.RawData))
 							using (BinaryReader binaryReader = new BinaryReader(memoryStream))
@@ -210,15 +210,15 @@ namespace Mag_CombatLogger
 
 								var targetId = binaryReader.ReadInt32();
 
-								output.Append("\"{\"ClientDispatch\":\"Targeted Missile Attack\",");
+								output.Append("{\"ClientDispatch\":\"Targeted Missile Attack\",");
 								output.Append("\"targetId\":\"" + targetId + "\",");
 
 								var wo = Core.WorldFilter[targetId];
-								if (targetId != null)
+								if (wo != null)
 									output.Append("\"targetName\":\"" + wo.Name + "\",");
 
 								output.Append("\"attackHeight\":\"" + binaryReader.ReadUInt32() + "\",");
-								output.Append("\"accuracy\":\"" + binaryReader.ReadSingle() + "\"}\"");
+								output.Append("\"accuracy\":\"" + binaryReader.ReadSingle() + "\"}");
 							}
 
 							writer.WriteLine(output);
@@ -252,12 +252,12 @@ namespace Mag_CombatLogger
 						{
 							StringBuilder output = new StringBuilder();
 
-							// "Timestamp,Landcell,JSON"
-							output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
-							output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
+							// Timestamp,Landcell,JSON
+							output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+							output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
 
-							output.Append("\"{\"ServerDispatch\":\"Attack Completed\",");
-							output.Append("\"number\":\"" + e.Message.Value<uint>("number") + "\"}\"");
+							output.Append("{\"ServerDispatch\":\"Attack Completed\",");
+							output.Append("\"number\":\"" + e.Message.Value<uint>("number") + "\"}");
 
 							writer.WriteLine(output);
 
@@ -277,16 +277,16 @@ namespace Mag_CombatLogger
 						{
 							StringBuilder output = new StringBuilder();
 
-							// "Timestamp,Landcell,JSON"
-							output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
-							output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
+							// Timestamp,Landcell,JSON
+							output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+							output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
 
-							output.Append("\"{\"ServerDispatch\":\"Inflict Melee Damage\",");
+							output.Append("{\"ServerDispatch\":\"Inflict Melee Damage\",");
 							output.Append("\"target\":\"" + e.Message.Value<string>("target") + "\",");
 							output.Append("\"type\":\"" + e.Message.Value<uint>("type") + "\",");
 							output.Append("\"severity\":\"" + e.Message.Value<double>("severity") + "\",");
 							output.Append("\"damage\":\"" + e.Message.Value<uint>("damage") + "\",");
-							output.Append("\"critical\":\"" + e.Message.Value<bool>("critical") + "\"}\"");
+							output.Append("\"critical\":\"" + e.Message.Value<bool>("critical") + "\"}");
 
 							writer.WriteLine(output);
 
@@ -306,11 +306,11 @@ namespace Mag_CombatLogger
 						{
 							StringBuilder output = new StringBuilder();
 
-							// "Timestamp,Landcell,JSON"
-							output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
-							output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
+							// Timestamp,Landcell,JSON
+							output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+							output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
 
-							output.Append("\"{\"ServerDispatch\":\"Receive Melee Damage\",");
+							output.Append("{\"ServerDispatch\":\"Receive Melee Damage\",");
 							output.Append("\"attacker\":\"" + e.Message.Value<string>("attacker") + "\",");
 							output.Append("\"type\":\"" + e.Message.Value<uint>("type") + "\",");
 							output.Append("\"severity\":\"" + e.Message.Value<double>("severity") + "\",");
@@ -336,12 +336,12 @@ namespace Mag_CombatLogger
 						{
 							StringBuilder output = new StringBuilder();
 
-							// "Timestamp,Landcell,JSON"
-							output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
-							output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
+							// Timestamp,Landcell,JSON
+							output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+							output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
 
-							output.Append("\"{\"ServerDispatch\":\"Other Melee Evade\",");
-							output.Append("\"target\":\"" + e.Message.Value<string>("target") + "\"}\"");
+							output.Append("{\"ServerDispatch\":\"Other Melee Evade\",");
+							output.Append("\"target\":\"" + e.Message.Value<string>("target") + "\"}");
 
 							writer.WriteLine(output);
 
@@ -361,12 +361,12 @@ namespace Mag_CombatLogger
 						{
 							StringBuilder output = new StringBuilder();
 
-							// "Timestamp,Landcell,JSON"
-							output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
-							output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
+							// Timestamp,Landcell,JSON
+							output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+							output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
 
-							output.Append("\"{\"ServerDispatch\":\"Self Melee Evade\",");
-							output.Append("\"attacker\":\"" + e.Message.Value<string>("attacker") + "\"}\"");
+							output.Append("{\"ServerDispatch\":\"Self Melee Evade\",");
+							output.Append("\"attacker\":\"" + e.Message.Value<string>("attacker") + "\"}");
 
 							writer.WriteLine(output);
 
@@ -386,12 +386,12 @@ namespace Mag_CombatLogger
 						{
 							StringBuilder output = new StringBuilder();
 
-							// "Timestamp,Landcell,JSON"
-							output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
-							output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
+							// Timestamp,Landcell,JSON
+							output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+							output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
 
-							output.Append("\"{\"ServerDispatch\":\"Start Melee Attack\",");
-							output.Append("\"attacker\":\"" + e.Message.Value<string>("attacker") + "\"}\"");
+							output.Append("{\"ServerDispatch\":\"Start Melee Attack\",");
+							output.Append("\"attacker\":\"" + e.Message.Value<string>("attacker") + "\"}");
 
 							writer.WriteLine(output);
 
@@ -399,8 +399,58 @@ namespace Mag_CombatLogger
 						}
 					}
 				}
+
+				if (e.Message.Type == 0xF74C) // Animation
+				{
+					var objectID = e.Message.Value<int>("object");
+
+					// I don't even know if these variables are working correctly in decal
+					if (objectID == Core.CharacterFilter.Id && e.Message.Value<byte>("animation_type") == 0 && (e.Message.Value<int>("flags") & 0x80) != 0)
+					{
+						/*
+						14:34:47 4CF70000687111501402 1100070000000001 40 00C1 00000040000000C03F5F000100000000400000F6B3ACDC	attack
+						14:34:47 4CF70000687111501402 1200070001000001 40 0087 00000040000500878CEEBF5F00010000000040F6B3ACDC
+						14:34:48 4CF70000687111501402 1300070001000001 40 0081 00000040005F000100000000400000F6B3ACDC
+								 4CF70000687111501402 1A000B0000000001 3E 00C1 0000003E000000C0BF5F000200000000400000E8B3ACDC
+								 4CF70000687111501402 22000F0000000001 3C 00C1 0000003C000000C0BF66000300000000400000F8B3ACDC
+						14:35:46 4CF70000687111501402 23000F0001000001 3C 0087 0000003C000500878CEEBF6600030000000040F8B3ACDC
+						6:39	 4CF70000687111501402 2B00160000000000 49 0081 000000490076000600000000400000						Cast Spell/Teleport
+						14:36:41 4CF70000687111501402 2C00170000000000 49 0081 000000490074000700000000400000
+ 	    						 4CF70000687111501402 2500100000000000 3C 0081 0000003C000E0104000000803F0000						Heal in combat
+						14:36:20 4CF70000687111501402 2900140000000000 3D 0080 0000000    E0105000000803F							Heal in peace
+						4:37:59  4CF70000687111501402 32001D0000000000 49 0081 00000049000E0109000000803F0000						Heal
+						*/
+
+						// This is a major hack
+						if ((e.Message.Value<int>("flags") == 0x80 && e.Message.RawData[24] == 0x0E) || (e.Message.Value<int>("flags") == 0x81 && e.Message.RawData[26] == 0x0E))
+						{
+							if (!CheckForAetheriaAndCloak())
+								return;
+
+							var logFileName = CreateFileIfItDoesntExist();
+
+							AddCurrentVariablesToLog(logFileName);
+
+							using (StreamWriter writer = new StreamWriter(logFileName, true))
+							{
+								StringBuilder output = new StringBuilder();
+
+								// Timestamp,Landcell,JSON
+								output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+								output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
+
+								output.Append("{\"Event\":\"Healing\"}");
+
+								writer.WriteLine(output);
+
+								writer.Close();
+							}
+						}
+					}
+				}
 			}
-			catch { }
+			//catch { }
+			catch (Exception ex) { Core.Actions.AddChatText("<{Mag-CombatLogger}>: Exception " + ex, 5); }
 		}
 
 
@@ -421,14 +471,14 @@ namespace Mag_CombatLogger
 					{
 						StringBuilder output = new StringBuilder();
 
-						// "Timestamp,Landcell,JSON"
-						output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
-						output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
+						// Timestamp,Landcell,JSON
+						output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+						output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
 
-						output.Append("\"{\"Event\":\"SpellCast\",");
+						output.Append("{\"Event\":\"SpellCast\",");
 						output.Append("\"EventType\":\"" + e.EventType + "\",");
 						output.Append("\"SpellId\":\"" + e.SpellId + "\",");
-						output.Append("\"TargetId\":\"" + e.TargetId + "\"}\"");
+						output.Append("\"TargetId\":\"" + e.TargetId + "\"}");
 
 						writer.WriteLine(output);
 
@@ -469,13 +519,13 @@ namespace Mag_CombatLogger
 				{
 					StringBuilder output = new StringBuilder();
 
-					// "Timestamp,Landcell,JSON"
-					output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
-					output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
+					// Timestamp,Landcell,JSON
+					output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+					output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
 
-					output.Append("\"{\"Event\":\"ItemSelected\",");
+					output.Append("{\"Event\":\"ItemSelected\",");
 					output.Append("\"ItemGuid\":\"" + e.ItemGuid + "\",");
-					output.Append("\"Name\":\"" + wo.Name + "\"}\"");
+					output.Append("\"Name\":\"" + wo.Name + "\"}");
 
 					writer.WriteLine(output);
 
@@ -591,11 +641,11 @@ namespace Mag_CombatLogger
 				{
 					StringBuilder output = new StringBuilder();
 
-					// "Timestamp,Landcell,JSON"
-					output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
-					output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
+					// Timestamp,Landcell,JSON
+					output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+					output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
 
-					output.Append("\"{\"GameText\":\"" + e.Text + "\"}\"");
+					output.Append("{\"GameText\":\"" + e.Text + "\"}");
 
 					writer.WriteLine(output);
 
@@ -619,7 +669,7 @@ namespace Mag_CombatLogger
 			{
 				using (StreamWriter writer = new StreamWriter(logFile.FullName, true))
 				{
-					writer.WriteLine("\"Timestamp\",\"LandCell\",\"JSON\"");
+					writer.WriteLine("Timestamp,LandCell,JSON");
 
 					writer.Close();
 				}
@@ -775,25 +825,25 @@ namespace Mag_CombatLogger
 			if (charwo.LongKeys.Contains(307))
 			{
 				value = charwo.Values((LongValueKey)307).ToString();
-				if (!variableHistory.ContainsKey("CreatureDamRating") || variableHistory["CreatureDamRating"] != value) { variableHistory["CreatureDamRating"] = value; changedVariables["CreatureDamRating"] = value; }
+				if (!variableHistory.ContainsKey("Self.CreatureDamRating") || variableHistory["Self.CreatureDamRating"] != value) { variableHistory["Self.CreatureDamRating"] = value; changedVariables["Self.CreatureDamRating"] = value; }
 			}
 
 			if (charwo.LongKeys.Contains(314))
 			{
 				value = charwo.Values((LongValueKey)314).ToString();
-				if (!variableHistory.ContainsKey("CreatureCritDamRating") || variableHistory["CreatureCritDamRating"] != value) { variableHistory["CreatureCritDamRating"] = value; changedVariables["CreatureCritDamRating"] = value; }
+				if (!variableHistory.ContainsKey("Self.CreatureCritDamRating") || variableHistory["Self.CreatureCritDamRating"] != value) { variableHistory["Self.CreatureCritDamRating"] = value; changedVariables["Self.CreatureCritDamRating"] = value; }
 			}
 
 			if (charwo.LongKeys.Contains(308))
 			{
 				value = charwo.Values((LongValueKey)308).ToString();
-				if (!variableHistory.ContainsKey("CreatureDamResist") || variableHistory["CreatureDamResist"] != value) { variableHistory["CreatureDamResist"] = value; changedVariables["CreatureDamResist"] = value; }
+				if (!variableHistory.ContainsKey("Self.CreatureDamResist") || variableHistory["Self.CreatureDamResist"] != value) { variableHistory["Self.CreatureDamResist"] = value; changedVariables["Self.CreatureDamResist"] = value; }
 			}
 
 			if (charwo.LongKeys.Contains(316))
 			{
 				value = charwo.Values((LongValueKey)316).ToString();
-				if (!variableHistory.ContainsKey("CreatureCritDamResist") || variableHistory["CreatureCritDamResist"] != value) { variableHistory["CreatureCritDamResist"] = value; changedVariables["CreatureCritDamResist"] = value; }
+				if (!variableHistory.ContainsKey("Self.CreatureCritDamResist") || variableHistory["Self.CreatureCritDamResist"] != value) { variableHistory["Self.CreatureCritDamResist"] = value; changedVariables["Self.CreatureCritDamResist"] = value; }
 			}
 
 
@@ -806,9 +856,6 @@ namespace Mag_CombatLogger
 
 			value = Core.CharacterFilter.Burden.ToString();
 			if (!variableHistory.ContainsKey("Burden") || variableHistory["Burden"] != value) { variableHistory["Burden"] = value; changedVariables["Burden"] = value; }
-
-			// Attacking/Healing? (action state)
-			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ADD CODE HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 			// Weapon
@@ -836,6 +883,23 @@ namespace Mag_CombatLogger
 					{
 						weaponVariables["shieldId"] = item.Id.ToString();
 						weaponVariables["shieldName"] = item.Name;
+
+						// The final value of each element is the prot * ArmorLevel.
+						// If ArmorLevel is 600, and prot is 2, then the final prot level will be 1200.
+						// If ArmorLevel is 600, and prot is 3, then the final prot level will still be 1200 as prots are capped at 2x AmorLevel.
+						// These are the buffed values
+						// We should also log base values for accurate numbers vs hollow creatures
+						weaponVariables["shieldProts"] = 
+							item.Values(DoubleValueKey.SlashProt).ToString("N2") + "/" +
+							item.Values(DoubleValueKey.PierceProt).ToString("N2") + "/" +
+							item.Values(DoubleValueKey.BludgeonProt).ToString("N2") + "/" +
+							item.Values(DoubleValueKey.ColdProt).ToString("N2") + "/" +
+							item.Values(DoubleValueKey.FireProt).ToString("N2") + "/" +
+							item.Values(DoubleValueKey.AcidProt).ToString("N2") + "/" +
+							item.Values(DoubleValueKey.LightningProt).ToString("N2");
+
+						if (!item.HasIdData)
+							Core.Actions.RequestId(item.Id);
 					}
 				}
 
@@ -916,14 +980,58 @@ namespace Mag_CombatLogger
 
 
 			// Armor
-			Dictionary<string, string> armorVariables = new Dictionary<string, string>();
+			Dictionary<string, string> armorPieces = new Dictionary<string, string>();
 
-			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ADD CODE HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			foreach (var item in Core.WorldFilter.GetInventory())
+			{
+				if (item.Values(LongValueKey.EquippedSlots) <= 0)
+					continue;
+
+				if (item.Values(LongValueKey.ArmorLevel) <= 0)
+					continue;
+
+				if (item.Values(LongValueKey.EquippedSlots) == 0x00200000) // 00200000 -1	Shield/Off Hand
+					continue;
+
+				Dictionary<string, string> armorVariables = new Dictionary<string, string>();
+
+				armorVariables["Id"] = item.Id.ToString();
+				armorVariables["Name"] = item.Name;
+
+				armorVariables["ArmorLevel"] = item.Values(LongValueKey.ArmorLevel).ToString();
+
+				// The final value of each element is the prot * ArmorLevel.
+				// If ArmorLevel is 600, and prot is 2, then the final prot level will be 1200.
+				// If ArmorLevel is 600, and prot is 3, then the final prot level will still be 1200 as prots are capped at 2x AmorLevel.
+				// These are the buffed values
+				// We should also log base values for accurate numbers vs hollow creatures
+				armorVariables["Prots"] =
+					item.Values(DoubleValueKey.SlashProt).ToString("N2") + "/" +
+					item.Values(DoubleValueKey.PierceProt).ToString("N2") + "/" +
+					item.Values(DoubleValueKey.BludgeonProt).ToString("N2") + "/" +
+					item.Values(DoubleValueKey.ColdProt).ToString("N2") + "/" +
+					item.Values(DoubleValueKey.FireProt).ToString("N2") + "/" +
+					item.Values(DoubleValueKey.AcidProt).ToString("N2") + "/" +
+					item.Values(DoubleValueKey.LightningProt).ToString("N2");
+
+				StringBuilder armorPieceOutput = new StringBuilder();
+
+				armorPieceOutput.Append("{");
+				foreach (var variable in armorVariables)
+					armorPieceOutput.Append("\"" + variable.Key + "\":\"" + variable.Value + "\",");
+				armorPieceOutput.Remove(armorPieceOutput.Length - 1, 1); // Remove the last comma
+				armorPieceOutput.Append("}");
+
+				armorPieces[item.Values(LongValueKey.EquippedSlots).ToString()] = armorPieceOutput.ToString();
+
+				if (!item.HasIdData)
+					Core.Actions.RequestId(item.Id);
+			}
 
 			StringBuilder armorOutput = new StringBuilder();
 			armorOutput.Append("{");
-			foreach (var variable in armorVariables)
-				armorOutput.Append("\"" + variable.Key + "\":\"" + variable.Value + "\",");
+			foreach (var variable in armorPieces)
+				armorOutput.Append("\"" + variable.Key + "\":" + variable.Value + ",");
 			armorOutput.Remove(armorOutput.Length - 1, 1); // Remove the last comma
 			armorOutput.Append("}");
 			if (!variableHistory.ContainsKey("Armor") || variableHistory["Armor"] != armorOutput.ToString()) { variableHistory["Armor"] = armorOutput.ToString(); changedVariables["Armor"] = armorOutput.ToString(); }
@@ -949,11 +1057,13 @@ namespace Mag_CombatLogger
 				{
 					StringBuilder output = new StringBuilder();
 
-					// "Timestamp,Landcell,JSON"
-					output.Append('"' + String.Format("{0:u}", DateTime.UtcNow) + ",");
-					output.Append('"' + CoreManager.Current.Actions.Landcell.ToString("X8") + '"' + ",");
+					// Timestamp,Landcell,JSON
+					output.Append(String.Format("{0:u}", DateTime.UtcNow) + ",");
+					output.Append(CoreManager.Current.Actions.Landcell.ToString("X8") + ",");
 
-					output.Append("\"{");
+					output.Append("{");
+
+					output.Append("\"Event\":\"VariableUpdate\",");
 
 					foreach (var variable in changedVariables)
 					{
@@ -966,7 +1076,7 @@ namespace Mag_CombatLogger
 					// Remove the last comma
 					output.Remove(output.Length - 1, 1);
 
-					output.Append("}\"");
+					output.Append("}");
 
 					writer.WriteLine(output);
 
