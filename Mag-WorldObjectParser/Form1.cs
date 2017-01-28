@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
 using Mag.Shared;
+using Mag.Shared.Constants;
 
 namespace Mag_WorldObjectParser
 {
@@ -22,6 +25,26 @@ namespace Mag_WorldObjectParser
 
 			var pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-WorldObjectLogger");
 			txtSourcePath.Text = pluginPersonalFolder.FullName;
+
+			typeof(DataGridView).InvokeMember("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null, dataGridView1, new object[] { true });
+			dataGridView1.RowHeadersVisible = false;
+			dataGridView1.AllowUserToAddRows = false;
+			dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+
+			typeof(DataGridView).InvokeMember("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null, dataGridViewLongValueKeys, new object[] { true });
+			dataGridViewLongValueKeys.RowHeadersVisible = false;
+			dataGridViewLongValueKeys.AllowUserToAddRows = false;
+			dataGridViewLongValueKeys.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+
+			typeof(DataGridView).InvokeMember("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null, dataGridViewDoubleValueKeys, new object[] { true });
+			dataGridViewDoubleValueKeys.RowHeadersVisible = false;
+			dataGridViewDoubleValueKeys.AllowUserToAddRows = false;
+			dataGridViewDoubleValueKeys.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+
+			typeof(DataGridView).InvokeMember("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null, dataGridViewStringValueKeys, new object[] { true });
+			dataGridViewStringValueKeys.RowHeadersVisible = false;
+			dataGridViewStringValueKeys.AllowUserToAddRows = false;
+			dataGridViewStringValueKeys.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 		}
 
 		private void cmdBrowseForDifferentSource_Click(object sender, EventArgs e)
@@ -35,11 +58,18 @@ namespace Mag_WorldObjectParser
 			}
 		}
 
+
+
+
 		private int totalLines;
 		private int corruptLines;
 
 		private void cmdReadAllFiles_Click(object sender, EventArgs e)
 		{
+			var startTime = DateTime.Now;
+
+			OnBeforeLoadFiles();
+
 			lblResults.Text = null;
 
 			var files = Directory.GetFiles(txtSourcePath.Text, "*.csv", SearchOption.AllDirectories);
@@ -48,9 +78,17 @@ namespace Mag_WorldObjectParser
 			corruptLines = 0;
 
 			for (int i = 0; i < files.Length; i++)
+			{
+				//if (i == 300)
+				//	break;
 				ProcessFile(files[i], i, files.Length);
+			}
 
 			lblResults.Text = totalLines.ToString("N0") + " lines read. " + corruptLines.ToString("N0") + " corrupt lines found.";
+
+			OnLoadFilesComplete();
+
+			//MessageBox.Show((DateTime.Now - startTime).TotalSeconds.ToString("N1"));
 		}
 
 		readonly JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
@@ -102,7 +140,6 @@ namespace Mag_WorldObjectParser
 					continue;
 				}
 
-				Tuple<double, double, double> rawCoordinates;
 				double x;
 				double y;
 				double z;
@@ -127,7 +164,7 @@ namespace Mag_WorldObjectParser
 					corruptLines++;
 					continue;
 				}
-				rawCoordinates = new Tuple<double, double, double>(x, y, z);
+				var rawCoordinates = new Tuple<double, double, double>(x, y, z);
 
 				var jsonPart = line.Substring(thirdComma + 1, line.Length - (thirdComma + 1));
 				if (jsonPart[0] != '"' || jsonPart[jsonPart.Length - 1] != '"') // Corrupt line
@@ -156,38 +193,17 @@ namespace Mag_WorldObjectParser
 
 					foreach (var kvp in result)
 						createPacket.RawData = Util.HexStringToByteArray((string)kvp.Value);
+
+					if (!ProcessCreatePacket(createPacket))
+					{
+						corruptLines++;
+						continue;
+					}
 				}
 				else if (jsonPart.StartsWith("{\"Id"))
 				{
-					// This is because I forgot to encode strings... 
-					jsonPart = jsonPart.Replace(" \"Ruschk\" ", " \\\"Ruschk\\\" ");
-					jsonPart = jsonPart.Replace(" \"giants\" ", " \\\"giants\\\" ");
-					jsonPart = jsonPart.Replace(" \"guard dogs.\"", " \\\"guard dogs.\\\"");
-					jsonPart = jsonPart.Replace(" \"Slayer of Hope\" ", " \\\"Slayer of Hope\\\" ");
-					jsonPart = jsonPart.Replace(" \"The Haven\"", " \\\"The Haven\\\"");
-					jsonPart = jsonPart.Replace(" \"intelligent portals\" ", " \\\"intelligent portals\\\" ");
-					jsonPart = jsonPart.Replace(" \"anti-magic\" ", " \\\"anti-magic\\\" ");
-					jsonPart = jsonPart.Replace(" \"slippage\"", " \\\"slippage\\\"");
-					jsonPart = jsonPart.Replace(" \"spilled\"", " \\\"spilled\\\"");
-					jsonPart = jsonPart.Replace(" \"small place\" ", " \\\"small place\\\" ");
-					jsonPart = jsonPart.Replace(" \"Hea Arantah's\" ", " \\\"Hea Arantah's\\\" ");
-					jsonPart = jsonPart.Replace(" \"Wharu\"", " \\\"Wharu\\\"");
-					jsonPart = jsonPart.Replace(" \"infiltrators,\"", " \\\"infiltrators,\\\"");
-					jsonPart = jsonPart.Replace(" \". . . the (Undead) believe the tentacled creatures are the spawn of the Great Ones.\" ", " \\\". . . the (Undead) believe the tentacled creatures are the spawn of the Great Ones.\\\" ");
-					jsonPart = jsonPart.Replace(" \"Great Ones\" ", " \\\"Great Ones\\\" ");
-					jsonPart = jsonPart.Replace(" \"fire that fell from the sky.\"", " \\\"fire that fell from the sky.\\\"");
-					jsonPart = jsonPart.Replace(" \"Bloodless,\"", " \\\"Bloodless,\\\"");
-					jsonPart = jsonPart.Replace(" \"it is best to let a sleeping Ursuin lie.\"", " \\\"it is best to let a sleeping Ursuin lie.\\\"");
-					jsonPart = jsonPart.Replace(" \"pure\" ", " \\\"pure\\\" ");
-					jsonPart = jsonPart.Replace(" \"The Story of Ben Ten and Yanshi.\" ", " \\\"The Story of Ben Ten and Yanshi.\\\" ");
-					jsonPart = jsonPart.Replace(" \"Gria'venir,\" ", " \\\"Gria'venir,\\\" ");
-					jsonPart = jsonPart.Replace(" \"Atual Arutoa\" ", " \\\"Atual Arutoa\\\" ");
-					jsonPart = jsonPart.Replace(" \"wings.\" ", " \\\"wings.\\\" ");
-					jsonPart = jsonPart.Replace(" \"Great Tukal\" ", " \\\"Great Tukal\\\" ");
-					jsonPart = jsonPart.Replace(" \"snow sharks.\" ", " \\\"snow sharks.\\\" ");
-					jsonPart = jsonPart.Replace("\"Lords of the World\" ", "\\\"Lords of the World\\\" ");
-					jsonPart = jsonPart.Replace("\"Winds From Darkness\"", "\\\"Winds From Darkness\\\"");
-					jsonPart = jsonPart.Replace(" \"Property of Celcynd\" ", " \\\"Property of Celcynd\\\" ");
+					bool retried = false;
+					retry:
 
 					try
 					{
@@ -365,9 +381,53 @@ namespace Mag_WorldObjectParser
 									throw new NotImplementedException();
 							}
 						}
+
+						if (!ProcessIdentResponse(identResponse))
+						{
+							corruptLines++;
+							continue;
+						}
 					}
 					catch
 					{
+						// This hacky retry method is about 25% faster
+						if (!retried)
+						{
+							retried = true;
+
+							// This is because I forgot to encode strings... 
+							jsonPart = jsonPart.Replace(" \"Ruschk\" ", " \\\"Ruschk\\\" ");
+							jsonPart = jsonPart.Replace(" \"giants\" ", " \\\"giants\\\" ");
+							jsonPart = jsonPart.Replace(" \"guard dogs.\"", " \\\"guard dogs.\\\"");
+							jsonPart = jsonPart.Replace(" \"Slayer of Hope\" ", " \\\"Slayer of Hope\\\" ");
+							jsonPart = jsonPart.Replace(" \"The Haven\"", " \\\"The Haven\\\"");
+							jsonPart = jsonPart.Replace(" \"intelligent portals\" ", " \\\"intelligent portals\\\" ");
+							jsonPart = jsonPart.Replace(" \"anti-magic\" ", " \\\"anti-magic\\\" ");
+							jsonPart = jsonPart.Replace(" \"slippage\"", " \\\"slippage\\\"");
+							jsonPart = jsonPart.Replace(" \"spilled\"", " \\\"spilled\\\"");
+							jsonPart = jsonPart.Replace(" \"small place\" ", " \\\"small place\\\" ");
+							jsonPart = jsonPart.Replace(" \"Hea Arantah's\" ", " \\\"Hea Arantah's\\\" ");
+							jsonPart = jsonPart.Replace(" \"Wharu\"", " \\\"Wharu\\\"");
+							jsonPart = jsonPart.Replace(" \"infiltrators,\"", " \\\"infiltrators,\\\"");
+							jsonPart = jsonPart.Replace(" \". . . the (Undead) believe the tentacled creatures are the spawn of the Great Ones.\" ", " \\\". . . the (Undead) believe the tentacled creatures are the spawn of the Great Ones.\\\" ");
+							jsonPart = jsonPart.Replace(" \"Great Ones\" ", " \\\"Great Ones\\\" ");
+							jsonPart = jsonPart.Replace(" \"fire that fell from the sky.\"", " \\\"fire that fell from the sky.\\\"");
+							jsonPart = jsonPart.Replace(" \"Bloodless,\"", " \\\"Bloodless,\\\"");
+							jsonPart = jsonPart.Replace(" \"it is best to let a sleeping Ursuin lie.\"", " \\\"it is best to let a sleeping Ursuin lie.\\\"");
+							jsonPart = jsonPart.Replace(" \"pure\" ", " \\\"pure\\\" ");
+							jsonPart = jsonPart.Replace(" \"The Story of Ben Ten and Yanshi.\" ", " \\\"The Story of Ben Ten and Yanshi.\\\" ");
+							jsonPart = jsonPart.Replace(" \"Gria'venir,\" ", " \\\"Gria'venir,\\\" ");
+							jsonPart = jsonPart.Replace(" \"Atual Arutoa\" ", " \\\"Atual Arutoa\\\" ");
+							jsonPart = jsonPart.Replace(" \"wings.\" ", " \\\"wings.\\\" ");
+							jsonPart = jsonPart.Replace(" \"Great Tukal\" ", " \\\"Great Tukal\\\" ");
+							jsonPart = jsonPart.Replace(" \"snow sharks.\" ", " \\\"snow sharks.\\\" ");
+							jsonPart = jsonPart.Replace("\"Lords of the World\" ", "\\\"Lords of the World\\\" ");
+							jsonPart = jsonPart.Replace("\"Winds From Darkness\"", "\\\"Winds From Darkness\\\"");
+							jsonPart = jsonPart.Replace(" \"Property of Celcynd\" ", " \\\"Property of Celcynd\\\" ");
+
+							goto retry;
+						}
+
 						corruptLines++;
 						continue;
 					}
@@ -380,7 +440,7 @@ namespace Mag_WorldObjectParser
 			}
 		}
 
-		class BaseLine
+		class LogItem
 		{
 			public DateTime Timestamp;
 
@@ -389,7 +449,7 @@ namespace Mag_WorldObjectParser
 			public Tuple<double, double, double> RawCoordinates;
 		}
 
-		class CreatePacket : BaseLine
+		class CreatePacket : LogItem
 		{
 			public byte[] RawData;
 		}
@@ -407,7 +467,7 @@ namespace Mag_WorldObjectParser
 			public uint self;
 		}
 
-		class IdentResponse : BaseLine
+		class IdentResponse : LogItem
 		{
 			public int Id;
 
@@ -427,6 +487,338 @@ namespace Mag_WorldObjectParser
 			public ExtendIDAttributeInfo ExtendIDAttributeInfo;
 
 			public Dictionary<int, int> Resources = new Dictionary<int, int>();
+		}
+
+
+
+
+
+
+
+
+		class CreatureInfo : ExtendIDAttributeInfo
+		{
+			public int Count;
+
+			/// <summary>
+			/// This is a list of Landcells this creatureInfo was found at.
+			/// I've found that creatures with the same name can have different attributes in different areas
+			/// </summary>
+			public List<int> Landcell = new List<int>();
+
+			public string Name;
+
+			public int Level;
+
+			// Add ratings
+
+			public bool Equals(CreatureInfo other)
+			{
+				if (Name != other.Name) return false;
+
+				if (Level != other.Level) return false;
+
+				if (healthMax != other.healthMax) return false;
+				if (staminaMax != other.staminaMax) return false;
+				if (manaMax != other.manaMax) return false;
+				if (strength != other.strength) return false;
+				if (endurance != other.endurance) return false;
+				if (quickness != other.quickness) return false;
+				if (coordination != other.coordination) return false;
+				if (focus != other.focus) return false;
+				if (self != other.self) return false;
+
+				return true;
+			}
+		}
+
+		private readonly Dictionary<int, int> longValueKeysFound = new Dictionary<int, int>();
+		private readonly Dictionary<int, int> doubleValueKeysFound = new Dictionary<int, int>();
+		private readonly Dictionary<int, int> stringValueKeysFound = new Dictionary<int, int>();
+
+		/// <summary>
+		/// Dictionary of creatures, and their identified attribute variants, and the count for each variant
+		/// </summary>
+		private Dictionary<int, List<CreatureInfo>> creatureAttributes = new Dictionary<int, List<CreatureInfo>>();
+
+		private void OnBeforeLoadFiles()
+		{
+			longValueKeysFound.Clear();
+			doubleValueKeysFound.Clear();
+			stringValueKeysFound.Clear();
+
+			creatureAttributes.Clear();
+
+			dataGridView1.DataSource = null;
+			dataGridViewLongValueKeys.DataSource = null;
+			dataGridViewDoubleValueKeys.DataSource = null;
+			dataGridViewStringValueKeys.DataSource = null;
+		}
+
+		private bool ProcessCreatePacket(CreatePacket createPacket)
+		{
+			return true;
+		}
+
+		private bool ProcessIdentResponse(IdentResponse identResponse)
+		{
+			foreach (var key in identResponse.LongValues)
+			{
+				if (!longValueKeysFound.ContainsKey(key.Key))
+					longValueKeysFound[key.Key] = 1;
+
+				longValueKeysFound[key.Key] = longValueKeysFound[key.Key] + 1;
+			}
+
+			foreach (var key in identResponse.DoubleValues)
+			{
+				if (!doubleValueKeysFound.ContainsKey(key.Key))
+					doubleValueKeysFound[key.Key] = 1;
+
+				doubleValueKeysFound[key.Key] = doubleValueKeysFound[key.Key] + 1;
+			}
+
+			foreach (var key in identResponse.StringValues)
+			{
+				if (!stringValueKeysFound.ContainsKey(key.Key))
+					stringValueKeysFound[key.Key] = 1;
+
+				stringValueKeysFound[key.Key] = stringValueKeysFound[key.Key] + 1;
+			}
+
+			if (identResponse.ExtendIDAttributeInfo != null)
+			{
+				if (!identResponse.LongValues.ContainsKey(218103808)) // Type. Everything should have this
+					return false;
+
+				if (!identResponse.StringValues.ContainsKey(1)) // Name. Everything should have this
+					return false;
+
+				List<CreatureInfo> creatureInfos;
+
+				if (!creatureAttributes.ContainsKey(identResponse.LongValues[218103808]))
+				{
+					creatureInfos = new List<CreatureInfo>();
+					creatureAttributes[identResponse.LongValues[218103808]] = creatureInfos;
+				}
+				else
+					creatureInfos = creatureAttributes[identResponse.LongValues[218103808]];
+
+				/*if (!creatureAttributes.ContainsKey(identResponse.StringValues[1]))
+				{
+					creatureInfos = new List<CreatureInfo>();
+					creatureAttributes[identResponse.StringValues[1]] = creatureInfos;
+				}
+				else
+					creatureInfos = creatureAttributes[identResponse.StringValues[1]];*/
+
+				CreatureInfo creatureInfo = new CreatureInfo();
+
+				creatureInfo.Name = identResponse.StringValues[1];
+
+				if (identResponse.LongValues.ContainsKey(25))
+					creatureInfo.Level = identResponse.LongValues[25];
+
+				if (identResponse.LongValues.ContainsKey(218103808) && identResponse.LongValues[218103808] == 35136)
+					Console.WriteLine("OK");
+
+				creatureInfo.healthMax = identResponse.ExtendIDAttributeInfo.healthMax;
+				creatureInfo.staminaMax = identResponse.ExtendIDAttributeInfo.staminaMax;
+				creatureInfo.manaMax = identResponse.ExtendIDAttributeInfo.manaMax;
+				creatureInfo.strength = identResponse.ExtendIDAttributeInfo.strength;
+				creatureInfo.endurance = identResponse.ExtendIDAttributeInfo.endurance;
+				creatureInfo.quickness = identResponse.ExtendIDAttributeInfo.quickness;
+				creatureInfo.coordination = identResponse.ExtendIDAttributeInfo.coordination;
+				creatureInfo.focus = identResponse.ExtendIDAttributeInfo.focus;
+				creatureInfo.self = identResponse.ExtendIDAttributeInfo.self;
+
+				for (int i = 0; i <= creatureInfos.Count; i++)
+				{
+					if (i == creatureInfos.Count)
+					{
+						if (i > 0 && creatureInfos[0].Name != creatureInfo.Name)
+							MessageBox.Show("This shouldn't happen");
+
+						creatureInfo.Count = 1;
+						creatureInfo.Landcell.Add(identResponse.Landcell);
+						creatureInfos.Add(creatureInfo);
+						break;
+					}
+
+					if (creatureInfos[i].Equals(creatureInfo))
+					{
+						creatureInfos[i].Count++;
+
+						if (!creatureInfos[i].Landcell.Contains(identResponse.Landcell))
+							creatureInfos[i].Landcell.Add(identResponse.Landcell);
+
+						break;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		private void OnLoadFilesComplete()
+		{
+			var dt = new DataTable();
+
+			dt.Columns.Add("Type", typeof(int));
+			dt.Columns.Add("Count", typeof(int));
+			dt.Columns.Add("Name", typeof(string));
+			dt.Columns.Add("Level", typeof(int));
+
+			dt.Columns.Add("healthMax", typeof(int));
+			dt.Columns.Add("staminaMax", typeof(int));
+			dt.Columns.Add("manaMax", typeof(int));
+
+			dt.Columns.Add("strength", typeof(int));
+			dt.Columns.Add("endurance", typeof(int));
+			dt.Columns.Add("quickness", typeof(int));
+			dt.Columns.Add("coordination", typeof(int));
+			dt.Columns.Add("focus", typeof(int));
+			dt.Columns.Add("self", typeof(int));
+
+			foreach (var kvp in creatureAttributes)
+			{
+				bool hasExtendedAttributeInfo = false;
+
+				foreach (var creatureInfo in kvp.Value)
+				{
+					if (creatureInfo.strength != 0)
+						hasExtendedAttributeInfo = true;
+				}
+
+				foreach (var creatureInfo in kvp.Value)
+				{
+					if (hasExtendedAttributeInfo && creatureInfo.strength == 0)
+						continue;
+
+					var dr = dt.NewRow();
+
+					dr["Type"] = kvp.Key;
+					dr["Count"] = creatureInfo.Count;
+					dr["Name"] = creatureInfo.Name;
+					dr["Level"] = creatureInfo.Level;
+
+					dr["healthMax"] = creatureInfo.healthMax;
+					dr["staminaMax"] = creatureInfo.staminaMax;
+					dr["manaMax"] = creatureInfo.manaMax;
+
+					dr["strength"] = creatureInfo.strength;
+					dr["endurance"] = creatureInfo.endurance;
+					dr["quickness"] = creatureInfo.quickness;
+					dr["coordination"] = creatureInfo.coordination;
+					dr["focus"] = creatureInfo.focus;
+					dr["self"] = creatureInfo.self;
+
+					dt.Rows.Add(dr);
+				}
+			}
+
+			dataGridView1.DataSource = dt;
+
+			for (int i = 0; i < dataGridView1.Columns.Count; i++)
+			{
+				if (i == 2)
+					continue;
+
+				dataGridView1.Columns[i].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+			}
+
+			dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+			dataGridView1.AutoResizeColumns();
+
+
+			dt = new DataTable();
+
+			dt.Columns.Add("Key", typeof(int));
+			dt.Columns.Add("Desc", typeof(string));
+			dt.Columns.Add("Hits", typeof(int));
+
+			foreach (var kvp in longValueKeysFound)
+			{
+				var dr = dt.NewRow();
+
+				dr["Key"] = kvp.Key;
+				dr["Desc"] = (IntValueKey)kvp.Key;
+				dr["Hits"] = kvp.Value;
+
+				dt.Rows.Add(dr);
+			}
+
+			dataGridViewLongValueKeys.DataSource = dt;
+
+			for (int i = 0; i < dataGridViewLongValueKeys.Columns.Count; i++)
+			{
+				if (i == 1) continue;
+				dataGridViewLongValueKeys.Columns[i].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+			}
+
+			dataGridViewLongValueKeys.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+			dataGridViewLongValueKeys.AutoResizeColumns();
+			dataGridViewLongValueKeys.Sort(dataGridViewLongValueKeys.Columns[0], System.ComponentModel.ListSortDirection.Ascending);
+
+
+			dt = new DataTable();
+
+			dt.Columns.Add("Key", typeof(int));
+			dt.Columns.Add("Desc", typeof(string));
+			dt.Columns.Add("Hits", typeof(int));
+
+			foreach (var kvp in doubleValueKeysFound)
+			{
+				var dr = dt.NewRow();
+
+				dr["Key"] = kvp.Key;
+				dr["Desc"] = (DoubleValueKey)kvp.Key;
+				dr["Hits"] = kvp.Value;
+
+				dt.Rows.Add(dr);
+			}
+
+			dataGridViewDoubleValueKeys.DataSource = dt;
+
+			for (int i = 0; i < dataGridViewDoubleValueKeys.Columns.Count; i++)
+			{
+				if (i == 1) continue;
+				dataGridViewDoubleValueKeys.Columns[i].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+			}
+
+			dataGridViewDoubleValueKeys.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+			dataGridViewDoubleValueKeys.AutoResizeColumns();
+			dataGridViewDoubleValueKeys.Sort(dataGridViewDoubleValueKeys.Columns[0], System.ComponentModel.ListSortDirection.Ascending);
+
+
+			dt = new DataTable();
+
+			dt.Columns.Add("Key", typeof(int));
+			dt.Columns.Add("Desc", typeof(string));
+			dt.Columns.Add("Hits", typeof(int));
+
+			foreach (var kvp in stringValueKeysFound)
+			{
+				var dr = dt.NewRow();
+
+				dr["Key"] = kvp.Key;
+				dr["Desc"] = (StringValueKey)kvp.Key;
+				dr["Hits"] = kvp.Value;
+
+				dt.Rows.Add(dr);
+			}
+
+			dataGridViewStringValueKeys.DataSource = dt;
+
+			for (int i = 0; i < dataGridViewStringValueKeys.Columns.Count; i++)
+			{
+				if (i == 1) continue;
+				dataGridViewStringValueKeys.Columns[i].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+			}
+
+			dataGridViewStringValueKeys.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+			dataGridViewStringValueKeys.AutoResizeColumns();
+			dataGridViewStringValueKeys.Sort(dataGridViewStringValueKeys.Columns[0], System.ComponentModel.ListSortDirection.Ascending);
 		}
 	}
 }
