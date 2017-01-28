@@ -42,7 +42,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.XML" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Shared\Constants\BoolValueKey.cs">
@@ -69,14 +69,8 @@
     <Compile Include="..\Shared\Constants\StringValueKey.cs">
       <Link>Shared\Constants\StringValueKey.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\MyWorldObject.cs">
-      <Link>Shared\MyWorldObject.cs</Link>
-    </Compile>
     <Compile Include="..\Shared\ObjectClass.cs">
       <Link>Shared\ObjectClass.cs</Link>
-    </Compile>
-    <Compile Include="..\Shared\SerializableDictionary.cs">
-      <Link>Shared\SerializableDictionary.cs</Link>
     </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
