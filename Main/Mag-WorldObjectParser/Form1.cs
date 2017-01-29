@@ -112,122 +112,124 @@ namespace Mag_WorldObjectParser
 				// "2017-01-23 15:25:42Z,"00000000",49.0488996505737 -29.9918003082275 -7.45058059692383E-09","{"RawData":"45F70000334020771100000003980100180001000C00000000003D00020000000C00000000000000B40104724BC8704135EFEFC1000000B2F70435BF0000000000000000F70435BF86000009220000202B000034DA0500020100020000000000000002000000000090010000300000000400446F6F720000A131171380000000141000002000000000000040"}"
 				// "2017-01-23 15:25:42Z,"00000000",49.0488996505737 -29.9918003082275 -7.45058059692383E-09","{"Id":"1998602291","ObjectClass":"Door","BoolValues":{},"DoubleValues":{"167772167":"269.999963323784","167772168":"2"},"LongValues":{"19":" - 1","218103811":"1912865204","218103831":"2","218103835":"4116","218103843":"32","218103847":"104451","218103808":"12705","218103830":"33555930","218103832":"48","218103834":"128","218103809":"4887"},"StringValues":{"1":"Door"},"ActiveSpells":"","Spells":""}"
 
-				var thirdComma = Util.IndexOfNth(line, ',', 3);
-
-				if (thirdComma == -1) // Corrupt line
+				try
 				{
-					corruptLines++;
-					continue;
-				}
+					var thirdComma = Util.IndexOfNth(line, ',', 3);
 
-				var firstPart = line.Substring(0, thirdComma);
-
-				var firstPartSplit = firstPart.Split(',');
-				if (firstPartSplit[0] == "\"Timestamp\"") // Header line
-					continue;
-
-				DateTime timestamp;
-				if (!DateTime.TryParse(firstPartSplit[0].Substring(1, firstPartSplit[0].Length - 2), out timestamp)) // Corrupt line
-				{
-					corruptLines++;
-					continue;
-				}
-
-				int landcell;
-				if (!int.TryParse(firstPartSplit[1].Substring(1, firstPartSplit[1].Length - 2), NumberStyles.HexNumber, null, out landcell)) // Corrupt line
-				{
-					corruptLines++;
-					continue;
-				}
-
-				double x;
-				double y;
-				double z;
-				var rawCoordinatesSplit = firstPartSplit[2].Substring(1, firstPartSplit[2].Length - 2).Split(' ');
-				if (rawCoordinatesSplit.Length != 3) // Corrupt line
-				{
-					corruptLines++;
-					continue;
-				}
-				if (!double.TryParse(rawCoordinatesSplit[0], out x)) // Corrupt line
-				{
-					corruptLines++;
-					continue;
-				}
-				if (!double.TryParse(rawCoordinatesSplit[1], out y)) // Corrupt line
-				{
-					corruptLines++;
-					continue;
-				}
-				if (!double.TryParse(rawCoordinatesSplit[2], out z)) // Corrupt line
-				{
-					corruptLines++;
-					continue;
-				}
-				var rawCoordinates = new Tuple<double, double, double>(x, y, z);
-
-				var jsonPart = line.Substring(thirdComma + 1, line.Length - (thirdComma + 1));
-				if (jsonPart[0] != '"' || jsonPart[jsonPart.Length - 1] != '"') // Corrupt line
-				{
-					corruptLines++;
-					continue;
-				}
-
-				jsonPart = jsonPart.Substring(1, jsonPart.Length - 2); // Trim the quotes... why did I add them.. :(
-
-				if (jsonPart.StartsWith("{\"Ra"))
-				{
-					var createPacket = new CreatePacket();
-
-					createPacket.Timestamp = timestamp;
-					createPacket.Landcell = landcell;
-					createPacket.RawCoordinates = rawCoordinates;
-
-					Dictionary<string, object> result = (Dictionary<string, object>)jsonSerializer.DeserializeObject(jsonPart);
-
-					if (result.Count != 1)
+					if (thirdComma == -1) // Corrupt line
 					{
 						corruptLines++;
 						continue;
 					}
 
-					foreach (var kvp in result)
-						createPacket.RawData = Util.HexStringToByteArray((string)kvp.Value);
+					var firstPart = line.Substring(0, thirdComma);
 
-					if (!ProcessCreatePacket(createPacket))
+					var firstPartSplit = firstPart.Split(',');
+					if (firstPartSplit[0] == "\"Timestamp\"") // Header line
+						continue;
+
+					DateTime timestamp;
+					if (!DateTime.TryParse(firstPartSplit[0].Substring(1, firstPartSplit[0].Length - 2), out timestamp)) // Corrupt line
 					{
 						corruptLines++;
 						continue;
 					}
-				}
-				else if (jsonPart.StartsWith("{\"Id"))
-				{
-					bool retried = false;
-					retry:
 
-					try
+					int landcell;
+					if (!int.TryParse(firstPartSplit[1].Substring(1, firstPartSplit[1].Length - 2), NumberStyles.HexNumber, null, out landcell)) // Corrupt line
 					{
-						var identResponse = new IdentResponse();
+						corruptLines++;
+						continue;
+					}
 
-						identResponse.Timestamp = timestamp;
-						identResponse.Landcell = landcell;
-						identResponse.RawCoordinates = rawCoordinates;
+					double x;
+					double y;
+					double z;
+					var rawCoordinatesSplit = firstPartSplit[2].Substring(1, firstPartSplit[2].Length - 2).Split(' ');
+					if (rawCoordinatesSplit.Length != 3) // Corrupt line
+					{
+						corruptLines++;
+						continue;
+					}
+					if (!double.TryParse(rawCoordinatesSplit[0], out x)) // Corrupt line
+					{
+						corruptLines++;
+						continue;
+					}
+					if (!double.TryParse(rawCoordinatesSplit[1], out y)) // Corrupt line
+					{
+						corruptLines++;
+						continue;
+					}
+					if (!double.TryParse(rawCoordinatesSplit[2], out z)) // Corrupt line
+					{
+						corruptLines++;
+						continue;
+					}
+					var rawCoordinates = new Tuple<double, double, double>(x, y, z);
 
-						Dictionary<string, object> result = (Dictionary<string, object>)jsonSerializer.DeserializeObject(jsonPart);
+					var jsonPart = line.Substring(thirdComma + 1, line.Length - (thirdComma + 1));
+					if (jsonPart[0] != '"' || jsonPart[jsonPart.Length - 1] != '"') // Corrupt line
+					{
+						corruptLines++;
+						continue;
+					}
+
+					jsonPart = jsonPart.Substring(1, jsonPart.Length - 2); // Trim the quotes... why did I add them.. :(
+
+					if (jsonPart.StartsWith("{\"Ra"))
+					{
+						var createPacket = new CreatePacket();
+
+						createPacket.Timestamp = timestamp;
+						createPacket.Landcell = landcell;
+						createPacket.RawCoordinates = rawCoordinates;
+
+						Dictionary<string, object> result = (Dictionary<string, object>) jsonSerializer.DeserializeObject(jsonPart);
+
+						if (result.Count != 1)
+						{
+							corruptLines++;
+							continue;
+						}
 
 						foreach (var kvp in result)
+							createPacket.RawData = Util.HexStringToByteArray((string) kvp.Value);
+
+						if (!ProcessCreatePacket(createPacket))
 						{
-							switch (kvp.Key)
+							corruptLines++;
+							continue;
+						}
+					}
+					else if (jsonPart.StartsWith("{\"Id"))
+					{
+						bool retried = false;
+						retry:
+
+						try
+						{
+							var identResponse = new IdentResponse();
+
+							identResponse.Timestamp = timestamp;
+							identResponse.Landcell = landcell;
+							identResponse.RawCoordinates = rawCoordinates;
+
+							Dictionary<string, object> result = (Dictionary<string, object>) jsonSerializer.DeserializeObject(jsonPart);
+
+							foreach (var kvp in result)
 							{
-								case "Id":
-									identResponse.Id = int.Parse((string)kvp.Value);
-									break;
+								switch (kvp.Key)
+								{
+									case "Id":
+										identResponse.Id = int.Parse((string) kvp.Value);
+										break;
 
-								case "ObjectClass":
-									identResponse.ObjectClass = (ObjectClass)Enum.Parse(typeof(ObjectClass), (string)kvp.Value);
-									break;
+									case "ObjectClass":
+										identResponse.ObjectClass = (ObjectClass) Enum.Parse(typeof (ObjectClass), (string) kvp.Value);
+										break;
 
-								case "BoolValues":
+									case "BoolValues":
 									{
 										var values = (Dictionary<string, object>) kvp.Value;
 
@@ -240,9 +242,9 @@ namespace Mag_WorldObjectParser
 										}
 									}
 
-									break;
+										break;
 
-								case "DoubleValues":
+									case "DoubleValues":
 									{
 										var values = (Dictionary<string, object>) kvp.Value;
 
@@ -255,11 +257,11 @@ namespace Mag_WorldObjectParser
 										}
 									}
 
-									break;
+										break;
 
-								case "LongValues":
+									case "LongValues":
 									{
-										var values = (Dictionary<string, object>)kvp.Value;
+										var values = (Dictionary<string, object>) kvp.Value;
 
 										foreach (var kvp2 in values)
 										{
@@ -270,11 +272,11 @@ namespace Mag_WorldObjectParser
 										}
 									}
 
-									break;
+										break;
 
-								case "StringValues":
+									case "StringValues":
 									{
-										var values = (Dictionary<string, object>)kvp.Value;
+										var values = (Dictionary<string, object>) kvp.Value;
 
 										foreach (var kvp2 in values)
 										{
@@ -284,74 +286,74 @@ namespace Mag_WorldObjectParser
 										}
 									}
 
-									break;
+										break;
 
-								case "ActiveSpells":
-									if (!string.IsNullOrEmpty((string)kvp.Value))
-									{
-										var spellsSplit = ((string)kvp.Value).Split(',');
+									case "ActiveSpells":
+										if (!string.IsNullOrEmpty((string) kvp.Value))
+										{
+											var spellsSplit = ((string) kvp.Value).Split(',');
 
-										foreach (var spell in spellsSplit)
-											identResponse.ActiveSpells.Add(int.Parse(spell));
-									}
+											foreach (var spell in spellsSplit)
+												identResponse.ActiveSpells.Add(int.Parse(spell));
+										}
 
-									break;
+										break;
 
-								case "Spells":
-									if (!string.IsNullOrEmpty((string)kvp.Value))
-									{
-										var spellsSplit = ((string)kvp.Value).Split(',');
+									case "Spells":
+										if (!string.IsNullOrEmpty((string) kvp.Value))
+										{
+											var spellsSplit = ((string) kvp.Value).Split(',');
 
-										foreach (var spell in spellsSplit)
-											identResponse.Spells.Add(int.Parse(spell));
-									}
+											foreach (var spell in spellsSplit)
+												identResponse.Spells.Add(int.Parse(spell));
+										}
 
-									break;
+										break;
 
-								case "Attributes":
+									case "Attributes":
 									{
 										identResponse.ExtendIDAttributeInfo = new ExtendIDAttributeInfo();
 
-										var values = (Dictionary<string, object>)kvp.Value;
+										var values = (Dictionary<string, object>) kvp.Value;
 
 										foreach (var kvp2 in values)
 										{
 											switch (kvp2.Key)
 											{
 												case "healthMax":
-													identResponse.ExtendIDAttributeInfo.healthMax = uint.Parse((string)kvp2.Value);
+													identResponse.ExtendIDAttributeInfo.healthMax = uint.Parse((string) kvp2.Value);
 													break;
 
 												case "manaMax":
-													identResponse.ExtendIDAttributeInfo.manaMax = uint.Parse((string)kvp2.Value);
+													identResponse.ExtendIDAttributeInfo.manaMax = uint.Parse((string) kvp2.Value);
 													break;
 
 												case "staminaMax":
-													identResponse.ExtendIDAttributeInfo.staminaMax = uint.Parse((string)kvp2.Value);
+													identResponse.ExtendIDAttributeInfo.staminaMax = uint.Parse((string) kvp2.Value);
 													break;
 
 												case "strength":
-													identResponse.ExtendIDAttributeInfo.strength = uint.Parse((string)kvp2.Value);
+													identResponse.ExtendIDAttributeInfo.strength = uint.Parse((string) kvp2.Value);
 													break;
 
 												case "endurance":
-													identResponse.ExtendIDAttributeInfo.endurance = uint.Parse((string)kvp2.Value);
+													identResponse.ExtendIDAttributeInfo.endurance = uint.Parse((string) kvp2.Value);
 													break;
 
 												case "quickness":
-													identResponse.ExtendIDAttributeInfo.quickness = uint.Parse((string)kvp2.Value);
+													identResponse.ExtendIDAttributeInfo.quickness = uint.Parse((string) kvp2.Value);
 													break;
 
 												case "coordination":
-													identResponse.ExtendIDAttributeInfo.coordination = uint.Parse((string)kvp2.Value);
+													identResponse.ExtendIDAttributeInfo.coordination = uint.Parse((string) kvp2.Value);
 													break;
 
 												case "focus":
-													identResponse.ExtendIDAttributeInfo.focus = uint.Parse((string)kvp2.Value);
+													identResponse.ExtendIDAttributeInfo.focus = uint.Parse((string) kvp2.Value);
 													break;
 
 												case "self":
-													identResponse.ExtendIDAttributeInfo.self = uint.Parse((string)kvp2.Value);
+													identResponse.ExtendIDAttributeInfo.self = uint.Parse((string) kvp2.Value);
 													break;
 
 												default:
@@ -360,11 +362,11 @@ namespace Mag_WorldObjectParser
 										}
 									}
 
-									break;
+										break;
 
-								case "Resources":
+									case "Resources":
 									{
-										var values = (Dictionary<string, object>)kvp.Value;
+										var values = (Dictionary<string, object>) kvp.Value;
 
 										foreach (var kvp2 in values)
 										{
@@ -375,64 +377,70 @@ namespace Mag_WorldObjectParser
 										}
 									}
 
-									break;
+										break;
 
-								default:
-									throw new NotImplementedException();
+									default:
+										throw new NotImplementedException();
+								}
+							}
+
+							if (!ProcessIdentResponse(identResponse))
+							{
+								corruptLines++;
+								continue;
 							}
 						}
-
-						if (!ProcessIdentResponse(identResponse))
+						catch
 						{
+							// This hacky retry method is about 25% faster
+							if (!retried)
+							{
+								retried = true;
+
+								// This is because I forgot to encode strings... 
+								jsonPart = jsonPart.Replace(" \"Ruschk\" ", " \\\"Ruschk\\\" ");
+								jsonPart = jsonPart.Replace(" \"giants\" ", " \\\"giants\\\" ");
+								jsonPart = jsonPart.Replace(" \"guard dogs.\"", " \\\"guard dogs.\\\"");
+								jsonPart = jsonPart.Replace(" \"Slayer of Hope\" ", " \\\"Slayer of Hope\\\" ");
+								jsonPart = jsonPart.Replace(" \"The Haven\"", " \\\"The Haven\\\"");
+								jsonPart = jsonPart.Replace(" \"intelligent portals\" ", " \\\"intelligent portals\\\" ");
+								jsonPart = jsonPart.Replace(" \"anti-magic\" ", " \\\"anti-magic\\\" ");
+								jsonPart = jsonPart.Replace(" \"slippage\"", " \\\"slippage\\\"");
+								jsonPart = jsonPart.Replace(" \"spilled\"", " \\\"spilled\\\"");
+								jsonPart = jsonPart.Replace(" \"small place\" ", " \\\"small place\\\" ");
+								jsonPart = jsonPart.Replace(" \"Hea Arantah's\" ", " \\\"Hea Arantah's\\\" ");
+								jsonPart = jsonPart.Replace(" \"Wharu\"", " \\\"Wharu\\\"");
+								jsonPart = jsonPart.Replace(" \"infiltrators,\"", " \\\"infiltrators,\\\"");
+								jsonPart = jsonPart.Replace(" \". . . the (Undead) believe the tentacled creatures are the spawn of the Great Ones.\" ", " \\\". . . the (Undead) believe the tentacled creatures are the spawn of the Great Ones.\\\" ");
+								jsonPart = jsonPart.Replace(" \"Great Ones\" ", " \\\"Great Ones\\\" ");
+								jsonPart = jsonPart.Replace(" \"fire that fell from the sky.\"", " \\\"fire that fell from the sky.\\\"");
+								jsonPart = jsonPart.Replace(" \"Bloodless,\"", " \\\"Bloodless,\\\"");
+								jsonPart = jsonPart.Replace(" \"it is best to let a sleeping Ursuin lie.\"", " \\\"it is best to let a sleeping Ursuin lie.\\\"");
+								jsonPart = jsonPart.Replace(" \"pure\" ", " \\\"pure\\\" ");
+								jsonPart = jsonPart.Replace(" \"The Story of Ben Ten and Yanshi.\" ", " \\\"The Story of Ben Ten and Yanshi.\\\" ");
+								jsonPart = jsonPart.Replace(" \"Gria'venir,\" ", " \\\"Gria'venir,\\\" ");
+								jsonPart = jsonPart.Replace(" \"Atual Arutoa\" ", " \\\"Atual Arutoa\\\" ");
+								jsonPart = jsonPart.Replace(" \"wings.\" ", " \\\"wings.\\\" ");
+								jsonPart = jsonPart.Replace(" \"Great Tukal\" ", " \\\"Great Tukal\\\" ");
+								jsonPart = jsonPart.Replace(" \"snow sharks.\" ", " \\\"snow sharks.\\\" ");
+								jsonPart = jsonPart.Replace("\"Lords of the World\" ", "\\\"Lords of the World\\\" ");
+								jsonPart = jsonPart.Replace("\"Winds From Darkness\"", "\\\"Winds From Darkness\\\"");
+								jsonPart = jsonPart.Replace(" \"Property of Celcynd\" ", " \\\"Property of Celcynd\\\" ");
+
+								goto retry;
+							}
+
 							corruptLines++;
 							continue;
 						}
 					}
-					catch
+					else
 					{
-						// This hacky retry method is about 25% faster
-						if (!retried)
-						{
-							retried = true;
-
-							// This is because I forgot to encode strings... 
-							jsonPart = jsonPart.Replace(" \"Ruschk\" ", " \\\"Ruschk\\\" ");
-							jsonPart = jsonPart.Replace(" \"giants\" ", " \\\"giants\\\" ");
-							jsonPart = jsonPart.Replace(" \"guard dogs.\"", " \\\"guard dogs.\\\"");
-							jsonPart = jsonPart.Replace(" \"Slayer of Hope\" ", " \\\"Slayer of Hope\\\" ");
-							jsonPart = jsonPart.Replace(" \"The Haven\"", " \\\"The Haven\\\"");
-							jsonPart = jsonPart.Replace(" \"intelligent portals\" ", " \\\"intelligent portals\\\" ");
-							jsonPart = jsonPart.Replace(" \"anti-magic\" ", " \\\"anti-magic\\\" ");
-							jsonPart = jsonPart.Replace(" \"slippage\"", " \\\"slippage\\\"");
-							jsonPart = jsonPart.Replace(" \"spilled\"", " \\\"spilled\\\"");
-							jsonPart = jsonPart.Replace(" \"small place\" ", " \\\"small place\\\" ");
-							jsonPart = jsonPart.Replace(" \"Hea Arantah's\" ", " \\\"Hea Arantah's\\\" ");
-							jsonPart = jsonPart.Replace(" \"Wharu\"", " \\\"Wharu\\\"");
-							jsonPart = jsonPart.Replace(" \"infiltrators,\"", " \\\"infiltrators,\\\"");
-							jsonPart = jsonPart.Replace(" \". . . the (Undead) believe the tentacled creatures are the spawn of the Great Ones.\" ", " \\\". . . the (Undead) believe the tentacled creatures are the spawn of the Great Ones.\\\" ");
-							jsonPart = jsonPart.Replace(" \"Great Ones\" ", " \\\"Great Ones\\\" ");
-							jsonPart = jsonPart.Replace(" \"fire that fell from the sky.\"", " \\\"fire that fell from the sky.\\\"");
-							jsonPart = jsonPart.Replace(" \"Bloodless,\"", " \\\"Bloodless,\\\"");
-							jsonPart = jsonPart.Replace(" \"it is best to let a sleeping Ursuin lie.\"", " \\\"it is best to let a sleeping Ursuin lie.\\\"");
-							jsonPart = jsonPart.Replace(" \"pure\" ", " \\\"pure\\\" ");
-							jsonPart = jsonPart.Replace(" \"The Story of Ben Ten and Yanshi.\" ", " \\\"The Story of Ben Ten and Yanshi.\\\" ");
-							jsonPart = jsonPart.Replace(" \"Gria'venir,\" ", " \\\"Gria'venir,\\\" ");
-							jsonPart = jsonPart.Replace(" \"Atual Arutoa\" ", " \\\"Atual Arutoa\\\" ");
-							jsonPart = jsonPart.Replace(" \"wings.\" ", " \\\"wings.\\\" ");
-							jsonPart = jsonPart.Replace(" \"Great Tukal\" ", " \\\"Great Tukal\\\" ");
-							jsonPart = jsonPart.Replace(" \"snow sharks.\" ", " \\\"snow sharks.\\\" ");
-							jsonPart = jsonPart.Replace("\"Lords of the World\" ", "\\\"Lords of the World\\\" ");
-							jsonPart = jsonPart.Replace("\"Winds From Darkness\"", "\\\"Winds From Darkness\\\"");
-							jsonPart = jsonPart.Replace(" \"Property of Celcynd\" ", " \\\"Property of Celcynd\\\" ");
-
-							goto retry;
-						}
-
 						corruptLines++;
 						continue;
 					}
 				}
-				else
+				catch
 				{
 					corruptLines++;
 					continue;
@@ -618,9 +626,6 @@ namespace Mag_WorldObjectParser
 
 				if (identResponse.LongValues.ContainsKey(25))
 					creatureInfo.Level = identResponse.LongValues[25];
-
-				if (identResponse.LongValues.ContainsKey(218103808) && identResponse.LongValues[218103808] == 35136)
-					Console.WriteLine("OK");
 
 				creatureInfo.healthMax = identResponse.ExtendIDAttributeInfo.healthMax;
 				creatureInfo.staminaMax = identResponse.ExtendIDAttributeInfo.staminaMax;

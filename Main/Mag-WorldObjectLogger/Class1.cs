@@ -117,7 +117,16 @@ namespace Mag_WorldObjectLogger
 								extendIDAttributeInfo.focus = e.Message.Value<uint>("focus");
 								extendIDAttributeInfo.self = e.Message.Value<uint>("self");
 
-								identAttributes[id] = extendIDAttributeInfo;
+								// We may have logged this item before with less info, so let's make sure we log it again
+								if (identAttributes.ContainsKey(id) && identAttributes[id].strength == 0 && extendIDAttributeInfo.strength != 0)
+								{
+									if (itemsLogged.ContainsKey(id)) itemsLogged.Remove(id);
+									if (itemsLoggedWithIdent.ContainsKey(id)) itemsLoggedWithIdent.Remove(id);
+									if (itemsLoggedWithExtendedIdent.Contains(Core.WorldFilter[id].Name)) itemsLoggedWithExtendedIdent.Remove(Core.WorldFilter[id].Name);
+								}
+
+								if (!identAttributes.ContainsKey(id) || extendIDAttributeInfo.strength != 0)
+									identAttributes[id] = extendIDAttributeInfo;
 							}
 						}
 
@@ -167,7 +176,7 @@ namespace Mag_WorldObjectLogger
 					}
 				}
 			}
-			catch { }
+			catch (Exception ex) { Core.Actions.AddChatText("<{Mag-WorldObgjectLogger}>: Exception " + ex, 5); }
 		}
 
 
@@ -221,7 +230,7 @@ namespace Mag_WorldObjectLogger
 						}
 						else if (wo.ObjectClass == ObjectClass.Vendor || wo.ObjectClass == ObjectClass.Monster)
 						{
-							if (!identAttributes.ContainsKey(wo.Id))
+							if (!identAttributes.ContainsKey(wo.Id) || identAttributes[wo.Id].strength == 0)
 							{
 								//Core.Actions.AddChatText("Requesting id 2: " + wo.Name, 0);
 
@@ -237,7 +246,7 @@ namespace Mag_WorldObjectLogger
 					}
 				}
 			}
-			catch { }
+			catch (Exception ex) { Core.Actions.AddChatText("<{Mag-WorldObgjectLogger}>: Exception " + ex, 5); }
 		}
 
 
