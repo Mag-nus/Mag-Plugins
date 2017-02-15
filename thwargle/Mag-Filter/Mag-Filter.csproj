@@ -12,10 +12,14 @@
     <AssemblyName>MagFilter</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,6 +29,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,7 +41,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Decal.Adapter">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Decal 3.0\Decal.Adapter.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Decal 3.0\Decal.Adapter.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.7.0.1\lib\net20\Newtonsoft.Json.dll</HintPath>
@@ -47,15 +52,18 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
     <Reference Include="VCS5">
-      <HintPath>..\..\..\..\Games\VirindiPlugins\VirindiChatSystem5\VCS5.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Games\VirindiPlugins\VirindiChatSystem5\VCS5.dll</HintPath>
     </Reference>
     <Reference Include="VirindiViewService">
-      <HintPath>..\..\..\..\Games\VirindiPlugins\VirindiViewService\VirindiViewService.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Games\VirindiPlugins\VirindiViewService\VirindiViewService.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Shared\Debug.cs">
       <Link>Shared\Debug.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\DecalProxy.cs">
+      <Link>Shared\DecalProxy.cs</Link>
     </Compile>
     <Compile Include="..\Shared\PostMessageTools.cs">
       <Link>Shared\PostMessageTools.cs</Link>
@@ -69,9 +77,21 @@
     <Compile Include="..\Shared\User32.cs">
       <Link>Shared\User32.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\VCS_Connector.cs">
+      <Link>Shared\VCS_Connector.cs</Link>
+    </Compile>
+    <Compile Include="AssemblySettings.cs" />
     <Compile Include="AutoRetryLogin.cs" />
+    <Compile Include="Channels\Channel.cs" />
+    <Compile Include="Channels\ChannelWriter.cs" />
+    <Compile Include="Channels\CommandWriter.cs" />
+    <Compile Include="Channels\Command.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="CharacterManager.cs" />
+    <Compile Include="Channels\CommandSet.cs" />
+    <Compile Include="EnumWindows.cs" />
+    <Compile Include="Heartbeat.cs" />
+    <Compile Include="HeartbeatGameStatus.cs" />
     <Compile Include="LauncherChooseCharacterManager.cs" />
     <Compile Include="DefaultFirstCharacter.cs" />
     <Compile Include="DefaultFirstCharacterManager.cs" />
@@ -84,16 +104,26 @@
     <Compile Include="LoginCompleteMessageQueueManager.cs" />
     <Compile Include="LoginNextCharacterManager.cs" />
     <Compile Include="AfterLoginCompleteMessageQueueManager.cs" />
+    <Compile Include="MagFilterCommands\GameRepo.cs" />
+    <Compile Include="MagFilterCommands\MagFilterCommandExecutor.cs" />
+    <Compile Include="MagFilterCommands\MagFilterCommandParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProxyDomain.cs" />
     <Compile Include="ServerCharacterListByAccount.cs" />
+    <Compile Include="SettingsFile.cs" />
+    <Compile Include="SettingHelpers.cs" />
+    <Compile Include="SettingsLineParser.cs" />
     <Compile Include="Settings\SettingsManager.cs" />
-    <Compile Include="Shared\VCS_Connector.cs" />
+    <Compile Include="Shared\PostMsgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /y "$(TargetPath)" "$(SolutionDir)..\..\ThwargLauncher\bin\Debug"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

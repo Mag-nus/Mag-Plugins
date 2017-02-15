@@ -7,14 +7,35 @@ namespace MagFilter
 {
     class log
     {
+        private static object _locker = new object();
+        private static string _logFilepath = "";
+
+        public static string GetLogFilepath()
+        {
+            return _logFilepath;
+        }
         public static void WriteLogMsg(string logText)
         {
-            // Write the string to a file.
-            string path = FileLocations.PluginPersonalFolder.FullName + @"\MagFilter_Log.txt";
-
-            using (StreamWriter file = new StreamWriter(path, append: true))
+            lock (_locker)
             {
-                file.WriteLine(string.Format("{0:yyyy-MM-dd HH:mm:ss} {1}", DateTime.Now, logText));
+                // Use log path specified in dll.config, or default to Decal Plugin folder with hardcoded name
+                if (string.IsNullOrEmpty(_logFilepath))
+                {
+                    AssemblySettings settings = new AssemblySettings();
+                    string filepath = settings["LogFilepath"];
+                    if (string.IsNullOrEmpty(filepath))
+                    {
+                        filepath = FileLocations.AppLogsFolder +  @"\Mag-Filter_%PID%_log.txt";
+                    }
+                    _logFilepath = FileLocations.ExpandFilepath(filepath);
+                    // Create any needed folders
+                    FileLocations.CreateAnyNeededFolders(_logFilepath);
+                }
+
+                using (StreamWriter file = new StreamWriter(_logFilepath, append: true))
+                {
+                    file.WriteLine(string.Format("{0:yyyy-MM-dd HH:mm:ss} {1}", DateTime.Now, logText));
+                }
             }
         }
     }

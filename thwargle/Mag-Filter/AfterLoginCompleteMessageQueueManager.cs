@@ -59,8 +59,9 @@ namespace MagFilter
 				else
 				{
 					PostMessageTools.SendEnter();
-					PostMessageTools.SendMsg(loginCompleteMessageQueue.Dequeue());
-					sendingLastEnter = true;
+					string cmd = loginCompleteMessageQueue.Dequeue();
+                    PostMessageTools.SendCharString(cmd);
+                    sendingLastEnter = true;
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }

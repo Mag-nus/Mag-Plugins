@@ -29,8 +29,10 @@ namespace MagFilter
 		{
 			// When we login for the first time we get the following for messages in the following order
 
-			if (e.Message.Type == 0xF658) // Character List (we get this when we log out a character as well)
-				zonename = Convert.ToString(e.Message["zonename"]);
+            if (e.Message.Type == 0xF658) // Character List (we get this when we log out a character as well)
+            {
+                zonename = Convert.ToString(e.Message["zonename"]);
+            }
 
 			if (e.Message.Type == 0xF7E1) // Server Name (we get this when we log out a character as well)
 				server = Convert.ToString(e.Message["server"]);
@@ -68,15 +70,14 @@ namespace MagFilter
 			try
 			{
                 // Override - instead of using the plugin xml, use the launch file
-                var launchInfo = (new LaunchControl()).GetLaunchInfo();
+                var launchInfo = LaunchControl.GetLaunchInfo();
                 if (launchInfo.IsValid)
                 {
                     TimeSpan FiveMinutes = new TimeSpan(0, 0, 5, 0);
                     if (DateTime.UtcNow - launchInfo.LaunchTime < FiveMinutes)
                     {
                         var ourCharacter = new DefaultFirstCharacter(launchInfo.ServerName, zonename, launchInfo.CharacterName);
-                        log.WriteLogMsg("launcherChooseCharTimer_Tick: LaunchInfo valid");
-                        log.WriteLogMsg("Character: " + launchInfo.CharacterName);
+                        log.WriteLogMsg("Character login requested: " + launchInfo.CharacterName);
 
                         if (ourCharacter.ZoneId == zonename && ourCharacter.Server == server)
                         {
@@ -86,11 +87,18 @@ namespace MagFilter
 
                             if (state == 3)
                             {
-                                loginCharacterTools.LoginCharacter(ourCharacter.CharacterName);
+                                bool ok = loginCharacterTools.LoginCharacter(ourCharacter.CharacterName);
+                                if (ok)
+                                {
+                                    Heartbeat.RecordCharacterName(ourCharacter.CharacterName);
+                                }
                             }
                         }
                     }
-                    log.WriteLogMsg("launcherChooseCharTimer_Tick: LaunchInfo too old: " + launchInfo.LaunchTime.ToString());
+                    else
+                    {
+                        log.WriteLogMsg("launcherChooseCharTimer_Tick: LaunchInfo too old: " + launchInfo.LaunchTime.ToString());
+                    }
                 }
                 else
                 {

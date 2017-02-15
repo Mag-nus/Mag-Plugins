@@ -29,8 +29,11 @@ namespace MagFilter
 		{
 			// When we login for the first time we get the following for messages in the following order
 
-			if (e.Message.Type == 0xF658) // Character List (we get this when we log out a character as well)
-				zonename = Convert.ToString(e.Message["zonename"]);
+            if (e.Message.Type == 0xF658) // Character List (we get this when we log out a character as well)
+            {
+                zonename = Convert.ToString(e.Message["zonename"]);
+                log.WriteLogMsg("FilterCore_ServerDispatch: 0xF658");
+            }
 
 			if (e.Message.Type == 0xF7E1) // Server Name (we get this when we log out a character as well)
 				server = Convert.ToString(e.Message["server"]);

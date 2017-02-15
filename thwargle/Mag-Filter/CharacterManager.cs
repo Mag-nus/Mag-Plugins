@@ -45,13 +45,30 @@ namespace MagFilter
 
         public void WriteCharacters(string server, string zonename, List<Character> characters)
         {
-            var launchInfo = (new LaunchControl()).GetLaunchInfo();
+            var launchInfo = LaunchControl.GetLaunchInfo();
             if (!launchInfo.IsValid)
             {
                 log.WriteLogMsg("LaunchInfo not valid");
                 return;
             }
+            if (!IsValidCharacterName(launchInfo.CharacterName))
+            {
+                try
+                {
+                    LaunchControl.RecordLaunchResponse(DateTime.UtcNow);
+                }
+                catch
+                {
+                    log.WriteLogMsg("WriteCharacters: Exception trying to record launch response");
+                }
+            }
             log.WriteLogMsg("LaunchInfo valid");
+
+            // Pass info to Heartbeat
+            Heartbeat.RecordServer(launchInfo.ServerName);
+            Heartbeat.RecordAccount(launchInfo.AccountName);
+            GameRepo.Game.SetServerAccount(server: launchInfo.ServerName, account: launchInfo.AccountName);
+
             string key = GetKey(server: server, accountName: launchInfo.AccountName);
             var clist = new ServerCharacterListByAccount()
                 {
@@ -65,6 +82,13 @@ namespace MagFilter
             {
                 file.Write(contents);
             }
+        }
+
+        private bool IsValidCharacterName(string characterName)
+        {
+            if (string.IsNullOrEmpty(characterName)) { return false; }
+            if (characterName == "None") { return false; }
+            return true;
         }
 
         public static CharacterManager ReadCharacters()
@@ -83,8 +107,10 @@ namespace MagFilter
         private static CharacterManager ReadCharactersImpl()
         {
             string path = FileLocations.GetCharacterFilePath();
-
-            log.WriteLogMsg("Q22-start ReadCharactersImpl");
+            if (!File.Exists(path))
+            {
+                path = FileLocations.GetOldCharacterFilePath();
+            }
 
             if (!File.Exists(path)) { return new CharacterManager(); }
             using (var file = new StreamReader(path))
@@ -92,7 +118,6 @@ namespace MagFilter
                 string contents = file.ReadToEnd();
                 var data = JsonConvert.DeserializeObject<Dictionary<string, ServerCharacterListByAccount>>(contents);
                 CharacterManager charMgr = new CharacterManager(data);
-                log.WriteLogMsg("Q28 - succeeded ReadCharactersImpl");
                 return charMgr;
             }
         }

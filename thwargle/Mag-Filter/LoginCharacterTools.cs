@@ -11,8 +11,9 @@ namespace MagFilter
 	    private string zonename;
 		int characterSlots;
 	    private bool written;
+        private string characterName = null;
 
-		public readonly List<Character> characters = new List<Character>();
+	    public List<Character> characters = null;
 
 		internal void FilterCore_ServerDispatch(object sender, NetworkMessageEventArgs e)
 		{
@@ -33,7 +34,7 @@ namespace MagFilter
                 log.WriteLogMsg("Inside ServerDispatch. 0xF658");
 				characterSlots = Convert.ToInt32(e.Message["slotCount"]);
 
-				characters.Clear();
+				characters = new List<Character>();
 
 				MessageStruct charactersStruct = e.Message.Struct("characters");
 
@@ -51,12 +52,18 @@ namespace MagFilter
 			}
             if (!written)
             {
-                if (server != null && zonename != null && characters.Count > 0)
+                if (server != null && zonename != null && characters != null)
                 {
                     CharacterManager mgr = CharacterManager.ReadCharacters();
 			        mgr.WriteCharacters(server: server, zonename: zonename, characters: characters);
+                    log.WriteLogMsg("Wrote our characters to file");
                     written = true;
 			    }
+            }
+            if (CoreManager.Current.CharacterFilter.Name != characterName)
+            {
+                GameRepo.Game.SetCharacter(CoreManager.Current.CharacterFilter.Name);
+                characterName = CoreManager.Current.CharacterFilter.Name;
             }
 		}
 
@@ -100,6 +107,8 @@ namespace MagFilter
 
 			// Click the Enter button
 			Mag.Shared.PostMessageTools.SendMouseClick(0x015C, 0x0185);
+
+            log.WriteLogMsg("LoginCharacterTools.LoginByIndex");
 
 			return true;
 		}

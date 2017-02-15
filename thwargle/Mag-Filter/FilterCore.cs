@@ -9,7 +9,7 @@ using Decal.Adapter;
 
 namespace MagFilter
 {
-	[FriendlyName("Mag-Filter")]
+	[FriendlyName("MagFilter")]
 	public class FilterCore : FilterBase
 	{
 		[DllImport("user32.dll", CharSet = CharSet.Auto)]
@@ -24,9 +24,13 @@ namespace MagFilter
 
 		DefaultFirstCharacterManager defaultFirstCharacterManager;
 	    private LauncherChooseCharacterManager chooseCharacterManager;
+        private MagFilterCommandExecutor magFilterCommandExecutor;
+        private MagFilterCommandParser magFilterCommandParser;
 		LoginNextCharacterManager loginNextCharacterManager;
 
         private string PluginName { get { return FileLocations.PluginName; } }
+
+        public void ExternalStartup() { Startup(); } // for game emulator
 		protected override void Startup()
 		{
             Debug.Init(FileLocations.PluginPersonalFolder.FullName + @"\Exceptions.txt", PluginName);
@@ -35,14 +39,19 @@ namespace MagFilter
 
 			defaultFirstCharacterManager = new DefaultFirstCharacterManager(loginCharacterTools);
             chooseCharacterManager = new LauncherChooseCharacterManager(loginCharacterTools);
-			loginNextCharacterManager = new LoginNextCharacterManager(loginCharacterTools);
+            magFilterCommandExecutor = new MagFilterCommandExecutor();
+            magFilterCommandParser = new MagFilterCommandParser(magFilterCommandExecutor);
+            Heartbeat.SetCommandParser(magFilterCommandParser);
+            loginNextCharacterManager = new LoginNextCharacterManager(loginCharacterTools);
 
 			ClientDispatch += new EventHandler<NetworkMessageEventArgs>(FilterCore_ClientDispatch);
 			ServerDispatch += new EventHandler<NetworkMessageEventArgs>(FilterCore_ServerDispatch);
 			WindowMessage += new EventHandler<WindowMessageEventArgs>(FilterCore_WindowMessage);
 
+
 			CommandLineText += new EventHandler<ChatParserInterceptEventArgs>(FilterCore_CommandLineText);
 		}
+
         private void LogStartup()
         {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
@@ -52,18 +61,24 @@ namespace MagFilter
                 assembly.GetName().Version,
                 System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location)
                                 ));
-
         }
 
-		protected override void Shutdown()
+        public void ExternalShutdown() { Shutdown(); } // for game emulator
+        protected override void Shutdown()
 		{
 			ClientDispatch -= new EventHandler<NetworkMessageEventArgs>(FilterCore_ClientDispatch);
 			ServerDispatch -= new EventHandler<NetworkMessageEventArgs>(FilterCore_ServerDispatch);
 			WindowMessage -= new EventHandler<WindowMessageEventArgs>(FilterCore_WindowMessage);
 
 			CommandLineText -= new EventHandler<ChatParserInterceptEventArgs>(FilterCore_CommandLineText);
+
+            log.WriteLogMsg("FilterCore-Shutdown");
 		}
 
+        public void CallFilterCoreClientDispatch(object sender, NetworkMessageEventArgs e) // for game emulator
+        {
+            FilterCore_ClientDispatch(sender, e);
+        }
 		void FilterCore_ClientDispatch(object sender, NetworkMessageEventArgs e)
 		{
 			try
@@ -108,7 +123,8 @@ namespace MagFilter
 				defaultFirstCharacterManager.FilterCore_CommandLineText(sender, e);
                 chooseCharacterManager.FilterCore_CommandLineText(sender, e);
 				loginNextCharacterManager.FilterCore_CommandLineText(sender, e);
-			}
+                magFilterCommandParser.FilterCore_CommandLineText(sender, e);
+            }
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 	}
