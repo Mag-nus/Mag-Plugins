@@ -4,14 +4,14 @@ namespace MagFilter
 	internal struct DefaultFirstCharacter
 	{
 		public string Server;
-		public string AccountName;
+		public string ZoneId;
 
 		public string CharacterName;
 
-		public DefaultFirstCharacter(string server, string accountName, string characterName)
+		public DefaultFirstCharacter(string server, string zoneId, string characterName)
 		{
 			Server = server;
-			AccountName = accountName;
+			ZoneId = zoneId;
 			CharacterName = characterName;
 		}
 	}

@@ -29,16 +29,28 @@ namespace MagFilter
 		{
 			// When we login for the first time we get the following for messages in the following order
 
-			if (e.Message.Type == 0xF658) // Character List (we get this when we log out a character as well)
-				zonename = Convert.ToString(e.Message["zonename"]);
+            if (e.Message.Type == 0xF658) // Character List (we get this when we log out a character as well)
+            {
+                zonename = Convert.ToString(e.Message["zonename"]);
+                log.WriteInfo("FilterCore_ServerDispatch: 0xF658");
+            }
 
 			if (e.Message.Type == 0xF7E1) // Server Name (we get this when we log out a character as well)
-				server = Convert.ToString(e.Message["server"]);
+            {
+                //getting the Server from the message, but then ignore it and set to the one we know works from the files
+                server = Convert.ToString(e.Message["server"]);
+                var launchInfo = LaunchControl.GetLaunchInfo();
+                server = launchInfo.ServerName;
+                log.WriteInfo("Server as retrieved from launchInfo: " + server);
+            }
+				
 
 			// F7E5 - Unknown? (we only get this the first time we connect), E5 F7 00 00 01 00 00 00 01 00 00 00 01 00 00 00 02 00 00 00 00 00 00 00 01 00 00 00 
 
 			if (e.Message.Type == 0xF7EA) // Unknown? (we only get this the first time we connect), EA F7 00 0
-				defaultFirstCharTimer.Start();
+			{
+			    defaultFirstCharTimer.Start();
+			}
 		}
 
 		public void FilterCore_CommandLineText(object sender, ChatParserInterceptEventArgs e)
@@ -47,14 +59,14 @@ namespace MagFilter
 
 			if (lower.StartsWith("/mf dlc set"))
 			{
-				Settings.SettingsManager.CharacterSelectionScreen.SetDefaultFirstCharacter(new DefaultFirstCharacter(server, zonename, CoreManager.Current.CharacterFilter.Name));
+				DefaultFirstCharacterLoader.SetDefaultFirstCharacter(new DefaultFirstCharacter(server, zonename, CoreManager.Current.CharacterFilter.Name));
 				Debug.WriteToChat("Default Login Character set to: " + CoreManager.Current.CharacterFilter.Name);
 
 				e.Eat = true;
 			}
 			else if (lower == "/mf dlc clear")
 			{
-				Settings.SettingsManager.CharacterSelectionScreen.DeleteDefaultFirstCharacter(server, zonename);
+				DefaultFirstCharacterLoader.DeleteDefaultFirstCharacter(server, zonename);
 				Debug.WriteToChat("Default Login Character cleared");
 
 				e.Eat = true;
@@ -65,18 +77,20 @@ namespace MagFilter
 		{
 			try
 			{
-				var defaultFirstCharacters = Settings.SettingsManager.CharacterSelectionScreen.DefaultFirstCharacters;
+				var defaultFirstCharacters = DefaultFirstCharacterLoader.DefaultFirstCharacters;
 
 				foreach (var character in defaultFirstCharacters)
 				{
-					if (character.AccountName == zonename && character.Server == server)
+					if (character.ZoneId == zonename && character.Server == server)
 					{
 						// Bypass movies/logos
 						if (state == 1 || state == 2)
 							PostMessageTools.SendMouseClick(350, 100);
 
 						if (state == 3)
-							loginCharacterTools.LoginCharacter(character.CharacterName);
+						{
+                            loginCharacterTools.LoginCharacter(character.CharacterName);
+						}
 
 						break;
 					}
