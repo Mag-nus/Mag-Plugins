@@ -19,7 +19,9 @@ namespace Mag.Shared.Constants
 		ImbuedBy = 40,
 		DateBorn = 43,
 		MonarchyTitle = 47,
+	    GearPlatingName = 52,
 
-		SecondaryName = 184549376,
+
+        SecondaryName = 184549376,
 	}
 }

@@ -21,7 +21,7 @@ namespace Mag.Shared.Constants
 		// 40
 		Deaths				= 43,
 		WandElemDmgType		= 45,
-		// 47
+		AttackType          = 47,
 		MinLevelRestrict	= 86,
 		MaxLevelRestrict	= 87,
 		LockpickSkillBonus	= 88,
@@ -45,9 +45,9 @@ namespace Mag.Shared.Constants
 		Age					= 125,
 		XPForVPReduction	= 129,
 		Material			= 131,
-		// 134
-		// 139
-		WieldReqType		= 158,
+	    PlayerKillerStatus  = 134,
+        // 139
+        WieldReqType		= 158,
 		WieldReqAttribute	= 159,
 		WieldReqValue		= 160,
 		SlayerSpecies		= 166,
@@ -55,7 +55,8 @@ namespace Mag.Shared.Constants
 		NumberItemsSalvagedFrom = 170,
 		NumberTimesTinkered = 171,
 		DescriptionFormat	= 172,
-		PagesUsed			= 174,
+	    AppraisalLockpickSuccessPercent = 173,
+        PagesUsed			= 174,
 		PagesTotal			= 175,
 		ActivationReqSkillId = 176,
 		GemSettingQty		= 177,
@@ -68,79 +69,106 @@ namespace Mag.Shared.Constants
 		// 261
 		CleaveType			= 263,
 		ArmorSet			= 265,
+	    Lifespan = 267,
+	    RemainingLifespan = 268,
 
-		// 281
-		// 289
-		// 294
-		// 295
-		// 296
-		// 297
-		// 298
-		// 299
+	    WieldRequirements2 = 270,
+	    WieldSkilltype2 = 271,
+	    WieldDifficulty2 = 272,
+	    WieldRequirements3 = 273,
+	    WieldSkilltype3 = 274,
+	    WieldDifficulty3 = 275,
+	    WieldRequirements4 = 276,
+	    WieldSkilltype4 = 277,
+	    WieldDifficulty4 = 278,
+	    Unique = 279,
+	    SharedCooldown = 280,
+	    Faction1Bits = 281,
 
-		CreatureDamRating	= 307,
+	    SocietyRankCelhan = 287,
+	    SocietyRankEldweb = 288,
+	    SocietyRankRadblo = 289,
+
+	    Cleaving = 292,
+
+        // 294
+        // 295
+        // 296
+        // 297
+        // 298
+        // 299
+
+	    ImbuedEffect2 = 303,
+	    ImbuedEffect3 = 304,
+	    ImbuedEffect4 = 305,
+	    ImbuedEffect5 = 306,
+        CreatureDamRating	= 307,
 		CreatureDamResist	= 308,
-		// 309
-		// 312
-		// 313
-		CreatureCritDamRating = 314,
-		// 315
-		CreatureCritDamResist = 316,
-		// 317
-		// 318
+        // 309
+	    // 312
+	    CritRating = 313,
+        CreatureCritDamRating = 314,
+	    CritResistRating = 315,
+        CreatureCritDamResist = 316,
+        // 317
+	    // 318
+	    ItemMaxLevel = 319,
+	    ItemXpStyle = 320,
+        // 322
+        // 323
+	    HeritageSpecificArmor = 324,
+        // 326
+        // 329
+        // 330
+        // 331
+        // 333
+        // 334
+        // 335
+        // 336
+        // 338
+        // 339
+        // 340
+        // 342
+        // 343
+        // 344
 
-		// 322
-		// 323
-		// 326
-		// 329
-		// 330
-		// 331
-		// 333
-		// 334
-		// 335
-		// 336
-		// 338
-		// 339
-		// 340
-		// 342
-		// 343
-		// 344
+        DoTResist			= 350,
+        // 351
+	    CloakWeaveProc = 352,
+        Mastery				= 353,
+        // 354
+        // 355
 
-		DoTResist			= 350,
-		// 351
-		Mastery				= 353,
-		// 354
-		// 355
-
-		// 360
-		// 361
-		// 365
-
-		SummoningGemBuffedSkillRequirement = 367,
-		SummoningGemLevelRequirement = 369,
+        // 360
+	    // 361
+	    // 365
+	    UseRequiresSkill = 366,
+        SummoningGemBuffedSkillRequirement = 367,
+	    UseRequiresSkillSpec = 368,
+        SummoningGemLevelRequirement = 369,
 
 		DamRating			= 370,
 		DamResRating		= 371,
-		CritRating			= 372,
-		CritResistRating	= 373,
+		GearCrit			= 372,
+		GearCritResistRating	= 373,
 		CritDamRating		= 374,
 		CritDamResistRating = 375,
 		HealBoostRating		= 376,
-		// 377
-		// 378
-		VitalityRating		= 379,
+	    GearNetherResist = 377,
+	    GearLifeResist = 378,
+        VitalityRating		= 379,
 
-		// 381
-		// 382
-		// 383
-		// 384
-		// 386
-		// 387
-		// 388
-		// 389
-		// 390
+	    PKDamageRating = 381,
+	    PKDamageResistRating = 382,
+	    GearPKDamageRating = 383,
+	    GearPKDamageResistRating = 384,
+	    Overpower = 386,
+	    OverpowerResist = 387,
+	    GearOverpower = 388,
+	    GearOverpowerResist = 389,
+	    Enlightenment = 390,
 
-		Type				= 218103808,
+        Type				= 218103808,
 		Icon				= 218103809,
 		Container			= 218103810,
 		Landblock			= 218103811,

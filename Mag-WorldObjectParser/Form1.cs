@@ -4,6 +4,8 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
@@ -61,11 +63,14 @@ namespace Mag_WorldObjectParser
 
 
 
+	    private readonly object totalLinesLockObject = new object();
 		private int totalLines;
 		private int corruptLines;
 
 		private void cmdReadAllFiles_Click(object sender, EventArgs e)
 		{
+            Enabled = false;
+
 			var startTime = DateTime.Now;
 
 			OnBeforeLoadFiles();
@@ -77,34 +82,40 @@ namespace Mag_WorldObjectParser
 			totalLines = 0;
 			corruptLines = 0;
 
-			for (int i = 0; i < files.Length; i++)
-			{
-				//if (i == 300)
-				//	break;
-				ProcessFile(files[i], i, files.Length);
-			}
+		    ThreadPool.QueueUserWorkItem(o =>
+		    {
+		        int filesProcessed = 0;
 
-			lblResults.Text = totalLines.ToString("N0") + " lines read. " + corruptLines.ToString("N0") + " corrupt lines found.";
+		        Parallel.ForEach(files, file =>
+		        {
+		            ProcessFile(file);
 
-			OnLoadFilesComplete();
+		            var processed = Interlocked.Increment(ref filesProcessed);
 
-			//MessageBox.Show((DateTime.Now - startTime).TotalSeconds.ToString("N1"));
+		            progressBar1.BeginInvoke((Action)(() => progressBar1.Value = (int)(((double)processed / files.Length) * 100)));
+		        });
+
+		        BeginInvoke((Action)(() =>
+                {
+                    lblResults.Text = totalLines.ToString("N0") + " lines read. " + corruptLines.ToString("N0") + " corrupt lines found.";
+
+                    OnLoadFilesComplete();
+
+                    Enabled = true;
+
+                    //MessageBox.Show((DateTime.Now - startTime).TotalSeconds.ToString("N1"));
+                }));
+            });
 		}
 
 		readonly JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
 
-		private void ProcessFile(string fileName, int fileIndex, int totalFiles)
+		private void ProcessFile(string fileName)
 		{
-			lblProgress.Text = "Processing file " + (fileIndex + 1).ToString("N0") + " of " + totalFiles.ToString("N0");
-			lblProgress.Refresh();
-			lblWorkingFile.Text = fileName;
-			lblWorkingFile.Refresh();
-			progressBar1.Value = (int)(((double)(fileIndex + 1) / totalFiles) * 100);
-			progressBar1.Refresh();
-
 			var fileLines = File.ReadAllLines(fileName);
 
-			totalLines += fileLines.Length;
+		    lock (totalLinesLockObject)
+			    totalLines += fileLines.Length;
 
 			foreach (var line in fileLines)
 			{
@@ -118,7 +129,7 @@ namespace Mag_WorldObjectParser
 
 					if (thirdComma == -1) // Corrupt line
 					{
-						corruptLines++;
+					    Interlocked.Increment(ref corruptLines);
 						continue;
 					}
 
@@ -131,15 +142,15 @@ namespace Mag_WorldObjectParser
 					DateTime timestamp;
 					if (!DateTime.TryParse(firstPartSplit[0].Substring(1, firstPartSplit[0].Length - 2), out timestamp)) // Corrupt line
 					{
-						corruptLines++;
-						continue;
+					    Interlocked.Increment(ref corruptLines);
+                        continue;
 					}
 
 					int landcell;
 					if (!int.TryParse(firstPartSplit[1].Substring(1, firstPartSplit[1].Length - 2), NumberStyles.HexNumber, null, out landcell)) // Corrupt line
 					{
-						corruptLines++;
-						continue;
+					    Interlocked.Increment(ref corruptLines);
+                        continue;
 					}
 
 					double x;
@@ -148,31 +159,31 @@ namespace Mag_WorldObjectParser
 					var rawCoordinatesSplit = firstPartSplit[2].Substring(1, firstPartSplit[2].Length - 2).Split(' ');
 					if (rawCoordinatesSplit.Length != 3) // Corrupt line
 					{
-						corruptLines++;
-						continue;
+					    Interlocked.Increment(ref corruptLines);
+                        continue;
 					}
 					if (!double.TryParse(rawCoordinatesSplit[0], out x)) // Corrupt line
 					{
-						corruptLines++;
-						continue;
+					    Interlocked.Increment(ref corruptLines);
+                        continue;
 					}
 					if (!double.TryParse(rawCoordinatesSplit[1], out y)) // Corrupt line
 					{
-						corruptLines++;
-						continue;
+					    Interlocked.Increment(ref corruptLines);
+                        continue;
 					}
 					if (!double.TryParse(rawCoordinatesSplit[2], out z)) // Corrupt line
 					{
-						corruptLines++;
-						continue;
+					    Interlocked.Increment(ref corruptLines);
+                        continue;
 					}
 					var rawCoordinates = new Tuple<double, double, double>(x, y, z);
 
 					var jsonPart = line.Substring(thirdComma + 1, line.Length - (thirdComma + 1));
 					if (jsonPart[0] != '"' || jsonPart[jsonPart.Length - 1] != '"') // Corrupt line
 					{
-						corruptLines++;
-						continue;
+					    Interlocked.Increment(ref corruptLines);
+                        continue;
 					}
 
 					jsonPart = jsonPart.Substring(1, jsonPart.Length - 2); // Trim the quotes... why did I add them.. :(
@@ -189,8 +200,8 @@ namespace Mag_WorldObjectParser
 
 						if (result.Count != 1)
 						{
-							corruptLines++;
-							continue;
+						    Interlocked.Increment(ref corruptLines);
+                            continue;
 						}
 
 						foreach (var kvp in result)
@@ -198,8 +209,8 @@ namespace Mag_WorldObjectParser
 
 						if (!ProcessCreatePacket(createPacket))
 						{
-							corruptLines++;
-							continue;
+						    Interlocked.Increment(ref corruptLines);
+                            continue;
 						}
 					}
 					else if (jsonPart.StartsWith("{\"Id"))
@@ -265,7 +276,7 @@ namespace Mag_WorldObjectParser
 
 										foreach (var kvp2 in values)
 										{
-											var key = int.Parse(kvp2.Key);
+											var key = (IntValueKey)int.Parse(kvp2.Key);
 											var value = int.Parse(kvp2.Value.ToString());
 
 											identResponse.LongValues[key] = value;
@@ -386,8 +397,8 @@ namespace Mag_WorldObjectParser
 
 							if (!ProcessIdentResponse(identResponse))
 							{
-								corruptLines++;
-								continue;
+							    Interlocked.Increment(ref corruptLines);
+                                continue;
 							}
 						}
 						catch
@@ -430,124 +441,37 @@ namespace Mag_WorldObjectParser
 								goto retry;
 							}
 
-							corruptLines++;
-							continue;
+						    Interlocked.Increment(ref corruptLines);
+                            continue;
 						}
 					}
 					else
 					{
-						corruptLines++;
-						continue;
+					    Interlocked.Increment(ref corruptLines);
+                        continue;
 					}
 				}
 				catch
 				{
-					corruptLines++;
-					continue;
+				    Interlocked.Increment(ref corruptLines);
+                    continue;
 				}
 			}
 		}
 
-		class LogItem
-		{
-			public DateTime Timestamp;
-
-			public int Landcell;
-
-			public Tuple<double, double, double> RawCoordinates;
-		}
-
-		class CreatePacket : LogItem
-		{
-			public byte[] RawData;
-		}
-
-		class ExtendIDAttributeInfo
-		{
-			public uint healthMax;
-			public uint staminaMax;
-			public uint manaMax;
-			public uint strength;
-			public uint endurance;
-			public uint quickness;
-			public uint coordination;
-			public uint focus;
-			public uint self;
-		}
-
-		class IdentResponse : LogItem
-		{
-			public int Id;
-
-			public ObjectClass ObjectClass;
-
-			public Dictionary<int, bool> BoolValues = new Dictionary<int, bool>();
-			public Dictionary<int, double> DoubleValues = new Dictionary<int, double>();
-			public Dictionary<int, int> LongValues = new Dictionary<int, int>();
-			public Dictionary<int, string> StringValues = new Dictionary<int, string>();
-
-			public List<int> ActiveSpells = new List<int>();
-			public List<int> Spells = new List<int>();
-
-			/// <summary>
-			/// Null if not present
-			/// </summary>
-			public ExtendIDAttributeInfo ExtendIDAttributeInfo;
-
-			public Dictionary<int, int> Resources = new Dictionary<int, int>();
-		}
 
 
 
+	    private readonly Object processLockObject = new Object();
 
-
-
-
-
-		class CreatureInfo : ExtendIDAttributeInfo
-		{
-			public int Count;
-
-			/// <summary>
-			/// This is a list of Landcells this creatureInfo was found at.
-			/// I've found that creatures with the same name can have different attributes in different areas
-			/// </summary>
-			public List<int> Landcell = new List<int>();
-
-			public string Name;
-
-			public int Level;
-
-			// Add ratings
-
-			public bool Equals(CreatureInfo other)
-			{
-				if (Name != other.Name) return false;
-
-				if (Level != other.Level) return false;
-
-				if (healthMax != other.healthMax) return false;
-				if (staminaMax != other.staminaMax) return false;
-				if (manaMax != other.manaMax) return false;
-				if (strength != other.strength) return false;
-				if (endurance != other.endurance) return false;
-				if (quickness != other.quickness) return false;
-				if (coordination != other.coordination) return false;
-				if (focus != other.focus) return false;
-				if (self != other.self) return false;
-
-				return true;
-			}
-		}
-
-		private readonly Dictionary<int, int> longValueKeysFound = new Dictionary<int, int>();
+		private readonly Dictionary<IntValueKey, int> longValueKeysFound = new Dictionary<IntValueKey, int>();
 		private readonly Dictionary<int, int> doubleValueKeysFound = new Dictionary<int, int>();
 		private readonly Dictionary<int, int> stringValueKeysFound = new Dictionary<int, int>();
 
 		/// <summary>
 		/// Dictionary of creatures, and their identified attribute variants, and the count for each variant
 		/// </summary>
-		private Dictionary<int, List<CreatureInfo>> creatureAttributes = new Dictionary<int, List<CreatureInfo>>();
+		private readonly Dictionary<int, List<CreatureInfo>> creatureAttributes = new Dictionary<int, List<CreatureInfo>>();
 
 		private void OnBeforeLoadFiles()
 		{
@@ -565,104 +489,114 @@ namespace Mag_WorldObjectParser
 
 		private bool ProcessCreatePacket(CreatePacket createPacket)
 		{
-			return true;
+		    lock (processLockObject)
+		    {
+                // todo
+
+		        return true;
+		    }
 		}
 
 		private bool ProcessIdentResponse(IdentResponse identResponse)
 		{
-			foreach (var key in identResponse.LongValues)
-			{
-				if (!longValueKeysFound.ContainsKey(key.Key))
-					longValueKeysFound[key.Key] = 1;
+		    lock (processLockObject)
+		    {
+		        foreach (var key in identResponse.LongValues)
+		        {
+		            if (!longValueKeysFound.ContainsKey(key.Key))
+		                longValueKeysFound[key.Key] = 1;
+		            else
+		                longValueKeysFound[key.Key] = longValueKeysFound[key.Key] + 1;
+		        }
 
-				longValueKeysFound[key.Key] = longValueKeysFound[key.Key] + 1;
-			}
+		        foreach (var key in identResponse.DoubleValues)
+		        {
+		            if (!doubleValueKeysFound.ContainsKey(key.Key))
+		                doubleValueKeysFound[key.Key] = 1;
+		            else
+		                doubleValueKeysFound[key.Key] = doubleValueKeysFound[key.Key] + 1;
+		        }
 
-			foreach (var key in identResponse.DoubleValues)
-			{
-				if (!doubleValueKeysFound.ContainsKey(key.Key))
-					doubleValueKeysFound[key.Key] = 1;
+		        foreach (var key in identResponse.StringValues)
+		        {
+		            if (!stringValueKeysFound.ContainsKey(key.Key))
+		                stringValueKeysFound[key.Key] = 1;
+		            else
+		                stringValueKeysFound[key.Key] = stringValueKeysFound[key.Key] + 1;
+		        }
 
-				doubleValueKeysFound[key.Key] = doubleValueKeysFound[key.Key] + 1;
-			}
+		        if (identResponse.ExtendIDAttributeInfo != null)
+		        {
+		            if (!identResponse.LongValues.ContainsKey(IntValueKey.Type)) // Type. Everything should have this
+		                return false;
 
-			foreach (var key in identResponse.StringValues)
-			{
-				if (!stringValueKeysFound.ContainsKey(key.Key))
-					stringValueKeysFound[key.Key] = 1;
+		            if (!identResponse.StringValues.ContainsKey((int) StringValueKey.Name)
+		            ) // Name. Everything should have this
+		                return false;
 
-				stringValueKeysFound[key.Key] = stringValueKeysFound[key.Key] + 1;
-			}
+		            List<CreatureInfo> creatureInfos;
 
-			if (identResponse.ExtendIDAttributeInfo != null)
-			{
-				if (!identResponse.LongValues.ContainsKey(218103808)) // Type. Everything should have this
-					return false;
+		            if (!creatureAttributes.ContainsKey(identResponse.LongValues[IntValueKey.Type]))
+		            {
+		                creatureInfos = new List<CreatureInfo>();
+		                creatureAttributes[identResponse.LongValues[IntValueKey.Type]] = creatureInfos;
+		            }
+		            else
+		                creatureInfos = creatureAttributes[identResponse.LongValues[IntValueKey.Type]];
 
-				if (!identResponse.StringValues.ContainsKey(1)) // Name. Everything should have this
-					return false;
+		            /*if (!creatureAttributes.ContainsKey(identResponse.StringValues[1]))
+                    {
+                        creatureInfos = new List<CreatureInfo>();
+                        creatureAttributes[identResponse.StringValues[1]] = creatureInfos;
+                    }
+                    else
+                        creatureInfos = creatureAttributes[identResponse.StringValues[1]];*/
 
-				List<CreatureInfo> creatureInfos;
+		            CreatureInfo creatureInfo = new CreatureInfo();
 
-				if (!creatureAttributes.ContainsKey(identResponse.LongValues[218103808]))
-				{
-					creatureInfos = new List<CreatureInfo>();
-					creatureAttributes[identResponse.LongValues[218103808]] = creatureInfos;
-				}
-				else
-					creatureInfos = creatureAttributes[identResponse.LongValues[218103808]];
+		            creatureInfo.Name = identResponse.StringValues[1];
 
-				/*if (!creatureAttributes.ContainsKey(identResponse.StringValues[1]))
-				{
-					creatureInfos = new List<CreatureInfo>();
-					creatureAttributes[identResponse.StringValues[1]] = creatureInfos;
-				}
-				else
-					creatureInfos = creatureAttributes[identResponse.StringValues[1]];*/
+		            if (identResponse.LongValues.ContainsKey(IntValueKey.CreatureLevel))
+		                creatureInfo.Level = identResponse.LongValues[IntValueKey.CreatureLevel];
 
-				CreatureInfo creatureInfo = new CreatureInfo();
+		            creatureInfo.healthMax = identResponse.ExtendIDAttributeInfo.healthMax;
+		            creatureInfo.staminaMax = identResponse.ExtendIDAttributeInfo.staminaMax;
+		            creatureInfo.manaMax = identResponse.ExtendIDAttributeInfo.manaMax;
+		            creatureInfo.strength = identResponse.ExtendIDAttributeInfo.strength;
+		            creatureInfo.endurance = identResponse.ExtendIDAttributeInfo.endurance;
+		            creatureInfo.quickness = identResponse.ExtendIDAttributeInfo.quickness;
+		            creatureInfo.coordination = identResponse.ExtendIDAttributeInfo.coordination;
+		            creatureInfo.focus = identResponse.ExtendIDAttributeInfo.focus;
+		            creatureInfo.self = identResponse.ExtendIDAttributeInfo.self;
 
-				creatureInfo.Name = identResponse.StringValues[1];
+		            for (int i = 0; i <= creatureInfos.Count; i++)
+		            {
+		                if (i == creatureInfos.Count)
+		                {
+                            // todo: This is currently disabled because its broken by pets. The same pet might be named Bob's Pet Dragon and Sally's Pet Dragon.
+		                    //if (i > 0 && creatureInfos[0].Name != creatureInfo.Name)
+		                    //	MessageBox.Show("This shouldn't happen ");
 
-				if (identResponse.LongValues.ContainsKey(25))
-					creatureInfo.Level = identResponse.LongValues[25];
+		                    creatureInfo.Count = 1;
+		                    creatureInfo.Landcell.Add(identResponse.Landcell);
+		                    creatureInfos.Add(creatureInfo);
+		                    break;
+		                }
 
-				creatureInfo.healthMax = identResponse.ExtendIDAttributeInfo.healthMax;
-				creatureInfo.staminaMax = identResponse.ExtendIDAttributeInfo.staminaMax;
-				creatureInfo.manaMax = identResponse.ExtendIDAttributeInfo.manaMax;
-				creatureInfo.strength = identResponse.ExtendIDAttributeInfo.strength;
-				creatureInfo.endurance = identResponse.ExtendIDAttributeInfo.endurance;
-				creatureInfo.quickness = identResponse.ExtendIDAttributeInfo.quickness;
-				creatureInfo.coordination = identResponse.ExtendIDAttributeInfo.coordination;
-				creatureInfo.focus = identResponse.ExtendIDAttributeInfo.focus;
-				creatureInfo.self = identResponse.ExtendIDAttributeInfo.self;
+		                if (creatureInfos[i].Equals(creatureInfo))
+		                {
+		                    creatureInfos[i].Count++;
 
-				for (int i = 0; i <= creatureInfos.Count; i++)
-				{
-					if (i == creatureInfos.Count)
-					{
-						if (i > 0 && creatureInfos[0].Name != creatureInfo.Name)
-							MessageBox.Show("This shouldn't happen");
+		                    if (!creatureInfos[i].Landcell.Contains(identResponse.Landcell))
+		                        creatureInfos[i].Landcell.Add(identResponse.Landcell);
 
-						creatureInfo.Count = 1;
-						creatureInfo.Landcell.Add(identResponse.Landcell);
-						creatureInfos.Add(creatureInfo);
-						break;
-					}
+		                    break;
+		                }
+		            }
+		        }
 
-					if (creatureInfos[i].Equals(creatureInfo))
-					{
-						creatureInfos[i].Count++;
-
-						if (!creatureInfos[i].Landcell.Contains(identResponse.Landcell))
-							creatureInfos[i].Landcell.Add(identResponse.Landcell);
-
-						break;
-					}
-				}
-			}
-
-			return true;
+		        return true;
+		    }
 		}
 
 		private void OnLoadFilesComplete()
