@@ -47,6 +47,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.dataGridViewLongValueKeys = new System.Windows.Forms.DataGridView();
             this.cmdStop = new System.Windows.Forms.Button();
+            this.lblTime = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -71,6 +72,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.lblTime);
             this.tabPage1.Controls.Add(this.cmdStop);
             this.tabPage1.Controls.Add(this.lblResults);
             this.tabPage1.Controls.Add(this.progressBar1);
@@ -252,6 +254,15 @@
             this.cmdStop.UseVisualStyleBackColor = true;
             this.cmdStop.Click += new System.EventHandler(this.cmdStop_Click);
             // 
+            // lblTime
+            // 
+            this.lblTime.AutoSize = true;
+            this.lblTime.Location = new System.Drawing.Point(62, 160);
+            this.lblTime.Name = "lblTime";
+            this.lblTime.Size = new System.Drawing.Size(40, 13);
+            this.lblTime.TabIndex = 12;
+            this.lblTime.Text = "lblTime";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -295,6 +306,7 @@
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.DataGridView dataGridViewLongValueKeys;
         private System.Windows.Forms.Button cmdStop;
+        private System.Windows.Forms.Label lblTime;
     }
 }
 

@@ -90,8 +90,9 @@ namespace Mag_WorldObjectParser
 			OnBeforeLoadFiles();
 
 			lblResults.Text = null;
+		    lblTime.Text = null;
 
-			var files = Directory.GetFiles(txtSourcePath.Text, "*.csv", SearchOption.AllDirectories);
+            var files = Directory.GetFiles(txtSourcePath.Text, "*.csv", SearchOption.AllDirectories);
 
 			totalLines = 0;
 			corruptLines = 0;
@@ -120,13 +121,12 @@ namespace Mag_WorldObjectParser
 		            cts.Dispose();
 
                     lblResults.Text = totalLines.ToString("N0") + " lines read. " + corruptLines.ToString("N0") + " corrupt lines found.";
+		            lblTime.Text = "Total Seconds: " + (DateTime.Now - startTime).TotalSeconds.ToString("N1");
 
                     OnLoadFilesComplete();
 
                     cmdBrowseForDifferentSource.Enabled = true;
                     cmdProcessAllFiles.Enabled = true;
-
-                    //MessageBox.Show((DateTime.Now - startTime).TotalSeconds.ToString("N1"));
                 }));
             });
 		}
