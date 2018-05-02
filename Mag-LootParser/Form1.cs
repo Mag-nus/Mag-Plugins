@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
+using Mag.Shared.Constants;
+
 using Mag_LootParser.Properties;
 
 namespace Mag_LootParser
@@ -265,11 +267,107 @@ namespace Mag_LootParser
             }
         }
 
+        private readonly Dictionary<string, int> lootTiers = new Dictionary<string, int>();
+
         private void OnLoadFilesComplete()
         {
+            // Calculate the loot tiers
+            // Reference: http://asheron.wikia.com/wiki/Loot
+            lootTiers.Clear();
+
+            foreach (var kvp in containersLoot)
+            {
+                int tier = 0;
+
+                foreach (var container in kvp.Value)
+                {
+                    foreach (var item in container.Value)
+                    {
+                        // Heavy/Light/Finesse
+                        if (item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && (item.LongValues[IntValueKey.WieldReqAttribute] == 0x2C || item.LongValues[IntValueKey.WieldReqAttribute] == 0x2D || item.LongValues[IntValueKey.WieldReqAttribute] == 0x2E) && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+                        {
+                            switch (item.LongValues[IntValueKey.WieldReqValue])
+                            {
+                                case 250:
+                                    if (tier < 2) tier = 2;
+                                    break;
+                                case 300:
+                                    // Could be tier 3 as well
+                                    if (tier < 4) tier = 4;
+                                    break;
+                                case 350:
+                                    if (tier < 5) tier = 5;
+                                    break;
+                                case 400:
+                                    if (tier < 6) tier = 6;
+                                    break;
+                                case 420:
+                                    if (tier < 7) tier = 7;
+                                    break;
+                                case 430:
+                                    tier = 8;
+                                    break;
+                            }
+                        }
+
+                        // Missile
+                        if (tier == 0 && item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && item.LongValues[IntValueKey.WieldReqAttribute] == 0x2F && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+                        {
+                            switch (item.LongValues[IntValueKey.WieldReqValue])
+                            {
+                                case 250:
+                                    if (tier < 2) tier = 2;
+                                    break;
+                                case 270:
+                                    // Could be tier 3 as well
+                                    if (tier < 4) tier = 4;
+                                    break;
+                                case 315:
+                                    if (tier < 5) tier = 5;
+                                    break;
+                                case 360:
+                                    if (tier < 6) tier = 6;
+                                    break;
+                                case 375:
+                                    if (tier < 7) tier = 7;
+                                    break;
+                                case 385:
+                                    tier = 8;
+                                    break;
+                            }
+                        }
+
+                        // Magic
+                        if (tier == 0 && item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && item.LongValues[IntValueKey.WieldReqAttribute] == 0x22 && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+                        {
+                            switch (item.LongValues[IntValueKey.WieldReqValue])
+                            {
+                                case 310:
+                                    if (tier < 5) tier = 5;
+                                    break;
+                                case 355:
+                                    if (tier < 6) tier = 6;
+                                    break;
+                                case 375:
+                                    if (tier < 7) tier = 7;
+                                    break;
+                                case 385:
+                                    tier = 8;
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                lootTiers[kvp.Key] = tier;
+            }
+
+
+            // Populate the Containers tab
             var dt = new DataTable();
 
             dt.Columns.Add("Name", typeof(string));
+            dt.Columns.Add("Tier", typeof(int));
             dt.Columns.Add("Hits", typeof(int));
             dt.Columns.Add("Average Items", typeof(float));
             dt.Columns.Add("Total Items", typeof(int));
@@ -279,6 +377,7 @@ namespace Mag_LootParser
                 var dr = dt.NewRow();
 
                 dr["Name"] = kvp.Key;
+                dr["Tier"] = lootTiers[kvp.Key];
                 dr["Hits"] = kvp.Value.Count;
 
                 var totalItems = 0;
