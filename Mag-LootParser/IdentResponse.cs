@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Mag.Shared;
 using Mag.Shared.Constants;
 
-namespace Mag_WorldObjectParser
+namespace Mag_LootParser
 {
     class IdentResponse : LogItem
     {

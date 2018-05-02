@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Threading;
@@ -49,7 +51,7 @@ namespace Mag_LootParser
         private int totalLines;
         private int corruptLines;
 
-        private CancellationTokenSource cts = new CancellationTokenSource();
+        private CancellationTokenSource cts;
 
         private void cmdProcessAllFiles_Click(object sender, EventArgs e)
         {
@@ -61,9 +63,10 @@ namespace Mag_LootParser
 
             var startTime = DateTime.Now;
 
-            //OnBeforeLoadFiles();
+            OnBeforeLoadFiles();
 
             lblResults.Text = null;
+            lblTime.Text = null;
 
             var files = Directory.GetFiles(txtSourcePath.Text, "*.csv", SearchOption.AllDirectories);
 
@@ -91,14 +94,15 @@ namespace Mag_LootParser
 
                 BeginInvoke((Action)(() =>
                 {
-                    lblResults.Text = totalLines.ToString("N0") + " lines read. " + corruptLines.ToString("N0") + " corrupt lines found.";
+                    cts.Dispose();
 
-                    //OnLoadFilesComplete();
+                    lblResults.Text = totalLines.ToString("N0") + " lines read. " + corruptLines.ToString("N0") + " corrupt lines found.";
+                    lblTime.Text = "Total Seconds: " + (DateTime.Now - startTime).TotalSeconds.ToString("N1");
+
+                    OnLoadFilesComplete();
 
                     cmdBrowseForDifferentSource.Enabled = true;
                     cmdProcessAllFiles.Enabled = true;
-
-                    //MessageBox.Show((DateTime.Now - startTime).TotalSeconds.ToString("N1"));
                 }));
             });
         }
@@ -116,6 +120,10 @@ namespace Mag_LootParser
         {
             var fileLines = File.ReadAllLines(fileName);
 
+            // "Timestamp","ContainerName","ContainerID","LandCell","Location","JSON"
+            if (fileLines.Length < 2 || fileLines[0] != "\"Timestamp\",\"ContainerName\",\"ContainerID\",\"LandCell\",\"Location\",\"JSON\"")
+                return;
+
             lock (totalLinesLockObject)
                 totalLines += fileLines.Length;
 
@@ -124,21 +132,21 @@ namespace Mag_LootParser
                 if (ct.IsCancellationRequested)
                     return;
 
-                // "Timestamp","ContainerName","ContainerID","LandCell","Location","JSON"
                 // "2017-01-20 08:18:48Z,"Monty's Golden Chest",2056986702,"A9B20117","40.8N, 33.6E","{"Id":"-1419165865","ObjectClass":"Misc","BoolValues":{"69":"True"},"DoubleValues":{"167":"45","167772170":"0"},"LongValues":{"367":"430","375":"7","218103835":"67108882","218103843":"8","280":"213","33":"0","105":"7","369":"115","114":"0","366":"54","374":"13","218103810":"2056986634","218103826":"16","218103830":"33554817","218103834":"128","218103850":"29728","19":"7000","91":"50","218103831":"48","218103847":"137345","92":"50","218103808":"49548","218103824":"64","218103832":"1076382872","5":"50","218103809":"4154","218103833":"7","218103849":"29733"},"StringValues":{"1":"Lightning Phyntos Wasp Essence (125)","14":"Use this essence to summon or dismiss your Lightning Phyntos Wasp."},"ActiveSpells":"","Spells":""}"
                 // "2017-01-20 08:18:48Z,"Monty's Golden Chest",2056986702,"A9B20117","40.8N, 33.6E","{"Id":"-1419511451","ObjectClass":"Scroll","BoolValues":{},"DoubleValues":{"167772170":"0"},"LongValues":{"19":"2000","218103831":"16","218103835":"18","218103843":"8","218103847":"135297","218103808":"45258","218103816":"5785","218103832":"6307864","218103848":"0","5":"30","218103809":"28959","218103810":"2056986634","218103830":"33554826","218103834":"8192","218103838":"1"},"StringValues":{"1":"Scroll of Dirty Fighting Mastery Self VII","14":"Use this item to attempt to learn its spell.","16":"Inscribed spell: Dirty Fighting Mastery Self VII Increases the caster's Dirty Fighting skill by 40 points."},"ActiveSpells":"","Spells":"5785"}"
+                // "2017-01-15 04:02:33Z,"Corpse of Mu-miyah Sentinel",-1851166334,"8764003C","21.6S, 6.8E","{"Id":"-1851166529","ObjectClass":"Money","BoolValues":{},"DoubleValues":{},"LongValues":{"19":"4775","218103815":"25000","218103831":"1","218103835":"16","218103843":"1","218103847":"131073","218103808":"273","218103832":"28696","5":"0","218103809":"8863","218103810":"-1851166402","218103814":"4775","218103830":"33557367","218103834":"64"},"StringValues":{"1":"Pyreal"},"ActiveSpells":"","Spells":""}"
 
                 try
                 {
-                    var fifthComma = Util.IndexOfNth(line, ',', 5);
+                    var sixthComma = Util.IndexOfNth(line, ',', 6);
 
-                    if (fifthComma == -1) // Corrupt line
+                    if (sixthComma == -1) // Corrupt line
                     {
                         Interlocked.Increment(ref corruptLines);
                         continue;
                     }
 
-                    var firstPart = line.Substring(0, fifthComma);
+                    var firstPart = line.Substring(0, sixthComma);
 
                     var firstPartSplit = firstPart.Split(',');
                     if (firstPartSplit[0] == "\"Timestamp\"") // Header line
@@ -151,9 +159,9 @@ namespace Mag_LootParser
                         continue;
                     }
 
-                    // ContainerName
+                    var containerName = firstPartSplit[1].Substring(1, firstPartSplit[1].Length - 2);
 
-                    // ContainerID
+                    var containerID = int.Parse(firstPartSplit[2].Substring(2, firstPartSplit[2].Length - 2));
 
                     int landcell;
                     if (!int.TryParse(firstPartSplit[3].Substring(1, firstPartSplit[3].Length - 2), NumberStyles.HexNumber, null, out landcell)) // Corrupt line
@@ -162,33 +170,9 @@ namespace Mag_LootParser
                         continue;
                     }
 
-                    /*double x;
-                    double y;
-                    double z;
-                    var rawCoordinatesSplit = firstPartSplit[4].Substring(1, firstPartSplit[4].Length - 2).Split(' ');
-                    if (rawCoordinatesSplit.Length != 3) // Corrupt line
-                    {
-                        Interlocked.Increment(ref corruptLines);
-                        continue;
-                    }
-                    if (!double.TryParse(rawCoordinatesSplit[0], out x)) // Corrupt line
-                    {
-                        Interlocked.Increment(ref corruptLines);
-                        continue;
-                    }
-                    if (!double.TryParse(rawCoordinatesSplit[1], out y)) // Corrupt line
-                    {
-                        Interlocked.Increment(ref corruptLines);
-                        continue;
-                    }
-                    if (!double.TryParse(rawCoordinatesSplit[2], out z)) // Corrupt line
-                    {
-                        Interlocked.Increment(ref corruptLines);
-                        continue;
-                    }
-                    var rawCoordinates = new Tuple<double, double, double>(x, y, z);*/
+                    var location = firstPartSplit[4].Substring(1) + ", " + firstPartSplit[5].Substring(0, firstPartSplit[5].Length - 1);
 
-                    var jsonPart = line.Substring(fifthComma + 1, line.Length - (fifthComma + 1));
+                    var jsonPart = line.Substring(sixthComma + 1, line.Length - (sixthComma + 1));
                     if (jsonPart[0] != '"' || jsonPart[jsonPart.Length - 1] != '"') // Corrupt line
                     {
                         Interlocked.Increment(ref corruptLines);
@@ -199,10 +183,24 @@ namespace Mag_LootParser
 
                     if (jsonPart.StartsWith("{\"Id"))
                     {
-                        // todo
+                        var identResponse = new IdentResponse();
+
+                        identResponse.Timestamp = timestamp;
+                        identResponse.Landcell = landcell;
+                        //identResponse.RawCoordinates = rawCoordinates;
+
+                        Dictionary<string, object> result = (Dictionary<string, object>)jsonSerializer.DeserializeObject(jsonPart);
+
+                        identResponse.ParseFromDictionary(result);
 
                         if (ct.IsCancellationRequested)
                             return;
+
+                        if (!ProcessLootItem(containerName, containerID, identResponse))
+                        {
+                            Interlocked.Increment(ref corruptLines);
+                            continue;
+                        }
                     }
                     else
                     {
@@ -216,6 +214,100 @@ namespace Mag_LootParser
                     continue;
                 }
             }
+        }
+
+
+
+
+        private readonly Object processLockObject = new Object();
+
+        private readonly Dictionary<string, Dictionary<int, List<IdentResponse>>> containersLoot = new Dictionary<string, Dictionary<int, List<IdentResponse>>>();
+
+        private void OnBeforeLoadFiles()
+        {
+            containersLoot.Clear();
+        }
+
+        private bool ProcessLootItem(string containerName, int containerID, IdentResponse identResponse)
+        {
+            lock (processLockObject)
+            {
+                Dictionary<int, List<IdentResponse>> containers;
+
+                if (containersLoot.ContainsKey(containerName))
+                    containers = containersLoot[containerName];
+                else
+                {
+                    containers = new Dictionary<int, List<IdentResponse>>();
+                    containersLoot.Add(containerName, containers);
+                }
+
+                List<IdentResponse> items;
+
+                if (containers.ContainsKey(containerID))
+                    items = containers[containerID];
+                else
+                {
+                    items = new List<IdentResponse>();
+                    containers.Add(containerID, items);
+                }
+
+                // Does this item already exist?
+                foreach (var item in items)
+                {
+                    if (item.Id == identResponse.Id)
+                        return true;
+                }
+
+                items.Add(identResponse);
+
+                return true;
+            }
+        }
+
+        private void OnLoadFilesComplete()
+        {
+            var dt = new DataTable();
+
+            dt.Columns.Add("Name", typeof(string));
+            dt.Columns.Add("Hits", typeof(int));
+            dt.Columns.Add("Average Items", typeof(float));
+            dt.Columns.Add("Total Items", typeof(int));
+
+            foreach (var kvp in containersLoot)
+            {
+                var dr = dt.NewRow();
+
+                dr["Name"] = kvp.Key;
+                dr["Hits"] = kvp.Value.Count;
+
+                var totalItems = 0;
+
+                foreach (var containers in kvp.Value)
+                    totalItems += containers.Value.Count;
+
+                dr["Average Items"] = totalItems / (float)kvp.Value.Count;
+                dr["Total Items"] = totalItems;
+
+                dt.Rows.Add(dr);
+            }
+
+            dataGridView1.DataSource = dt;
+
+            dataGridView1.Columns["Hits"].DefaultCellStyle.Format = "N0";
+            dataGridView1.Columns["Average Items"].DefaultCellStyle.Format = "0.0";
+            dataGridView1.Columns["Total Items"].DefaultCellStyle.Format = "N0";
+
+            for (int i = 0; i < dataGridView1.Columns.Count; i++)
+            {
+                if (i == 0)
+                    continue;
+
+                dataGridView1.Columns[i].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView1.AutoResizeColumns();
         }
     }
 }

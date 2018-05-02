@@ -75,7 +75,7 @@ namespace Mag_WorldObjectParser
 		private int totalLines;
 		private int corruptLines;
 
-	    private CancellationTokenSource cts = new CancellationTokenSource();
+	    private CancellationTokenSource cts;
 
         private void cmdProcessAllFiles_Click(object sender, EventArgs e)
 		{
@@ -116,7 +116,9 @@ namespace Mag_WorldObjectParser
 		        });
 
 		        BeginInvoke((Action)(() =>
-                {
+		        {
+		            cts.Dispose();
+
                     lblResults.Text = totalLines.ToString("N0") + " lines read. " + corruptLines.ToString("N0") + " corrupt lines found.";
 
                     OnLoadFilesComplete();
@@ -142,7 +144,11 @@ namespace Mag_WorldObjectParser
 		{
 			var fileLines = File.ReadAllLines(fileName);
 
-		    lock (totalLinesLockObject)
+		    // "Timestamp","LandCell","RawCoordinates","JSON"
+            if (fileLines.Length < 2 || fileLines[0] != "\"Timestamp\",\"LandCell\",\"RawCoordinates\",\"JSON\"")
+		        return;
+
+            lock (totalLinesLockObject)
 			    totalLines += fileLines.Length;
 
 			foreach (var line in fileLines)
@@ -150,7 +156,6 @@ namespace Mag_WorldObjectParser
 			    if (ct.IsCancellationRequested)
 			        return;
 
-                // "Timestamp,Landcell,RawCoordinates,JSON"
                 // "2017-01-23 15:25:42Z,"00000000",49.0488996505737 -29.9918003082275 -7.45058059692383E-09","{"RawData":"45F70000334020771100000003980100180001000C00000000003D00020000000C00000000000000B40104724BC8704135EFEFC1000000B2F70435BF0000000000000000F70435BF86000009220000202B000034DA0500020100020000000000000002000000000090010000300000000400446F6F720000A131171380000000141000002000000000000040"}"
                 // "2017-01-23 15:25:42Z,"00000000",49.0488996505737 -29.9918003082275 -7.45058059692383E-09","{"Id":"1998602291","ObjectClass":"Door","BoolValues":{},"DoubleValues":{"167772167":"269.999963323784","167772168":"2"},"LongValues":{"19":" - 1","218103811":"1912865204","218103831":"2","218103835":"4116","218103843":"32","218103847":"104451","218103808":"12705","218103830":"33555930","218103832":"48","218103834":"128","218103809":"4887"},"StringValues":{"1":"Door"},"ActiveSpells":"","Spells":""}"
 
@@ -262,172 +267,7 @@ namespace Mag_WorldObjectParser
 
 							Dictionary<string, object> result = (Dictionary<string, object>) jsonSerializer.DeserializeObject(jsonPart);
 
-							foreach (var kvp in result)
-							{
-								switch (kvp.Key)
-								{
-									case "Id":
-										identResponse.Id = int.Parse((string) kvp.Value);
-										break;
-
-									case "ObjectClass":
-										identResponse.ObjectClass = (ObjectClass) Enum.Parse(typeof (ObjectClass), (string) kvp.Value);
-										break;
-
-									case "BoolValues":
-									{
-										var values = (Dictionary<string, object>) kvp.Value;
-
-										foreach (var kvp2 in values)
-										{
-											var key = int.Parse(kvp2.Key);
-											var value = bool.Parse(kvp2.Value.ToString());
-
-											identResponse.BoolValues[key] = value;
-										}
-									}
-
-										break;
-
-									case "DoubleValues":
-									{
-										var values = (Dictionary<string, object>) kvp.Value;
-
-										foreach (var kvp2 in values)
-										{
-											var key = int.Parse(kvp2.Key);
-											var value = double.Parse(kvp2.Value.ToString());
-
-											identResponse.DoubleValues[key] = value;
-										}
-									}
-
-										break;
-
-									case "LongValues":
-									{
-										var values = (Dictionary<string, object>) kvp.Value;
-
-										foreach (var kvp2 in values)
-										{
-											var key = (IntValueKey)int.Parse(kvp2.Key);
-											var value = int.Parse(kvp2.Value.ToString());
-
-											identResponse.LongValues[key] = value;
-										}
-									}
-
-										break;
-
-									case "StringValues":
-									{
-										var values = (Dictionary<string, object>) kvp.Value;
-
-										foreach (var kvp2 in values)
-										{
-											var key = int.Parse(kvp2.Key);
-
-											identResponse.StringValues[key] = kvp2.Value.ToString();
-										}
-									}
-
-										break;
-
-									case "ActiveSpells":
-										if (!string.IsNullOrEmpty((string) kvp.Value))
-										{
-											var spellsSplit = ((string) kvp.Value).Split(',');
-
-											foreach (var spell in spellsSplit)
-												identResponse.ActiveSpells.Add(int.Parse(spell));
-										}
-
-										break;
-
-									case "Spells":
-										if (!string.IsNullOrEmpty((string) kvp.Value))
-										{
-											var spellsSplit = ((string) kvp.Value).Split(',');
-
-											foreach (var spell in spellsSplit)
-												identResponse.Spells.Add(int.Parse(spell));
-										}
-
-										break;
-
-									case "Attributes":
-									{
-										identResponse.ExtendIDAttributeInfo = new ExtendIDAttributeInfo();
-
-										var values = (Dictionary<string, object>) kvp.Value;
-
-										foreach (var kvp2 in values)
-										{
-											switch (kvp2.Key)
-											{
-												case "healthMax":
-													identResponse.ExtendIDAttributeInfo.healthMax = uint.Parse((string) kvp2.Value);
-													break;
-
-												case "manaMax":
-													identResponse.ExtendIDAttributeInfo.manaMax = uint.Parse((string) kvp2.Value);
-													break;
-
-												case "staminaMax":
-													identResponse.ExtendIDAttributeInfo.staminaMax = uint.Parse((string) kvp2.Value);
-													break;
-
-												case "strength":
-													identResponse.ExtendIDAttributeInfo.strength = uint.Parse((string) kvp2.Value);
-													break;
-
-												case "endurance":
-													identResponse.ExtendIDAttributeInfo.endurance = uint.Parse((string) kvp2.Value);
-													break;
-
-												case "quickness":
-													identResponse.ExtendIDAttributeInfo.quickness = uint.Parse((string) kvp2.Value);
-													break;
-
-												case "coordination":
-													identResponse.ExtendIDAttributeInfo.coordination = uint.Parse((string) kvp2.Value);
-													break;
-
-												case "focus":
-													identResponse.ExtendIDAttributeInfo.focus = uint.Parse((string) kvp2.Value);
-													break;
-
-												case "self":
-													identResponse.ExtendIDAttributeInfo.self = uint.Parse((string) kvp2.Value);
-													break;
-
-												default:
-													throw new NotImplementedException();
-											}
-										}
-									}
-
-										break;
-
-									case "Resources":
-									{
-										var values = (Dictionary<string, object>) kvp.Value;
-
-										foreach (var kvp2 in values)
-										{
-											var key = int.Parse(kvp2.Key);
-											var value = int.Parse(kvp2.Value.ToString());
-
-											identResponse.Resources[key] = value;
-										}
-									}
-
-										break;
-
-									default:
-										throw new NotImplementedException();
-								}
-							}
+						    identResponse.ParseFromDictionary(result);
 
 						    if (ct.IsCancellationRequested)
 						        return;
