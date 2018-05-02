@@ -133,7 +133,17 @@ namespace Mag_SuitBuilder
 
 			string txtInventoryRootPathOrig = txtInventoryRootPath.Text;
 
-			string[] serverFolderPaths = Directory.GetDirectories(txtInventoryRootPath.Text);
+            string[] serverFolderPaths;
+
+            try
+            {
+                serverFolderPaths = Directory.GetDirectories(txtInventoryRootPath.Text);
+            }
+            catch
+            {
+                this.Enabled = true;
+                return;
+            }
 
 			for (int i = 0; i < serverFolderPaths.Length; i++)
 			{
