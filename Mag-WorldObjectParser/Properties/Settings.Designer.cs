@@ -22,5 +22,17 @@ namespace Mag_WorldObjectParser.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SourceFolder {
+            get {
+                return ((string)(this["SourceFolder"]));
+            }
+            set {
+                this["SourceFolder"] = value;
+            }
+        }
     }
 }

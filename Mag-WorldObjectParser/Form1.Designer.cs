@@ -33,7 +33,7 @@
             this.lblResults = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label2 = new System.Windows.Forms.Label();
-            this.cmdReadAllFiles = new System.Windows.Forms.Button();
+            this.cmdProcessAllFiles = new System.Windows.Forms.Button();
             this.cmdBrowseForDifferentSource = new System.Windows.Forms.Button();
             this.txtSourcePath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -46,6 +46,7 @@
             this.dataGridViewDoubleValueKeys = new System.Windows.Forms.DataGridView();
             this.label3 = new System.Windows.Forms.Label();
             this.dataGridViewLongValueKeys = new System.Windows.Forms.DataGridView();
+            this.cmdStop = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -70,10 +71,11 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.cmdStop);
             this.tabPage1.Controls.Add(this.lblResults);
             this.tabPage1.Controls.Add(this.progressBar1);
             this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.cmdReadAllFiles);
+            this.tabPage1.Controls.Add(this.cmdProcessAllFiles);
             this.tabPage1.Controls.Add(this.cmdBrowseForDifferentSource);
             this.tabPage1.Controls.Add(this.txtSourcePath);
             this.tabPage1.Controls.Add(this.label1);
@@ -111,15 +113,15 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "Progress";
             // 
-            // cmdReadAllFiles
+            // cmdProcessAllFiles
             // 
-            this.cmdReadAllFiles.Location = new System.Drawing.Point(275, 35);
-            this.cmdReadAllFiles.Name = "cmdReadAllFiles";
-            this.cmdReadAllFiles.Size = new System.Drawing.Size(111, 23);
-            this.cmdReadAllFiles.TabIndex = 3;
-            this.cmdReadAllFiles.Text = "Read All Files";
-            this.cmdReadAllFiles.UseVisualStyleBackColor = true;
-            this.cmdReadAllFiles.Click += new System.EventHandler(this.cmdReadAllFiles_Click);
+            this.cmdProcessAllFiles.Location = new System.Drawing.Point(275, 35);
+            this.cmdProcessAllFiles.Name = "cmdProcessAllFiles";
+            this.cmdProcessAllFiles.Size = new System.Drawing.Size(111, 23);
+            this.cmdProcessAllFiles.TabIndex = 3;
+            this.cmdProcessAllFiles.Text = "Process All Files";
+            this.cmdProcessAllFiles.UseVisualStyleBackColor = true;
+            this.cmdProcessAllFiles.Click += new System.EventHandler(this.cmdProcessAllFiles_Click);
             // 
             // cmdBrowseForDifferentSource
             // 
@@ -239,6 +241,17 @@
             this.dataGridViewLongValueKeys.Size = new System.Drawing.Size(350, 494);
             this.dataGridViewLongValueKeys.TabIndex = 1;
             // 
+            // cmdStop
+            // 
+            this.cmdStop.Enabled = false;
+            this.cmdStop.Location = new System.Drawing.Point(392, 35);
+            this.cmdStop.Name = "cmdStop";
+            this.cmdStop.Size = new System.Drawing.Size(111, 23);
+            this.cmdStop.TabIndex = 9;
+            this.cmdStop.Text = "Stop";
+            this.cmdStop.UseVisualStyleBackColor = true;
+            this.cmdStop.Click += new System.EventHandler(this.cmdStop_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -247,7 +260,6 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
             this.Text = "Mag-WordObjectParser";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -268,7 +280,7 @@
 		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.ProgressBar progressBar1;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Button cmdReadAllFiles;
+		private System.Windows.Forms.Button cmdProcessAllFiles;
 		private System.Windows.Forms.Button cmdBrowseForDifferentSource;
 		private System.Windows.Forms.TextBox txtSourcePath;
 		private System.Windows.Forms.Label label1;
@@ -282,6 +294,7 @@
 		private System.Windows.Forms.DataGridView dataGridViewDoubleValueKeys;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.DataGridView dataGridViewLongValueKeys;
-	}
+        private System.Windows.Forms.Button cmdStop;
+    }
 }
 

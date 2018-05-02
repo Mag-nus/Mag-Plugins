@@ -12,6 +12,8 @@ using System.Windows.Forms;
 using Mag.Shared;
 using Mag.Shared.Constants;
 
+using Mag_WorldObjectParser.Properties;
+
 namespace Mag_WorldObjectParser
 {
 	public partial class Form1 : Form
@@ -19,16 +21,18 @@ namespace Mag_WorldObjectParser
 		public Form1()
 		{
 			InitializeComponent();
-		}
 
-		private void Form1_Load(object sender, EventArgs e)
-		{
 			this.Text += " " + Application.ProductVersion;
 
-			var pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-WorldObjectLogger");
-			txtSourcePath.Text = pluginPersonalFolder.FullName;
+		    txtSourcePath.Text = (string)Settings.Default["SourceFolder"];
 
-			typeof(DataGridView).InvokeMember("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null, dataGridView1, new object[] { true });
+		    if (String.IsNullOrEmpty(txtSourcePath.Text))
+		    {
+		        var pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-WorldObjectLogger");
+		        txtSourcePath.Text = pluginPersonalFolder.FullName;
+		    }
+
+		    typeof(DataGridView).InvokeMember("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null, dataGridView1, new object[] { true });
 			dataGridView1.RowHeadersVisible = false;
 			dataGridView1.AllowUserToAddRows = false;
 			dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -55,8 +59,12 @@ namespace Mag_WorldObjectParser
 			{
 				dialog.SelectedPath = txtSourcePath.Text;
 
-				if (dialog.ShowDialog() == DialogResult.OK)
-					txtSourcePath.Text = dialog.SelectedPath;
+			    if (dialog.ShowDialog() == DialogResult.OK)
+			    {
+			        txtSourcePath.Text = dialog.SelectedPath;
+			        Settings.Default["SourceFolder"] = txtSourcePath.Text;
+			        Settings.Default.Save();
+                }
 			}
 		}
 
@@ -67,11 +75,17 @@ namespace Mag_WorldObjectParser
 		private int totalLines;
 		private int corruptLines;
 
-		private void cmdReadAllFiles_Click(object sender, EventArgs e)
-		{
-            Enabled = false;
+	    private CancellationTokenSource cts = new CancellationTokenSource();
 
-			var startTime = DateTime.Now;
+        private void cmdProcessAllFiles_Click(object sender, EventArgs e)
+		{
+            cmdBrowseForDifferentSource.Enabled = false;
+		    cmdProcessAllFiles.Enabled = false;
+            cmdStop.Enabled = true;
+
+		    cts = new CancellationTokenSource();
+
+            var startTime = DateTime.Now;
 
 			OnBeforeLoadFiles();
 
@@ -88,9 +102,15 @@ namespace Mag_WorldObjectParser
 
 		        Parallel.ForEach(files, file =>
 		        {
-		            ProcessFile(file);
+		            if (cts.IsCancellationRequested)
+		                return;
 
-		            var processed = Interlocked.Increment(ref filesProcessed);
+                    ProcessFile(file, cts.Token);
+
+		            if (cts.IsCancellationRequested)
+		                return;
+
+                    var processed = Interlocked.Increment(ref filesProcessed);
 
 		            progressBar1.BeginInvoke((Action)(() => progressBar1.Value = (int)(((double)processed / files.Length) * 100)));
 		        });
@@ -101,16 +121,24 @@ namespace Mag_WorldObjectParser
 
                     OnLoadFilesComplete();
 
-                    Enabled = true;
+                    cmdBrowseForDifferentSource.Enabled = true;
+                    cmdProcessAllFiles.Enabled = true;
 
                     //MessageBox.Show((DateTime.Now - startTime).TotalSeconds.ToString("N1"));
                 }));
             });
 		}
 
-		readonly JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+	    private void cmdStop_Click(object sender, EventArgs e)
+	    {
+	        cmdStop.Enabled = false;
 
-		private void ProcessFile(string fileName)
+	        cts.Cancel();
+        }
+
+        readonly JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+
+		private void ProcessFile(string fileName, CancellationToken ct)
 		{
 			var fileLines = File.ReadAllLines(fileName);
 
@@ -119,11 +147,14 @@ namespace Mag_WorldObjectParser
 
 			foreach (var line in fileLines)
 			{
-				// "Timestamp,Landcell,RawCoordinates,JSON"
-				// "2017-01-23 15:25:42Z,"00000000",49.0488996505737 -29.9918003082275 -7.45058059692383E-09","{"RawData":"45F70000334020771100000003980100180001000C00000000003D00020000000C00000000000000B40104724BC8704135EFEFC1000000B2F70435BF0000000000000000F70435BF86000009220000202B000034DA0500020100020000000000000002000000000090010000300000000400446F6F720000A131171380000000141000002000000000000040"}"
-				// "2017-01-23 15:25:42Z,"00000000",49.0488996505737 -29.9918003082275 -7.45058059692383E-09","{"Id":"1998602291","ObjectClass":"Door","BoolValues":{},"DoubleValues":{"167772167":"269.999963323784","167772168":"2"},"LongValues":{"19":" - 1","218103811":"1912865204","218103831":"2","218103835":"4116","218103843":"32","218103847":"104451","218103808":"12705","218103830":"33555930","218103832":"48","218103834":"128","218103809":"4887"},"StringValues":{"1":"Door"},"ActiveSpells":"","Spells":""}"
+			    if (ct.IsCancellationRequested)
+			        return;
 
-				try
+                // "Timestamp,Landcell,RawCoordinates,JSON"
+                // "2017-01-23 15:25:42Z,"00000000",49.0488996505737 -29.9918003082275 -7.45058059692383E-09","{"RawData":"45F70000334020771100000003980100180001000C00000000003D00020000000C00000000000000B40104724BC8704135EFEFC1000000B2F70435BF0000000000000000F70435BF86000009220000202B000034DA0500020100020000000000000002000000000090010000300000000400446F6F720000A131171380000000141000002000000000000040"}"
+                // "2017-01-23 15:25:42Z,"00000000",49.0488996505737 -29.9918003082275 -7.45058059692383E-09","{"Id":"1998602291","ObjectClass":"Door","BoolValues":{},"DoubleValues":{"167772167":"269.999963323784","167772168":"2"},"LongValues":{"19":" - 1","218103811":"1912865204","218103831":"2","218103835":"4116","218103843":"32","218103847":"104451","218103808":"12705","218103830":"33555930","218103832":"48","218103834":"128","218103809":"4887"},"StringValues":{"1":"Door"},"ActiveSpells":"","Spells":""}"
+
+                try
 				{
 					var thirdComma = Util.IndexOfNth(line, ',', 3);
 
@@ -207,7 +238,10 @@ namespace Mag_WorldObjectParser
 						foreach (var kvp in result)
 							createPacket.RawData = Util.HexStringToByteArray((string) kvp.Value);
 
-						if (!ProcessCreatePacket(createPacket))
+					    if (ct.IsCancellationRequested)
+					        return;
+
+                        if (!ProcessCreatePacket(createPacket))
 						{
 						    Interlocked.Increment(ref corruptLines);
                             continue;
@@ -395,7 +429,10 @@ namespace Mag_WorldObjectParser
 								}
 							}
 
-							if (!ProcessIdentResponse(identResponse))
+						    if (ct.IsCancellationRequested)
+						        return;
+
+                            if (!ProcessIdentResponse(identResponse))
 							{
 							    Interlocked.Increment(ref corruptLines);
                                 continue;
@@ -759,5 +796,5 @@ namespace Mag_WorldObjectParser
 			dataGridViewStringValueKeys.AutoResizeColumns();
 			dataGridViewStringValueKeys.Sort(dataGridViewStringValueKeys.Columns[0], System.ComponentModel.ListSortDirection.Ascending);
 		}
-	}
+    }
 }

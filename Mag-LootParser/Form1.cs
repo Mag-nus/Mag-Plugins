@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
+using Mag_LootParser.Properties;
+
 namespace Mag_LootParser
 {
     public partial class Form1 : Form
@@ -13,16 +15,16 @@ namespace Mag_LootParser
         public Form1()
         {
             InitializeComponent();
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
 
             this.Text += " " + Application.ProductVersion;
 
-            var pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-LootLogger");
-            txtSourcePath.Text = pluginPersonalFolder.FullName;
+            txtSourcePath.Text = (string)Settings.Default["SourceFolder"];
+
+            if (String.IsNullOrEmpty(txtSourcePath.Text))
+            {
+                var pluginPersonalFolder = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\Decal Plugins\Mag-LootLogger");
+                txtSourcePath.Text = pluginPersonalFolder.FullName;
+            }
         }
 
         private void cmdBrowseForDifferentSource_Click(object sender, EventArgs e)
@@ -32,7 +34,11 @@ namespace Mag_LootParser
                 dialog.SelectedPath = txtSourcePath.Text;
 
                 if (dialog.ShowDialog() == DialogResult.OK)
+                {
                     txtSourcePath.Text = dialog.SelectedPath;
+                    Settings.Default["SourceFolder"] = txtSourcePath.Text;
+                    Settings.Default.Save();
+                }
             }
         }
 
@@ -43,9 +49,15 @@ namespace Mag_LootParser
         private int totalLines;
         private int corruptLines;
 
-        private void cmdReadAllFiles_Click(object sender, EventArgs e)
+        private CancellationTokenSource cts = new CancellationTokenSource();
+
+        private void cmdProcessAllFiles_Click(object sender, EventArgs e)
         {
-            Enabled = false;
+            cmdBrowseForDifferentSource.Enabled = false;
+            cmdProcessAllFiles.Enabled = false;
+            cmdStop.Enabled = true;
+
+            cts = new CancellationTokenSource();
 
             var startTime = DateTime.Now;
 
@@ -64,7 +76,13 @@ namespace Mag_LootParser
 
                 Parallel.ForEach(files, file =>
                 {
-                    ProcessFile(file);
+                    if (cts.IsCancellationRequested)
+                        return;
+
+                    ProcessFile(file, cts.Token);
+
+                    if (cts.IsCancellationRequested)
+                        return;
 
                     var processed = Interlocked.Increment(ref filesProcessed);
 
@@ -77,16 +95,24 @@ namespace Mag_LootParser
 
                     //OnLoadFilesComplete();
 
-                    Enabled = true;
+                    cmdBrowseForDifferentSource.Enabled = true;
+                    cmdProcessAllFiles.Enabled = true;
 
                     //MessageBox.Show((DateTime.Now - startTime).TotalSeconds.ToString("N1"));
                 }));
             });
         }
 
+        private void cmdStop_Click(object sender, EventArgs e)
+        {
+            cmdStop.Enabled = false;
+
+            cts.Cancel();
+        }
+
         readonly JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
 
-        private void ProcessFile(string fileName)
+        private void ProcessFile(string fileName, CancellationToken ct)
         {
             var fileLines = File.ReadAllLines(fileName);
 
@@ -95,6 +121,9 @@ namespace Mag_LootParser
 
             foreach (var line in fileLines)
             {
+                if (ct.IsCancellationRequested)
+                    return;
+
                 // "Timestamp","ContainerName","ContainerID","LandCell","Location","JSON"
                 // "2017-01-20 08:18:48Z,"Monty's Golden Chest",2056986702,"A9B20117","40.8N, 33.6E","{"Id":"-1419165865","ObjectClass":"Misc","BoolValues":{"69":"True"},"DoubleValues":{"167":"45","167772170":"0"},"LongValues":{"367":"430","375":"7","218103835":"67108882","218103843":"8","280":"213","33":"0","105":"7","369":"115","114":"0","366":"54","374":"13","218103810":"2056986634","218103826":"16","218103830":"33554817","218103834":"128","218103850":"29728","19":"7000","91":"50","218103831":"48","218103847":"137345","92":"50","218103808":"49548","218103824":"64","218103832":"1076382872","5":"50","218103809":"4154","218103833":"7","218103849":"29733"},"StringValues":{"1":"Lightning Phyntos Wasp Essence (125)","14":"Use this essence to summon or dismiss your Lightning Phyntos Wasp."},"ActiveSpells":"","Spells":""}"
                 // "2017-01-20 08:18:48Z,"Monty's Golden Chest",2056986702,"A9B20117","40.8N, 33.6E","{"Id":"-1419511451","ObjectClass":"Scroll","BoolValues":{},"DoubleValues":{"167772170":"0"},"LongValues":{"19":"2000","218103831":"16","218103835":"18","218103843":"8","218103847":"135297","218103808":"45258","218103816":"5785","218103832":"6307864","218103848":"0","5":"30","218103809":"28959","218103810":"2056986634","218103830":"33554826","218103834":"8192","218103838":"1"},"StringValues":{"1":"Scroll of Dirty Fighting Mastery Self VII","14":"Use this item to attempt to learn its spell.","16":"Inscribed spell: Dirty Fighting Mastery Self VII Increases the caster's Dirty Fighting skill by 40 points."},"ActiveSpells":"","Spells":"5785"}"
@@ -170,7 +199,10 @@ namespace Mag_LootParser
 
                     if (jsonPart.StartsWith("{\"Id"))
                     {
+                        // todo
 
+                        if (ct.IsCancellationRequested)
+                            return;
                     }
                     else
                     {
