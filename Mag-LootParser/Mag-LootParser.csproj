@@ -68,6 +68,12 @@
     <Compile Include="..\Shared\ObjectClass.cs">
       <Link>Shared\ObjectClass.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\Spells\Spell.cs">
+      <Link>Shared\Spells\Spell.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Spells\SpellTools.cs">
+      <Link>Shared\Spells\SpellTools.cs</Link>
+    </Compile>
     <Compile Include="ExtendIDAttributeInfo.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -76,9 +82,14 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="IdentResponse.cs" />
+    <Compile Include="ItemGroupStats.cs" />
     <Compile Include="LogItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpellStats.cs" />
+    <Compile Include="Stats.cs" />
+    <Compile Include="StatsCalculator.cs" />
+    <Compile Include="TierCalculator.cs" />
     <Compile Include="Util.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -92,6 +103,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="..\Shared\Spells\Spells.csv">
+      <Link>Shared\Spells\Spells.csv</Link>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

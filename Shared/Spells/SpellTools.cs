@@ -43,8 +43,8 @@ namespace Mag.Shared.Spells
 		/// </summary>
 		public static Spell GetSpell(int id)
 		{
-			if (SpellsById.ContainsKey(id))
-				return SpellsById[id];
+            if (SpellsById.TryGetValue(id, out var spell))
+                return spell;
 
 			int idIndex = SpellTableHeader.IndexOf("Id");
 

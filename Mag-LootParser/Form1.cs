@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
-
-using Mag.Shared.Constants;
 
 using Mag_LootParser.Properties;
 
@@ -69,6 +68,11 @@ namespace Mag_LootParser
 
             lblResults.Text = null;
             lblTime.Text = null;
+
+            // Clear our outputs
+            dataGridView1.DataSource = null;
+            txtRawOutput1.Text = null;
+            txtRawOutput2.Text = null;
 
             var files = Directory.GetFiles(txtSourcePath.Text, "*.csv", SearchOption.AllDirectories);
 
@@ -267,100 +271,13 @@ namespace Mag_LootParser
             }
         }
 
-        private readonly Dictionary<string, int> lootTiers = new Dictionary<string, int>();
-
         private void OnLoadFilesComplete()
         {
+            var sb = new StringBuilder();
+
+
             // Calculate the loot tiers
-            // Reference: http://asheron.wikia.com/wiki/Loot
-            lootTiers.Clear();
-
-            foreach (var kvp in containersLoot)
-            {
-                int tier = 0;
-
-                foreach (var container in kvp.Value)
-                {
-                    foreach (var item in container.Value)
-                    {
-                        // Heavy/Light/Finesse
-                        if (item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && (item.LongValues[IntValueKey.WieldReqAttribute] == 0x2C || item.LongValues[IntValueKey.WieldReqAttribute] == 0x2D || item.LongValues[IntValueKey.WieldReqAttribute] == 0x2E) && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
-                        {
-                            switch (item.LongValues[IntValueKey.WieldReqValue])
-                            {
-                                case 250:
-                                    if (tier < 2) tier = 2;
-                                    break;
-                                case 300:
-                                    // Could be tier 3 as well
-                                    if (tier < 4) tier = 4;
-                                    break;
-                                case 350:
-                                    if (tier < 5) tier = 5;
-                                    break;
-                                case 400:
-                                    if (tier < 6) tier = 6;
-                                    break;
-                                case 420:
-                                    if (tier < 7) tier = 7;
-                                    break;
-                                case 430:
-                                    tier = 8;
-                                    break;
-                            }
-                        }
-
-                        // Missile
-                        if (tier == 0 && item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && item.LongValues[IntValueKey.WieldReqAttribute] == 0x2F && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
-                        {
-                            switch (item.LongValues[IntValueKey.WieldReqValue])
-                            {
-                                case 250:
-                                    if (tier < 2) tier = 2;
-                                    break;
-                                case 270:
-                                    // Could be tier 3 as well
-                                    if (tier < 4) tier = 4;
-                                    break;
-                                case 315:
-                                    if (tier < 5) tier = 5;
-                                    break;
-                                case 360:
-                                    if (tier < 6) tier = 6;
-                                    break;
-                                case 375:
-                                    if (tier < 7) tier = 7;
-                                    break;
-                                case 385:
-                                    tier = 8;
-                                    break;
-                            }
-                        }
-
-                        // Magic
-                        if (tier == 0 && item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && item.LongValues[IntValueKey.WieldReqAttribute] == 0x22 && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
-                        {
-                            switch (item.LongValues[IntValueKey.WieldReqValue])
-                            {
-                                case 310:
-                                    if (tier < 5) tier = 5;
-                                    break;
-                                case 355:
-                                    if (tier < 6) tier = 6;
-                                    break;
-                                case 375:
-                                    if (tier < 7) tier = 7;
-                                    break;
-                                case 385:
-                                    tier = 8;
-                                    break;
-                            }
-                        }
-                    }
-                }
-
-                lootTiers[kvp.Key] = tier;
-            }
+            TierCalculator.Calculate(containersLoot);
 
 
             // Populate the Containers tab
@@ -377,7 +294,7 @@ namespace Mag_LootParser
                 var dr = dt.NewRow();
 
                 dr["Name"] = kvp.Key;
-                dr["Tier"] = lootTiers[kvp.Key];
+                dr["Tier"] = TierCalculator.GetTierByContainerName(kvp.Key);
                 dr["Hits"] = kvp.Value.Count;
 
                 var totalItems = 0;
@@ -407,6 +324,31 @@ namespace Mag_LootParser
 
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridView1.AutoResizeColumns();
+
+
+            // Calculate the stats
+            StatsCalculator.Calculate(containersLoot);
+
+
+            // Output stats by tier
+            sb.Clear();
+            foreach (var kvp in StatsCalculator.StatsByLootTier)
+            {
+                sb.AppendLine();
+                sb.AppendLine("========== Tier " + kvp.Key + " ==========");
+                sb.Append(kvp.Value);
+            }
+            txtRawOutput1.Text = sb.ToString();
+
+            // Output stats by container name
+            sb.Clear();
+            foreach (var kvp in StatsCalculator.StatsByContainerName)
+            {
+                sb.AppendLine();
+                sb.AppendLine("========== Container Name " + kvp.Key + " ==========");
+                sb.Append(kvp.Value);
+            }
+            txtRawOutput2.Text = sb.ToString();
         }
     }
 }

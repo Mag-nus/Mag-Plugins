@@ -30,6 +30,8 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.lblTime = new System.Windows.Forms.Label();
+            this.cmdStop = new System.Windows.Forms.Button();
             this.lblResults = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.label2 = new System.Windows.Forms.Label();
@@ -40,22 +42,15 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label5 = new System.Windows.Forms.Label();
-            this.dataGridViewStringValueKeys = new System.Windows.Forms.DataGridView();
-            this.label4 = new System.Windows.Forms.Label();
-            this.dataGridViewDoubleValueKeys = new System.Windows.Forms.DataGridView();
-            this.label3 = new System.Windows.Forms.Label();
-            this.dataGridViewLongValueKeys = new System.Windows.Forms.DataGridView();
-            this.cmdStop = new System.Windows.Forms.Button();
-            this.lblTime = new System.Windows.Forms.Label();
+            this.txtRawOutput1 = new System.Windows.Forms.RichTextBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.txtRawOutput2 = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStringValueKeys)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDoubleValueKeys)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLongValueKeys)).BeginInit();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -63,11 +58,12 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(800, 450);
+            this.tabControl1.Size = new System.Drawing.Size(784, 961);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
@@ -88,6 +84,26 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Read Log Files";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // lblTime
+            // 
+            this.lblTime.AutoSize = true;
+            this.lblTime.Location = new System.Drawing.Point(62, 159);
+            this.lblTime.Name = "lblTime";
+            this.lblTime.Size = new System.Drawing.Size(40, 13);
+            this.lblTime.TabIndex = 11;
+            this.lblTime.Text = "lblTime";
+            // 
+            // cmdStop
+            // 
+            this.cmdStop.Enabled = false;
+            this.cmdStop.Location = new System.Drawing.Point(392, 35);
+            this.cmdStop.Name = "cmdStop";
+            this.cmdStop.Size = new System.Drawing.Size(111, 23);
+            this.cmdStop.TabIndex = 10;
+            this.cmdStop.Text = "Stop";
+            this.cmdStop.UseVisualStyleBackColor = true;
+            this.cmdStop.Click += new System.EventHandler(this.cmdStop_Click);
             // 
             // lblResults
             // 
@@ -175,99 +191,50 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.label5);
-            this.tabPage3.Controls.Add(this.dataGridViewStringValueKeys);
-            this.tabPage3.Controls.Add(this.label4);
-            this.tabPage3.Controls.Add(this.dataGridViewDoubleValueKeys);
-            this.tabPage3.Controls.Add(this.label3);
-            this.tabPage3.Controls.Add(this.dataGridViewLongValueKeys);
+            this.tabPage3.Controls.Add(this.txtRawOutput1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(792, 424);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Keys";
+            this.tabPage3.Text = "Raw Output 1";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // label5
+            // txtRawOutput1
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(720, 12);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(84, 13);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "StringValueKeys";
+            this.txtRawOutput1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtRawOutput1.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRawOutput1.Location = new System.Drawing.Point(3, 3);
+            this.txtRawOutput1.Name = "txtRawOutput1";
+            this.txtRawOutput1.Size = new System.Drawing.Size(786, 418);
+            this.txtRawOutput1.TabIndex = 0;
+            this.txtRawOutput1.Text = "";
             // 
-            // dataGridViewStringValueKeys
+            // tabPage4
             // 
-            this.dataGridViewStringValueKeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.dataGridViewStringValueKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewStringValueKeys.Location = new System.Drawing.Point(523, 28);
-            this.dataGridViewStringValueKeys.Name = "dataGridViewStringValueKeys";
-            this.dataGridViewStringValueKeys.Size = new System.Drawing.Size(350, 393);
-            this.dataGridViewStringValueKeys.TabIndex = 5;
+            this.tabPage4.Controls.Add(this.txtRawOutput2);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(776, 935);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Raw Output 2";
+            this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // label4
+            // txtRawOutput2
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(364, 12);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(91, 13);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "DoubleValueKeys";
-            // 
-            // dataGridViewDoubleValueKeys
-            // 
-            this.dataGridViewDoubleValueKeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.dataGridViewDoubleValueKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewDoubleValueKeys.Location = new System.Drawing.Point(167, 28);
-            this.dataGridViewDoubleValueKeys.Name = "dataGridViewDoubleValueKeys";
-            this.dataGridViewDoubleValueKeys.Size = new System.Drawing.Size(350, 393);
-            this.dataGridViewDoubleValueKeys.TabIndex = 3;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 12);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(81, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "LongValueKeys";
-            // 
-            // dataGridViewLongValueKeys
-            // 
-            this.dataGridViewLongValueKeys.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.dataGridViewLongValueKeys.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewLongValueKeys.Location = new System.Drawing.Point(-189, 28);
-            this.dataGridViewLongValueKeys.Name = "dataGridViewLongValueKeys";
-            this.dataGridViewLongValueKeys.Size = new System.Drawing.Size(350, 393);
-            this.dataGridViewLongValueKeys.TabIndex = 1;
-            // 
-            // cmdStop
-            // 
-            this.cmdStop.Enabled = false;
-            this.cmdStop.Location = new System.Drawing.Point(392, 35);
-            this.cmdStop.Name = "cmdStop";
-            this.cmdStop.Size = new System.Drawing.Size(111, 23);
-            this.cmdStop.TabIndex = 10;
-            this.cmdStop.Text = "Stop";
-            this.cmdStop.UseVisualStyleBackColor = true;
-            this.cmdStop.Click += new System.EventHandler(this.cmdStop_Click);
-            // 
-            // lblTime
-            // 
-            this.lblTime.AutoSize = true;
-            this.lblTime.Location = new System.Drawing.Point(62, 159);
-            this.lblTime.Name = "lblTime";
-            this.lblTime.Size = new System.Drawing.Size(40, 13);
-            this.lblTime.TabIndex = 11;
-            this.lblTime.Text = "lblTime";
+            this.txtRawOutput2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtRawOutput2.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRawOutput2.Location = new System.Drawing.Point(0, 0);
+            this.txtRawOutput2.Name = "txtRawOutput2";
+            this.txtRawOutput2.Size = new System.Drawing.Size(776, 935);
+            this.txtRawOutput2.TabIndex = 0;
+            this.txtRawOutput2.Text = "";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(784, 961);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
             this.Text = "Mag-LootParser";
@@ -277,10 +244,7 @@
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewStringValueKeys)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDoubleValueKeys)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewLongValueKeys)).EndInit();
+            this.tabPage4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -299,14 +263,11 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.DataGridView dataGridViewStringValueKeys;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.DataGridView dataGridViewDoubleValueKeys;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.DataGridView dataGridViewLongValueKeys;
         private System.Windows.Forms.Button cmdStop;
         private System.Windows.Forms.Label lblTime;
+        private System.Windows.Forms.RichTextBox txtRawOutput1;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.RichTextBox txtRawOutput2;
     }
 }
 
