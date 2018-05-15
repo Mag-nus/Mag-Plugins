@@ -88,7 +88,11 @@ namespace MagTools.Client
 
 				User32.GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
 
-				// Widths: 800 1024 1152 1280 1360 1400 1440 1600 1680 1792 1800 1856 1920 2048 2560
+				// Widths: 800 1024 1152 1280 1360 1400 1440 1600 1680 1792 1800 1856 1920 2048 2560 3840 4096 5040 7680
+				if (rect.Width >= 7680) return rect.Width - 7680;
+				if (rect.Width >= 5040) return rect.Width - 5040;
+				if (rect.Width >= 4096) return rect.Width - 4096;
+				if (rect.Width >= 3840) return rect.Width - 3840;
 				if (rect.Width >= 2560) return rect.Width - 2560;
 				if (rect.Width >= 2048) return rect.Width - 2048;
 				if (rect.Width >= 1920) return rect.Width - 1920;
@@ -124,7 +128,9 @@ namespace MagTools.Client
 				// Workarounds go here:
 				if (rect.Height == (1024 + 28)) return 28;
 
-				// Heights: 600 720 768 800 864 900 960 1024 1050 1080 1200 1344 1392 1440 1536 1600
+				// Heights: 600 720 768 800 864 900 960 1024 1050 1080 1200 1344 1392 1440 1536 1600 2160 4320
+				if (rect.Height >= 4320) return rect.Height - 4320;
+				if (rect.Height >= 2160) return rect.Height - 2160;
 				if (rect.Height >= 1600) return rect.Height - 1600;
 				if (rect.Height >= 1536) return rect.Height - 1536;
 				if (rect.Height >= 1440) return rect.Height - 1440;
