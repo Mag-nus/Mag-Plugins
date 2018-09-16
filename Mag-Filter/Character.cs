@@ -2,13 +2,13 @@
 
 namespace MagFilter
 {
-	public class Character
+	struct Character
 	{
-        public int Id { get; set; }
+		public readonly int Id;
 
-	    public string Name { get; set; }
+		public readonly string Name;
 
-        public TimeSpan DeleteTimeout { get; set; }
+		public readonly TimeSpan DeleteTimeout;
 
 		public Character(int id, string name, int timeout)
 		{
