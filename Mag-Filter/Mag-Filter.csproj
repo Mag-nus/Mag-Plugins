@@ -25,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,16 +34,22 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Decal.Adapter, Version=2.9.7.2, Culture=neutral, PublicKeyToken=bd1c8ce002ce221e, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Binaries\Decal\2.9.7.2\Decal.Adapter.dll</HintPath>
+    <Reference Include="Decal.Adapter">
+      <HintPath>..\lib\Decal\2.9.7.5\Decal.Adapter.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
+    <Reference Include="VCS5">
+      <HintPath>..\lib\VirindiPlugins\VCS5.dll</HintPath>
+    </Reference>
+    <Reference Include="VirindiViewService">
+      <HintPath>..\lib\VirindiPlugins\VirindiViewService.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Shared\Debug.cs">
@@ -59,6 +66,9 @@
     </Compile>
     <Compile Include="..\Shared\User32.cs">
       <Link>Shared\User32.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\VCS_Connector.cs">
+      <Link>Shared\VCS_Connector.cs</Link>
     </Compile>
     <Compile Include="AutoRetryLogin.cs" />
     <Compile Include="Character.cs" />

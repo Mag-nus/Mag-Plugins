@@ -25,6 +25,7 @@
     <DefineConstants>TRACE;DEBUG;VVS_REFERENCED</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,20 +34,21 @@
     <DefineConstants>TRACE;VVS_REFERENCED</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Decal.Adapter, Version=2.9.7.2, Culture=neutral, PublicKeyToken=bd1c8ce002ce221e, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Binaries\Decal\2.9.7.2\Decal.Adapter.dll</HintPath>
+      <HintPath>..\lib\Decal\2.9.7.5\Decal.Adapter.dll</HintPath>
     </Reference>
     <Reference Include="Decal.FileService, Version=2.9.7.2, Culture=neutral, PublicKeyToken=bd1c8ce002ce221e, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Binaries\Decal\2.9.7.2\Decal.FileService.dll</HintPath>
+      <HintPath>..\lib\Decal\2.9.7.5\Decal.FileService.dll</HintPath>
     </Reference>
     <Reference Include="Decal.Interop.Core, Version=2.9.7.2, Culture=neutral, PublicKeyToken=481f17d392f1fb65, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\..\Binaries\Decal\2.9.7.2\.NET 2.0 PIA\Decal.Interop.Core.DLL</HintPath>
+      <HintPath>..\lib\Decal\2.9.7.5\.NET 2.0 PIA\Decal.Interop.Core.DLL</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -54,29 +56,29 @@
     <Reference Include="System.Xml" />
     <Reference Include="utank2-i, Version=0.3.1.148, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Binaries\VirindiPlugins\utank2-i.dll</HintPath>
+      <HintPath>..\lib\VirindiPlugins\utank2-i.dll</HintPath>
     </Reference>
     <Reference Include="VCS5">
-      <HintPath>..\..\Binaries\VirindiPlugins\VCS5.dll</HintPath>
+      <HintPath>..\lib\VirindiPlugins\VCS5.dll</HintPath>
     </Reference>
     <Reference Include="VirindiHotkeySystem, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Binaries\VirindiPlugins\VirindiHotkeySystem.dll</HintPath>
+      <HintPath>..\lib\VirindiPlugins\VirindiHotkeySystem.dll</HintPath>
     </Reference>
     <Reference Include="VirindiHUDs">
-      <HintPath>..\..\Binaries\VirindiPlugins\VirindiHUDs.dll</HintPath>
+      <HintPath>..\lib\VirindiPlugins\VirindiHUDs.dll</HintPath>
     </Reference>
     <Reference Include="VirindiItemTool, Version=1.0.0.10, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Binaries\VirindiPlugins\VirindiItemTool.dll</HintPath>
+      <HintPath>..\lib\VirindiPlugins\VirindiItemTool.dll</HintPath>
     </Reference>
     <Reference Include="VirindiViewService, Version=1.0.0.47, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Binaries\VirindiPlugins\VirindiViewService.dll</HintPath>
+      <HintPath>..\lib\VirindiPlugins\VirindiViewService.dll</HintPath>
     </Reference>
     <Reference Include="VTClassic, Version=1.0.1.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Binaries\VirindiPlugins\VTClassic.dll</HintPath>
+      <HintPath>..\lib\VirindiPlugins\VTClassic.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
