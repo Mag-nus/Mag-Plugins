@@ -38,7 +38,7 @@ namespace MagFilter
 		readonly AutoRetryLogin autoRetryLogin = new AutoRetryLogin();
 		readonly LoginCharacterTools loginCharacterTools = new LoginCharacterTools();
 		readonly FastQuit fastQuit = new FastQuit();
-		readonly CharacterSelectionScreenFrameRateLimiter characterSelectionScreenFrameRateLimiter = new CharacterSelectionScreenFrameRateLimiter();
+		readonly FrameRateLimiter frameRateLimiter = new FrameRateLimiter();
 
 		readonly LoginCompleteMessageQueueManager loginCompleteMessageQueueManager = new LoginCompleteMessageQueueManager();
 		readonly AfterLoginCompleteMessageQueueManager afterLoginCompleteMessageQueueManager = new AfterLoginCompleteMessageQueueManager();
@@ -51,7 +51,7 @@ namespace MagFilter
 			Debug.Init(PluginPersonalFolder.FullName + @"\Exceptions.txt", PluginName);
 			SettingsFile.Init(PluginPersonalFolder.FullName + @"\" + PluginName + ".xml", PluginName);
 
-			characterSelectionScreenFrameRateLimiter.Startup();
+			frameRateLimiter.Startup();
 
 			defaultFirstCharacterManager = new DefaultFirstCharacterManager(loginCharacterTools);
 			loginNextCharacterManager = new LoginNextCharacterManager(loginCharacterTools);
@@ -71,7 +71,7 @@ namespace MagFilter
 
 			CommandLineText -= new EventHandler<ChatParserInterceptEventArgs>(FilterCore_CommandLineText);
 
-			characterSelectionScreenFrameRateLimiter.Shutdown();
+			frameRateLimiter.Shutdown();
 		}
 
 		void FilterCore_ClientDispatch(object sender, NetworkMessageEventArgs e)
@@ -112,7 +112,7 @@ namespace MagFilter
 		{
 			try
 			{
-				characterSelectionScreenFrameRateLimiter.FilterCore_CommandLineText(sender, e);
+				frameRateLimiter.FilterCore_CommandLineText(sender, e);
 
 				loginCompleteMessageQueueManager.FilterCore_CommandLineText(sender, e);
 				afterLoginCompleteMessageQueueManager.FilterCore_CommandLineText(sender, e);

@@ -72,7 +72,7 @@
     </Compile>
     <Compile Include="AutoRetryLogin.cs" />
     <Compile Include="Character.cs" />
-    <Compile Include="CharacterSelectionScreenFrameRateLimiter.cs" />
+    <Compile Include="FrameRateLimiter.cs" />
     <Compile Include="DefaultFirstCharacter.cs" />
     <Compile Include="DefaultFirstCharacterManager.cs" />
     <Compile Include="FastQuit.cs" />

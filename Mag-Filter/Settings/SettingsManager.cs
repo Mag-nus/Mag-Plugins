@@ -10,8 +10,6 @@ namespace MagFilter.Settings
 	{
 		public static class CharacterSelectionScreen
 		{
-			public static readonly Setting<uint> MaximumFPS = new Setting<uint>("CharacterSelectionScreen/MaximumFPS");
-
 			public static Collection<DefaultFirstCharacter> DefaultFirstCharacters
 			{
 				get
@@ -116,6 +114,13 @@ namespace MagFilter.Settings
 					}
 				}
 			}
+		}
+
+		public static class FrameRateLimiters
+		{
+			public static readonly Setting<uint> CharacterSelectionScreen = new Setting<uint>("FrameRateLimiters/CharacterSelectionScreen");
+
+			public static readonly Setting<uint> InWorld = new Setting<uint>("FrameRateLimiters/InWorld");
 		}
 	}
 }
