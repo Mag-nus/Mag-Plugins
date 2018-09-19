@@ -10,6 +10,8 @@ namespace MagFilter.Settings
 	{
 		public static class CharacterSelectionScreen
 		{
+			public static readonly Setting<uint> MaximumFPS = new Setting<uint>("CharacterSelectionScreen/MaximumFPS");
+
 			public static Collection<DefaultFirstCharacter> DefaultFirstCharacters
 			{
 				get
