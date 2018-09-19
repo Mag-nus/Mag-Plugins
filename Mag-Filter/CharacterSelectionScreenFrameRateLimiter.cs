@@ -58,7 +58,7 @@ namespace MagFilter
 				else
 				{
 					SettingsManager.CharacterSelectionScreen.MaximumFPS.Value = value;
-					Debug.WriteToChat("Character Selection Screen Maximum FPS set: " + e.Text);
+					Debug.WriteToChat("Character Selection Screen Maximum FPS set: " + value);
 				}
 
 				e.Eat = true;

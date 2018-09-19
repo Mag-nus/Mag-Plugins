@@ -60,15 +60,17 @@ namespace MagFilter
 		{
 			if (e.Text.StartsWith("/mf lcmq add "))
 			{
-				loginMessageQueue.Enqueue(e.Text.Substring(13, e.Text.Length - 13));
-				Debug.WriteToChat("Login Complete Message Queue added: " + e.Text);
+				var command = e.Text.Substring(13, e.Text.Length - 13);
+				loginMessageQueue.Enqueue(command);
+				Debug.WriteToChat("Login Complete Message Queue added: " + command);
 
 				e.Eat = true;
 			}
 			else if (e.Text.StartsWith("/mf lmq add ")) // Backwards Compatability
 			{
-				loginMessageQueue.Enqueue(e.Text.Substring(12, e.Text.Length - 12));
-				Debug.WriteToChat("Login Complete Message Queue added: " + e.Text);
+				var command = e.Text.Substring(12, e.Text.Length - 12);
+				loginMessageQueue.Enqueue(command);
+				Debug.WriteToChat("Login Complete Message Queue added: " + command);
 
 				e.Eat = true;
 			}
