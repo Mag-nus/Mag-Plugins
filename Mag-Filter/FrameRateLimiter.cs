@@ -29,30 +29,12 @@ namespace MagFilter
 				if (CoreManager.Current.CharacterFilter == null || CoreManager.Current.CharacterFilter.Id == 0)
 				{
 					if (SettingsManager.FrameRateLimiters.CharacterSelectionScreen.Value != 0)
-					{
-						var lastFrameElapsedTime = stopWatch.Elapsed;
-
-						var targetFrameSpacing = (double) 1000 / SettingsManager.FrameRateLimiters.CharacterSelectionScreen.Value;
-
-						if (lastFrameElapsedTime.TotalMilliseconds < targetFrameSpacing)
-							Thread.Sleep((int) (targetFrameSpacing - lastFrameElapsedTime.TotalMilliseconds));
-
-						stopWatch.Reset();
-					}
+						LimitFPS(SettingsManager.FrameRateLimiters.CharacterSelectionScreen.Value);
 				}
 				else
 				{
 					if (SettingsManager.FrameRateLimiters.InWorld.Value != 0)
-					{
-						var lastFrameElapsedTime = stopWatch.Elapsed;
-
-						var targetFrameSpacing = (double)1000 / SettingsManager.FrameRateLimiters.InWorld.Value;
-
-						if (lastFrameElapsedTime.TotalMilliseconds < targetFrameSpacing)
-							Thread.Sleep((int)(targetFrameSpacing - lastFrameElapsedTime.TotalMilliseconds));
-
-						stopWatch.Reset();
-					}
+						LimitFPS(SettingsManager.FrameRateLimiters.InWorld.Value);
 				}
 			}
 			catch (Exception ex)
@@ -61,6 +43,40 @@ namespace MagFilter
 
 				// If we fail once, just stop.
 				CoreManager.Current.RenderFrame -= Current_RenderFrame;
+			}
+		}
+
+		private uint lastMaxFPS;
+		private double targetFrameSpacing;
+		private int frameCount;
+
+		private void LimitFPS(uint maxFPS)
+		{
+			if (lastMaxFPS != maxFPS)
+			{
+				lastMaxFPS = maxFPS;
+				targetFrameSpacing = (double)1000 / maxFPS;
+				frameCount = 1;
+
+				stopWatch.Reset();
+				stopWatch.Start();
+
+				return;
+			}
+
+			var elapsedMilliseconds = stopWatch.ElapsedMilliseconds;
+
+			var sleepTime = (int)((targetFrameSpacing * frameCount) - elapsedMilliseconds);
+
+			if (sleepTime > 0)
+				Thread.Sleep(sleepTime);
+
+			if (++frameCount > maxFPS || elapsedMilliseconds > 1000)
+			{
+				frameCount = 1;
+
+				stopWatch.Reset();
+				stopWatch.Start();
 			}
 		}
 
