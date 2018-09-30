@@ -49,8 +49,16 @@ namespace MagFilter
 		{
 			for (int i = 0; i < characters.Count; i++)
 			{
-				if (String.Compare(characters[i].Name, name, StringComparison.OrdinalIgnoreCase) == 0)
-					return LoginByIndex(i);
+				if (characters[i].Name.StartsWith("+") && !name.StartsWith("+"))
+				{
+					if (String.Compare(characters[i].Name.TrimStart('+'), name, StringComparison.OrdinalIgnoreCase) == 0)
+						return LoginByIndex(i);
+				}
+				else
+				{
+					if (String.Compare(characters[i].Name, name, StringComparison.OrdinalIgnoreCase) == 0)
+						return LoginByIndex(i);
+				}
 			}
 
 			return false;
