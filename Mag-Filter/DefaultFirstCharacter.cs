@@ -7,12 +7,14 @@ namespace MagFilter
 		public string AccountName;
 
 		public string CharacterName;
+		public int CharacterIndex;
 
-		public DefaultFirstCharacter(string server, string accountName, string characterName)
+		public DefaultFirstCharacter(string server, string accountName, string characterName, int characterIndex = -1)
 		{
 			Server = server;
 			AccountName = accountName;
 			CharacterName = characterName;
+			CharacterIndex = characterIndex;
 		}
 	}
 }

@@ -52,7 +52,30 @@ namespace MagFilter
 
 				e.Eat = true;
 			}
-			else if (lower == "/mf dlc clear")
+			else if (lower.StartsWith("/mf dlcbi set "))
+			{
+				var index = int.Parse(lower.Substring(14, lower.Length - 14));
+
+				if (index > 10)
+				{
+					index = -1;
+					Debug.WriteToChat("Default Login Character failed with input too large: " + index);
+				}
+				else if (index < 0)
+				{
+					index = -1;
+					Debug.WriteToChat("Default Login Character failed with input too small: " + index);
+				}
+				else
+				{
+
+					Settings.SettingsManager.CharacterSelectionScreen.SetDefaultFirstCharacter(new DefaultFirstCharacter(server, zonename, null, index));
+					Debug.WriteToChat("Default Login Character set to index: " + index);
+				}
+
+				e.Eat = true;
+			}
+			else if (lower == "/mf dlc clear" || lower == "/mf dlcbi clear")
 			{
 				Settings.SettingsManager.CharacterSelectionScreen.DeleteDefaultFirstCharacter(server, zonename);
 				Debug.WriteToChat("Default Login Character cleared");
@@ -76,7 +99,12 @@ namespace MagFilter
 							PostMessageTools.SendMouseClick(350, 100);
 
 						if (state == 3)
-							loginCharacterTools.LoginCharacter(character.CharacterName);
+						{
+							if (!String.IsNullOrEmpty(character.CharacterName))
+								loginCharacterTools.LoginCharacter(character.CharacterName);
+							else if (character.CharacterIndex != -1)
+								loginCharacterTools.LoginByIndex(character.CharacterIndex);
+						}
 
 						break;
 					}

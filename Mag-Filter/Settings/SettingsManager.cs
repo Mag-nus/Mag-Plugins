@@ -30,6 +30,10 @@ namespace MagFilter.Settings
 								character.AccountName = childNode.Attributes["AccountName"].Value;
 
 								character.CharacterName = childNode.Attributes["CharacterName"].Value;
+								if (childNode.Attributes["CharacterIndex"] != null)
+									int.TryParse(childNode.Attributes["CharacterIndex"].Value, out character.CharacterIndex);
+								else
+									character.CharacterIndex = -1;
 
 								characters.Add(character);
 							}
@@ -66,6 +70,7 @@ namespace MagFilter.Settings
 					attributes.Add("AccountName", character.AccountName);
 
 					attributes.Add("CharacterName", character.CharacterName);
+					attributes.Add("CharacterIndex", character.CharacterIndex.ToString());
 
 					collection.Add(attributes);
 				}
@@ -76,6 +81,7 @@ namespace MagFilter.Settings
 				newAttributes.Add("AccountName", newDefaultFirstCharacter.AccountName);
 
 				newAttributes.Add("CharacterName", newDefaultFirstCharacter.CharacterName);
+				newAttributes.Add("CharacterIndex", newDefaultFirstCharacter.CharacterIndex.ToString());
 
 				collection.Add(newAttributes);
 
@@ -104,6 +110,7 @@ namespace MagFilter.Settings
 							attributes.Add("AccountName", character.AccountName);
 
 							attributes.Add("CharacterName", character.CharacterName);
+							attributes.Add("CharacterIndex", character.CharacterIndex.ToString());
 
 							collection.Add(attributes);
 						}
