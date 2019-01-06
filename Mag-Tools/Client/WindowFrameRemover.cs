@@ -87,8 +87,8 @@ namespace MagTools.Client
 				User32.RECT rect = new User32.RECT();
 
 				User32.GetWindowRect(CoreManager.Current.Decal.Hwnd, ref rect);
-
-                // Widths: 800 1024 1152 1176 1280 1360 1400 1440 1600 1680 1792 1800 1856 1920 2048 2560 3440
+				
+				// Widths: 800 1024 1152 1176 1280 1360 1400 1440 1600 1680 1792 1800 1856 1920 2048 2560 3440
 				if (rect.Width >= 2560) return rect.Width - 3440;
 				if (rect.Width >= 2560) return rect.Width - 2560;
 				if (rect.Width >= 2048) return rect.Width - 2048;
