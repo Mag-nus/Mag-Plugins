@@ -209,10 +209,15 @@ namespace Mag.Shared
 			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)VK_CONTROL,		(UIntPtr)0xC01D0001);
 		}
 
-		/// <summary>
-		/// Opens/Closes fellowship view
-		/// </summary>
-		public static void SendF4()
+        public static void SendAltF4()
+        {
+            User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_DESTROY, new IntPtr(0), new UIntPtr(0));
+        }
+
+        /// <summary>
+        /// Opens/Closes fellowship view
+        /// </summary>
+        public static void SendF4()
 		{
 			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)0x00000073, (UIntPtr)0x003E0001);
 			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)0x00000073, (UIntPtr)0xC03E0001);

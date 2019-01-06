@@ -8,8 +8,8 @@ namespace Mag.Shared
 		public const int WM_ACTIVATE		= 0x0006;
 		public const int WM_KILLFOCUS		= 0x0008;
 		public const int WM_ACTIVATEAPP		= 0x001C;
-
-		public const int WM_KEYDOWN			= 0x0100;
+        public const int WM_DESTROY         = 0x0002;
+        public const int WM_KEYDOWN			= 0x0100;
 		public const int WM_KEYUP			= 0x0101;
 		public const int WM_CHAR			= 0x0102;
 
