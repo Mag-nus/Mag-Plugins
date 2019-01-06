@@ -93,7 +93,7 @@ namespace MagTools.Client
 				if (rect.Width >= 5040) return rect.Width - 5040;
 				if (rect.Width >= 4096) return rect.Width - 4096;
 				if (rect.Width >= 3840) return rect.Width - 3840;
-				if (rect.Width >= 2560) return rect.Width - 3440;
+				if (rect.Width >= 3440) return rect.Width - 3440;
 				if (rect.Width >= 2560) return rect.Width - 2560;
 				if (rect.Width >= 2048) return rect.Width - 2048;
 				if (rect.Width >= 1920) return rect.Width - 1920;
