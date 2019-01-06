@@ -9,9 +9,9 @@ namespace Mag.Shared
 	{
 		// http://msdn.microsoft.com/en-us/library/dd375731%28v=vs.85%29.aspx
 
-		private const byte VK_RETURN	= 0x0D;
+		private const byte VK_RETURN		= 0x0D;
 		private const byte VK_SHIFT		= 0x10;
-		private const byte VK_CONTROL	= 0x11;
+		private const byte VK_CONTROL		= 0x11;
 		private const byte VK_PAUSE		= 0x13;
 		private const byte VK_SPACE		= 0x20;
 
@@ -208,16 +208,16 @@ namespace Mag.Shared
 			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)CharCode(ch),	(UIntPtr)0xC0100001);
 			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)VK_CONTROL,		(UIntPtr)0xC01D0001);
 		}
-
-        public static void SendAltF4()
-        {
-            User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_DESTROY, new IntPtr(0), new UIntPtr(0));
-        }
-
-        /// <summary>
-        /// Opens/Closes fellowship view
-        /// </summary>
-        public static void SendF4()
+		
+		public static void SendAltF4()
+		{
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_DESTROY, new IntPtr(0), new UIntPtr(0));
+		}
+		
+		/// <summary>
+		/// Opens/Closes fellowship view
+		/// </summary>
+		public static void SendF4()
 		{
 			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)0x00000073, (UIntPtr)0x003E0001);
 			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)0x00000073, (UIntPtr)0xC03E0001);
