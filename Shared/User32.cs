@@ -6,6 +6,7 @@ namespace Mag.Shared
 	public static class User32
 	{
 		public const int WM_ACTIVATE		= 0x0006;
+		public const int WM_SETFOCUS		= 0x0007;
 		public const int WM_KILLFOCUS		= 0x0008;
 		public const int WM_ACTIVATEAPP		= 0x001C;
 

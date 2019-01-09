@@ -60,7 +60,7 @@ namespace MagTools.Client
 				if (e.Msg == User32.WM_KILLFOCUS)
 					Throttling = true;
 
-				if (e.Msg == 7 && e.LParam == 0 && e.WParam == 0)
+				if (e.Msg == User32.WM_SETFOCUS && e.LParam == 0 && e.WParam == 0)
 					Throttling = false;
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
