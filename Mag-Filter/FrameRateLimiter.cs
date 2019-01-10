@@ -22,19 +22,33 @@ namespace MagFilter
 			CoreManager.Current.RenderFrame -= Current_RenderFrame;
 		}
 
+		RateLimiter characterSelectionScreenRateLimiter;
+
 		private void Current_RenderFrame(object sender, EventArgs e)
 		{
 			try
 			{
 				if (CoreManager.Current.CharacterFilter == null || CoreManager.Current.CharacterFilter.Id == 0)
 				{
-					if (SettingsManager.FrameRateLimiters.CharacterSelectionScreen.Value != 0)
-						LimitFPS(SettingsManager.FrameRateLimiters.CharacterSelectionScreen.Value);
+					if (SettingsManager.CharacterSelectionScreen.MaxFPS.Value >= 10)
+					{
+						if (characterSelectionScreenRateLimiter == null || characterSelectionScreenRateLimiter.MaxNumberOfEvents != SettingsManager.CharacterSelectionScreen.MaxFPS.Value)
+							characterSelectionScreenRateLimiter = new RateLimiter((int)SettingsManager.CharacterSelectionScreen.MaxFPS.Value, TimeSpan.FromSeconds(1));
+					}
+					else
+						characterSelectionScreenRateLimiter = null;
 				}
 				else
+					characterSelectionScreenRateLimiter = null;
+
+				if (characterSelectionScreenRateLimiter != null)
 				{
-					if (SettingsManager.FrameRateLimiters.InWorld.Value != 0)
-						LimitFPS(SettingsManager.FrameRateLimiters.InWorld.Value);
+					var sleepTime = (int)(characterSelectionScreenRateLimiter.GetSecondsToWaitBeforeNextEvent() * 1000);
+
+					if (sleepTime > 0)
+						Thread.Sleep(sleepTime);
+
+					characterSelectionScreenRateLimiter.RegisterEvent();
 				}
 			}
 			catch (Exception ex)
@@ -46,66 +60,18 @@ namespace MagFilter
 			}
 		}
 
-		private uint lastMaxFPS;
-		private double targetFrameSpacing;
-		private int frameCount;
-
-		private void LimitFPS(uint maxFPS)
-		{
-			if (lastMaxFPS != maxFPS)
-			{
-				lastMaxFPS = maxFPS;
-				targetFrameSpacing = (double)1000 / maxFPS;
-				frameCount = 1;
-
-				stopWatch.Reset();
-				stopWatch.Start();
-
-				return;
-			}
-
-			var elapsedMilliseconds = stopWatch.ElapsedMilliseconds;
-
-			var sleepTime = (int)((targetFrameSpacing * frameCount) - elapsedMilliseconds);
-
-			if (sleepTime > 0)
-				Thread.Sleep(sleepTime);
-
-			if (++frameCount > maxFPS || elapsedMilliseconds > 1000)
-			{
-				frameCount = 1;
-
-				stopWatch.Reset();
-				stopWatch.Start();
-			}
-		}
-
 		public void FilterCore_CommandLineText(object sender, ChatParserInterceptEventArgs e)
 		{
 			if (e.Text.StartsWith("/mf cssmfps "))
 			{
 				var value = uint.Parse(e.Text.Substring(12, e.Text.Length - 12));
 
-				if (value > 0 && value < 10)
+				if (value != 0 && value < 10)
 					Debug.WriteToChat("Character Selection Screen Maximum FPS cannot be less than 10. Set to zero to disable.");
 				else
 				{
-					SettingsManager.FrameRateLimiters.CharacterSelectionScreen.Value = value;
+					SettingsManager.CharacterSelectionScreen.MaxFPS.Value = value;
 					Debug.WriteToChat("Character Selection Screen Maximum FPS set: " + value);
-				}
-
-				e.Eat = true;
-			}
-			else if (e.Text.StartsWith("/mf iwmfps "))
-			{
-				var value = uint.Parse(e.Text.Substring(11, e.Text.Length - 11));
-
-				if (value > 0 && value < 20)
-					Debug.WriteToChat("In-World Maximum FPS cannot be less than 20. Set to zero to disable.");
-				else
-				{
-					SettingsManager.FrameRateLimiters.InWorld.Value = value;
-					Debug.WriteToChat("In-World Maximum FPS set: " + value);
 				}
 
 				e.Eat = true;

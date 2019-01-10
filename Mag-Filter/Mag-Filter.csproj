@@ -58,6 +58,9 @@
     <Compile Include="..\Shared\PostMessageTools.cs">
       <Link>Shared\PostMessageTools.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\RateLimiter.cs">
+      <Link>Shared\RateLimiter.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\Settings\Setting.cs">
       <Link>Shared\Settings\Setting.cs</Link>
     </Compile>
