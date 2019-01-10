@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml;
 
@@ -122,6 +123,36 @@ namespace MagFilter.Settings
 						break;
 					}
 				}
+			}
+
+			public static void DeleteDefaultFirstCharacters(string server)
+			{
+				SettingsFile.ReloadXmlDocument();
+
+				Collection<DefaultFirstCharacter> characters = DefaultFirstCharacters;
+
+				for (int i = 0; i < characters.Count; i++)
+				{
+					if (characters[i].Server == server)
+						characters.RemoveAt(i);
+				}
+
+				Collection<Dictionary<string, string>> collection = new Collection<Dictionary<string, string>>();
+
+				foreach (DefaultFirstCharacter character in characters)
+				{
+					Dictionary<string, string> attributes = new Dictionary<string, string>();
+
+					attributes.Add("Server", character.Server);
+					attributes.Add("AccountName", character.AccountName);
+
+					attributes.Add("CharacterName", character.CharacterName);
+					attributes.Add("CharacterIndex", character.CharacterIndex.ToString());
+
+					collection.Add(attributes);
+				}
+
+				SettingsFile.SetNodeChilderen("CharacterSelectionScreen/DefaultLoginChars", "DefaultLoginChar", collection);
 			}
 		}
 	}

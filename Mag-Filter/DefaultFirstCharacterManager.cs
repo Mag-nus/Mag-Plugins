@@ -82,6 +82,36 @@ namespace MagFilter
 
 				e.Eat = true;
 			}
+			else if (lower.StartsWith("/mf sdlcbi set "))
+			{
+				var index = int.Parse(lower.Substring(15, lower.Length - 15));
+
+				if (index > 10)
+				{
+					index = -1;
+					Debug.WriteToChat("Default Login Character failed with input too large: " + index);
+				}
+				else if (index < 0)
+				{
+					index = -1;
+					Debug.WriteToChat("Default Login Character failed with input too small: " + index);
+				}
+				else
+				{
+
+					Settings.SettingsManager.CharacterSelectionScreen.SetDefaultFirstCharacter(new DefaultFirstCharacter(server, null, null, index));
+					Debug.WriteToChat("Server Default Login Character set to index: " + index);
+				}
+
+				e.Eat = true;
+			}
+			else if (lower == "/mf sdlcbi clear")
+			{
+				Settings.SettingsManager.CharacterSelectionScreen.DeleteDefaultFirstCharacters(server);
+				Debug.WriteToChat("Server Default Login Characters cleared");
+
+				e.Eat = true;
+			}
 		}
 
 		void defaultFirstCharTimer_Tick(object sender, EventArgs e)
@@ -92,7 +122,7 @@ namespace MagFilter
 
 				foreach (var character in defaultFirstCharacters)
 				{
-					if (character.AccountName == zonename && character.Server == server)
+					if ((String.IsNullOrEmpty(character.AccountName) || character.AccountName == zonename) && character.Server == server)
 					{
 						// Bypass movies/logos
 						if (state == 1 || state == 2)
