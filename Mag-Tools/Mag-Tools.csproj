@@ -112,6 +112,9 @@
     <Compile Include="..\Shared\PostMessageTools.cs">
       <Link>Shared\PostMessageTools.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\RateLimiter.cs">
+      <Link>Shared\RateLimiter.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\SerializableDictionary.cs">
       <Link>Shared\SerializableDictionary.cs</Link>
     </Compile>
@@ -132,7 +135,7 @@
     </Compile>
     <Compile Include="Client\ChatSizeManager.cs" />
     <Compile Include="ChatFilter.cs" />
-    <Compile Include="Client\NoFocusFPSManager.cs" />
+    <Compile Include="Client\FPSManager.cs" />
     <Compile Include="Client\WindowPosition.cs" />
     <Compile Include="Loggers\Chat\BufferedChatLogFileWriter.cs" />
     <Compile Include="Loggers\Chat\ChatLogger.cs" />

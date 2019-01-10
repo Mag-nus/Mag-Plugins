@@ -249,7 +249,10 @@
             <control progid="DecalControls.StaticText" name="ClientSetPositionLabel" left="10" top="165" width="310" height="60" text="This sets the startup position for this account/server pair. The client window will be moved do these desktop coords on login."/>
 
             <control progid="DecalControls.StaticText" name="NoFocusFPSLabel" left="10" top="250" width="310" height="30" text="This sets the frames per second the client will run at when its not in focus. Default is 10 (off):"/>
-            <control progid="DecalControls.Edit" name="NoFocusFPS" left="200" top="265" width="30" height="16" text="" />
+            <control progid="DecalControls.Edit" name="NoFocusFPS" left="200" top="267" width="30" height="16" text="" />
+
+            <control progid="DecalControls.StaticText" name="MaxFPSLabel" left="10" top="290" width="310" height="30" text="This throttles client if it tries to exceed this frames per second. Test with /framerate. Default is 0 (off):"/>
+            <control progid="DecalControls.Edit" name="MaxFPS" left="257" top="307" width="30" height="16" text="" />
           </control>
         </page>
 

@@ -123,7 +123,7 @@ namespace MagTools
 		// Misc
 		WindowFrameRemover windowFrameRemover;
 		WindowMover windowMover;
-		NoFocusFPSManager noFocusFPSManager;
+		FPSManager fpsManager;
 
 
 		// Relies on other decal assemblies
@@ -224,7 +224,7 @@ namespace MagTools
 				// Misc
 				windowFrameRemover = new WindowFrameRemover();
 				windowMover = new WindowMover();
-				noFocusFPSManager = new NoFocusFPSManager();
+				fpsManager = new FPSManager();
 
 
 				savePersistentStatsTimer.Interval = 600000; // Set the timer to run once every 10 minutes
@@ -404,7 +404,7 @@ namespace MagTools
 				// Misc
 				if (windowFrameRemover != null) windowFrameRemover.Dispose();
 				if (windowMover != null) windowMover.Dispose();
-				if (noFocusFPSManager != null) noFocusFPSManager.Dispose();
+				if (fpsManager != null) fpsManager.Dispose();
 
 				// Loggers
 				if (chatLogger != null) chatLogger.Dispose();

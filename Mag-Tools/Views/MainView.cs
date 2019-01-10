@@ -126,6 +126,7 @@ namespace MagTools.Views
 		HudStaticText ClientSetPosition { get; set; }
 
 		HudTextBox NoFocusFPS { get; set; }
+		HudTextBox MaxFPS { get; set; }
 
 		// Misc - About
 		public HudStaticText VersionLabel { get; private set; }
@@ -256,6 +257,7 @@ namespace MagTools.Views
 				ClientSetPosition = view != null ? (HudStaticText)view["ClientSetPosition"] : new HudStaticText();
 
 				NoFocusFPS = view != null ? (HudTextBox)view["NoFocusFPS"] : new HudTextBox();
+				MaxFPS = view != null ? (HudTextBox)view["MaxFPS"] : new HudTextBox();
 
 				// Misc - About
 				VersionLabel = view != null ? (HudStaticText)view["VersionLabel"] : new HudStaticText();
@@ -434,7 +436,30 @@ namespace MagTools.Views
 						int value;
 						if (!int.TryParse(NoFocusFPS.Text, out value))
 							value = Settings.SettingsManager.Misc.NoFocusFPS.DefaultValue;
+						else if (value <= Settings.SettingsManager.Misc.NoFocusFPS.DefaultValue)
+						{
+							Debug.WriteToChat("No Focus FPS cannot be less than " + Settings.SettingsManager.Misc.NoFocusFPS.DefaultValue + ". Set to " + Settings.SettingsManager.Misc.NoFocusFPS.DefaultValue + " to disable.");
+							value = 10;
+						}
 						Settings.SettingsManager.Misc.NoFocusFPS.Value = value;
+					}
+					catch (Exception ex) { Debug.LogException(ex); }
+				};
+
+				MaxFPS.Text = Settings.SettingsManager.Misc.MaxFPS.Value.ToString(CultureInfo.InvariantCulture);
+				MaxFPS.Change += (s, e) =>
+				{
+					try
+					{
+						int value;
+						if (!int.TryParse(MaxFPS.Text, out value))
+							value = Settings.SettingsManager.Misc.MaxFPS.DefaultValue;
+						else if (value != 0 && value < 20)
+						{ 
+							Debug.WriteToChat("Maximum FPS cannot be less than 20. Set to zero to disable.");
+							value = 20;
+						}
+						Settings.SettingsManager.Misc.MaxFPS.Value = value;
 					}
 					catch (Exception ex) { Debug.LogException(ex); }
 				};

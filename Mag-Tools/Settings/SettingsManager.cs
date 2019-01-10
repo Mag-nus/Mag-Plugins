@@ -398,6 +398,8 @@ namespace MagTools.Settings
 			}
 
 			public static readonly Setting<int> NoFocusFPS = new Setting<int>("Misc/NoFocusFPS", "No Focus FPS", 10);
+
+			public static readonly Setting<int> MaxFPS = new Setting<int>("Misc/MaxFPS", "Max FPS", 0);
 		}
 
 		public static class Filters
