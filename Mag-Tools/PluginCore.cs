@@ -160,6 +160,7 @@ namespace MagTools
 		TinkeringToolsView tinkeringToolsView;
 
 		AccountServerCharacterGUI accountServerCharacterGUI;
+		ServerGUI serverGUI;
 
 		HUD hud;
 
@@ -324,6 +325,7 @@ namespace MagTools
 					tinkeringToolsView = new TinkeringToolsView(mainView);
 
 					accountServerCharacterGUI = new AccountServerCharacterGUI(mainView);
+					serverGUI = new ServerGUI(mainView);
 
 					mainView.CombatTrackerClearCurrentStats.Hit += (s2, e2) => { try { combatTrackerCurrent.ClearStats(); } catch (Exception ex) { Debug.LogException(ex); } };
 					mainView.CombatTrackerExportCurrentStats.Hit += (s2, e2) => { try { combatTrackerCurrent.ExportStats(PluginPersonalFolder.FullName + @"\" + CoreManager.Current.CharacterFilter.Server + @"\" + CoreManager.Current.CharacterFilter.Name + ".CombatTracker." + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + ".xml", true); } catch (Exception ex) { Debug.LogException(ex); } };
@@ -370,6 +372,7 @@ namespace MagTools
 				if (hud != null) hud.Dispose();
 
 				if (accountServerCharacterGUI != null) accountServerCharacterGUI.Dispose();
+				if (serverGUI != null) serverGUI.Dispose();
 
 				if (tinkeringToolsView != null) tinkeringToolsView.Dispose();
 				//if (inventoryToolsView != null) inventoryToolsView.Dispose();

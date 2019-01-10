@@ -55,7 +55,9 @@ namespace MagTools.Macros
 			{
 				var commands = Settings.SettingsManager.AccountServerCharacter.GetOnLoginCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name);
 
-				if (commands.Count == 0)
+				var serverCommands = Settings.SettingsManager.Server.GetOnLoginCommands(CoreManager.Current.CharacterFilter.Server);
+
+				if (commands.Count == 0 && serverCommands.Count == 0)
 					return;
 
 				if (pendingCommands.Count == 0)
@@ -65,6 +67,9 @@ namespace MagTools.Macros
 				pendingCommands.Enqueue(null);
 
 				foreach (var action in commands)
+					pendingCommands.Enqueue(action);
+
+				foreach (var action in serverCommands)
 					pendingCommands.Enqueue(action);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }
@@ -76,7 +81,9 @@ namespace MagTools.Macros
 			{
 				var commands = Settings.SettingsManager.AccountServerCharacter.GetOnLoginCompleteCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name);
 
-				if (commands.Count == 0)
+				var serverCommands = Settings.SettingsManager.Server.GetOnLoginCompleteCommands(CoreManager.Current.CharacterFilter.Server);
+
+				if (commands.Count == 0 && serverCommands.Count == 0)
 					return;
 
 				if (pendingCommands.Count == 0)
@@ -86,6 +93,9 @@ namespace MagTools.Macros
 				pendingCommands.Enqueue(null);
 
 				foreach (var action in commands)
+					pendingCommands.Enqueue(action);
+
+				foreach (var action in serverCommands)
 					pendingCommands.Enqueue(action);
 			}
 			catch (Exception ex) { Debug.LogException(ex); }

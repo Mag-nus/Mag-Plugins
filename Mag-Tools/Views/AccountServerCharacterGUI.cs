@@ -261,7 +261,7 @@ namespace MagTools.Views
 
 				var commands = Settings.SettingsManager.AccountServerCharacter.GetPeriodicCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name);
 
-				commands.Add(new Settings.SettingsManager.AccountServerCharacter.PeriodicCommand(command, TimeSpan.FromMinutes(interval), TimeSpan.FromMinutes(offset)));
+				commands.Add(new Settings.SettingsManager.PeriodicCommand(command, TimeSpan.FromMinutes(interval), TimeSpan.FromMinutes(offset)));
 
 				Settings.SettingsManager.AccountServerCharacter.SetPeriodicCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name, commands);
 
@@ -284,7 +284,7 @@ namespace MagTools.Views
 				else
 					return;
 
-				var commands = new List<Settings.SettingsManager.AccountServerCharacter.PeriodicCommand>();
+				var commands = new List<Settings.SettingsManager.PeriodicCommand>();
 
 				for (int i = 0; i < periodicCommandList.RowCount; i++)
 				{
@@ -294,7 +294,7 @@ namespace MagTools.Views
 					int.TryParse(((HudStaticText)periodicCommandList[i][1]).Text, out interval);
 					int.TryParse(((HudStaticText)periodicCommandList[i][2]).Text, out offset);
 
-					commands.Add(new Settings.SettingsManager.AccountServerCharacter.PeriodicCommand(((HudStaticText)periodicCommandList[i][0]).Text, TimeSpan.FromMinutes(interval), TimeSpan.FromMinutes(offset)));
+					commands.Add(new Settings.SettingsManager.PeriodicCommand(((HudStaticText)periodicCommandList[i][0]).Text, TimeSpan.FromMinutes(interval), TimeSpan.FromMinutes(offset)));
 				}
 
 				Settings.SettingsManager.AccountServerCharacter.SetPeriodicCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name, commands);

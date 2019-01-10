@@ -155,6 +155,7 @@
     <Compile Include="Trackers\ValueSnapShotGroup.cs" />
     <Compile Include="Views\AccountServerCharacterGUI.cs" />
     <Compile Include="Views\InventoryToolsView.cs" />
+    <Compile Include="Views\ServerGUI.cs" />
     <Compile Include="Views\TinkeringToolsView.cs" />
     <Compile Include="Trackers\Inventory\InventoryTracker.cs" />
     <Compile Include="Trackers\Inventory\TrackedInventory.cs" />

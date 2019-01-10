@@ -109,6 +109,21 @@ namespace MagTools.Views
 		public HudButton PeriodicCommandAdd { get; private set; }
 		public HudList PeriodicCommandList { get; private set; }
 
+		// Tools - Server
+		public HudTextBox ServerLoginText { get; private set; }
+		public HudButton ServerLoginAdd { get; private set; }
+		public HudList ServerLoginList { get; private set; }
+
+		public HudTextBox ServerLoginCompleteText { get; private set; }
+		public HudButton ServerLoginCompleteAdd { get; private set; }
+		public HudList ServerLoginCompleteList { get; private set; }
+
+		public HudTextBox ServerPeriodicCommandText { get; private set; }
+		public HudTextBox ServerPeriodicCommandInterval { get; private set; }
+		public HudTextBox ServerPeriodicCommandOffset { get; private set; }
+		public HudButton ServerPeriodicCommandAdd { get; private set; }
+		public HudList ServerPeriodicCommandList { get; private set; }
+
 
 		// Misc - Options
 		HudList OptionList { get; set; }
@@ -239,6 +254,21 @@ namespace MagTools.Views
 				PeriodicCommandOffset = view != null ? (HudTextBox)view["PeriodicCommandOffset"] : new HudTextBox();
 				PeriodicCommandAdd = view != null ? (HudButton)view["PeriodicCommandAdd"] : new HudButton();
 				PeriodicCommandList = view != null ? (HudList)view["PeriodicCommandList"] : new HudList();
+
+				// Tools - Server
+				ServerLoginText = view != null ? (HudTextBox)view["ServerLoginText"] : new HudTextBox();
+				ServerLoginAdd = view != null ? (HudButton)view["ServerLoginAdd"] : new HudButton();
+				ServerLoginList = view != null ? (HudList)view["ServerLoginList"] : new HudList();
+
+				ServerLoginCompleteText = view != null ? (HudTextBox)view["ServerLoginCompleteText"] : new HudTextBox();
+				ServerLoginCompleteAdd = view != null ? (HudButton)view["ServerLoginCompleteAdd"] : new HudButton();
+				ServerLoginCompleteList = view != null ? (HudList)view["ServerLoginCompleteList"] : new HudList();
+
+				ServerPeriodicCommandText = view != null ? (HudTextBox)view["ServerPeriodicCommandText"] : new HudTextBox();
+				ServerPeriodicCommandInterval = view != null ? (HudTextBox)view["ServerPeriodicCommandInterval"] : new HudTextBox();
+				ServerPeriodicCommandOffset = view != null ? (HudTextBox)view["ServerPeriodicCommandOffset"] : new HudTextBox();
+				ServerPeriodicCommandAdd = view != null ? (HudButton)view["ServerPeriodicCommandAdd"] : new HudButton();
+				ServerPeriodicCommandList = view != null ? (HudList)view["ServerPeriodicCommandList"] : new HudList();
 
 
 				// Misc - Options
