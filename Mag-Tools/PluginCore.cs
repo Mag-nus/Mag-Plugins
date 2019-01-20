@@ -124,6 +124,7 @@ namespace MagTools
 		WindowFrameRemover windowFrameRemover;
 		WindowMover windowMover;
 		FPSManager fpsManager;
+		Dictionary<string, int> vendorList;
 
 
 		// Relies on other decal assemblies
@@ -191,6 +192,7 @@ namespace MagTools
 				CoreManager.Current.CharacterFilter.LoginComplete += new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.CharacterFilter.Logoff += new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 				CoreManager.Current.CommandLineText += new EventHandler<ChatParserInterceptEventArgs>(Current_CommandLineText);
+				CoreManager.Current.WorldFilter.ApproachVendor += new EventHandler<ApproachVendorEventArgs>(WorldFilter_ApproachVendor);
 
 
 				// General
@@ -365,6 +367,7 @@ namespace MagTools
 				CoreManager.Current.CharacterFilter.LoginComplete -= new EventHandler(CharacterFilter_LoginComplete);
 				CoreManager.Current.CharacterFilter.Logoff -= new EventHandler<Decal.Adapter.Wrappers.LogoffEventArgs>(CharacterFilter_Logoff);
 				CoreManager.Current.CommandLineText -= new EventHandler<ChatParserInterceptEventArgs>(Current_CommandLineText);
+				CoreManager.Current.WorldFilter.ApproachVendor -= new EventHandler<ApproachVendorEventArgs>(WorldFilter_ApproachVendor);
 
 
 				// Views, depends on VirindiViewService.dll
@@ -673,6 +676,32 @@ namespace MagTools
 			catch (Exception ex) { Debug.LogException(ex); }
 		}
 
+		void WorldFilter_ApproachVendor(object sender, ApproachVendorEventArgs e)
+		{
+			vendorList = new Dictionary<string, int>();
+
+			try
+			{
+				Vendor vendor = e.Vendor;
+
+				foreach (WorldObject wo in vendor)
+				{
+					string name = wo.Name.ToLower();
+
+					if (!vendorList.ContainsKey(name)) {
+						vendorList.Add(name, wo.Id);
+					}
+				}
+
+				vendor = null;
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteToChat(ex.Message);
+				Debug.LogException(ex, "Approach Vendor Issue");
+			}
+		}
+
 		readonly Dictionary<string, object> rememberedSettings = new Dictionary<string, object>();
 
 		public bool ProcessMTCommand(string mtCommand)
@@ -887,7 +916,7 @@ namespace MagTools
 
 				if (targetName != null)
 				{
-					objectId = FindIdForName(targetName, false, false, true, partialMatch);
+					objectId = FindIdForName(targetName, false, false, true, false, partialMatch);
 					if (objectId == -1) return false;
 				}
 
@@ -900,7 +929,7 @@ namespace MagTools
 				bool partialMatch = lower.StartsWith("/mt selectp ");
 				int offset = partialMatch ? 12 : 11;
 
-				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, true, true, partialMatch);
+				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, true, true, false, partialMatch);
 
 				if (objectId == -1) return false;
 				CoreManager.Current.Actions.SelectItem(objectId);
@@ -941,7 +970,7 @@ namespace MagTools
 						objectId = wo.Id;
 					}
 					else
-						objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), searchInventory, false, searchLandscape, partialMatch);
+						objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), searchInventory, false, searchLandscape, false, partialMatch);
 				}
 				else
 				{
@@ -949,8 +978,8 @@ namespace MagTools
 					string first = command.Substring(0, command.IndexOf(" on ", StringComparison.Ordinal));
 					string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
 
-					objectId = FindIdForName(first, searchInventory, false, false, partialMatch);
-					useMethod = FindIdForName(second, searchInventory, false, searchLandscape, partialMatch, objectId);
+					objectId = FindIdForName(first, searchInventory, false, false, false, partialMatch);
+					useMethod = FindIdForName(second, searchInventory, false, searchLandscape, partialMatch, false, objectId);
 				}
 
 				if (objectId == -1 || useMethod == -1)
@@ -976,8 +1005,8 @@ namespace MagTools
 				string first = command.Substring(0, command.IndexOf(" to ", StringComparison.Ordinal));
 				string second = command.Substring(first.Length + 4, command.Length - first.Length - 4);
 
-				int objectId = FindIdForName(first, true, false, false, partialMatch);
-				int destinationId = FindIdForName(second, false, false, true, partialMatch);
+				int objectId = FindIdForName(first, true, false, false, false, partialMatch);
+				int destinationId = FindIdForName(second, false, false, true, false, partialMatch);
 
 				if (objectId == -1 || destinationId == -1) return false;
 				CoreManager.Current.Actions.GiveItem(objectId, destinationId);
@@ -989,7 +1018,7 @@ namespace MagTools
 				bool partialMatch = lower.StartsWith("/mt lootp ");
 				int offset = partialMatch ? 10 : 9;
 
-				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), false, true, false, partialMatch);
+				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), false, true, false, false, partialMatch);
 
 				if (objectId == -1) return false;
 				CoreManager.Current.Actions.UseItem(objectId, 0);
@@ -1001,7 +1030,7 @@ namespace MagTools
 				bool partialMatch = lower.StartsWith("/mt dropp ");
 				int offset = partialMatch ? 10 : 9;
 
-				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, partialMatch);
+				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, false, partialMatch);
 
 				if (objectId == -1) return false;
 				CoreManager.Current.Actions.DropItem(objectId);
@@ -1025,7 +1054,7 @@ namespace MagTools
 				bool partialMatch = lower.StartsWith("/mt trade addp ");
 				int offset = partialMatch ? 15 : 14;
 
-				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, partialMatch);
+				int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, false, partialMatch);
 
 				if (objectId == -1) return false;
 				CoreManager.Current.Actions.TradeAdd(objectId);
@@ -1038,6 +1067,55 @@ namespace MagTools
 
 			if (CoreManager.Current.Actions.VendorId != 0)
 			{
+				string cmd;
+
+				cmd = "/mt vendor addmax ";
+				if (lower.StartsWith(cmd))
+				{
+					int vendorId = CoreManager.Current.Actions.VendorId;
+					int offset = cmd.Length;
+					string[] commands = lower.Substring(offset, lower.Length - offset).Split('|');
+					string itemName = commands[0];
+					int itemValue = commands.Length > 1 ? Int32.Parse(commands[1]) : -1;
+					int pyrealCount = 0;
+
+					if (itemValue == -1) 
+					{
+						Debug.WriteToChat("Use format: /mt vendor addmax Trade Note (250,000)|287500");
+						return true;
+					}
+
+					WorldObjectCollection inventory = CoreManager.Current.WorldFilter.GetInventory();
+
+					foreach (WorldObject wo in inventory) 
+					{
+						if (wo.Name.Equals("Pyreal"))
+						{
+							pyrealCount += wo.Values(LongValueKey.StackCount);
+						}
+					}
+
+					int itemQty = pyrealCount / itemValue;
+
+					if (itemQty <= 0)
+					{
+						Debug.WriteToChat("You do not have enough pyreals.");
+						return true;
+					}
+
+
+					if (vendorList.ContainsKey(itemName))
+					{
+						int objectId = vendorList[itemName];
+						CoreManager.Current.Actions.VendorAddBuyList(objectId, itemQty);
+						return true;
+					}
+
+					Debug.WriteToChat(itemName + " not found!");
+
+					return true;
+				}
+
 				if ((lower.StartsWith("/mt vendor addbuy ") && lower.Length > 18) || (lower.StartsWith("/mt vendor addbuyp ") && lower.Length > 19))
 				{
 					bool partialMatch = lower.StartsWith("/mt vendor addbuyp ");
@@ -1051,7 +1129,7 @@ namespace MagTools
 					else
 						count = 1;
 
-					int objectId = FindIdForName(itemName, true, false, false, partialMatch);
+					int objectId = FindIdForName(itemName, true, false, false, true, partialMatch);
 
 					if (objectId == -1) return false;
 					CoreManager.Current.Actions.VendorAddBuyList(objectId, count);
@@ -1062,7 +1140,7 @@ namespace MagTools
 					bool partialMatch = lower.StartsWith("/mt vendor addsellp ");
 					int offset = partialMatch ? 20 : 19;
 
-					int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, partialMatch);
+					int objectId = FindIdForName(lower.Substring(offset, lower.Length - offset), true, false, false, false, partialMatch);
 
 					if (objectId == -1) return false;
 					CoreManager.Current.Actions.VendorAddSellList(objectId);
@@ -1305,7 +1383,7 @@ namespace MagTools
 			return null;
 		}
 
-		int FindIdForName(string name, bool searchInInventory, bool searchOpenContainer, bool searchEnvironment, bool partialMatch, int idToSkip = 0)
+		int FindIdForName(string name, bool searchInInventory, bool searchOpenContainer, bool searchEnvironment, bool searchVendor, bool partialMatch, int idToSkip = 0)
 		{
 			// Exact match attempt first
 			if (searchInInventory)
@@ -1332,6 +1410,16 @@ namespace MagTools
 
 				if (closestObject != null)
 					return closestObject.Id;
+			}
+
+			if (searchVendor) 
+			{
+				string lowerName = name.ToLower();
+
+				if (vendorList.ContainsKey(lowerName))
+				{
+					return vendorList[lowerName];
+				}
 			}
 
 			// Partial match attempt second
@@ -1362,6 +1450,24 @@ namespace MagTools
 					if (closestObject != null)
 						return closestObject.Id;
 				}	
+
+				if (searchVendor) 
+				{
+					string lowerName = name.ToLower();
+
+					foreach (string key in vendorList.Keys)
+					{
+						if  (key.Contains(lowerName))
+						{
+							int objectId = vendorList[key];
+
+							if (objectId != idToSkip)
+							{
+								return objectId;
+							}
+						}
+					}
+				}
 			}
 
 			return -1;
