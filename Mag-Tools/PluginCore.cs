@@ -716,6 +716,12 @@ namespace MagTools
 				return true;
 			}
 
+				if (lower.StartsWith("/mt quit") || lower.StartsWith("/mt exit"))
+				{
+				PostMessageTools.SendAltF4();
+				return true;
+				}
+
 			if (lower.StartsWith("/mt click "))
 			{
 				if (lower.StartsWith("/mt click ok")) PostMessageTools.ClickOK();
