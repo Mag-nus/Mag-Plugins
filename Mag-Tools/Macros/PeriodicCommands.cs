@@ -64,7 +64,7 @@ namespace MagTools.Macros
 
 		DateTime lastTick;
 
-		readonly Queue<Settings.SettingsManager.AccountServerCharacter.PeriodicCommand> pendingCommands = new Queue<Settings.SettingsManager.AccountServerCharacter.PeriodicCommand>();
+		readonly Queue<Settings.SettingsManager.PeriodicCommand> pendingCommands = new Queue<Settings.SettingsManager.PeriodicCommand>();
 
 		void timer_Tick(object sender, EventArgs e)
 		{
@@ -78,14 +78,22 @@ namespace MagTools.Macros
 
 				var periodicCommands = Settings.SettingsManager.AccountServerCharacter.GetPeriodicCommands(CoreManager.Current.CharacterFilter.AccountName, CoreManager.Current.CharacterFilter.Server, CoreManager.Current.CharacterFilter.Name);
 
-				if (periodicCommands.Count == 0)
+				var serverPeriodicCommands = Settings.SettingsManager.Server.GetPeriodicCommands(CoreManager.Current.CharacterFilter.Server);
+
+				if (periodicCommands.Count == 0 && serverPeriodicCommands.Count == 0)
 					return;
 
-				int previousPendingCommandCount = pendingCommands.Count;
+				int previousPendingCommandCount = (pendingCommands.Count + serverPeriodicCommands.Count);
 
 				int minutesAfterMidnight = (int)(DateTime.Now - DateTime.Today).TotalMinutes;
 
 				foreach (var periodicCommand in periodicCommands)
+				{
+					if ((minutesAfterMidnight + (int)periodicCommand.OffsetFromMidnight.TotalMinutes) % (int)periodicCommand.Interval.TotalMinutes == 0)
+						pendingCommands.Enqueue(periodicCommand);
+				}
+
+				foreach (var periodicCommand in serverPeriodicCommands)
 				{
 					if ((minutesAfterMidnight + (int)periodicCommand.OffsetFromMidnight.TotalMinutes) % (int)periodicCommand.Interval.TotalMinutes == 0)
 						pendingCommands.Enqueue(periodicCommand);

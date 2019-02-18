@@ -109,6 +109,21 @@ namespace MagTools.Views
 		public HudButton PeriodicCommandAdd { get; private set; }
 		public HudList PeriodicCommandList { get; private set; }
 
+		// Tools - Server
+		public HudTextBox ServerLoginText { get; private set; }
+		public HudButton ServerLoginAdd { get; private set; }
+		public HudList ServerLoginList { get; private set; }
+
+		public HudTextBox ServerLoginCompleteText { get; private set; }
+		public HudButton ServerLoginCompleteAdd { get; private set; }
+		public HudList ServerLoginCompleteList { get; private set; }
+
+		public HudTextBox ServerPeriodicCommandText { get; private set; }
+		public HudTextBox ServerPeriodicCommandInterval { get; private set; }
+		public HudTextBox ServerPeriodicCommandOffset { get; private set; }
+		public HudButton ServerPeriodicCommandAdd { get; private set; }
+		public HudList ServerPeriodicCommandList { get; private set; }
+
 
 		// Misc - Options
 		HudList OptionList { get; set; }
@@ -126,6 +141,7 @@ namespace MagTools.Views
 		HudStaticText ClientSetPosition { get; set; }
 
 		HudTextBox NoFocusFPS { get; set; }
+		HudTextBox MaxFPS { get; set; }
 
 		// Misc - About
 		public HudStaticText VersionLabel { get; private set; }
@@ -239,6 +255,21 @@ namespace MagTools.Views
 				PeriodicCommandAdd = view != null ? (HudButton)view["PeriodicCommandAdd"] : new HudButton();
 				PeriodicCommandList = view != null ? (HudList)view["PeriodicCommandList"] : new HudList();
 
+				// Tools - Server
+				ServerLoginText = view != null ? (HudTextBox)view["ServerLoginText"] : new HudTextBox();
+				ServerLoginAdd = view != null ? (HudButton)view["ServerLoginAdd"] : new HudButton();
+				ServerLoginList = view != null ? (HudList)view["ServerLoginList"] : new HudList();
+
+				ServerLoginCompleteText = view != null ? (HudTextBox)view["ServerLoginCompleteText"] : new HudTextBox();
+				ServerLoginCompleteAdd = view != null ? (HudButton)view["ServerLoginCompleteAdd"] : new HudButton();
+				ServerLoginCompleteList = view != null ? (HudList)view["ServerLoginCompleteList"] : new HudList();
+
+				ServerPeriodicCommandText = view != null ? (HudTextBox)view["ServerPeriodicCommandText"] : new HudTextBox();
+				ServerPeriodicCommandInterval = view != null ? (HudTextBox)view["ServerPeriodicCommandInterval"] : new HudTextBox();
+				ServerPeriodicCommandOffset = view != null ? (HudTextBox)view["ServerPeriodicCommandOffset"] : new HudTextBox();
+				ServerPeriodicCommandAdd = view != null ? (HudButton)view["ServerPeriodicCommandAdd"] : new HudButton();
+				ServerPeriodicCommandList = view != null ? (HudList)view["ServerPeriodicCommandList"] : new HudList();
+
 
 				// Misc - Options
 				OptionList = view != null ? (HudList)view["OptionList"] : new HudList();
@@ -256,6 +287,7 @@ namespace MagTools.Views
 				ClientSetPosition = view != null ? (HudStaticText)view["ClientSetPosition"] : new HudStaticText();
 
 				NoFocusFPS = view != null ? (HudTextBox)view["NoFocusFPS"] : new HudTextBox();
+				MaxFPS = view != null ? (HudTextBox)view["MaxFPS"] : new HudTextBox();
 
 				// Misc - About
 				VersionLabel = view != null ? (HudStaticText)view["VersionLabel"] : new HudStaticText();
@@ -434,7 +466,30 @@ namespace MagTools.Views
 						int value;
 						if (!int.TryParse(NoFocusFPS.Text, out value))
 							value = Settings.SettingsManager.Misc.NoFocusFPS.DefaultValue;
+						else if (value <= Settings.SettingsManager.Misc.NoFocusFPS.DefaultValue)
+						{
+							Debug.WriteToChat("No Focus FPS cannot be less than " + Settings.SettingsManager.Misc.NoFocusFPS.DefaultValue + ". Set to " + Settings.SettingsManager.Misc.NoFocusFPS.DefaultValue + " to disable.");
+							value = 10;
+						}
 						Settings.SettingsManager.Misc.NoFocusFPS.Value = value;
+					}
+					catch (Exception ex) { Debug.LogException(ex); }
+				};
+
+				MaxFPS.Text = Settings.SettingsManager.Misc.MaxFPS.Value.ToString(CultureInfo.InvariantCulture);
+				MaxFPS.Change += (s, e) =>
+				{
+					try
+					{
+						int value;
+						if (!int.TryParse(MaxFPS.Text, out value))
+							value = Settings.SettingsManager.Misc.MaxFPS.DefaultValue;
+						else if (value != 0 && value < 20)
+						{ 
+							Debug.WriteToChat("Maximum FPS cannot be less than 20. Set to zero to disable.");
+							value = 20;
+						}
+						Settings.SettingsManager.Misc.MaxFPS.Value = value;
 					}
 					catch (Exception ex) { Debug.LogException(ex); }
 				};

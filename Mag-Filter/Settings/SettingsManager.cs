@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml;
 
@@ -10,6 +11,8 @@ namespace MagFilter.Settings
 	{
 		public static class CharacterSelectionScreen
 		{
+			public static readonly Setting<uint> MaxFPS = new Setting<uint>("CharacterSelectionScreen/MaxFPS");
+
 			public static Collection<DefaultFirstCharacter> DefaultFirstCharacters
 			{
 				get
@@ -30,6 +33,10 @@ namespace MagFilter.Settings
 								character.AccountName = childNode.Attributes["AccountName"].Value;
 
 								character.CharacterName = childNode.Attributes["CharacterName"].Value;
+								if (childNode.Attributes["CharacterIndex"] != null)
+									int.TryParse(childNode.Attributes["CharacterIndex"].Value, out character.CharacterIndex);
+								else
+									character.CharacterIndex = -1;
 
 								characters.Add(character);
 							}
@@ -66,6 +73,7 @@ namespace MagFilter.Settings
 					attributes.Add("AccountName", character.AccountName);
 
 					attributes.Add("CharacterName", character.CharacterName);
+					attributes.Add("CharacterIndex", character.CharacterIndex.ToString());
 
 					collection.Add(attributes);
 				}
@@ -76,6 +84,7 @@ namespace MagFilter.Settings
 				newAttributes.Add("AccountName", newDefaultFirstCharacter.AccountName);
 
 				newAttributes.Add("CharacterName", newDefaultFirstCharacter.CharacterName);
+				newAttributes.Add("CharacterIndex", newDefaultFirstCharacter.CharacterIndex.ToString());
 
 				collection.Add(newAttributes);
 
@@ -104,6 +113,7 @@ namespace MagFilter.Settings
 							attributes.Add("AccountName", character.AccountName);
 
 							attributes.Add("CharacterName", character.CharacterName);
+							attributes.Add("CharacterIndex", character.CharacterIndex.ToString());
 
 							collection.Add(attributes);
 						}
@@ -113,6 +123,36 @@ namespace MagFilter.Settings
 						break;
 					}
 				}
+			}
+
+			public static void DeleteDefaultFirstCharacters(string server)
+			{
+				SettingsFile.ReloadXmlDocument();
+
+				Collection<DefaultFirstCharacter> characters = DefaultFirstCharacters;
+
+				for (int i = 0; i < characters.Count; i++)
+				{
+					if (characters[i].Server == server)
+						characters.RemoveAt(i);
+				}
+
+				Collection<Dictionary<string, string>> collection = new Collection<Dictionary<string, string>>();
+
+				foreach (DefaultFirstCharacter character in characters)
+				{
+					Dictionary<string, string> attributes = new Dictionary<string, string>();
+
+					attributes.Add("Server", character.Server);
+					attributes.Add("AccountName", character.AccountName);
+
+					attributes.Add("CharacterName", character.CharacterName);
+					attributes.Add("CharacterIndex", character.CharacterIndex.ToString());
+
+					collection.Add(attributes);
+				}
+
+				SettingsFile.SetNodeChilderen("CharacterSelectionScreen/DefaultLoginChars", "DefaultLoginChar", collection);
 			}
 		}
 	}

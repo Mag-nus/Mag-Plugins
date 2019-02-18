@@ -4,15 +4,17 @@ namespace MagFilter
 	internal struct DefaultFirstCharacter
 	{
 		public string Server;
-		public string ZoneId;
+		public string AccountName;
 
 		public string CharacterName;
+		public int CharacterIndex;
 
-		public DefaultFirstCharacter(string server, string zoneId, string characterName)
+		public DefaultFirstCharacter(string server, string accountName, string characterName, int characterIndex = -1)
 		{
 			Server = server;
-			ZoneId = zoneId;
+			AccountName = accountName;
 			CharacterName = characterName;
+			CharacterIndex = characterIndex;
 		}
 	}
 }

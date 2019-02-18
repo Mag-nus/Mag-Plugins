@@ -210,6 +210,44 @@
             
           </control>
         </page>
+
+        <page label="  Server  ">
+          <control progid="DecalControls.FixedLayout" clipped="">
+
+            <control progid="DecalControls.StaticText" name="ServerLoginLabel" left="5" top="10" width="60" height="16" text="On Login:"/>
+            <control progid="DecalControls.Edit" name="ServerLoginText" left="65" top="12" width="205" height="16" />
+            <control progid="DecalControls.PushButton" name="ServerLoginAdd" left="275" top="10" width="40" height="20" text="Add" />
+            <control progid="DecalControls.List" name="ServerLoginList" left="0" top="35" width="320" height="80">
+              <column progid="DecalControls.TextColumn" name="ServerLoginListText" fixedwidth="224" />
+              <column progid="DecalControls.IconColumn" name="ServerLoginListUpIcon" fixedwidth="16" />
+              <column progid="DecalControls.IconColumn" name="ServerLoginListDownIcon" fixedwidth="16" />
+              <column progid="DecalControls.IconColumn" name="ServerLoginListDeleteIcon" fixedwidth="16" />
+            </control>
+
+            <control progid="DecalControls.StaticText" name="ServerLoginCompleteLabel" left="5" top="122" width="110" height="16" text="On Login Complete:"/>
+            <control progid="DecalControls.Edit" name="ServerLoginCompleteText" left="115" top="122" width="155" height="16" />
+            <control progid="DecalControls.PushButton" name="ServerLoginCompleteAdd" left="275" top="120" width="40" height="20" text="Add" />
+            <control progid="DecalControls.List" name="ServerLoginCompleteList" left="0" top="145" width="320" height="80">
+              <column progid="DecalControls.TextColumn" name="ServerLoginCompleteListText" fixedwidth="224" />
+              <column progid="DecalControls.IconColumn" name="ServerLoginCompleteListUpIcon" fixedwidth="16" />
+              <column progid="DecalControls.IconColumn" name="ServerLoginCompleteListDownIcon" fixedwidth="16" />
+              <column progid="DecalControls.IconColumn" name="ServerLoginCompleteListDeleteIcon" fixedwidth="16" />
+            </control>
+
+            <control progid="DecalControls.StaticText" name="ServerPeriodicCommandLabel" left="5" top="235" width="320" height="16" text="Periodic Command, Interval (min), Offset (min):"/>
+            <control progid="DecalControls.Edit" name="ServerPeriodicCommandText" left="5" top="250" width="185" height="16" />
+            <control progid="DecalControls.Edit" name="ServerPeriodicCommandInterval" left="195" top="250" width="35" height="16" text="1" />
+            <control progid="DecalControls.Edit" name="ServerPeriodicCommandOffset" left="235" top="250" width="35" height="16" text="0" />
+            <control progid="DecalControls.PushButton" name="ServerPeriodicCommandAdd" left="275" top="248" width="40" height="20" text="Add" />
+            <control progid="DecalControls.List" name="ServerPeriodicCommandList" left="0" top="270" width="320" height="140">
+              <column progid="DecalControls.TextColumn" name="ServerPeriodicCommandListText" fixedwidth="216" />
+              <column progid="DecalControls.TextColumn" name="ServerPeriodicCommandListInterval" fixedwidth="20" />
+              <column progid="DecalControls.TextColumn" name="ServerPeriodicCommandListOffset" fixedwidth="20" />
+              <column progid="DecalControls.IconColumn" name="ServerPeriodicCommandListDeleteIcon" fixedwidth="16" />
+            </control>
+
+          </control>
+        </page>
         
       </control>
     </page>
@@ -249,7 +287,10 @@
             <control progid="DecalControls.StaticText" name="ClientSetPositionLabel" left="10" top="165" width="310" height="60" text="This sets the startup position for this account/server pair. The client window will be moved do these desktop coords on login."/>
 
             <control progid="DecalControls.StaticText" name="NoFocusFPSLabel" left="10" top="250" width="310" height="30" text="This sets the frames per second the client will run at when its not in focus. Default is 10 (off):"/>
-            <control progid="DecalControls.Edit" name="NoFocusFPS" left="200" top="265" width="30" height="16" text="" />
+            <control progid="DecalControls.Edit" name="NoFocusFPS" left="200" top="267" width="30" height="16" text="" />
+
+            <control progid="DecalControls.StaticText" name="MaxFPSLabel" left="10" top="290" width="310" height="30" text="This throttles client if it tries to exceed this frames per second. Test with /framerate. Default is 0 (off):"/>
+            <control progid="DecalControls.Edit" name="MaxFPS" left="257" top="307" width="30" height="16" text="" />
           </control>
         </page>
 

@@ -138,7 +138,10 @@ namespace MyClasses
 			{
 				foreach (int x in windows)
 				{
-					Host.Actions.AddChatText(text, color, x);
+				    if (Host != null)
+				        Host.Actions.AddChatText(text, color, x);
+				    else
+				        CoreManager.Current.Actions.AddChatText(text, color, x);
 				}
 			}
 

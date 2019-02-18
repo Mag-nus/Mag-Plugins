@@ -12,14 +12,14 @@ namespace MagFilter
 
 		readonly System.Windows.Forms.Timer loginNextCharTimer = new System.Windows.Forms.Timer();
 
-		string nextCharacter;
-		int nextCharByInt;
+		string nextCharacterName;
+		int nextCharacterIndex;
 
 		public LoginNextCharacterManager(LoginCharacterTools loginCharacterTools)
 		{
 			this.loginCharacterTools = loginCharacterTools;
 
-			nextCharByInt = -1;
+			nextCharacterIndex = -1;
 
 			loginNextCharTimer.Tick += new EventHandler(defaultFirstCharTimer_Tick);
 			loginNextCharTimer.Interval = 1000;
@@ -41,37 +41,37 @@ namespace MagFilter
 
 			if (lower.StartsWith("/mf lnc set "))
 			{
-				nextCharacter = lower.Substring(12, lower.Length - 12);
-				nextCharByInt = -1;
+				nextCharacterName = lower.Substring(12, lower.Length - 12);
+				nextCharacterIndex = -1;
 
-				Debug.WriteToChat("Login Next Character set to: " + nextCharacter);
+				Debug.WriteToChat("Login Next Character set to: " + nextCharacterName);
 
 				e.Eat = true;
 			}
 			else if (lower.StartsWith("/mf lncbi set "))
 			{
-				nextCharacter = null;
-				nextCharByInt = int.Parse(lower.Substring(14, lower.Length - 14));
+				nextCharacterName = null;
+				nextCharacterIndex = int.Parse(lower.Substring(14, lower.Length - 14));
 
-				if (nextCharByInt > 10)
+				if (nextCharacterIndex > 10)
 				{
-					nextCharByInt = -1;
-					Debug.WriteToChat("Login Next Character failed with input too large: " + nextCharByInt);
+					nextCharacterIndex = -1;
+					Debug.WriteToChat("Login Next Character failed with input too large: " + nextCharacterIndex);
 				}
-				else if (nextCharByInt < 0)
+				else if (nextCharacterIndex < 0)
 				{
-					nextCharByInt = -1;
-					Debug.WriteToChat("Login Next Character failed with input too small: " + nextCharByInt);
+					nextCharacterIndex = -1;
+					Debug.WriteToChat("Login Next Character failed with input too small: " + nextCharacterIndex);
 				}
 				else
-					Debug.WriteToChat("Login Next Character set to index: " + nextCharByInt);
+					Debug.WriteToChat("Login Next Character set to index: " + nextCharacterIndex);
 
 				e.Eat = true;
 			}
 			else if (lower == "/mf lnc clear" || lower == "/mf lncbi clear")
 			{
-				nextCharacter = null;
-				nextCharByInt = -1;
+				nextCharacterName = null;
+				nextCharacterIndex = -1;
 
 				Debug.WriteToChat("Login Next Character cleared");
 
@@ -85,15 +85,15 @@ namespace MagFilter
 			{
 				loginNextCharTimer.Stop();
 
-				if (!String.IsNullOrEmpty(nextCharacter))
+				if (!String.IsNullOrEmpty(nextCharacterName))
 				{
-					loginCharacterTools.LoginCharacter(nextCharacter);
-					nextCharacter = null;
+					loginCharacterTools.LoginCharacter(nextCharacterName);
+					nextCharacterName = null;
 				}
-				else if (nextCharByInt >= 0 && nextCharByInt <= 10)
+				else if (nextCharacterIndex >= 0 && nextCharacterIndex <= 10)
 				{
-					loginCharacterTools.LoginByIndex(nextCharByInt);
-					nextCharByInt = -1;
+					loginCharacterTools.LoginByIndex(nextCharacterIndex);
+					nextCharacterIndex = -1;
 				}
 			}
 			catch (Exception ex) { Debug.LogException(ex); }

@@ -181,7 +181,21 @@ namespace MagTools.Settings
 				Groups[1] = new Group(2);
 			}
 		}
-		
+
+		public struct PeriodicCommand
+		{
+			public readonly string Command;
+			public readonly TimeSpan Interval;
+			public readonly TimeSpan OffsetFromMidnight;
+
+			public PeriodicCommand(string command, TimeSpan interval, TimeSpan offsetFromMidnight)
+			{
+				Command = command;
+				Interval = interval;
+				OffsetFromMidnight = offsetFromMidnight;
+			}
+		}
+
 		public static class AccountServerCharacter
 		{
 			public static IList<string> GetOnLoginCommands(string account, string server, string character)
@@ -202,20 +216,6 @@ namespace MagTools.Settings
 			public static void SetOnLoginCompleteCommands(string account, string server, string character, IList<string> commands)
 			{
 				SettingsFile.SetNodeChilderen("_" + account + "_" + XmlConvert.EncodeName(server) + "/" + XmlConvert.EncodeName(character) + "/OnLoginCompleteCommands", "Command", commands);
-			}
-
-			public struct PeriodicCommand
-			{
-				public readonly string Command;
-				public readonly TimeSpan Interval;
-				public readonly TimeSpan OffsetFromMidnight;
-
-				public PeriodicCommand(string command, TimeSpan interval, TimeSpan offsetFromMidnight)
-				{
-					Command = command;
-					Interval = interval;
-					OffsetFromMidnight = offsetFromMidnight;
-				}
 			}
 
 			public static IList<PeriodicCommand> GetPeriodicCommands(string account, string server, string character)
@@ -250,6 +250,82 @@ namespace MagTools.Settings
 				SettingsFile.ReloadXmlDocument();
 
 				var xmlNode = SettingsFile.GetNode("_" + account + "_" + XmlConvert.EncodeName(server) + "/" + XmlConvert.EncodeName(character) + "/PeriodicCommands", true);
+
+				xmlNode.RemoveAll();
+
+				foreach (var command in commands)
+				{
+					XmlNode childNode = xmlNode.AppendChild(SettingsFile.XmlDocument.CreateElement("PeriodicCommand"));
+
+					childNode.InnerText = command.Command;
+
+					XmlAttribute attribute = SettingsFile.XmlDocument.CreateAttribute("offset");
+					attribute.Value = command.OffsetFromMidnight.TotalMinutes.ToString(CultureInfo.InvariantCulture);
+					if (childNode.Attributes != null) childNode.Attributes.Append(attribute);
+
+					attribute = SettingsFile.XmlDocument.CreateAttribute("interval");
+					attribute.Value = command.Interval.TotalMinutes.ToString(CultureInfo.InvariantCulture);
+					if (childNode.Attributes != null) childNode.Attributes.Append(attribute);
+				}
+
+				SettingsFile.SaveXmlDocument();
+			}
+		}
+
+		public static class Server
+		{
+			public static IList<string> GetOnLoginCommands(string server)
+			{
+				return SettingsFile.GetChilderenInnerTexts("_" + XmlConvert.EncodeName(server) + "/OnLoginCommands");
+			}
+
+			public static void SetOnLoginCommands(string server, IList<string> commands)
+			{
+				SettingsFile.SetNodeChilderen("_" + XmlConvert.EncodeName(server) + "/OnLoginCommands", "Command", commands);
+			}
+
+			public static IList<string> GetOnLoginCompleteCommands(string server)
+			{
+				return SettingsFile.GetChilderenInnerTexts("_" + XmlConvert.EncodeName(server) + "/OnLoginCompleteCommands");
+			}
+
+			public static void SetOnLoginCompleteCommands(string server, IList<string> commands)
+			{
+				SettingsFile.SetNodeChilderen("_" + XmlConvert.EncodeName(server) + "/OnLoginCompleteCommands", "Command", commands);
+			}
+
+			public static IList<PeriodicCommand> GetPeriodicCommands(string server)
+			{
+				var commands = new List<PeriodicCommand>();
+
+				var xmlNode = SettingsFile.GetNode("_" + XmlConvert.EncodeName(server) + "/PeriodicCommands");
+
+				if (xmlNode != null && xmlNode.HasChildNodes)
+				{
+					foreach (XmlNode childNode in xmlNode.ChildNodes)
+					{
+						int interval = 0;
+						int offset = 0;
+
+						if (childNode.Attributes != null)
+						{
+							int.TryParse(childNode.Attributes["interval"].Value, out interval);
+							int.TryParse(childNode.Attributes["offset"].Value, out offset);
+						}
+
+
+						commands.Add(new PeriodicCommand(childNode.InnerText, TimeSpan.FromMinutes(interval), TimeSpan.FromMinutes(offset)));
+					}
+				}
+
+				return commands;
+			}
+
+			public static void SetPeriodicCommands(string server, IList<PeriodicCommand> commands)
+			{
+				SettingsFile.ReloadXmlDocument();
+
+				var xmlNode = SettingsFile.GetNode("_" + XmlConvert.EncodeName(server) + "/PeriodicCommands", true);
 
 				xmlNode.RemoveAll();
 
@@ -398,6 +474,8 @@ namespace MagTools.Settings
 			}
 
 			public static readonly Setting<int> NoFocusFPS = new Setting<int>("Misc/NoFocusFPS", "No Focus FPS", 10);
+
+			public static readonly Setting<int> MaxFPS = new Setting<int>("Misc/MaxFPS", "Max FPS", 0);
 		}
 
 		public static class Filters
