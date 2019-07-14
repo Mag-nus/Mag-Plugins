@@ -59,6 +59,9 @@
     <Compile Include="..\Shared\Constants\IntValueKey.cs">
       <Link>Shared\Constants\IntValueKey.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\Constants\MaterialType.cs">
+      <Link>Shared\Constants\MaterialType.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\Constants\QuadValueKey.cs">
       <Link>Shared\Constants\QuadValueKey.cs</Link>
     </Compile>
