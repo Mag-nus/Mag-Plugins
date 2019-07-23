@@ -1,17 +1,18 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
-namespace Mag_LootParser
+namespace Mag_LootParser.ItemGroups
 {
     class ItemGroupStats
     {
-        public int TotalItems;
+        public readonly List<IdentResponse> Items = new List<IdentResponse>();
 
         public readonly SpellStats SpellStats = new SpellStats();
 
 
-        public void ProcessItem(IdentResponse item)
+        public virtual void ProcessItem(IdentResponse item)
         {
-            TotalItems++;
+            Items.Add(item);
 
             SpellStats.ProcessItem(item);
         }
@@ -21,7 +22,7 @@ namespace Mag_LootParser
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine("Total Items: " + TotalItems.ToString("N0"));
+            sb.AppendLine("Total Items: " + Items.Count.ToString("N0"));
             sb.AppendLine();
 
             if (SpellStats.TotalSpells > 0)

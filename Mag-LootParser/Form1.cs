@@ -22,6 +22,7 @@ namespace Mag_LootParser
             this.Text += " " + Application.ProductVersion;
 
             txtSourcePath.Text = (string)Settings.Default["SourceFolder"];
+            txtOutputPath.Text = (string)Settings.Default["OutputFolder"];
 
             if (String.IsNullOrEmpty(txtSourcePath.Text))
             {
@@ -39,7 +40,22 @@ namespace Mag_LootParser
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     txtSourcePath.Text = dialog.SelectedPath;
-                    Settings.Default["SourceFolder"] = txtSourcePath.Text;
+                    Settings.Default["SourceFolder"] = dialog.SelectedPath;
+                    Settings.Default.Save();
+                }
+            }
+        }
+
+        private void cmdBrowseForDifferentOutput_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new FolderBrowserDialog())
+            {
+                dialog.SelectedPath = txtOutputPath.Text;
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    txtOutputPath.Text = dialog.SelectedPath;
+                    Settings.Default["OutputFolder"] = dialog.SelectedPath;
                     Settings.Default.Save();
                 }
             }
@@ -56,7 +72,10 @@ namespace Mag_LootParser
 
         private void cmdProcessAllFiles_Click(object sender, EventArgs e)
         {
+            txtSourcePath.Enabled = false;
             cmdBrowseForDifferentSource.Enabled = false;
+            txtOutputPath.Enabled = false;
+            cmdBrowseForDifferentOutput.Enabled = false;
             cmdProcessAllFiles.Enabled = false;
             cmdStop.Enabled = true;
 
@@ -71,8 +90,6 @@ namespace Mag_LootParser
 
             // Clear our outputs
             dataGridView1.DataSource = null;
-            txtRawOutput1.Text = null;
-            txtRawOutput2.Text = null;
 
             var files = Directory.GetFiles(txtSourcePath.Text, "*.csv", SearchOption.AllDirectories);
 
@@ -107,8 +124,12 @@ namespace Mag_LootParser
 
                     OnLoadFilesComplete();
 
+                    txtSourcePath.Enabled = true;
                     cmdBrowseForDifferentSource.Enabled = true;
+                    txtOutputPath.Enabled = true;
+                    cmdBrowseForDifferentOutput.Enabled = true;
                     cmdProcessAllFiles.Enabled = true;
+                    cmdStop.Enabled = false;
                 }));
             });
         }
@@ -331,24 +352,12 @@ namespace Mag_LootParser
 
 
             // Output stats by tier
-            sb.Clear();
             foreach (var kvp in StatsCalculator.StatsByLootTier)
-            {
-                sb.AppendLine();
-                sb.AppendLine("========== Tier " + kvp.Key + " ==========");
-                sb.Append(kvp.Value);
-            }
-            txtRawOutput1.Text = sb.ToString();
+                File.WriteAllText(Path.Combine(txtOutputPath.Text, "Tier " + kvp.Key + ".txt"), kvp.Value.ToString());
 
             // Output stats by container name
-            sb.Clear();
             foreach (var kvp in StatsCalculator.StatsByContainerName)
-            {
-                sb.AppendLine();
-                sb.AppendLine("========== Container Name " + kvp.Key + " ==========");
-                sb.Append(kvp.Value);
-            }
-            txtRawOutput2.Text = sb.ToString();
+                File.WriteAllText(Path.Combine(txtOutputPath.Text, "Container " + kvp.Key + ".txt"), kvp.Value.ToString());
         }
     }
 }

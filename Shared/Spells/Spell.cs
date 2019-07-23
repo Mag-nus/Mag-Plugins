@@ -75,7 +75,7 @@ namespace Mag.Shared.Spells
 				CantripLevel = CantripLevels.Lesser;
 			else if (name.StartsWith("Moderate "))
 				CantripLevel = CantripLevels.Moderate;
-			else if (name.StartsWith("Inner "))
+			else if (name.StartsWith("Inner ") && name != "Inner Calm")
 				CantripLevel = CantripLevels.Inner;
 			else if (name.StartsWith("Major "))
 				CantripLevel = CantripLevels.Major;

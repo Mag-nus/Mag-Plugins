@@ -16,15 +16,18 @@ namespace Mag_LootParser
 
             // Create empty stats for every loot tier
             for (int i = -1; i <= 8; i++)
-                StatsByLootTier[i] = new Stats();
+                StatsByLootTier[i] = new Stats(null);
 
             foreach (var kvp in containersLoot)
             {
                 var containerByTier = StatsByLootTier[TierCalculator.GetTierByContainerName(kvp.Key)];
-                var containerStats = new Stats();
+                var containerStats = new Stats(kvp.Key);
 
                 foreach (var container in kvp.Value)
                 {
+                    containerByTier.TotalContainers++;
+                    containerStats.TotalContainers++;
+
                     foreach (var item in container.Value)
                     {
                         containerByTier.ProcessItem(item);

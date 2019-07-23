@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using Mag.Shared.Constants;
+using Mag.Shared.Spells;
 
 namespace Mag_LootParser
 {
@@ -16,12 +17,22 @@ namespace Mag_LootParser
 
             foreach (var kvp in containersLoot)
             {
-                int tier = -1;
+                int tier = 0;
+                bool isPlayerCorpse = false;
 
                 foreach (var container in kvp.Value)
                 {
+                    if (isPlayerCorpse)
+                        break;
+
                     foreach (var item in container.Value)
                     {
+                        if ((item.LongValues.ContainsKey(IntValueKey.NumberTimesTinkered) && item.LongValues[IntValueKey.NumberTimesTinkered] > 0) || item.ActiveSpells.Count > 0)
+                        {
+                            isPlayerCorpse = true;
+                            break;
+                        }
+
                         // Heavy/Light/Finesse
                         if (item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && (item.LongValues[IntValueKey.WieldReqAttribute] == 0x2C || item.LongValues[IntValueKey.WieldReqAttribute] == 0x2D || item.LongValues[IntValueKey.WieldReqAttribute] == 0x2E) && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
                         {
@@ -31,12 +42,12 @@ namespace Mag_LootParser
                                     if (tier < 2) tier = 2;
                                     break;
                                 case 300:
-                                    // Could be tier 3 as well
-                                    if (tier < 4) tier = 4;
+                                    if (tier < 3) tier = 3;
                                     break;
                                 case 350:
                                     if (tier < 5) tier = 5;
                                     break;
+                                case 370:
                                 case 400:
                                     if (tier < 6) tier = 6;
                                     break;
@@ -50,7 +61,7 @@ namespace Mag_LootParser
                         }
 
                         // Missile
-                        if (tier == 0 && item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && item.LongValues[IntValueKey.WieldReqAttribute] == 0x2F && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+                        if (item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && item.LongValues[IntValueKey.WieldReqAttribute] == 0x2F && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
                         {
                             switch (item.LongValues[IntValueKey.WieldReqValue])
                             {
@@ -58,9 +69,9 @@ namespace Mag_LootParser
                                     if (tier < 2) tier = 2;
                                     break;
                                 case 270:
-                                    // Could be tier 3 as well
-                                    if (tier < 4) tier = 4;
+                                    if (tier < 3) tier = 3;
                                     break;
+                                //case 290:
                                 case 315:
                                     if (tier < 5) tier = 5;
                                     break;
@@ -77,10 +88,11 @@ namespace Mag_LootParser
                         }
 
                         // Magic
-                        if (tier == 0 && item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && item.LongValues[IntValueKey.WieldReqAttribute] == 0x22 && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+                        if (item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && item.LongValues[IntValueKey.WieldReqAttribute] == 0x22 && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
                         {
                             switch (item.LongValues[IntValueKey.WieldReqValue])
                             {
+                                //case 290:
                                 case 310:
                                     if (tier < 5) tier = 5;
                                     break;
@@ -95,17 +107,35 @@ namespace Mag_LootParser
                                     break;
                             }
                         }
+
+                        if (item.LongValues.ContainsKey(IntValueKey.Workmanship))
+                        {
+                            if (item.LongValues[IntValueKey.Workmanship] == 8  && tier < 4) tier = 4;
+                            if (item.LongValues[IntValueKey.Workmanship] == 9  && tier < 5) tier = 5;
+                            if (item.LongValues[IntValueKey.Workmanship] == 10 && tier < 6) tier = 6;
+                        }
+
+                        foreach (var spellId in item.Spells)
+                        {
+                            var spell = SpellTools.GetSpell(spellId);
+
+                            if (spell.CantripLevel >= Spell.CantripLevels.Epic      && tier < 7) tier = 7;
+                            if (spell.CantripLevel >= Spell.CantripLevels.Legendary && tier < 8) tier = 8;
+                        }
                     }
                 }
 
-                LootTiers[kvp.Key] = tier;
+                if (isPlayerCorpse)
+                    LootTiers[kvp.Key] = -1;
+                else
+                    LootTiers[kvp.Key] = tier;
             }
         }
 
         /// <summary>
         /// Will return -1 if not found
         /// </summary>
-        public static  int GetTierByContainerName(string containerName)
+        public static int GetTierByContainerName(string containerName)
         {
             if (LootTiers.TryGetValue(containerName, out var tier))
                 return tier;

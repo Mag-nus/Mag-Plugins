@@ -15,7 +15,7 @@ namespace Mag_LootParser
         public Dictionary<int, bool> BoolValues = new Dictionary<int, bool>();
         public Dictionary<int, double> DoubleValues = new Dictionary<int, double>();
         public Dictionary<IntValueKey, int> LongValues = new Dictionary<IntValueKey, int>();
-        public Dictionary<int, string> StringValues = new Dictionary<int, string>();
+        public Dictionary<StringValueKey, string> StringValues = new Dictionary<StringValueKey, string>();
 
         public List<int> ActiveSpells = new List<int>();
         public List<int> Spells = new List<int>();
@@ -93,7 +93,7 @@ namespace Mag_LootParser
 
                             foreach (var kvp2 in values)
                             {
-                                var key = int.Parse(kvp2.Key);
+                                var key = (StringValueKey)int.Parse(kvp2.Key);
 
                                 StringValues[key] = kvp2.Value.ToString();
                             }

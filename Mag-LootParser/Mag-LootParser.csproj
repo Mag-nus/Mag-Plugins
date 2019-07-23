@@ -85,7 +85,8 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="IdentResponse.cs" />
-    <Compile Include="ItemGroupStats.cs" />
+    <Compile Include="ItemGroups\GemStats.cs" />
+    <Compile Include="ItemGroups\ItemGroupStats.cs" />
     <Compile Include="LogItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
