@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
@@ -368,16 +366,16 @@ namespace Mag_LootParser
             dt.Columns.Add("Average Items", typeof(float));
             dt.Columns.Add("Total Items", typeof(int));
 
-            foreach (var kvp in StatsCalculator.StatsByContainerName)
+            foreach (var stats in StatsCalculator.StatsByContainerNameAndTier)
             {
                 var dr = dt.NewRow();
 
-                dr["Name"] = kvp.Key;
-                dr["Tier"] = kvp.Value.Tier;
-                dr["Hits"] = kvp.Value.TotalContainers;
+                dr["Name"] = stats.ContainerName;
+                dr["Tier"] = stats.Tier;
+                dr["Hits"] = stats.TotalContainers;
 
-                dr["Average Items"] = kvp.Value.TotalItems / (float)kvp.Value.TotalContainers;
-                dr["Total Items"] = kvp.Value.TotalItems;
+                dr["Average Items"] = stats.TotalItems / (float)stats.TotalContainers;
+                dr["Total Items"] = stats.TotalItems;
 
                 dt.Rows.Add(dr);
             }
@@ -405,26 +403,24 @@ namespace Mag_LootParser
                 File.WriteAllText(Path.Combine(txtOutputPath.Text, "Tier " + kvp.Key + ".txt"), kvp.Value.ToString());
 
             // Output stats by container name
-            foreach (var kvp in StatsCalculator.StatsByContainerName)
-                File.WriteAllText(Path.Combine(txtOutputPath.Text, "Container " + kvp.Key + ".txt"), kvp.Value.ToString());
+            foreach (var stats in StatsCalculator.StatsByContainerNameAndTier)
+                File.WriteAllText(Path.Combine(txtOutputPath.Text, "Container " + stats.ContainerName + $" (T{stats.Tier}).txt"), stats.ToString());
 
 
             // Audit all the containers for anomolies
             File.Delete(Path.Combine(txtOutputPath.Text, "Tier Container Audit.txt"));
-            var dictionaryList = StatsCalculator.StatsByContainerName.ToList();
-            dictionaryList.Sort((a, b) => b.Value.TotalItems.CompareTo(a.Value.TotalItems));
-            foreach (var kvp in dictionaryList)
+            foreach (var stats in StatsCalculator.StatsByContainerNameAndTier)
             {
                 outputAuditLine = false;
 
-                ContainerTierAudit(kvp.Value, 1, Mag.Shared.Spells.Spell.BuffLevels.I, Mag.Shared.Spells.Spell.BuffLevels.III);
-                ContainerTierAudit(kvp.Value, 2, Mag.Shared.Spells.Spell.BuffLevels.III, Mag.Shared.Spells.Spell.BuffLevels.V);
-                ContainerTierAudit(kvp.Value, 3, Mag.Shared.Spells.Spell.BuffLevels.IV, Mag.Shared.Spells.Spell.BuffLevels.VI);
-                ContainerTierAudit(kvp.Value, 4, Mag.Shared.Spells.Spell.BuffLevels.IV, Mag.Shared.Spells.Spell.BuffLevels.VI);
-                ContainerTierAudit(kvp.Value, 5, Mag.Shared.Spells.Spell.BuffLevels.V, Mag.Shared.Spells.Spell.BuffLevels.VII);
-                ContainerTierAudit(kvp.Value, 6, Mag.Shared.Spells.Spell.BuffLevels.VI, Mag.Shared.Spells.Spell.BuffLevels.VII);
-                ContainerTierAudit(kvp.Value, 7, Mag.Shared.Spells.Spell.BuffLevels.VI, Mag.Shared.Spells.Spell.BuffLevels.VIII);
-                ContainerTierAudit(kvp.Value, 8, Mag.Shared.Spells.Spell.BuffLevels.VI, Mag.Shared.Spells.Spell.BuffLevels.VIII);
+                ContainerTierAudit(stats, 1, Mag.Shared.Spells.Spell.BuffLevels.I, Mag.Shared.Spells.Spell.BuffLevels.III);
+                ContainerTierAudit(stats, 2, Mag.Shared.Spells.Spell.BuffLevels.III, Mag.Shared.Spells.Spell.BuffLevels.V);
+                ContainerTierAudit(stats, 3, Mag.Shared.Spells.Spell.BuffLevels.IV, Mag.Shared.Spells.Spell.BuffLevels.VI);
+                ContainerTierAudit(stats, 4, Mag.Shared.Spells.Spell.BuffLevels.IV, Mag.Shared.Spells.Spell.BuffLevels.VI);
+                ContainerTierAudit(stats, 5, Mag.Shared.Spells.Spell.BuffLevels.V, Mag.Shared.Spells.Spell.BuffLevels.VII);
+                ContainerTierAudit(stats, 6, Mag.Shared.Spells.Spell.BuffLevels.VI, Mag.Shared.Spells.Spell.BuffLevels.VII);
+                ContainerTierAudit(stats, 7, Mag.Shared.Spells.Spell.BuffLevels.VI, Mag.Shared.Spells.Spell.BuffLevels.VIII);
+                ContainerTierAudit(stats, 8, Mag.Shared.Spells.Spell.BuffLevels.VI, Mag.Shared.Spells.Spell.BuffLevels.VIII);
 
                 if (outputAuditLine)
                     File.AppendAllText(Path.Combine(txtOutputPath.Text, "Tier Container Audit.txt"), Environment.NewLine);

@@ -6,13 +6,13 @@ namespace Mag_LootParser
     {
         public static readonly Dictionary<int, Stats> StatsByLootTier = new Dictionary<int, Stats>();
 
-        public static readonly Dictionary<string, Stats> StatsByContainerName = new Dictionary<string, Stats>();
+        public static readonly List<Stats> StatsByContainerNameAndTier = new List<Stats>();
 
         public static void Calculate(Dictionary<string, List<ContainerInfo>> containersLoot)
         {
             StatsByLootTier.Clear();
 
-            StatsByContainerName.Clear();
+            StatsByContainerNameAndTier.Clear();
 
             // Create empty stats for every loot tier
             for (int i = 0; i <= 8; i++)
@@ -53,7 +53,7 @@ namespace Mag_LootParser
                         }
                     }
 
-                    StatsByContainerName[kvp.Key + $" (T{containerInfoGroup.Key})"] = containerStats;
+                    StatsByContainerNameAndTier.Add(containerStats);
                 }
             }
         }
