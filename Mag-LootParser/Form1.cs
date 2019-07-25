@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -154,7 +155,7 @@ namespace Mag_LootParser
             lock (totalLinesLockObject)
                 totalLines += fileLines.Length;
 
-            foreach (var line in fileLines)
+            for (int i = 0; i < fileLines.Length; i++)
             {
                 if (ct.IsCancellationRequested)
                     return;
@@ -165,11 +166,47 @@ namespace Mag_LootParser
 
                 try
                 {
+                    var line = fileLines[i];
+
+                    // "2017-01-19 09:03:44Z,"Corpse of Gigas Raider",-1419920476,"02E70109","81.3N, 99.2W","{"Id":"-1419521241","ObjectClass":"Scroll","BoolValues":{},"DoubleValues":{"167772170":"0"},"LongValues":{"19":"100","218103831":"16","218103835":"18","218103843":"8","218103847":"135297","218103808":"3060","218103816":"1087","218103832":"6307864","218103848":"0","5":"30","218103809":"13652","218103810":"-1419920544","218103830":"33554826","218103834":"8192","218103838":"1"},"StringValues":{"1":"Scroll of Lightning Vulnerability Other IV","14":"Use this item to attempt to learn its spell.","16":"Inscribed spell: Lightning Vulnerability Other IV
+                    // Increases damage the target takes from Lightning by 75%."},"ActiveSpells":"","Spells":"1087"}"
+                    if (i < fileLines.Length - 1)
+                    {
+                        var nextLine = fileLines[i + 1];
+
+                        var thisLineIsTerminated = line.EndsWith("}\"");
+                        var nextLineHasProperStart = nextLine.StartsWith("\"") && !nextLine.StartsWith("\",");
+
+                        if (!thisLineIsTerminated && !nextLineHasProperStart)
+                        {
+                            line += '\n' + nextLine;
+                            i++;
+
+                            // "2017-01-31 11:39:31Z,"Corpse of Cyberkiller",-583852276,"C4A80102","32.6N, 55.0E","{"Id":"-583994245","ObjectClass":"Armor","BoolValues":{"100":"True"},"DoubleValues":{"167772160":"1.29999995231628","167772164":"0.341241389513016","167772161":"1","167772163":"0.600000023841858","167772165":"0.400000005960464","167772169":"3","5":"-0.0333333350718021","167772162":"1","167772166":"0.400000005960464"},"LongValues":{"218103835":"18","218103843":"1","105":"3","218103821":"15360","106":"194","110":"0","218103810":"-583852344","218103822":"7680","218103830":"33554644","218103834":"2","218103838":"3","19":"13665","107":"123","115":"0","131":"60","218103831":"16","218103847":"137217","28":"146","108":"441","218103808":"72","218103824":"1","218103832":"-2128265064","218103848":"0","5":"4126","109":"194","218103809":"6300"},"StringValues":{"1":"Platemail Hauberk","7":"AL 146
+                            // Imp III, Acid Bane II, Frost Bane IV
+                            // 1/29, Diff 194","8":"Shai'tan","16":"Finely crafted Gold Platemail Hauberk , set with 4 Peridots"},"ActiveSpells":"","Spells":"1483,1494,1526"}"
+                            if (i < fileLines.Length - 1)
+                            {
+                                nextLine = fileLines[i + 1];
+
+                                thisLineIsTerminated = line.EndsWith("}\"");
+                                nextLineHasProperStart = nextLine.StartsWith("\"");
+
+                                if (!thisLineIsTerminated && !nextLineHasProperStart)
+                                {
+                                    line += '\n' + nextLine;
+                                    i++;
+                                }
+                            }
+                        }
+                    }
+
                     var sixthComma = Util.IndexOfNth(line, ',', 6);
 
                     if (sixthComma == -1) // Corrupt line
                     {
-                        Interlocked.Increment(ref corruptLines);
+                        if (line != "\"Timestamp\",\"ContainerName\",\"ContainerID\",\"LandCell\",\"Location\",\"JSON\"")
+                            Interlocked.Increment(ref corruptLines);
                         continue;
                     }
 
@@ -179,8 +216,7 @@ namespace Mag_LootParser
                     if (firstPartSplit[0] == "\"Timestamp\"") // Header line
                         continue;
 
-                    DateTime timestamp;
-                    if (!DateTime.TryParse(firstPartSplit[0].Substring(1, firstPartSplit[0].Length - 2), out timestamp)) // Corrupt line
+                    if (!DateTime.TryParse(firstPartSplit[0].Substring(1, firstPartSplit[0].Length - 2), out var timestamp)) // Corrupt line
                     {
                         Interlocked.Increment(ref corruptLines);
                         continue;
@@ -188,10 +224,9 @@ namespace Mag_LootParser
 
                     var containerName = firstPartSplit[1].Substring(1, firstPartSplit[1].Length - 2);
 
-                    var containerID = int.Parse(firstPartSplit[2].Substring(2, firstPartSplit[2].Length - 2));
+                    var containerID = (uint)int.Parse(firstPartSplit[2].Substring(2, firstPartSplit[2].Length - 2));
 
-                    int landcell;
-                    if (!int.TryParse(firstPartSplit[3].Substring(1, firstPartSplit[3].Length - 2), NumberStyles.HexNumber, null, out landcell)) // Corrupt line
+                    if (!int.TryParse(firstPartSplit[3].Substring(1, firstPartSplit[3].Length - 2), NumberStyles.HexNumber, null, out var landcell)) // Corrupt line
                     {
                         Interlocked.Increment(ref corruptLines);
                         continue;
@@ -210,6 +245,16 @@ namespace Mag_LootParser
 
                     if (jsonPart.StartsWith("{\"Id"))
                     {
+                        // Fix json errors
+                        jsonPart = jsonPart.Replace("\"Enchanted\"", "\\\"Enchanted\\\"");
+                        jsonPart = jsonPart.Replace("\"Bunny Master\"", "\\\"Bunny Master\\\"");
+                        jsonPart = jsonPart.Replace("\"Samuel\"", "\\\"Samuel\\\"");
+
+                        jsonPart = jsonPart.Replace("\"Is that what I think it is?\"", "\\\"Is that what I think it is?\\\"");
+
+                        jsonPart = jsonPart.Replace("\"Procedures By", "\\\"Procedures By");
+                        jsonPart = jsonPart.Replace("The Creeping Blight.\"", "The Creeping Blight.\\\"");
+
                         var identResponse = new IdentResponse();
 
                         identResponse.Timestamp = timestamp;
@@ -223,7 +268,7 @@ namespace Mag_LootParser
                         if (ct.IsCancellationRequested)
                             return;
 
-                        if (!ProcessLootItem(containerName, containerID, identResponse))
+                        if (!ProcessLootItem(containerID, containerName, landcell, location, identResponse))
                         {
                             Interlocked.Increment(ref corruptLines);
                             continue;
@@ -235,7 +280,7 @@ namespace Mag_LootParser
                         continue;
                     }
                 }
-                catch
+                catch // Item is likely inscribed
                 {
                     Interlocked.Increment(ref corruptLines);
                     continue;
@@ -248,45 +293,61 @@ namespace Mag_LootParser
 
         private readonly Object processLockObject = new Object();
 
-        private readonly Dictionary<string, Dictionary<int, List<IdentResponse>>> containersLoot = new Dictionary<string, Dictionary<int, List<IdentResponse>>>();
+        private readonly Dictionary<string, List<ContainerInfo>> containersLoot = new Dictionary<string, List<ContainerInfo>>();
 
         private void OnBeforeLoadFiles()
         {
             containersLoot.Clear();
         }
 
-        private bool ProcessLootItem(string containerName, int containerID, IdentResponse identResponse)
+        private bool ProcessLootItem(uint containerID, string containerName, int landcell, string location, IdentResponse identResponse)
         {
+            // These items are odd-balls that were found in corpses. Possibly code error, or maybe a player put the item in the corpse?
+            // Corpse of Grave Rat
+            if (identResponse.Id == 0xDD2B79A9 && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Electric Spine Glaive") return false;
+            // Corpse of Drudge Slave
+            if (identResponse.Id == 0xDC94F88A && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Heavy Crossbow") return false;
+            if (identResponse.Id == 0xDC9AE6E2 && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Katar") return false;
+            // Corpse of Mercenary
+            if (identResponse.Id == 0xABCC0A35 && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Studded Leather Breastplate") return false;
+
             lock (processLockObject)
             {
-                Dictionary<int, List<IdentResponse>> containers;
+                List<ContainerInfo> containers;
 
                 if (containersLoot.ContainsKey(containerName))
                     containers = containersLoot[containerName];
                 else
                 {
-                    containers = new Dictionary<int, List<IdentResponse>>();
+                    containers = new List<ContainerInfo>();
                     containersLoot.Add(containerName, containers);
                 }
 
-                List<IdentResponse> items;
+                ContainerInfo containerInfo = null;
 
-                if (containers.ContainsKey(containerID))
-                    items = containers[containerID];
-                else
+                foreach (var container in containers)
                 {
-                    items = new List<IdentResponse>();
-                    containers.Add(containerID, items);
+                    if (container.Id == containerID && container.Name == containerName && container.Landcell == landcell && container.Location == location)
+                    {
+                        containerInfo = container;
+                        break;
+                    }
+                }
+
+                if (containerInfo == null)
+                {
+                    containerInfo = new ContainerInfo { Id = containerID, Name = containerName, Landcell = landcell, Location = location };
+                    containers.Add(containerInfo);
                 }
 
                 // Does this item already exist?
-                foreach (var item in items)
+                foreach (var item in containerInfo.Items)
                 {
                     if (item.Id == identResponse.Id)
                         return true;
                 }
 
-                items.Add(identResponse);
+                containerInfo.Items.Add(identResponse);
 
                 return true;
             }
@@ -294,11 +355,8 @@ namespace Mag_LootParser
 
         private void OnLoadFilesComplete()
         {
-            var sb = new StringBuilder();
-
-
-            // Calculate the loot tiers
-            TierCalculator.Calculate(containersLoot);
+            // Calculate the stats
+            StatsCalculator.Calculate(containersLoot);
 
 
             // Populate the Containers tab
@@ -310,21 +368,16 @@ namespace Mag_LootParser
             dt.Columns.Add("Average Items", typeof(float));
             dt.Columns.Add("Total Items", typeof(int));
 
-            foreach (var kvp in containersLoot)
+            foreach (var kvp in StatsCalculator.StatsByContainerName)
             {
                 var dr = dt.NewRow();
 
                 dr["Name"] = kvp.Key;
-                dr["Tier"] = TierCalculator.GetTierByContainerName(kvp.Key);
-                dr["Hits"] = kvp.Value.Count;
+                dr["Tier"] = kvp.Value.Tier;
+                dr["Hits"] = kvp.Value.TotalContainers;
 
-                var totalItems = 0;
-
-                foreach (var containers in kvp.Value)
-                    totalItems += containers.Value.Count;
-
-                dr["Average Items"] = totalItems / (float)kvp.Value.Count;
-                dr["Total Items"] = totalItems;
+                dr["Average Items"] = kvp.Value.TotalItems / (float)kvp.Value.TotalContainers;
+                dr["Total Items"] = kvp.Value.TotalItems;
 
                 dt.Rows.Add(dr);
             }
@@ -347,10 +400,6 @@ namespace Mag_LootParser
             dataGridView1.AutoResizeColumns();
 
 
-            // Calculate the stats
-            StatsCalculator.Calculate(containersLoot);
-
-
             // Output stats by tier
             foreach (var kvp in StatsCalculator.StatsByLootTier)
                 File.WriteAllText(Path.Combine(txtOutputPath.Text, "Tier " + kvp.Key + ".txt"), kvp.Value.ToString());
@@ -358,6 +407,71 @@ namespace Mag_LootParser
             // Output stats by container name
             foreach (var kvp in StatsCalculator.StatsByContainerName)
                 File.WriteAllText(Path.Combine(txtOutputPath.Text, "Container " + kvp.Key + ".txt"), kvp.Value.ToString());
+
+
+            // Audit all the containers for anomolies
+            File.Delete(Path.Combine(txtOutputPath.Text, "Tier Container Audit.txt"));
+            var dictionaryList = StatsCalculator.StatsByContainerName.ToList();
+            dictionaryList.Sort((a, b) => b.Value.TotalItems.CompareTo(a.Value.TotalItems));
+            foreach (var kvp in dictionaryList)
+            {
+                outputAuditLine = false;
+
+                ContainerTierAudit(kvp.Value, 1, Mag.Shared.Spells.Spell.BuffLevels.I, Mag.Shared.Spells.Spell.BuffLevels.III);
+                ContainerTierAudit(kvp.Value, 2, Mag.Shared.Spells.Spell.BuffLevels.III, Mag.Shared.Spells.Spell.BuffLevels.V);
+                ContainerTierAudit(kvp.Value, 3, Mag.Shared.Spells.Spell.BuffLevels.IV, Mag.Shared.Spells.Spell.BuffLevels.VI);
+                ContainerTierAudit(kvp.Value, 4, Mag.Shared.Spells.Spell.BuffLevels.IV, Mag.Shared.Spells.Spell.BuffLevels.VI);
+                ContainerTierAudit(kvp.Value, 5, Mag.Shared.Spells.Spell.BuffLevels.V, Mag.Shared.Spells.Spell.BuffLevels.VII);
+                ContainerTierAudit(kvp.Value, 6, Mag.Shared.Spells.Spell.BuffLevels.VI, Mag.Shared.Spells.Spell.BuffLevels.VII);
+                ContainerTierAudit(kvp.Value, 7, Mag.Shared.Spells.Spell.BuffLevels.VI, Mag.Shared.Spells.Spell.BuffLevels.VIII);
+                ContainerTierAudit(kvp.Value, 8, Mag.Shared.Spells.Spell.BuffLevels.VI, Mag.Shared.Spells.Spell.BuffLevels.VIII);
+
+                if (outputAuditLine)
+                    File.AppendAllText(Path.Combine(txtOutputPath.Text, "Tier Container Audit.txt"), Environment.NewLine);
+            }
+        }
+
+        private void ContainerTierAudit(Stats stats, int tier, Mag.Shared.Spells.Spell.BuffLevels minBuffLevel, Mag.Shared.Spells.Spell.BuffLevels maxBuffLevel)
+        {
+            if (stats.Tier != tier)
+                return;
+
+            ContainerTierAudit2(stats.ContainerName, tier, stats.MeleeWeapons, minBuffLevel, maxBuffLevel);
+            ContainerTierAudit2(stats.ContainerName, tier, stats.MissileWeapons, minBuffLevel, maxBuffLevel);
+            ContainerTierAudit2(stats.ContainerName, tier, stats.WandStaffOrbs, minBuffLevel, maxBuffLevel);
+
+            ContainerTierAudit2(stats.ContainerName, tier, stats.Shields, minBuffLevel, maxBuffLevel);
+
+            ContainerTierAudit2(stats.ContainerName, tier, stats.Armor, minBuffLevel, maxBuffLevel);
+
+            ContainerTierAudit2(stats.ContainerName, tier, stats.Underwear, minBuffLevel, maxBuffLevel);
+
+            ContainerTierAudit2(stats.ContainerName, tier, stats.Jewelry, minBuffLevel, maxBuffLevel);
+        }
+
+        private bool outputAuditLine;
+
+        private void ContainerTierAudit2(string containerName, int tier, ItemGroups.ItemGroupStats itemGroupStats, Mag.Shared.Spells.Spell.BuffLevels minBuffLevel, Mag.Shared.Spells.Spell.BuffLevels maxBuffLevel)
+        {
+            foreach (var item in itemGroupStats.Items)
+            {
+                if (LootTools.IsTrophy(item))
+                    continue;
+
+                foreach (var spellId in item.Spells)
+                {
+                    var spell = Mag.Shared.Spells.SpellTools.GetSpell(spellId);
+
+                    if (spell.BuffLevel == Mag.Shared.Spells.Spell.BuffLevels.None)
+                        continue;
+
+                    if (spell.BuffLevel < minBuffLevel || spell.BuffLevel > maxBuffLevel)
+                    {
+                        File.AppendAllText(Path.Combine(txtOutputPath.Text, "Tier Container Audit.txt"), $"containerName: {containerName.PadRight(30)}, tier: {tier}, item: 0x{item.Id:X8}:{item.StringValues[Mag.Shared.Constants.StringValueKey.Name].PadRight(30)}, has spell: {spell}" + Environment.NewLine);
+                        outputAuditLine = true;
+                    }
+                }
+            }
         }
     }
 }

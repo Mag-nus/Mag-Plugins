@@ -8,7 +8,7 @@ namespace Mag_LootParser
 {
     class IdentResponse : LogItem
     {
-        public int Id;
+        public uint Id;
 
         public ObjectClass ObjectClass;
 
@@ -35,7 +35,7 @@ namespace Mag_LootParser
                 switch (kvp.Key)
                 {
                     case "Id":
-                        Id = int.Parse((string)kvp.Value);
+                        Id = (uint)int.Parse((string)kvp.Value);
                         break;
 
                     case "ObjectClass":

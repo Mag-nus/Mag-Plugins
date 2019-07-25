@@ -8,34 +8,53 @@ namespace Mag_LootParser
 
         public static readonly Dictionary<string, Stats> StatsByContainerName = new Dictionary<string, Stats>();
 
-        public static void Calculate(Dictionary<string, Dictionary<int, List<IdentResponse>>> containersLoot)
+        public static void Calculate(Dictionary<string, List<ContainerInfo>> containersLoot)
         {
             StatsByLootTier.Clear();
 
             StatsByContainerName.Clear();
 
             // Create empty stats for every loot tier
-            for (int i = -1; i <= 8; i++)
-                StatsByLootTier[i] = new Stats(null);
+            for (int i = 0; i <= 8; i++)
+                StatsByLootTier[i] = new Stats(null, i);
 
             foreach (var kvp in containersLoot)
             {
-                var containerByTier = StatsByLootTier[TierCalculator.GetTierByContainerName(kvp.Key)];
-                var containerStats = new Stats(kvp.Key);
+                // Housing containers can contain anything
+                if (kvp.Key == "Chest")                 continue; // Housing container
 
-                foreach (var container in kvp.Value)
+                // These landscape containers seem to be multi-tier
+                if (kvp.Key == "Runed Chest")           continue;
+                if (kvp.Key == "Coral Encrusted Chest") continue;
+
+                // Player Corpses
+                if (kvp.Key == "Corpse of Father Of Sin" || kvp.Key == "Corpse of Copastetic" || kvp.Key == "Corpse of Blumenkind" || kvp.Key == "Corpse of Cyberkiller" || kvp.Key == "Corpse of Sholdslastridelc")
+                    continue;
+
+                var containerInfoGroups = kvp.Value.GroupContainerInfosByTier();
+
+                foreach (var containerInfoGroup in containerInfoGroups)
                 {
-                    containerByTier.TotalContainers++;
-                    containerStats.TotalContainers++;
+                    if (containerInfoGroup.Key == -1) // Player container
+                        continue;
 
-                    foreach (var item in container.Value)
+                    var containerByTier = StatsByLootTier[containerInfoGroup.Key];
+                    var containerStats = new Stats(kvp.Key, containerInfoGroup.Key);
+
+                    foreach (var container in containerInfoGroup.Value)
                     {
-                        containerByTier.ProcessItem(item);
-                        containerStats.ProcessItem(item);
-                    }
-                }
+                        containerByTier.TotalContainers++;
+                        containerStats.TotalContainers++;
 
-                StatsByContainerName[kvp.Key] = containerStats;
+                        foreach (var item in container.Items)
+                        {
+                            containerByTier.ProcessItem(item);
+                            containerStats.ProcessItem(item);
+                        }
+                    }
+
+                    StatsByContainerName[kvp.Key + $" (T{containerInfoGroup.Key})"] = containerStats;
+                }
             }
         }
     }

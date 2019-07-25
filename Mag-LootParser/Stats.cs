@@ -12,6 +12,7 @@ namespace Mag_LootParser
     class Stats
     {
         public readonly string ContainerName;
+        public readonly int Tier;
 
         public int TotalContainers;
         public int TotalItems;
@@ -46,9 +47,10 @@ namespace Mag_LootParser
         // Scroll
         public readonly Dictionary<ObjectClass, ItemGroupStats> AllOthers = new Dictionary<ObjectClass, ItemGroupStats>();
 
-        public Stats(string containerName)
+        public Stats(string containerName, int tier)
         {
             ContainerName = containerName;
+            Tier = tier;
         }
 
         public void ProcessItem(IdentResponse item)
@@ -118,9 +120,7 @@ namespace Mag_LootParser
         {
             var sb = new StringBuilder();
 
-            if (ContainerName != null)
-                sb.AppendLine("Tier: " + TierCalculator.GetTierByContainerName(ContainerName));
-
+            sb.AppendLine("Tier: " + Tier);
             sb.AppendLine("Total Containers: " + TotalContainers.ToString("N0"));
             sb.AppendLine("Total Items: " + TotalItems.ToString("N0"));
             sb.AppendLine();
