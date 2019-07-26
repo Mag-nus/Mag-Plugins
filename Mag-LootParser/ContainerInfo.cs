@@ -66,7 +66,7 @@ namespace Mag_LootParser
             var name = containerInfos.First().Name;
 
             // Test Code
-            /*var sorted = containerInfos.OrderBy(r => r.Tier).ToList(); ;
+            /*var sorted = containerInfos.OrderBy(r => r.Tier).ToList();
 
             var output = "";
 

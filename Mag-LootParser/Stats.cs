@@ -21,31 +21,47 @@ namespace Mag_LootParser
 
         public readonly Dictionary<MaterialType, int> MaterialHits = new Dictionary<MaterialType, int>();
 
-        public readonly ItemGroupStats MeleeWeapons = new ItemGroupStats();
-        public readonly ItemGroupStats MissileWeapons = new ItemGroupStats();
-        public readonly ItemGroupStats WandStaffOrbs = new ItemGroupStats();
+        public readonly SpellStats SpellStats = new SpellStats();
 
-        public readonly ItemGroupStats Shields = new ItemGroupStats();
+        public readonly Dictionary<ObjectClass, ItemGroupStats> ObjectClasses = new Dictionary<ObjectClass, ItemGroupStats>
+        {
+            { ObjectClass.MeleeWeapon, new ItemGroupStats() },
+            { ObjectClass.MissileWeapon, new ItemGroupStats() },
+            { ObjectClass.WandStaffOrb, new ItemGroupStats() },
 
-        public readonly ItemGroupStats Armor = new ItemGroupStats();
+            { ObjectClass.Armor, new ItemGroupStats() },
+            { ObjectClass.Clothing, new ItemGroupStats() },
 
-        public readonly ItemGroupStats Underwear = new ItemGroupStats();
+            { ObjectClass.Jewelry, new ItemGroupStats() },
 
-        public readonly ItemGroupStats Jewelry = new ItemGroupStats();
+            { ObjectClass.Gem, new GemStats() },
 
-        public readonly ItemGroupStats ManaStones = new ItemGroupStats();
-        public readonly ItemGroupStats HealingKits = new ItemGroupStats();
-        public readonly ItemGroupStats Food = new ItemGroupStats();
-        public readonly ItemGroupStats Lockpicks = new ItemGroupStats();
-        public readonly GemStats Gems = new GemStats();
+            { ObjectClass.Scroll, new ItemGroupStats() },
+            { ObjectClass.SpellComponent, new ItemGroupStats() },
 
-        // todo
-        // Money
-        // Misc
-        // SpellComponent
-        // Key
-        // Scroll
-        public readonly Dictionary<ObjectClass, ItemGroupStats> AllOthers = new Dictionary<ObjectClass, ItemGroupStats>();
+            { ObjectClass.HealingKit, new ItemGroupStats() },
+            { ObjectClass.Food, new ItemGroupStats() },
+
+            { ObjectClass.BaseCooking, new ItemGroupStats() },
+            { ObjectClass.CraftedAlchemy, new ItemGroupStats() },
+
+            { ObjectClass.ManaStone, new ItemGroupStats() },
+
+            { ObjectClass.Key, new ItemGroupStats() },
+            { ObjectClass.Lockpick, new ItemGroupStats() },
+
+            { ObjectClass.Book, new ItemGroupStats() },
+            { ObjectClass.Journal, new ItemGroupStats() },
+
+            { ObjectClass.Money, new ItemGroupStats() },
+            { ObjectClass.TradeNote, new ItemGroupStats() },
+
+            { ObjectClass.Bundle, new ItemGroupStats() },
+
+            { ObjectClass.Misc, new ItemGroupStats() },
+
+            { ObjectClass.Unknown, new ItemGroupStats() },
+        };
 
         public Stats(string containerName, int tier)
         {
@@ -73,46 +89,10 @@ namespace Mag_LootParser
                 MaterialHits[(MaterialType)item.LongValues[IntValueKey.Material]]++;
             }
 
-            if (item.ObjectClass == ObjectClass.MeleeWeapon)
-                MeleeWeapons.ProcessItem(item);
-            else if (item.ObjectClass == ObjectClass.MissileWeapon)
-                MissileWeapons.ProcessItem(item);
-            else if (item.ObjectClass == ObjectClass.WandStaffOrb)
-                WandStaffOrbs.ProcessItem(item);
-            else if (item.ObjectClass == ObjectClass.Armor)
-                Armor.ProcessItem(item);
-            else if (item.ObjectClass == ObjectClass.Clothing)
-            {
-                if (item.LongValues.ContainsKey(IntValueKey.Coverage))
-                {
-                    if (((CoverageFlags)item.LongValues[IntValueKey.Coverage]).IsUnderwear())
-                        Underwear.ProcessItem(item);
-                    else
-                        Armor.ProcessItem(item);
+            if (item.LongValues.ContainsKey(IntValueKey.Workmanship))
+                SpellStats.ProcessItem(item);
 
-                    // todo: this could still be a cloak
-                }
-            }
-            else if (item.ObjectClass == ObjectClass.Jewelry)
-                Jewelry.ProcessItem(item);
-            else if (item.ObjectClass == ObjectClass.ManaStone)
-                ManaStones.ProcessItem(item);
-            else if (item.ObjectClass == ObjectClass.HealingKit)
-                HealingKits.ProcessItem(item);
-            else if (item.ObjectClass == ObjectClass.Food)
-                Food.ProcessItem(item);
-            else if (item.ObjectClass == ObjectClass.Lockpick)
-                Lockpicks.ProcessItem(item);
-            else if (item.ObjectClass == ObjectClass.Gem)
-                Gems.ProcessItem(item);
-            else
-            {
-                // These slipped through
-                if (!AllOthers.ContainsKey(item.ObjectClass))
-                    AllOthers[item.ObjectClass] = new ItemGroupStats();
-
-                AllOthers[item.ObjectClass].ProcessItem(item);
-            }
+            ObjectClasses[item.ObjectClass].ProcessItem(item);
         }
 
 
@@ -128,47 +108,29 @@ namespace Mag_LootParser
             sb.AppendLine("Workmanship Hits: ");
             var totalWorkmanshipHits = WorkmanshipHits.Values.Sum();
             foreach (var kvp in WorkmanshipHits.OrderBy(i => i.Key))
-            {
                 sb.AppendLine(kvp.Key.ToString().PadLeft(2) + " [" + kvp.Value.ToString("N0").PadLeft(6) + " " + (kvp.Value / (float)totalWorkmanshipHits * 100).ToString("N1").PadLeft(4) + "%]");
-            }
             sb.AppendLine();
 
             // This is really dependant on the type of object being dropped
-            /*
             sb.AppendLine("Material Hits: ");
             var totalMaterialHits = MaterialHits.Values.Sum();
             foreach (var kvp in MaterialHits.OrderBy(i => i.Key))
-            {
                 sb.AppendLine(kvp.Key.ToString().PadRight(15) + " [" + kvp.Value.ToString("N0").PadLeft(6) + " " + (kvp.Value / (float)totalMaterialHits * 100).ToString("N1").PadLeft(4) + "%]");
+            sb.AppendLine();
+
+            sb.AppendLine("Total Spell Stats: ");
+            sb.AppendLine(SpellStats.ToString());
+            sb.AppendLine();
+
+            foreach (var kvp in ObjectClasses)
+            {
+                if (kvp.Value.Items.Count == 0)
+                    continue;
+
+                sb.AppendLine();
+                sb.AppendLine(kvp.Key + ": ");
+                sb.Append(kvp.Value);
             }
-            sb.AppendLine();*/
-
-            sb.AppendLine("Melee Weapons: ");
-            sb.Append(MeleeWeapons);
-
-            sb.AppendLine();
-            sb.AppendLine("Missile Weapons: ");
-            sb.Append(MissileWeapons);
-
-            sb.AppendLine();
-            sb.AppendLine("Wand Staff Orbs: ");
-            sb.Append(WandStaffOrbs);
-
-            sb.AppendLine();
-            sb.AppendLine("Armor: ");
-            sb.Append(Armor);
-
-            sb.AppendLine();
-            sb.AppendLine("Clothing (Underwear): ");
-            sb.Append(Underwear);
-
-            sb.AppendLine();
-            sb.AppendLine("Jewelry: ");
-            sb.Append(Jewelry);
-
-            sb.AppendLine();
-            sb.AppendLine("Gems: ");
-            sb.Append(Gems);
 
             return sb.ToString();
         }

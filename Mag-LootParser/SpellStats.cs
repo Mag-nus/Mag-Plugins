@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 
+using Mag.Shared.Constants;
 using Mag.Shared.Spells;
 
 namespace Mag_LootParser
@@ -32,6 +33,9 @@ namespace Mag_LootParser
 
         public void ProcessItem(IdentResponse item)
         {
+            if (!item.LongValues.ContainsKey(IntValueKey.Workmanship))
+                return;
+
             TotalItems++;
             TotalSpells += item.Spells.Count;
 
@@ -74,20 +78,20 @@ namespace Mag_LootParser
             var sortedKeys1 = HitsByBuffLevels.Keys.ToList();
             sortedKeys1.Sort();
             foreach (var key in sortedKeys1)
-                sb.AppendLine(key.ToString().PadLeft(9) + " [" + HitsByBuffLevels[key].ToString("N0").PadLeft(6) + " " + (HitsByBuffLevels[key] / (float)totalHitsByBuffLevels * 100).ToString("N1").PadLeft(4) + "%]");
+                sb.AppendLine(key.ToString().PadLeft(9) + " [" + HitsByBuffLevels[key].ToString("N0").PadLeft(7) + " " + (HitsByBuffLevels[key] / (float)totalHitsByBuffLevels * 100).ToString("N1").PadLeft(4) + "%]");
 
             sb.AppendLine("Hits By Cantrip ID: ");
             var totalHitsByCantrip = HitsByCantrip.Values.Sum();
             var sortedKeys2 = HitsByCantrip.Keys.ToList();
             sortedKeys2.Sort();
             foreach (var key in sortedKeys2)
-                sb.AppendLine(key.ToString().PadLeft(9) + " [" + HitsByCantrip[key].ToString("N0").PadLeft(6) + " " + (HitsByCantrip[key] / (float)totalHitsByCantrip * 100).ToString("N1").PadLeft(4) + "%]");
+                sb.AppendLine(key.ToString().PadLeft(9) + " [" + HitsByCantrip[key].ToString("N0").PadLeft(7) + " " + (HitsByCantrip[key] / (float)totalHitsByCantrip * 100).ToString("N1").PadLeft(4) + "%]");
 
             sb.AppendLine("Hits By Spell ID: ");
             var sortedKeys3 = HitsBySpellID.Keys.ToList();
             sortedKeys3.Sort();
-            foreach (var key in sortedKeys3)
-                sb.AppendLine(key.ToString().PadLeft(4) + " [" + HitsBySpellID[key].ToString("N0").PadLeft(6) + " " + (HitsBySpellID[key] / (float)TotalSpells * 100).ToString("N1").PadLeft(4) + "%] " + SpellTools.GetSpell(key).Name);
+            //foreach (var key in sortedKeys3)
+            //    sb.AppendLine(key.ToString().PadLeft(4) + " [" + HitsBySpellID[key].ToString("N0").PadLeft(7) + " " + (HitsBySpellID[key] / (float)TotalSpells * 100).ToString("N1").PadLeft(4) + "%] " + SpellTools.GetSpell(key).Name);
 
 
             return sb.ToString();

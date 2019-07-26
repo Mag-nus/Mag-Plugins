@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
+using Mag.Shared.Constants;
+
 using Mag_LootParser.Properties;
 
 namespace Mag_LootParser
@@ -65,6 +67,7 @@ namespace Mag_LootParser
 
         private readonly object totalLinesLockObject = new object();
         private int totalLines;
+        private int skippedLines;
         private int corruptLines;
 
         private CancellationTokenSource cts;
@@ -94,6 +97,7 @@ namespace Mag_LootParser
 
             totalLines = 0;
             corruptLines = 0;
+            corruptLines = 0;
 
             ThreadPool.QueueUserWorkItem(o =>
             {
@@ -118,7 +122,7 @@ namespace Mag_LootParser
                 {
                     cts.Dispose();
 
-                    lblResults.Text = totalLines.ToString("N0") + " lines read. " + corruptLines.ToString("N0") + " corrupt lines found.";
+                    lblResults.Text = totalLines.ToString("N0") + " lines read. " + skippedLines.ToString("N0") + " lines skipped. " + corruptLines.ToString("N0") + " corrupt lines found.";
                     lblTime.Text = "Total Seconds: " + (DateTime.Now - startTime).TotalSeconds.ToString("N1");
 
                     OnLoadFilesComplete();
@@ -266,11 +270,7 @@ namespace Mag_LootParser
                         if (ct.IsCancellationRequested)
                             return;
 
-                        if (!ProcessLootItem(containerID, containerName, landcell, location, identResponse))
-                        {
-                            Interlocked.Increment(ref corruptLines);
-                            continue;
-                        }
+                        ProcessLootItem(containerID, containerName, landcell, location, identResponse);
                     }
                     else
                     {
@@ -298,16 +298,66 @@ namespace Mag_LootParser
             containersLoot.Clear();
         }
 
-        private bool ProcessLootItem(uint containerID, string containerName, int landcell, string location, IdentResponse identResponse)
+        private void ProcessLootItem(uint containerID, string containerName, int landcell, string location, IdentResponse identResponse)
         {
+            // Player Corpses
+            if (containerName == "Corpse of Father Of Sin" ||
+                containerName == "Corpse of Copastetic" ||
+                containerName == "Corpse of Blumenkind" ||
+                containerName == "Corpse of Cyberkiller" ||
+                containerName == "Corpse of Sholdslastridelc" ||
+                containerName == "Corpse of Thisistheendmyonlyfriendtheend")
+            {
+                Interlocked.Increment(ref skippedLines);
+                return;
+            }
+
+            // Housing containers can contain anything
+            if (containerName == "Chest")
+            {
+                Interlocked.Increment(ref skippedLines);
+                return;
+            }
+
+            // These landscape containers seem to be multi-tier
+            if (containerName == "Runed Chest" ||
+                containerName == "Coral Encrusted Chest")
+            {
+                Interlocked.Increment(ref skippedLines);
+                return;
+            }
+
             // These items are odd-balls that were found in corpses. Possibly code error, or maybe a player put the item in the corpse?
             // Corpse of Grave Rat
-            if (identResponse.Id == 0xDD2B79A9 && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Electric Spine Glaive") return false;
+            if (identResponse.Id == 0xDD2B79A9 && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Electric Spine Glaive")
+            {
+                Interlocked.Increment(ref skippedLines);
+                return;
+            }
             // Corpse of Drudge Slave
-            if (identResponse.Id == 0xDC94F88A && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Heavy Crossbow") return false;
-            if (identResponse.Id == 0xDC9AE6E2 && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Katar") return false;
+            if (identResponse.Id == 0xDC94F88A && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Heavy Crossbow")
+            {
+                Interlocked.Increment(ref skippedLines);
+                return;
+            }
+            if (identResponse.Id == 0xDC9AE6E2 && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Katar")
+            {
+                Interlocked.Increment(ref skippedLines);
+                return;
+            }
             // Corpse of Mercenary
-            if (identResponse.Id == 0xABCC0A35 && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Studded Leather Breastplate") return false;
+            if (identResponse.Id == 0xABCC0A35 && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Studded Leather Breastplate")
+            {
+                Interlocked.Increment(ref skippedLines);
+                return;
+            }
+
+            // Not sure why corpses are being detected as inside a container, probably a data bug
+            if (identResponse.ObjectClass == Mag.Shared.ObjectClass.Corpse)
+            {
+                Interlocked.Increment(ref skippedLines);
+                return;
+            }
 
             lock (processLockObject)
             {
@@ -342,12 +392,12 @@ namespace Mag_LootParser
                 foreach (var item in containerInfo.Items)
                 {
                     if (item.Id == identResponse.Id)
-                        return true;
+                        return;
                 }
 
                 containerInfo.Items.Add(identResponse);
 
-                return true;
+                return;
             }
         }
 
@@ -432,17 +482,8 @@ namespace Mag_LootParser
             if (stats.Tier != tier)
                 return;
 
-            ContainerTierAudit2(stats.ContainerName, tier, stats.MeleeWeapons, minBuffLevel, maxBuffLevel);
-            ContainerTierAudit2(stats.ContainerName, tier, stats.MissileWeapons, minBuffLevel, maxBuffLevel);
-            ContainerTierAudit2(stats.ContainerName, tier, stats.WandStaffOrbs, minBuffLevel, maxBuffLevel);
-
-            ContainerTierAudit2(stats.ContainerName, tier, stats.Shields, minBuffLevel, maxBuffLevel);
-
-            ContainerTierAudit2(stats.ContainerName, tier, stats.Armor, minBuffLevel, maxBuffLevel);
-
-            ContainerTierAudit2(stats.ContainerName, tier, stats.Underwear, minBuffLevel, maxBuffLevel);
-
-            ContainerTierAudit2(stats.ContainerName, tier, stats.Jewelry, minBuffLevel, maxBuffLevel);
+            foreach (var itemGroupStats in stats.ObjectClasses.Values)
+                ContainerTierAudit2(stats.ContainerName, tier, itemGroupStats, minBuffLevel, maxBuffLevel);
         }
 
         private bool outputAuditLine;
@@ -451,7 +492,7 @@ namespace Mag_LootParser
         {
             foreach (var item in itemGroupStats.Items)
             {
-                if (LootTools.IsTrophy(item))
+                if (!item.LongValues.ContainsKey(IntValueKey.Workmanship))
                     continue;
 
                 foreach (var spellId in item.Spells)

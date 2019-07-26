@@ -20,17 +20,6 @@ namespace Mag_LootParser
 
             foreach (var kvp in containersLoot)
             {
-                // Housing containers can contain anything
-                if (kvp.Key == "Chest")                 continue; // Housing container
-
-                // These landscape containers seem to be multi-tier
-                if (kvp.Key == "Runed Chest")           continue;
-                if (kvp.Key == "Coral Encrusted Chest") continue;
-
-                // Player Corpses
-                if (kvp.Key == "Corpse of Father Of Sin" || kvp.Key == "Corpse of Copastetic" || kvp.Key == "Corpse of Blumenkind" || kvp.Key == "Corpse of Cyberkiller" || kvp.Key == "Corpse of Sholdslastridelc")
-                    continue;
-
                 var containerInfoGroups = kvp.Value.GroupContainerInfosByTier();
 
                 foreach (var containerInfoGroup in containerInfoGroups)

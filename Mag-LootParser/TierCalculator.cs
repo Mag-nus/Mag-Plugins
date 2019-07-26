@@ -23,8 +23,8 @@ namespace Mag_LootParser
                     return -1;
 
                 // Exclude trophy items from tier calculation
-                if (LootTools.IsTrophy(item))
-                    continue;
+                if (!item.LongValues.ContainsKey(IntValueKey.Workmanship))
+                    goto bypassNonRandomLootGenItems;
 
                 // Heavy/Light/Finesse
                 if (item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && (item.LongValues[IntValueKey.WieldReqAttribute] == 0x2C || item.LongValues[IntValueKey.WieldReqAttribute] == 0x2D || item.LongValues[IntValueKey.WieldReqAttribute] == 0x2E) && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
@@ -115,8 +115,10 @@ namespace Mag_LootParser
                     if (item.LongValues[IntValueKey.Workmanship] == 10 && tier < 6) tier = 6;
                 }
 
+                bypassNonRandomLootGenItems:
+
                 // Gems in higher tiers can come with low spells, so we don't do spell checks on these objects
-                if (item.ObjectClass != Mag.Shared.ObjectClass.Gem && item.ObjectClass != Mag.Shared.ObjectClass.Scroll)
+                if (item.LongValues.ContainsKey(IntValueKey.Workmanship))
                 {
                     foreach (var spellId in item.Spells)
                     {

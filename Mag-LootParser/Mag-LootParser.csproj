@@ -89,7 +89,6 @@
     <Compile Include="ItemGroups\GemStats.cs" />
     <Compile Include="ItemGroups\ItemGroupStats.cs" />
     <Compile Include="LogItem.cs" />
-    <Compile Include="LootTools.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpellStats.cs" />
