@@ -64,7 +64,7 @@ namespace Mag.Shared.Spells
 				BuffLevel = BuffLevels.VI;
 			else if (name.EndsWith(" VII")) // This doesn't pick up every lvl 7
 				BuffLevel = BuffLevels.VII;
-			else if (name.StartsWith("Incantation "))
+			else if (name.StartsWith("Incantation ") || name.StartsWith("Aura of Incantation "))
 				BuffLevel = BuffLevels.VIII;
 
 			if (name.StartsWith("Feeble "))
@@ -84,12 +84,62 @@ namespace Mag.Shared.Spells
 			else if (name.StartsWith("Legendary "))
 				CantripLevel = CantripLevels.Legendary;
 
-			// Try to determine if this is a lvl 7
+			// Try to determine if this is a lvl x
 			if (BuffLevel == BuffLevels.None && CantripLevel == CantripLevels.None)
 			{
-				if (difficulty == 300 && duration == 3600)
-					BuffLevel = BuffLevels.VII;
-			}
+                // These spells don't have levels
+                if (name.StartsWith("Prodigal ") || // Rares
+                    name.StartsWith("Cloaked in ") || name.StartsWith("Shroud of ")) // Cloaks
+                    return;
+
+                if (difficulty == 1 && duration == 1800)
+                    BuffLevel = BuffLevels.I;
+                if (difficulty == 50 && duration == -1 && name.StartsWith("Evaporate "))
+                    BuffLevel = BuffLevels.II;
+
+                if (difficulty == 50 && duration == 1800)
+                    BuffLevel = BuffLevels.II;
+                if (difficulty == 100 && duration == -1 && name.StartsWith("Extinguish "))
+                    BuffLevel = BuffLevels.II;
+
+                if (difficulty == 100 && duration == 1800)
+                    BuffLevel = BuffLevels.III;
+                if (difficulty == 150 && duration == -1 && name.StartsWith("Cleanse "))
+                    BuffLevel = BuffLevels.III;
+
+                if (difficulty == 150 && duration == 1800)
+                    BuffLevel = BuffLevels.IV;
+                if (difficulty == 200 && duration == -1 && name.StartsWith("Devour "))
+                    BuffLevel = BuffLevels.IV;
+
+                if (difficulty == 200 && duration == 1800)
+                    BuffLevel = BuffLevels.V;
+                if (difficulty == 250 && duration == -1 && name.StartsWith("Purge "))
+                    BuffLevel = BuffLevels.V;
+
+                if (difficulty == 200 && duration == -1 && !name.StartsWith("Devour ")) // Ring spells
+                    BuffLevel = BuffLevels.VI;
+                if (difficulty == 250 && duration == 2700)
+                    BuffLevel = BuffLevels.VI;
+                if (difficulty == 300 && duration == -1 && name.StartsWith("Nullify "))
+                    BuffLevel = BuffLevels.VI;
+
+                if (difficulty == 300 && duration == -1 && !name.StartsWith("Nullify "))
+                    BuffLevel = BuffLevels.VII;
+                if (difficulty == 300 && duration == 240)
+                    BuffLevel = BuffLevels.VII;
+                if (difficulty == 300 && duration == 3600)
+                    BuffLevel = BuffLevels.VII;
+                if (difficulty == 325 && duration == -1)
+                    BuffLevel = BuffLevels.VII;
+                if (difficulty == 325 && duration == 240)
+                    BuffLevel = BuffLevels.VII;
+                if (difficulty == 350 && duration == -1)
+                    BuffLevel = BuffLevels.VII;
+
+                if (difficulty == 400 && duration == 5400)
+                    BuffLevel = BuffLevels.VIII;
+            }
 		}
 
 

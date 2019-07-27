@@ -21,18 +21,21 @@ namespace Mag_LootParser
 
         public readonly Dictionary<MaterialType, int> MaterialHits = new Dictionary<MaterialType, int>();
 
+        /// <summary>
+        /// SpellStats for items with Workmanship
+        /// </summary>
         public readonly SpellStats SpellStats = new SpellStats();
 
         public readonly Dictionary<ObjectClass, ItemGroupStats> ObjectClasses = new Dictionary<ObjectClass, ItemGroupStats>
         {
-            { ObjectClass.MeleeWeapon, new ItemGroupStats() },
-            { ObjectClass.MissileWeapon, new ItemGroupStats() },
-            { ObjectClass.WandStaffOrb, new ItemGroupStats() },
+            { ObjectClass.MeleeWeapon, new ItemGroupStats(true) },
+            { ObjectClass.MissileWeapon, new ItemGroupStats(true) },
+            { ObjectClass.WandStaffOrb, new ItemGroupStats(true) },
 
-            { ObjectClass.Armor, new ItemGroupStats() },
-            { ObjectClass.Clothing, new ItemGroupStats() },
+            { ObjectClass.Armor, new ItemGroupStats(true) },
+            { ObjectClass.Clothing, new ItemGroupStats(true) },
 
-            { ObjectClass.Jewelry, new ItemGroupStats() },
+            { ObjectClass.Jewelry, new ItemGroupStats(true) },
 
             { ObjectClass.Gem, new GemStats() },
 
@@ -118,7 +121,7 @@ namespace Mag_LootParser
                 sb.AppendLine(kvp.Key.ToString().PadRight(15) + " [" + kvp.Value.ToString("N0").PadLeft(6) + " " + (kvp.Value / (float)totalMaterialHits * 100).ToString("N1").PadLeft(4) + "%]");
             sb.AppendLine();
 
-            sb.AppendLine("Total Spell Stats: ");
+            sb.AppendLine("Total Spell Stats for Items With Workmanship: ");
             sb.AppendLine(SpellStats.ToString());
             sb.AppendLine();
 
