@@ -1311,6 +1311,18 @@ namespace MagTools
 			return null;
 		}
 
+        bool CompareItemNameString(WorldObject wo, String name, bool partial)
+        {
+            MyWorldObject mwo = MyWorldObjectCreator.Create(wo);
+            String fullItemName = mwo.Material == null ? mwo.Name : mwo.Material + " " + mwo.Name;
+            if (partial)
+                return fullItemName.ToLower().Contains(name.ToLower());
+            else
+                // retain legacy behavior but also add material name comparison 
+                return String.Compare(wo.Name, name, StringComparison.OrdinalIgnoreCase) == 0 || 
+                    String.Compare(fullItemName, name, StringComparison.OrdinalIgnoreCase) == 0;
+        }
+
 		int FindIdForName(string name, bool searchInInventory, bool searchOpenContainer, bool searchEnvironment, bool partialMatch, int idToSkip = 0)
 		{
 			// Exact match attempt first
@@ -1318,7 +1330,7 @@ namespace MagTools
 			{
 				foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
 				{
-					if (String.Compare(wo.Name, name, StringComparison.OrdinalIgnoreCase) == 0 && wo.Id != idToSkip)
+					if (CompareItemNameString(wo, name, false) && wo.Id != idToSkip)
 						return wo.Id;
 				}
 			}
@@ -1327,7 +1339,7 @@ namespace MagTools
 			{
 				foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetByContainer(CoreManager.Current.Actions.OpenedContainer))
 				{
-					if (String.Compare(wo.Name, name, StringComparison.OrdinalIgnoreCase) == 0)
+                    if (CompareItemNameString(wo, name, false))
 						return wo.Id;
 				}
 			}
@@ -1356,7 +1368,7 @@ namespace MagTools
 				{
 					foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetByContainer(CoreManager.Current.Actions.OpenedContainer))
 					{
-						if (wo.Name.ToLower().Contains(name.ToLower()))
+                        if (CompareItemNameString(wo, name, true))
 							return wo.Id;
 					}
 				}
