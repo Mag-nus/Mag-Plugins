@@ -83,7 +83,7 @@ namespace MagTools.Macros
 				if (periodicCommands.Count == 0 && serverPeriodicCommands.Count == 0)
 					return;
 
-				int previousPendingCommandCount = (pendingCommands.Count + serverPeriodicCommands.Count);
+				int previousPendingCommandCount = pendingCommands.Count;
 
 				int minutesAfterMidnight = (int)(DateTime.Now - DateTime.Today).TotalMinutes;
 
