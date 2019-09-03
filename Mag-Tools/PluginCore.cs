@@ -984,8 +984,31 @@ namespace MagTools
                 {
                     if ((!partialMatch && String.Compare(wo.Name, name, StringComparison.OrdinalIgnoreCase) == 0) || (partialMatch && wo.Name.ToLower().Contains(name.ToLower())))
                     {
-                        // Skip over already equipped items
-                        if (wo.Values(LongValueKey.EquippedSlots) > 0 || wo.Values(LongValueKey.Slot, 0) == -1)
+                        // Skip over equipped items
+                        if (wo.Values(LongValueKey.EquippedSlots) > 0 || wo.Values(LongValueKey.Slot, 0) == -1) // Weapons are in the -1 slot
+                            continue;
+
+                        CoreManager.Current.Actions.UseItem(wo.Id, 0);
+                        break;
+                    }
+                }
+
+                return true;
+            }
+
+            if ((lower.StartsWith("/mt dequip ") && lower.Length > 11) || (lower.StartsWith("/mt dequipp ") && lower.Length > 12))
+            {
+                bool partialMatch = lower.StartsWith("/mt dequipp ");
+                int offset = lower.StartsWith("/mt dequip ") || lower.StartsWith("/mt dequipp ") ? (partialMatch ? 12 : 11) : (partialMatch ? 13 : 12);
+
+                string name = lower.Substring(offset, lower.Length - offset);
+
+                foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
+                {
+                    if ((!partialMatch && String.Compare(wo.Name, name, StringComparison.OrdinalIgnoreCase) == 0) || (partialMatch && wo.Name.ToLower().Contains(name.ToLower())))
+                    {
+                        // Skip over non-equipped items
+                        if (wo.Values(LongValueKey.EquippedSlots) <= 0 && wo.Values(LongValueKey.Slot, 0) != -1) // Weapons are in the -1 slot
                             continue;
 
                         CoreManager.Current.Actions.UseItem(wo.Id, 0);
