@@ -716,13 +716,13 @@ namespace MagTools
 				return true;
 			}
 
-				if (lower.StartsWith("/mt quit") || lower.StartsWith("/mt exit"))
-				{
-				PostMessageTools.SendAltF4();
-				return true;
-				}
+            if (lower.StartsWith("/mt quit") || lower.StartsWith("/mt exit"))
+            {
+                PostMessageTools.SendAltF4();
+                return true;
+            }
 
-			if (lower.StartsWith("/mt click "))
+            if (lower.StartsWith("/mt click "))
 			{
 				if (lower.StartsWith("/mt click ok")) PostMessageTools.ClickOK();
 				else if (lower.StartsWith("/mt click yes")) PostMessageTools.ClickYes();
@@ -973,7 +973,30 @@ namespace MagTools
 				return true;
 			}
 
-			if ((lower.StartsWith("/mt give ") && lower.Contains(" to ")) || (lower.StartsWith("/mt givep ") && lower.Contains(" to ")))
+            if ((lower.StartsWith("/mt equip ") && lower.Length > 10) || (lower.StartsWith("/mt equipp ") && lower.Length > 11))
+            {
+                bool partialMatch = lower.StartsWith("/mt equipp ");
+                int offset = lower.StartsWith("/mt equip ") || lower.StartsWith("/mt equipp ") ? (partialMatch ? 11 : 10) : (partialMatch ? 12 : 11);
+
+                string name = lower.Substring(offset, lower.Length - offset);
+
+                foreach (WorldObject wo in CoreManager.Current.WorldFilter.GetInventory())
+                {
+                    if ((!partialMatch && String.Compare(wo.Name, name, StringComparison.OrdinalIgnoreCase) == 0) || (partialMatch && wo.Name.ToLower().Contains(name.ToLower())))
+                    {
+                        // Skip over already equipped items
+                        if (wo.Values(LongValueKey.EquippedSlots) > 0 || wo.Values(LongValueKey.Slot, 0) == -1)
+                            continue;
+
+                        CoreManager.Current.Actions.UseItem(wo.Id, 0);
+                        break;
+                    }
+                }
+
+                return true;
+            }
+
+            if ((lower.StartsWith("/mt give ") && lower.Contains(" to ")) || (lower.StartsWith("/mt givep ") && lower.Contains(" to ")))
 			{
 				bool partialMatch = lower.StartsWith("/mt givep ");
 				int offset = partialMatch ? 10 : 9;
