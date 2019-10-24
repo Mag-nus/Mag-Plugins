@@ -70,5 +70,12 @@ namespace Mag.Shared
 		/// <para>If the function fails, the return value is zero. To get extended error information, call GetLastError.</para></returns>
 		[DllImport("user32.dll", SetLastError = true)]
 		public static extern bool MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
+
+
+		public const int SW_MINIMIZE = 6;
+
+		[DllImport("user32.dll")]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 	}
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -1333,6 +1333,12 @@ namespace MagTools
 				}
 
 				return false;
+			}
+
+			if (lower.StartsWith("/mt client "))
+			{
+				if (lower == "/mt client minimize")
+					User32.ShowWindow(CoreManager.Current.Decal.Hwnd, User32.SW_MINIMIZE);
 			}
 
 			return false;
