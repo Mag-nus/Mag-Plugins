@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Mag.Shared.Constants
 {
@@ -18,7 +18,7 @@ namespace Mag.Shared.Constants
 			{ 0x5, "Mace" },
 			{ 0x6, "Melee Defense" },
 			{ 0x7, "Missile Defense" },
-			// 0x8
+			{ 0x8, "Sling" },
 			{ 0x9, "Spear" },
 			{ 0xA, "Staff" },
 			{ 0xB, "Sword" },
@@ -49,7 +49,7 @@ namespace Mag.Shared.Constants
 			{ 0x27, "Cooking" },
 			{ 0x28, "Salvaging" },
 			{ 0x29, "Two Handed Combat" },
-			// 0x2A
+			{ 0x2A, "Gearcraft"},
 			{ 0x2B, "Void" },
 			{ 0x2C, "Heavy Weapons" },
 			{ 0x2D, "Light Weapons" },
@@ -60,7 +60,7 @@ namespace Mag.Shared.Constants
 			{ 0x32, "Recklessness" },
 			{ 0x33, "Sneak Attack" },
 			{ 0x34, "Dirty Fighting" },
-			// 0x35
+			{ 0x35, "Challenge" },
 			{ 0x36, "Summoning" },
 		};
 
@@ -91,9 +91,9 @@ namespace Mag.Shared.Constants
 		{
 			// This list was taken from Virindi Tank Loot Editor
 			// 01
-			// 02
+			{ 02, "Test"},
 			// 03
-			// 04
+			{ 04, "Carraida's Benediction"},
 			{ 05, "Noble Relic Set" },
 			{ 06, "Ancient Relic Set" },
 			{ 07, "Relic Alduressa Set" },
@@ -121,9 +121,9 @@ namespace Mag.Shared.Constants
 			{ 29, "Lightning Proof Set" },
 			{ 30, "Dedication Set" },
 			{ 31, "Gladiatorial Clothing Set" },
-			{ 32, "Protective Clothing Set" },
-			// 33
-			// 34
+			{ 32, "Ceremonial Clothing" },
+			{ 33, "Protective Clothing" },
+			{ 34, "Noobie Armor" },
 			{ 35, "Sigil of Defense" },
 			{ 36, "Sigil of Destruction" },
 			{ 37, "Sigil of Fury" },
@@ -131,13 +131,13 @@ namespace Mag.Shared.Constants
 			{ 39, "Sigil of Vigor" },
 			{ 40, "Heroic Protector Set" },
 			{ 41, "Heroic Destroyer Set" },
-			// 42
-			// 43
-			// 44
-			// 45
-			// 46
+			{ 42, "Olthoi Armor D Red" },
+			{ 43, "Olthoi Armor C Rat" },
+			{ 44, "Olthoi Armor C Red" },
+			{ 45, "Olthoi Armor D Rat" },
+			{ 46, "Upgraded Relic Alduressa Set" },
 			{ 47, "Upgraded Ancient Relic Set" },
-			// 48
+			{ 48, "Upgraded Noble Relic Set" },
 			{ 49, "Weave of Alchemy" },
 			{ 50, "Weave of Arcane Lore" },
 			{ 51, "Weave of Armor Tinkering" },
@@ -178,8 +178,53 @@ namespace Mag.Shared.Constants
 			{ 86, "Weave of Recklessness" },
 			{ 87, "Weave of Shield" },
 			{ 88, "Weave of Sneak Attack" },
-			// 89
+			{ 89, "Ninja_New" },
 			{ 90, "Weave of Summoning" },
+
+			{ 91, "Shrouded Soul" },
+			{ 92, "Darkened Mind" },
+			{ 93, "Clouded Spirit" },
+			{ 94, "Minor Stinging Shrouded Soul" },
+			{ 95, "Minor Sparking Shrouded Soul" },
+			{ 96, "Minor Smoldering Shrouded Soul" },
+			{ 97, "Minor Shivering Shrouded Soul" },
+			{ 98, "Minor Stinging Darkened Mind" },
+			{ 99, "Minor Sparking Darkened Mind" },
+
+			{ 100, "Minor Smoldering Darkened Mind" },
+			{ 101, "Minor Shivering Darkened Mind" },
+			{ 102, "Minor Stinging Clouded Spirit" },
+			{ 103, "Minor Sparking Clouded Spirit" },
+			{ 104, "Minor Smoldering Clouded Spirit" },
+			{ 105, "Minor Shivering Clouded Spirit" },
+			{ 106, "Major Stinging Shrouded Soul" },
+			{ 107, "Major Sparking Shrouded Soul" },
+			{ 108, "Major Smoldering Shrouded Soul" },
+			{ 109, "Major Shivering Shrouded Soul" },
+
+			{ 110, "Major Stinging Darkened Mind" },
+			{ 111, "Major Sparking Darkened Mind" },
+			{ 112, "Major Smoldering Darkened Mind" },
+			{ 113, "Major Shivering Darkened Mind" },
+			{ 114, "Major Stinging Clouded Spirit" },
+			{ 115, "Major Sparking Clouded Spirit" },
+			{ 116, "Major Smoldering Clouded Spirit" },
+			{ 117, "Major Shivering Clouded Spirit" },
+			{ 118, "Blackfire Stinging Shrouded Soul" },
+			{ 119, "Blackfire Sparking Shrouded Soul" },
+
+			{ 120, "Blackfire Smoldering Shrouded Soul" },
+			{ 121, "Blackfire Shivering Shrouded Soul" },
+			{ 122, "Blackfire Stinging Darkened Mind" },
+			{ 123, "Blackfire Sparking Darkened Mind" },
+			{ 124, "Blackfire Smoldering Darkened Mind" },
+			{ 125, "Blackfire Shivering Darkened Mind" },
+			{ 126, "Blackfire Stinging Clouded Spirit" },
+			{ 127, "Blackfire Sparking Clouded Spirit" },
+			{ 128, "Blackfire Smoldering Clouded Spirit" },
+			{ 129, "Blackfire Shivering Clouded Spirit" },
+
+			{ 130, "Shimmering Shadows" },
 		};
 
 		/// <summary>
