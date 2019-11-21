@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text;
 
 using Mag.Shared.Constants;
@@ -9,7 +9,7 @@ namespace Mag_LootParser.ItemGroups
     {
         public readonly List<IdentResponse> Items = new List<IdentResponse>();
 
-        public readonly bool LimitSpellStatsToOnlyItemsWithWorkmanship;
+        public readonly bool LimitStatsToOnlyItemsWithWorkmanship;
 
         /// <summary>
         /// SpellStats for items with Workmanship
@@ -17,17 +17,17 @@ namespace Mag_LootParser.ItemGroups
         public readonly SpellStats SpellStats = new SpellStats();
 
 
-        public ItemGroupStats(bool limitSpellStatsToOnlyItemsWithWorkmanship = false)
+        public ItemGroupStats(bool limitStatsToOnlyItemsWithWorkmanship = false)
         {
-            LimitSpellStatsToOnlyItemsWithWorkmanship = limitSpellStatsToOnlyItemsWithWorkmanship;
+            LimitStatsToOnlyItemsWithWorkmanship = limitStatsToOnlyItemsWithWorkmanship;
         }
 
         public virtual void ProcessItem(IdentResponse item)
         {
             Items.Add(item);
 
-            if (!LimitSpellStatsToOnlyItemsWithWorkmanship || item.LongValues.ContainsKey(IntValueKey.Workmanship))
-                SpellStats.ProcessItem(item);
+            if (!LimitStatsToOnlyItemsWithWorkmanship || item.LongValues.ContainsKey(IntValueKey.Workmanship))
+	            SpellStats.ProcessItem(item);
         }
 
 

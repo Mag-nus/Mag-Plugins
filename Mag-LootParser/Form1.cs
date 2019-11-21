@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -329,24 +329,29 @@ namespace Mag_LootParser
 
             // These items are odd-balls that were found in corpses. Possibly code error, or maybe a player put the item in the corpse?
             // Corpse of Grave Rat
-            if (identResponse.Id == 0xDD2B79A9 && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Electric Spine Glaive")
+            if (identResponse.Id == 0xDD2B79A9 && identResponse.StringValues[StringValueKey.Name] == "Electric Spine Glaive")
             {
                 Interlocked.Increment(ref skippedLines);
                 return;
             }
             // Corpse of Drudge Slave
-            if (identResponse.Id == 0xDC94F88A && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Heavy Crossbow")
+            if (identResponse.Id == 0xDC94F88A && identResponse.StringValues[StringValueKey.Name] == "Heavy Crossbow")
             {
                 Interlocked.Increment(ref skippedLines);
                 return;
             }
-            if (identResponse.Id == 0xDC9AE6E2 && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Katar")
+            if (identResponse.Id == 0xDC9AE6E2 && identResponse.StringValues[StringValueKey.Name] == "Katar")
             {
                 Interlocked.Increment(ref skippedLines);
                 return;
             }
-            // Corpse of Mercenary
-            if (identResponse.Id == 0xABCC0A35 && identResponse.StringValues[Mag.Shared.Constants.StringValueKey.Name] == "Studded Leather Breastplate")
+            if (identResponse.Id == 0xD80AB491 && identResponse.StringValues[StringValueKey.Name] == "Flaming Great Star Mace")
+            {
+	            Interlocked.Increment(ref skippedLines);
+	            return;
+            }
+			// Corpse of Mercenary
+			if (identResponse.Id == 0xABCC0A35 && identResponse.StringValues[StringValueKey.Name] == "Studded Leather Breastplate")
             {
                 Interlocked.Increment(ref skippedLines);
                 return;
@@ -450,7 +455,7 @@ namespace Mag_LootParser
 
             // Output stats by tier
             foreach (var kvp in StatsCalculator.StatsByLootTier)
-                File.WriteAllText(Path.Combine(txtOutputPath.Text, "Tier " + kvp.Key + ".txt"), kvp.Value.ToString());
+                File.WriteAllText(Path.Combine(txtOutputPath.Text, "Tier " + kvp.Key + " (No Chests).txt"), kvp.Value.ToString());
 
             // Output stats by container name
             foreach (var stats in StatsCalculator.StatsByContainerNameAndTier)
@@ -461,34 +466,65 @@ namespace Mag_LootParser
             File.Delete(Path.Combine(txtOutputPath.Text, "Tier Container Audit.txt"));
             foreach (var stats in StatsCalculator.StatsByContainerNameAndTier)
             {
-                outputAuditLine = false;
+                // Chests of the same name can contain multiple tiers
+				if (ContainerInfo.IsChest(stats.ContainerName))
+					continue;
 
-                ContainerTierAudit(stats, 1, Mag.Shared.Spells.Spell.BuffLevels.I, Mag.Shared.Spells.Spell.BuffLevels.III);
-                ContainerTierAudit(stats, 2, Mag.Shared.Spells.Spell.BuffLevels.III, Mag.Shared.Spells.Spell.BuffLevels.V);
-                ContainerTierAudit(stats, 3, Mag.Shared.Spells.Spell.BuffLevels.IV, Mag.Shared.Spells.Spell.BuffLevels.VI);
-                ContainerTierAudit(stats, 4, Mag.Shared.Spells.Spell.BuffLevels.IV, Mag.Shared.Spells.Spell.BuffLevels.VI);
-                ContainerTierAudit(stats, 5, Mag.Shared.Spells.Spell.BuffLevels.V, Mag.Shared.Spells.Spell.BuffLevels.VII);
-                ContainerTierAudit(stats, 6, Mag.Shared.Spells.Spell.BuffLevels.VI, Mag.Shared.Spells.Spell.BuffLevels.VII);
-                ContainerTierAudit(stats, 7, Mag.Shared.Spells.Spell.BuffLevels.VI, Mag.Shared.Spells.Spell.BuffLevels.VIII);
-                ContainerTierAudit(stats, 8, Mag.Shared.Spells.Spell.BuffLevels.VI, Mag.Shared.Spells.Spell.BuffLevels.VIII);
+	            outputAuditLine = false;
 
-                if (outputAuditLine)
+                ContainerTierAuditSpells(stats, 1, Mag.Shared.Spells.Spell.BuffLevels.I, Mag.Shared.Spells.Spell.BuffLevels.III);
+                ContainerTierAuditSpells(stats, 2, Mag.Shared.Spells.Spell.BuffLevels.III, Mag.Shared.Spells.Spell.BuffLevels.V);
+                ContainerTierAuditSpells(stats, 3, Mag.Shared.Spells.Spell.BuffLevels.IV, Mag.Shared.Spells.Spell.BuffLevels.VI);
+                ContainerTierAuditSpells(stats, 4, Mag.Shared.Spells.Spell.BuffLevels.IV, Mag.Shared.Spells.Spell.BuffLevels.VI);
+                ContainerTierAuditSpells(stats, 5, Mag.Shared.Spells.Spell.BuffLevels.V, Mag.Shared.Spells.Spell.BuffLevels.VII);
+                ContainerTierAuditSpells(stats, 6, Mag.Shared.Spells.Spell.BuffLevels.VI, Mag.Shared.Spells.Spell.BuffLevels.VII);
+                ContainerTierAuditSpells(stats, 7, Mag.Shared.Spells.Spell.BuffLevels.VI, Mag.Shared.Spells.Spell.BuffLevels.VIII);
+                ContainerTierAuditSpells(stats, 8, Mag.Shared.Spells.Spell.BuffLevels.VI, Mag.Shared.Spells.Spell.BuffLevels.VIII);
+
+                ContainerTierAuditWieldReqs(stats, 1, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 0 });
+				ContainerTierAuditWieldReqs(stats, 2, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 0, 250 });
+                ContainerTierAuditWieldReqs(stats, 3, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 0, 250, 300 });
+                ContainerTierAuditWieldReqs(stats, 4, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 0, 250, 300 });
+                ContainerTierAuditWieldReqs(stats, 5, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 300, 325, 350 });
+                ContainerTierAuditWieldReqs(stats, 6, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 350, 370, 400 });
+                ContainerTierAuditWieldReqs(stats, 7, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 370, 400, 420 });
+                ContainerTierAuditWieldReqs(stats, 8, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 400, 420, 430 });
+
+                ContainerTierAuditWieldReqs(stats, 1, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 0 });
+				ContainerTierAuditWieldReqs(stats, 2, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 0, 250 });
+                ContainerTierAuditWieldReqs(stats, 3, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 0, 250, 270 });
+                ContainerTierAuditWieldReqs(stats, 4, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 250, 270 });
+                ContainerTierAuditWieldReqs(stats, 5, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 270, 290, 315 });
+                ContainerTierAuditWieldReqs(stats, 6, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 315, 335, 360 });
+                ContainerTierAuditWieldReqs(stats, 7, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 335, 360, 375 });
+                ContainerTierAuditWieldReqs(stats, 8, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 360, 375, 385 });
+
+                ContainerTierAuditWieldReqs(stats, 1, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 0 });
+                ContainerTierAuditWieldReqs(stats, 2, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 0 });
+                ContainerTierAuditWieldReqs(stats, 3, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 0 });
+                ContainerTierAuditWieldReqs(stats, 4, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 0 });
+				ContainerTierAuditWieldReqs(stats, 5, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 0, 290, 310 });
+                ContainerTierAuditWieldReqs(stats, 6, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 0, 290, 310, 330, 355 });
+                ContainerTierAuditWieldReqs(stats, 7, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 330, 355, 375 });
+                ContainerTierAuditWieldReqs(stats, 8, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 355, 375, 385 }); 
+
+				if (outputAuditLine)
                     File.AppendAllText(Path.Combine(txtOutputPath.Text, "Tier Container Audit.txt"), Environment.NewLine);
             }
         }
 
-        private void ContainerTierAudit(Stats stats, int tier, Mag.Shared.Spells.Spell.BuffLevels minBuffLevel, Mag.Shared.Spells.Spell.BuffLevels maxBuffLevel)
+        private bool outputAuditLine;
+
+		private void ContainerTierAuditSpells(Stats stats, int tier, Mag.Shared.Spells.Spell.BuffLevels minBuffLevel, Mag.Shared.Spells.Spell.BuffLevels maxBuffLevel)
         {
             if (stats.Tier != tier)
                 return;
 
             foreach (var itemGroupStats in stats.ObjectClasses.Values)
-                ContainerTierAudit2(stats.ContainerName, tier, itemGroupStats, minBuffLevel, maxBuffLevel);
+                ContainerTierAuditSpellsInner(stats.ContainerName, tier, itemGroupStats, minBuffLevel, maxBuffLevel);
         }
 
-        private bool outputAuditLine;
-
-        private void ContainerTierAudit2(string containerName, int tier, ItemGroups.ItemGroupStats itemGroupStats, Mag.Shared.Spells.Spell.BuffLevels minBuffLevel, Mag.Shared.Spells.Spell.BuffLevels maxBuffLevel)
+        private void ContainerTierAuditSpellsInner(string containerName, int tier, ItemGroups.ItemGroupStats itemGroupStats, Mag.Shared.Spells.Spell.BuffLevels minBuffLevel, Mag.Shared.Spells.Spell.BuffLevels maxBuffLevel)
         {
             foreach (var item in itemGroupStats.Items)
             {
@@ -504,11 +540,50 @@ namespace Mag_LootParser
 
                     if (spell.BuffLevel < minBuffLevel || spell.BuffLevel > maxBuffLevel)
                     {
-                        File.AppendAllText(Path.Combine(txtOutputPath.Text, "Tier Container Audit.txt"), $"containerName: {containerName.PadRight(30)}, tier: {tier}, item: 0x{item.Id:X8}:{item.StringValues[Mag.Shared.Constants.StringValueKey.Name].PadRight(30)}, has spell: {spell}" + Environment.NewLine);
+                        File.AppendAllText(Path.Combine(txtOutputPath.Text, "Tier Container Audit.txt"), $"containerName: {containerName.PadRight(30)}, tier: {tier}, item: 0x{item.Id:X8}:{item.StringValues[StringValueKey.Name].PadRight(30)}, has spell: {spell}, Calculated Item Tier: {TierCalculator.Calculate(new List<IdentResponse> { item })}" + Environment.NewLine);
                         outputAuditLine = true;
                     }
                 }
             }
         }
-    }
+
+        private void ContainerTierAuditWieldReqs(Stats stats, int tier, int wieldReqType, HashSet<int> wieldReqAttributes, HashSet<int> validWieldReqValues)
+        {
+	        if (stats.Tier != tier)
+		        return;
+
+	        foreach (var itemGroupStats in stats.ObjectClasses.Values)
+		        ContainerTierAuditWieldReqsInner(stats.ContainerName, tier, itemGroupStats, wieldReqType, wieldReqAttributes, validWieldReqValues);
+		}
+
+		private void ContainerTierAuditWieldReqsInner(string containerName, int tier, ItemGroups.ItemGroupStats itemGroupStats, int wieldReqType, HashSet<int> wieldReqAttributes, HashSet<int> validWieldReqValues)
+        {
+	        foreach (var item in itemGroupStats.Items)
+	        {
+		        if (!item.LongValues.ContainsKey(IntValueKey.Workmanship))
+			        continue;
+
+				if (!item.LongValues.ContainsKey(IntValueKey.WieldReqType))
+			        continue;
+
+				if (item.LongValues[IntValueKey.WieldReqType] != wieldReqType)
+					continue;
+
+				if (!item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute))
+					continue;
+
+				if (!wieldReqAttributes.Contains(item.LongValues[IntValueKey.WieldReqAttribute]))
+					continue;
+
+				if (!item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+					continue;
+
+				if (!validWieldReqValues.Contains(item.LongValues[IntValueKey.WieldReqValue]))
+				{
+					File.AppendAllText(Path.Combine(txtOutputPath.Text, "Tier Container Audit.txt"), $"containerName: {containerName.PadRight(30)}, tier: {tier}, item: 0x{item.Id:X8}:{item.StringValues[StringValueKey.Name].PadRight(30)}, has WieldReqType: {item.LongValues[IntValueKey.WieldReqType]}, WieldReqAttribute: {item.LongValues[IntValueKey.WieldReqAttribute]}, WieldReqValue: {item.LongValues[IntValueKey.WieldReqValue]}, Calculated Item Tier: {TierCalculator.Calculate(new List<IdentResponse> { item })}" + Environment.NewLine);
+					outputAuditLine = true;
+				}
+			}
+		}
+	}
 }

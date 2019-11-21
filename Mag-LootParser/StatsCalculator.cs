@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Mag_LootParser
 {
     static class StatsCalculator
     {
+		/// <summary>
+		/// This will not include chest loot
+		/// </summary>
         public static readonly Dictionary<int, Stats> StatsByLootTier = new Dictionary<int, Stats>();
 
         public static readonly List<Stats> StatsByContainerNameAndTier = new List<Stats>();
@@ -22,29 +25,38 @@ namespace Mag_LootParser
             {
                 var containerInfoGroups = kvp.Value.GroupContainerInfosByTier();
 
-                foreach (var containerInfoGroup in containerInfoGroups)
-                {
-                    if (containerInfoGroup.Key == -1) // Player container
-                        continue;
+				foreach (var containerInfoGroup in containerInfoGroups)
+				{
+					if (containerInfoGroup.Key == -1) // Player container
+						continue;
 
-                    var containerByTier = StatsByLootTier[containerInfoGroup.Key];
-                    var containerStats = new Stats(kvp.Key, containerInfoGroup.Key);
+					// Don't add chest stats to StatsByLootTier
+					if (!ContainerInfo.IsChest(kvp.Key))
+					{
+						var containerByTier = StatsByLootTier[containerInfoGroup.Key];
 
-                    foreach (var container in containerInfoGroup.Value)
-                    {
-                        containerByTier.TotalContainers++;
-                        containerStats.TotalContainers++;
+						foreach (var container in containerInfoGroup.Value)
+						{
+							containerByTier.TotalContainers++;
 
-                        foreach (var item in container.Items)
-                        {
-                            containerByTier.ProcessItem(item);
-                            containerStats.ProcessItem(item);
-                        }
-                    }
+							foreach (var item in container.Items)
+								containerByTier.ProcessItem(item);
+						}
+					}
 
-                    StatsByContainerNameAndTier.Add(containerStats);
-                }
-            }
-        }
-    }
+					var containerStats = new Stats(kvp.Key, containerInfoGroup.Key);
+
+					foreach (var container in containerInfoGroup.Value)
+					{
+						containerStats.TotalContainers++;
+
+						foreach (var item in container.Items)
+							containerStats.ProcessItem(item);
+					}
+
+					StatsByContainerNameAndTier.Add(containerStats);
+				}
+			}
+		}
+	}
 }

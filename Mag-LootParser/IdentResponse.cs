@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using Mag.Shared;
@@ -196,23 +196,6 @@ namespace Mag_LootParser
                         throw new NotImplementedException();
                 }
             }
-        }
-
-
-        public bool IsTrophy()
-        {
-            if (ObjectClass == ObjectClass.MeleeWeapon ||
-                ObjectClass == ObjectClass.MissileWeapon ||
-                ObjectClass == ObjectClass.WandStaffOrb ||
-                ObjectClass == ObjectClass.Armor ||
-                ObjectClass == ObjectClass.Clothing ||
-                ObjectClass == ObjectClass.Jewelry)
-            {
-                if (!LongValues.ContainsKey(IntValueKey.Workmanship))
-                    return true;
-            }
-
-            return false;
         }
     }
 }

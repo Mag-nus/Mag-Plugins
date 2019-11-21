@@ -65,8 +65,14 @@
     <Compile Include="..\Shared\Constants\QuadValueKey.cs">
       <Link>Shared\Constants\QuadValueKey.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\Constants\Skill.cs">
+      <Link>Shared\Constants\Skill.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\Constants\StringValueKey.cs">
       <Link>Shared\Constants\StringValueKey.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Constants\WieldRequirement.cs">
+      <Link>Shared\Constants\WieldRequirement.cs</Link>
     </Compile>
     <Compile Include="..\Shared\ObjectClass.cs">
       <Link>Shared\ObjectClass.cs</Link>
@@ -88,6 +94,10 @@
     <Compile Include="IdentResponse.cs" />
     <Compile Include="ItemGroups\GemStats.cs" />
     <Compile Include="ItemGroups\ItemGroupStats.cs" />
+    <Compile Include="ItemGroups\MeleeWeaponStats.cs" />
+    <Compile Include="ItemGroups\MissileWeaponStats.cs" />
+    <Compile Include="ItemGroups\WandStaffOrbStats.cs" />
+    <Compile Include="ItemGroups\WieldableStats.cs" />
     <Compile Include="LogItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

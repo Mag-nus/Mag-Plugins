@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using Mag.Shared.Constants;
@@ -26,10 +26,12 @@ namespace Mag_LootParser
                 if (!item.LongValues.ContainsKey(IntValueKey.Workmanship))
                     goto bypassNonRandomLootGenItems;
 
-                // Heavy/Light/Finesse
-                if (item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && (item.LongValues[IntValueKey.WieldReqAttribute] == 0x2C || item.LongValues[IntValueKey.WieldReqAttribute] == 0x2D || item.LongValues[IntValueKey.WieldReqAttribute] == 0x2E) && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
-                {
-                    switch (item.LongValues[IntValueKey.WieldReqValue])
+				// Melee
+				if (item.LongValues.ContainsKey(IntValueKey.WieldReqType) && item.LongValues[IntValueKey.WieldReqType] == (int)WieldRequirement.RawSkill &&
+					item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && (item.LongValues[IntValueKey.WieldReqAttribute] == (int)Skill.TwoHandedCombat || item.LongValues[IntValueKey.WieldReqAttribute] == (int)Skill.HeavyWeapons || item.LongValues[IntValueKey.WieldReqAttribute] == (int)Skill.LightWeapons || item.LongValues[IntValueKey.WieldReqAttribute] == (int)Skill.FinesseWeapons) &&
+                    item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+				{
+					switch (item.LongValues[IntValueKey.WieldReqValue])
                     {
                         case 250:
                             if (tier < 2) tier = 2;
@@ -37,7 +39,8 @@ namespace Mag_LootParser
                         case 300:
                             if (tier < 3) tier = 3;
                             break;
-                        case 350:
+						case 325:
+						case 350:
                             if (tier < 5) tier = 5;
                             break;
                         case 370:
@@ -54,9 +57,11 @@ namespace Mag_LootParser
                 }
 
                 // Missile
-                if (item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && item.LongValues[IntValueKey.WieldReqAttribute] == 0x2F && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+                if (item.LongValues.ContainsKey(IntValueKey.WieldReqType) && item.LongValues[IntValueKey.WieldReqType] == (int)WieldRequirement.RawSkill &&
+					item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && item.LongValues[IntValueKey.WieldReqAttribute] == (int)Skill.MissileWeapons &&
+					item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
                 {
-                    switch (item.LongValues[IntValueKey.WieldReqValue])
+					switch (item.LongValues[IntValueKey.WieldReqValue])
                     {
                         case 250:
                             if (tier < 2) tier = 2;
@@ -64,11 +69,12 @@ namespace Mag_LootParser
                         case 270:
                             if (tier < 3) tier = 3;
                             break;
-                        //case 290:
-                        case 315:
+						case 290:
+						case 315:
                             if (tier < 5) tier = 5;
                             break;
-                        case 360:
+						case 335:
+						case 360:
                             if (tier < 6) tier = 6;
                             break;
                         case 375:
@@ -80,16 +86,19 @@ namespace Mag_LootParser
                     }
                 }
 
-                // Magic
-                if (item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && item.LongValues[IntValueKey.WieldReqAttribute] == 0x22 && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+				// Magic
+				if (item.LongValues.ContainsKey(IntValueKey.WieldReqType) && item.LongValues[IntValueKey.WieldReqType] == (int)WieldRequirement.RawSkill &&
+					item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && (item.LongValues[IntValueKey.WieldReqAttribute] == (int)Skill.WarMagic || item.LongValues[IntValueKey.WieldReqAttribute] == (int)Skill.VoidMagic) &&
+					item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
                 {
-                    switch (item.LongValues[IntValueKey.WieldReqValue])
+					switch (item.LongValues[IntValueKey.WieldReqValue])
                     {
-                        //case 290:
-                        case 310:
+						case 290:
+						case 310:
                             if (tier < 5) tier = 5;
                             break;
-                        case 355:
+						case 330:
+						case 355:
                             if (tier < 6) tier = 6;
                             break;
                         case 375:
@@ -101,7 +110,22 @@ namespace Mag_LootParser
                     }
                 }
 
-                if (item.LongValues.ContainsKey(IntValueKey.Workmanship))
+				// Wield Level
+				if (item.LongValues.ContainsKey(IntValueKey.WieldReqType) && item.LongValues[IntValueKey.WieldReqType] == (int)WieldRequirement.Level &&
+				    item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+				{
+					switch (item.LongValues[IntValueKey.WieldReqValue])
+					{
+						case 150:
+							if (tier < 7) tier = 7;
+							break;
+						case 180:
+							tier = 8;
+							break;
+					}
+				}
+
+				if (item.LongValues.ContainsKey(IntValueKey.Workmanship))
                 {
                     if (item.LongValues[IntValueKey.Workmanship] ==  1 && tier < 1) tier = 1;
                     if (item.LongValues[IntValueKey.Workmanship] ==  2 && tier < 1) tier = 1;

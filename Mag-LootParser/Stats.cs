@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -28,9 +28,9 @@ namespace Mag_LootParser
 
         public readonly Dictionary<ObjectClass, ItemGroupStats> ObjectClasses = new Dictionary<ObjectClass, ItemGroupStats>
         {
-            { ObjectClass.MeleeWeapon, new ItemGroupStats(true) },
-            { ObjectClass.MissileWeapon, new ItemGroupStats(true) },
-            { ObjectClass.WandStaffOrb, new ItemGroupStats(true) },
+            { ObjectClass.MeleeWeapon, new MeleeWeaponStats(true) },
+            { ObjectClass.MissileWeapon, new MissileWeaponStats(true) },
+            { ObjectClass.WandStaffOrb, new WandStaffOrbStats(true) },
 
             { ObjectClass.Armor, new ItemGroupStats(true) },
             { ObjectClass.Clothing, new ItemGroupStats(true) },
@@ -131,9 +131,11 @@ namespace Mag_LootParser
                     continue;
 
                 sb.AppendLine();
+                sb.AppendLine("==============================================================================");
                 sb.AppendLine(kvp.Key + ": ");
                 sb.Append(kvp.Value);
-            }
+                sb.AppendLine("==============================================================================");
+			}
 
             return sb.ToString();
         }
