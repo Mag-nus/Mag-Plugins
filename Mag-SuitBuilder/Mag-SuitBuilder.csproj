@@ -60,11 +60,20 @@
     <Compile Include="..\Shared\Constants\DoubleValueKey.cs">
       <Link>Shared\Constants\DoubleValueKey.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\Constants\EphemeralAttribute.cs">
+      <Link>Shared\Constants\EphemeralAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\Constants\EquippableSlotFlags.cs">
       <Link>Shared\Constants\EquippableSlotFlags.cs</Link>
     </Compile>
     <Compile Include="..\Shared\Constants\IntValueKey.cs">
       <Link>Shared\Constants\IntValueKey.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Constants\SendOnLoginAttribute.cs">
+      <Link>Shared\Constants\SendOnLoginAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Constants\ServerOnlyAttribute.cs">
+      <Link>Shared\Constants\ServerOnlyAttribute.cs</Link>
     </Compile>
     <Compile Include="..\Shared\Constants\StringValueKey.cs">
       <Link>Shared\Constants\StringValueKey.cs</Link>

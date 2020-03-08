@@ -528,7 +528,7 @@ namespace Mag_LootParser
         {
             foreach (var item in itemGroupStats.Items)
             {
-                if (!item.LongValues.ContainsKey(IntValueKey.Workmanship))
+                if (!item.LongValues.ContainsKey(IntValueKey.ItemWorkmanship))
                     continue;
 
                 foreach (var spellId in item.Spells)
@@ -547,40 +547,40 @@ namespace Mag_LootParser
             }
         }
 
-        private void ContainerTierAuditWieldReqs(Stats stats, int tier, int wieldReqType, HashSet<int> wieldReqAttributes, HashSet<int> validWieldReqValues)
+        private void ContainerTierAuditWieldReqs(Stats stats, int tier, int wieldRequirements, HashSet<int> wieldSkillType, HashSet<int> validWieldDifficulties)
         {
 	        if (stats.Tier != tier)
 		        return;
 
 	        foreach (var itemGroupStats in stats.ObjectClasses.Values)
-		        ContainerTierAuditWieldReqsInner(stats.ContainerName, tier, itemGroupStats, wieldReqType, wieldReqAttributes, validWieldReqValues);
+		        ContainerTierAuditWieldReqsInner(stats.ContainerName, tier, itemGroupStats, wieldRequirements, wieldSkillType, validWieldDifficulties);
 		}
 
-		private void ContainerTierAuditWieldReqsInner(string containerName, int tier, ItemGroups.ItemGroupStats itemGroupStats, int wieldReqType, HashSet<int> wieldReqAttributes, HashSet<int> validWieldReqValues)
+		private void ContainerTierAuditWieldReqsInner(string containerName, int tier, ItemGroups.ItemGroupStats itemGroupStats, int wieldRequirements, HashSet<int> wieldSkillType, HashSet<int> validWieldDifficulties)
         {
 	        foreach (var item in itemGroupStats.Items)
 	        {
-		        if (!item.LongValues.ContainsKey(IntValueKey.Workmanship))
+		        if (!item.LongValues.ContainsKey(IntValueKey.ItemWorkmanship))
 			        continue;
 
-				if (!item.LongValues.ContainsKey(IntValueKey.WieldReqType))
+				if (!item.LongValues.ContainsKey(IntValueKey.WieldRequirements))
 			        continue;
 
-				if (item.LongValues[IntValueKey.WieldReqType] != wieldReqType)
+				if (item.LongValues[IntValueKey.WieldRequirements] != wieldRequirements)
 					continue;
 
-				if (!item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute))
+				if (!item.LongValues.ContainsKey(IntValueKey.WieldSkillType))
 					continue;
 
-				if (!wieldReqAttributes.Contains(item.LongValues[IntValueKey.WieldReqAttribute]))
+				if (!wieldSkillType.Contains(item.LongValues[IntValueKey.WieldSkillType]))
 					continue;
 
-				if (!item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+				if (!item.LongValues.ContainsKey(IntValueKey.WieldDifficulty))
 					continue;
 
-				if (!validWieldReqValues.Contains(item.LongValues[IntValueKey.WieldReqValue]))
+				if (!validWieldDifficulties.Contains(item.LongValues[IntValueKey.WieldDifficulty]))
 				{
-					File.AppendAllText(Path.Combine(txtOutputPath.Text, "Tier Container Audit.txt"), $"containerName: {containerName.PadRight(30)}, tier: {tier}, item: 0x{item.Id:X8}:{item.StringValues[StringValueKey.Name].PadRight(30)}, has WieldReqType: {item.LongValues[IntValueKey.WieldReqType]}, WieldReqAttribute: {item.LongValues[IntValueKey.WieldReqAttribute]}, WieldReqValue: {item.LongValues[IntValueKey.WieldReqValue]}, Calculated Item Tier: {TierCalculator.Calculate(new List<IdentResponse> { item })}" + Environment.NewLine);
+					File.AppendAllText(Path.Combine(txtOutputPath.Text, "Tier Container Audit.txt"), $"containerName: {containerName.PadRight(30)}, tier: {tier}, item: 0x{item.Id:X8}:{item.StringValues[StringValueKey.Name].PadRight(30)}, has WieldRequirements: {item.LongValues[IntValueKey.WieldRequirements]}, WieldSkillType: {item.LongValues[IntValueKey.WieldSkillType]}, WieldDifficulty: {item.LongValues[IntValueKey.WieldDifficulty]}, Calculated Item Tier: {TierCalculator.Calculate(new List<IdentResponse> { item })}" + Environment.NewLine);
 					outputAuditLine = true;
 				}
 			}

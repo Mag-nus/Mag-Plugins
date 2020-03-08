@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using Mag.Shared.Constants;
@@ -28,12 +28,12 @@ namespace Mag.Shared
 		{
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
-			if (mwo.Values(IntValueKey.Material) > 0)
+			if (mwo.Values(IntValueKey.MaterialType) > 0)
 			{
-				if (Dictionaries.MaterialInfo.ContainsKey(mwo.Values(IntValueKey.Material)))
-					sb.Append(Dictionaries.MaterialInfo[mwo.Values(IntValueKey.Material)] + " ");
+				if (Dictionaries.MaterialInfo.ContainsKey(mwo.Values(IntValueKey.MaterialType)))
+					sb.Append(Dictionaries.MaterialInfo[mwo.Values(IntValueKey.MaterialType)] + " ");
 				else
-					sb.Append("unknown material " + mwo.Values(IntValueKey.Material) + " ");
+					sb.Append("unknown material " + mwo.Values(IntValueKey.MaterialType) + " ");
 			}
 
 			sb.Append(mwo.Name);
@@ -59,56 +59,56 @@ namespace Mag.Shared
 			if (mwo.Values(IntValueKey.ArmorLevel) > 0)
 				sb.Append(", AL " + mwo.Values(IntValueKey.ArmorLevel));
 
-			if (mwo.Values(IntValueKey.Imbued) > 0)
+			if (mwo.Values(IntValueKey.ImbuedEffect) > 0)
 			{
 				sb.Append(",");
-				if ((mwo.Values(IntValueKey.Imbued) & 1) == 1) sb.Append(" CS");
-				if ((mwo.Values(IntValueKey.Imbued) & 2) == 2) sb.Append(" CB");
-				if ((mwo.Values(IntValueKey.Imbued) & 4) == 4) sb.Append(" AR");
-				if ((mwo.Values(IntValueKey.Imbued) & 8) == 8) sb.Append(" SlashRend");
-				if ((mwo.Values(IntValueKey.Imbued) & 16) == 16) sb.Append(" PierceRend");
-				if ((mwo.Values(IntValueKey.Imbued) & 32) == 32) sb.Append(" BludgeRend");
-				if ((mwo.Values(IntValueKey.Imbued) & 64) == 64) sb.Append(" AcidRend");
-				if ((mwo.Values(IntValueKey.Imbued) & 128) == 128) sb.Append(" FrostRend");
-				if ((mwo.Values(IntValueKey.Imbued) & 256) == 256) sb.Append(" LightRend");
-				if ((mwo.Values(IntValueKey.Imbued) & 512) == 512) sb.Append(" FireRend");
-				if ((mwo.Values(IntValueKey.Imbued) & 1024) == 1024) sb.Append(" MeleeImbue");
-				if ((mwo.Values(IntValueKey.Imbued) & 4096) == 4096) sb.Append(" MagicImbue");
-				if ((mwo.Values(IntValueKey.Imbued) & 8192) == 8192) sb.Append(" Hematited");
-				if ((mwo.Values(IntValueKey.Imbued) & 536870912) == 536870912) sb.Append(" MagicAbsorb");
+				if ((mwo.Values(IntValueKey.ImbuedEffect) & 1) == 1) sb.Append(" CS");
+				if ((mwo.Values(IntValueKey.ImbuedEffect) & 2) == 2) sb.Append(" CB");
+				if ((mwo.Values(IntValueKey.ImbuedEffect) & 4) == 4) sb.Append(" AR");
+				if ((mwo.Values(IntValueKey.ImbuedEffect) & 8) == 8) sb.Append(" SlashRend");
+				if ((mwo.Values(IntValueKey.ImbuedEffect) & 16) == 16) sb.Append(" PierceRend");
+				if ((mwo.Values(IntValueKey.ImbuedEffect) & 32) == 32) sb.Append(" BludgeRend");
+				if ((mwo.Values(IntValueKey.ImbuedEffect) & 64) == 64) sb.Append(" AcidRend");
+				if ((mwo.Values(IntValueKey.ImbuedEffect) & 128) == 128) sb.Append(" FrostRend");
+				if ((mwo.Values(IntValueKey.ImbuedEffect) & 256) == 256) sb.Append(" LightRend");
+				if ((mwo.Values(IntValueKey.ImbuedEffect) & 512) == 512) sb.Append(" FireRend");
+				if ((mwo.Values(IntValueKey.ImbuedEffect) & 1024) == 1024) sb.Append(" MeleeImbue");
+				if ((mwo.Values(IntValueKey.ImbuedEffect) & 4096) == 4096) sb.Append(" MagicImbue");
+				if ((mwo.Values(IntValueKey.ImbuedEffect) & 8192) == 8192) sb.Append(" Hematited");
+				if ((mwo.Values(IntValueKey.ImbuedEffect) & 536870912) == 536870912) sb.Append(" MagicAbsorb");
 			}
 
-			if (mwo.Values(IntValueKey.NumberTimesTinkered) > 0)
-				sb.Append(", Tinks " + mwo.Values(IntValueKey.NumberTimesTinkered));
+			if (mwo.Values(IntValueKey.NumTimesTinkered) > 0)
+				sb.Append(", Tinks " + mwo.Values(IntValueKey.NumTimesTinkered));
 
-			if (mwo.Values(IntValueKey.MaxDamage) != 0 && mwo.Values(DoubleValueKey.Variance) != 0)
-				sb.Append(", " + (mwo.Values(IntValueKey.MaxDamage) - (mwo.Values(IntValueKey.MaxDamage) * mwo.Values(DoubleValueKey.Variance))).ToString("N2") + "-" + mwo.Values(IntValueKey.MaxDamage));
-			else if (mwo.Values(IntValueKey.MaxDamage) != 0 && mwo.Values(DoubleValueKey.Variance) == 0)
-				sb.Append(", " + mwo.Values(IntValueKey.MaxDamage));
+			if (mwo.Values(IntValueKey.MaxDamage_Decal) != 0 && mwo.Values(DoubleValueKey.Variance_Decal) != 0)
+				sb.Append(", " + (mwo.Values(IntValueKey.MaxDamage_Decal) - (mwo.Values(IntValueKey.MaxDamage_Decal) * mwo.Values(DoubleValueKey.Variance_Decal))).ToString("N2") + "-" + mwo.Values(IntValueKey.MaxDamage_Decal));
+			else if (mwo.Values(IntValueKey.MaxDamage_Decal) != 0 && mwo.Values(DoubleValueKey.Variance_Decal) == 0)
+				sb.Append(", " + mwo.Values(IntValueKey.MaxDamage_Decal));
 
-			if (mwo.Values(IntValueKey.ElementalDmgBonus, 0) != 0)
-				sb.Append(", +" + mwo.Values(IntValueKey.ElementalDmgBonus));
+			if (mwo.Values(IntValueKey.ElementalDamageBonus, 0) != 0)
+				sb.Append(", +" + mwo.Values(IntValueKey.ElementalDamageBonus));
 
-			if (mwo.Values(DoubleValueKey.DamageBonus, 1) != 1)
-				sb.Append(", +" + Math.Round(((mwo.Values(DoubleValueKey.DamageBonus) - 1) * 100)) + "%");
+			if (mwo.Values(DoubleValueKey.DamageBonus_Decal, 1) != 1)
+				sb.Append(", +" + Math.Round(((mwo.Values(DoubleValueKey.DamageBonus_Decal) - 1) * 100)) + "%");
 
-			if (mwo.Values(DoubleValueKey.ElementalDamageVersusMonsters, 1) != 1)
-				sb.Append(", +" + Math.Round(((mwo.Values(DoubleValueKey.ElementalDamageVersusMonsters) - 1) * 100)) + "%vs. Monsters");
+			if (mwo.Values(DoubleValueKey.ElementalDamageMod, 1) != 1)
+				sb.Append(", +" + Math.Round(((mwo.Values(DoubleValueKey.ElementalDamageMod) - 1) * 100)) + "%vs. Monsters");
 
-			if (mwo.Values(DoubleValueKey.AttackBonus, 1) != 1)
-				sb.Append(", +" + Math.Round(((mwo.Values(DoubleValueKey.AttackBonus) - 1) * 100)) + "%a");
+			if (mwo.Values(DoubleValueKey.AttackBonus_Decal, 1) != 1)
+				sb.Append(", +" + Math.Round(((mwo.Values(DoubleValueKey.AttackBonus_Decal) - 1) * 100)) + "%a");
 
-			if (mwo.Values(DoubleValueKey.MeleeDefenseBonus, 1) != 1)
-				sb.Append(", " + Math.Round(((mwo.Values(DoubleValueKey.MeleeDefenseBonus) - 1) * 100)) + "%md");
+			if (mwo.Values(DoubleValueKey.WeaponDefense, 1) != 1)
+				sb.Append(", " + Math.Round(((mwo.Values(DoubleValueKey.WeaponDefense) - 1) * 100)) + "%md");
 
-			if (mwo.Values(DoubleValueKey.MagicDBonus, 1) != 1)
-				sb.Append(", " + Math.Round(((mwo.Values(DoubleValueKey.MagicDBonus) - 1) * 100), 1) + "%mgc.d");
+			if (mwo.Values(DoubleValueKey.WeaponMagicDefense, 1) != 1)
+				sb.Append(", " + Math.Round(((mwo.Values(DoubleValueKey.WeaponMagicDefense) - 1) * 100), 1) + "%mgc.d");
 
-			if (mwo.Values(DoubleValueKey.MissileDBonus, 1) != 1)
-				sb.Append(", " + Math.Round(((mwo.Values(DoubleValueKey.MissileDBonus) - 1) * 100), 1) + "%msl.d");
+			if (mwo.Values(DoubleValueKey.WeaponMissileDefense, 1) != 1)
+				sb.Append(", " + Math.Round(((mwo.Values(DoubleValueKey.WeaponMissileDefense) - 1) * 100), 1) + "%msl.d");
 
-			if (mwo.Values(DoubleValueKey.ManaCBonus) != 0)
-				sb.Append(", " + Math.Round((mwo.Values(DoubleValueKey.ManaCBonus) * 100)) + "%mc");
+			if (mwo.Values(DoubleValueKey.ManaConversionMod) != 0)
+				sb.Append(", " + Math.Round((mwo.Values(DoubleValueKey.ManaConversionMod) * 100)) + "%mc");
 
 			if (showBuffedValues && (mwo.ObjectClass == (int)ObjectClass.MeleeWeapon || mwo.ObjectClass == (int)ObjectClass.MissileWeapon || mwo.ObjectClass == (int)ObjectClass.WandStaffOrb))
 			{
@@ -116,25 +116,25 @@ namespace Mag.Shared
 
 				// (Damage)
 				if (mwo.ObjectClass == (int)ObjectClass.MeleeWeapon)
-					sb.Append(mwo.CalcedBuffedTinkedDoT.ToString("N1") + "/" + mwo.GetBuffedIntValueKey((int)IntValueKey.MaxDamage));
+					sb.Append(mwo.CalcedBuffedTinkedDoT.ToString("N1") + "/" + mwo.GetBuffedIntValueKey((int)IntValueKey.MaxDamage_Decal));
 
 				if (mwo.ObjectClass == (int)ObjectClass.MissileWeapon)
 					sb.Append(mwo.CalcedBuffedMissileDamage.ToString("N1"));
 
 				if (mwo.ObjectClass == (int)ObjectClass.WandStaffOrb)
-					sb.Append(((mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.ElementalDamageVersusMonsters) - 1) * 100).ToString("N1"));
+					sb.Append(((mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.ElementalDamageMod) - 1) * 100).ToString("N1"));
 
 				// (AttackBonus/MeleeDefenseBonus/ManaCBonus)
 				sb.Append(" ");
 
-				if (mwo.Values(DoubleValueKey.AttackBonus, 1) != 1)
-					sb.Append(Math.Round(((mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.AttackBonus) - 1) * 100)).ToString("N1") + "/");
+				if (mwo.Values(DoubleValueKey.AttackBonus_Decal, 1) != 1)
+					sb.Append(Math.Round(((mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.AttackBonus_Decal) - 1) * 100)).ToString("N1") + "/");
 
-				if (mwo.Values(DoubleValueKey.MeleeDefenseBonus, 1) != 1)
-					sb.Append(Math.Round(((mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.MeleeDefenseBonus) - 1) * 100)).ToString("N1"));
+				if (mwo.Values(DoubleValueKey.WeaponDefense, 1) != 1)
+					sb.Append(Math.Round(((mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.WeaponDefense) - 1) * 100)).ToString("N1"));
 
-				if (mwo.Values(DoubleValueKey.ManaCBonus) != 0)
-					sb.Append("/" + Math.Round(mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.ManaCBonus) * 100));
+				if (mwo.Values(DoubleValueKey.ManaConversionMod) != 0)
+					sb.Append("/" + Math.Round(mwo.GetBuffedDoubleValueKey((int)DoubleValueKey.ManaConversionMod) * 100));
 
 				sb.Append(")");
 			}
@@ -157,7 +157,7 @@ namespace Mag.Shared
 						continue;
 
 					// If the item is not loot generated, show all spells
-					if (!mwo.IntValues.ContainsKey((int)IntValueKey.Material))
+					if (!mwo.IntValues.ContainsKey((int)IntValueKey.MaterialType))
 						goto ShowSpell;
 
 					// Always show Minor/Major/Epic Impen
@@ -168,7 +168,7 @@ namespace Mag.Shared
 					if (spell.Name.Contains("Augmented"))
 						goto ShowSpell;
 
-					if (mwo.Values(IntValueKey.Unenchantable, 0) != 0)
+					if (mwo.Values(IntValueKey.ResistMagic, 0) != 0)
 					{
 						// Show banes and impen on unenchantable equipment
 						if (spell.Name.Contains(" Bane") || spell.Name.Contains("Impen") || spell.Name.StartsWith("Brogard"))
@@ -250,17 +250,17 @@ namespace Mag.Shared
 			}
 
 			// Wield Lvl 180
-			if (mwo.Values(IntValueKey.WieldReqValue) > 0)
+			if (mwo.Values(IntValueKey.WieldDifficulty) > 0)
 			{
 				// I don't quite understand this.
-				if (mwo.Values(IntValueKey.WieldReqType) == 7 && mwo.Values(IntValueKey.WieldReqAttribute) == 1)
-					sb.Append(", Wield Lvl " + mwo.Values(IntValueKey.WieldReqValue));
+				if (mwo.Values(IntValueKey.WieldRequirements) == 7 && mwo.Values(IntValueKey.WieldSkillType) == 1)
+					sb.Append(", Wield Lvl " + mwo.Values(IntValueKey.WieldDifficulty));
 				else
 				{
-					if (Dictionaries.SkillInfo.ContainsKey(mwo.Values(IntValueKey.WieldReqAttribute)))
-						sb.Append(", " + Dictionaries.SkillInfo[mwo.Values(IntValueKey.WieldReqAttribute)] + " " + mwo.Values(IntValueKey.WieldReqValue));
+					if (Dictionaries.SkillInfo.ContainsKey(mwo.Values(IntValueKey.WieldSkillType)))
+						sb.Append(", " + Dictionaries.SkillInfo[mwo.Values(IntValueKey.WieldSkillType)] + " " + mwo.Values(IntValueKey.WieldDifficulty));
 					else
-						sb.Append(", Unknown skill: " + mwo.Values(IntValueKey.WieldReqAttribute) + " " + mwo.Values(IntValueKey.WieldReqValue));
+						sb.Append(", Unknown skill: " + mwo.Values(IntValueKey.WieldSkillType) + " " + mwo.Values(IntValueKey.WieldDifficulty));
 				}
 			}
 
@@ -270,12 +270,12 @@ namespace Mag.Shared
 
 			// Melee Defense 300 to Activate
 			// If the activation is lower than the wield requirement, don't show it.
-			if (mwo.Values(IntValueKey.SkillLevelReq) > 0 && (mwo.Values(IntValueKey.WieldReqAttribute) != mwo.Values(IntValueKey.ActivationReqSkillId) || mwo.Values(IntValueKey.WieldReqValue) < mwo.Values(IntValueKey.SkillLevelReq)))
+			if (mwo.Values(IntValueKey.ItemSkillLevelLimit) > 0 && (mwo.Values(IntValueKey.WieldSkillType) != mwo.Values(IntValueKey.AppraisalItemSkill) || mwo.Values(IntValueKey.WieldDifficulty) < mwo.Values(IntValueKey.ItemSkillLevelLimit)))
 			{
-				if (Dictionaries.SkillInfo.ContainsKey(mwo.Values(IntValueKey.ActivationReqSkillId)))
-					sb.Append(", " + Dictionaries.SkillInfo[mwo.Values(IntValueKey.ActivationReqSkillId)] + " " + mwo.Values(IntValueKey.SkillLevelReq) + " to Activate");
+				if (Dictionaries.SkillInfo.ContainsKey(mwo.Values(IntValueKey.AppraisalItemSkill)))
+					sb.Append(", " + Dictionaries.SkillInfo[mwo.Values(IntValueKey.AppraisalItemSkill)] + " " + mwo.Values(IntValueKey.ItemSkillLevelLimit) + " to Activate");
 				else
-					sb.Append(", Unknown skill: " + mwo.Values(IntValueKey.ActivationReqSkillId) + " " + mwo.Values(IntValueKey.SkillLevelReq) + " to Activate");
+					sb.Append(", Unknown skill: " + mwo.Values(IntValueKey.AppraisalItemSkill) + " " + mwo.Values(IntValueKey.ItemSkillLevelLimit) + " to Activate");
 			}
 
 			// Summoning Gem
@@ -296,30 +296,30 @@ namespace Mag.Shared
 					sb.Append(", Unknown skill spec: " + mwo.Values((IntValueKey)368) + " " + mwo.Values((IntValueKey)367));
 			}
 
-			if (mwo.Values(IntValueKey.LoreRequirement) > 0)
-				sb.Append(", Diff " + mwo.Values(IntValueKey.LoreRequirement));
+			if (mwo.Values(IntValueKey.ItemDifficulty) > 0)
+				sb.Append(", Diff " + mwo.Values(IntValueKey.ItemDifficulty));
 
 			if (mwo.ObjectClass == (int)ObjectClass.Salvage)
 			{
-				if (mwo.Values(DoubleValueKey.SalvageWorkmanship) > 0)
-					sb.Append(", Work " + mwo.Values(DoubleValueKey.SalvageWorkmanship).ToString("N2"));
+				if (mwo.Values(DoubleValueKey.SalvageWorkmanship_Decal) > 0)
+					sb.Append(", Work " + mwo.Values(DoubleValueKey.SalvageWorkmanship_Decal).ToString("N2"));
 			}
 			else
 			{
-				if (mwo.Values(IntValueKey.Workmanship) > 0 && mwo.Values(IntValueKey.NumberTimesTinkered) != 10) // Don't show the work if its already 10 tinked.
-					sb.Append(", Craft " + mwo.Values(IntValueKey.Workmanship));
+				if (mwo.Values(IntValueKey.ItemWorkmanship) > 0 && mwo.Values(IntValueKey.NumTimesTinkered) != 10) // Don't show the work if its already 10 tinked.
+					sb.Append(", Craft " + mwo.Values(IntValueKey.ItemWorkmanship));
 			}
 
-			if (mwo.ObjectClass == (int)ObjectClass.Armor && mwo.Values(IntValueKey.Unenchantable, 0) != 0)
+			if (mwo.ObjectClass == (int)ObjectClass.Armor && mwo.Values(IntValueKey.ResistMagic, 0) != 0)
 			{
 				sb.Append(", [" +
-					mwo.Values(DoubleValueKey.SlashProt).ToString("N1") + "/" +
-					mwo.Values(DoubleValueKey.PierceProt).ToString("N1") + "/" +
-					mwo.Values(DoubleValueKey.BludgeonProt).ToString("N1") + "/" +
-					mwo.Values(DoubleValueKey.ColdProt).ToString("N1") + "/" +
-					mwo.Values(DoubleValueKey.FireProt).ToString("N1") + "/" +
-					mwo.Values(DoubleValueKey.AcidProt).ToString("N1") + "/" +
-					mwo.Values(DoubleValueKey.LightningProt).ToString("N1") + "]");
+					mwo.Values(DoubleValueKey.SlashProt_Decal).ToString("N1") + "/" +
+					mwo.Values(DoubleValueKey.PierceProt_Decal).ToString("N1") + "/" +
+					mwo.Values(DoubleValueKey.BludgeonProt_Decal).ToString("N1") + "/" +
+					mwo.Values(DoubleValueKey.ColdProt_Decal).ToString("N1") + "/" +
+					mwo.Values(DoubleValueKey.FireProt_Decal).ToString("N1") + "/" +
+					mwo.Values(DoubleValueKey.AcidProt_Decal).ToString("N1") + "/" +
+					mwo.Values(DoubleValueKey.LightningProt_Decal).ToString("N1") + "]");
 			}
 
 			if (showValueAndBurden)
@@ -327,8 +327,8 @@ namespace Mag.Shared
 				if (mwo.Values(IntValueKey.Value) > 0)
 					sb.Append(", Value " + String.Format("{0:n0}", mwo.Values(IntValueKey.Value)));
 
-				if (mwo.Values(IntValueKey.Burden) > 0)
-					sb.Append(", BU " + mwo.Values(IntValueKey.Burden));
+				if (mwo.Values(IntValueKey.EncumbranceVal) > 0)
+					sb.Append(", BU " + mwo.Values(IntValueKey.EncumbranceVal));
 			}
 
 			if (mwo.TotalRating > 0)
@@ -347,7 +347,7 @@ namespace Mag.Shared
 			}
 
 			if (mwo.ObjectClass == (int)ObjectClass.Misc && mwo.Name.Contains("Keyring"))
-				sb.Append(", Keys: " + mwo.Values(IntValueKey.KeysHeld) + ", Uses: " + mwo.Values(IntValueKey.UsesRemaining));
+				sb.Append(", Keys: " + mwo.Values(IntValueKey.NumKeys) + ", Uses: " + mwo.Values(IntValueKey.Structure));
 
 			return sb.ToString();
 		}

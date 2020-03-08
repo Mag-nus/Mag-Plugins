@@ -76,23 +76,23 @@ namespace Mag_LootParser
         {
             TotalItems++;
 
-            if (item.LongValues.ContainsKey(IntValueKey.Workmanship))
+            if (item.LongValues.ContainsKey(IntValueKey.ItemWorkmanship))
             {
-                if (!WorkmanshipHits.ContainsKey(item.LongValues[IntValueKey.Workmanship]))
-                    WorkmanshipHits[item.LongValues[IntValueKey.Workmanship]] = 0;
+                if (!WorkmanshipHits.ContainsKey(item.LongValues[IntValueKey.ItemWorkmanship]))
+                    WorkmanshipHits[item.LongValues[IntValueKey.ItemWorkmanship]] = 0;
 
-                WorkmanshipHits[item.LongValues[IntValueKey.Workmanship]]++;
+                WorkmanshipHits[item.LongValues[IntValueKey.ItemWorkmanship]]++;
             }
 
-            if (item.LongValues.ContainsKey(IntValueKey.Material))
+            if (item.LongValues.ContainsKey(IntValueKey.MaterialType))
             {
-                if (!MaterialHits.ContainsKey((MaterialType)item.LongValues[IntValueKey.Material]))
-                    MaterialHits[(MaterialType)item.LongValues[IntValueKey.Material]] = 0;
+                if (!MaterialHits.ContainsKey((MaterialType)item.LongValues[IntValueKey.MaterialType]))
+                    MaterialHits[(MaterialType)item.LongValues[IntValueKey.MaterialType]] = 0;
 
-                MaterialHits[(MaterialType)item.LongValues[IntValueKey.Material]]++;
+                MaterialHits[(MaterialType)item.LongValues[IntValueKey.MaterialType]]++;
             }
 
-            if (item.LongValues.ContainsKey(IntValueKey.Workmanship))
+            if (item.LongValues.ContainsKey(IntValueKey.ItemWorkmanship))
                 SpellStats.ProcessItem(item);
 
             ObjectClasses[item.ObjectClass].ProcessItem(item);

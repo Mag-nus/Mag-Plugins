@@ -26,7 +26,7 @@ namespace Mag_LootParser.ItemGroups
         {
             Items.Add(item);
 
-            if (!LimitStatsToOnlyItemsWithWorkmanship || item.LongValues.ContainsKey(IntValueKey.Workmanship))
+            if (!LimitStatsToOnlyItemsWithWorkmanship || item.LongValues.ContainsKey(IntValueKey.ItemWorkmanship))
 	            SpellStats.ProcessItem(item);
         }
 

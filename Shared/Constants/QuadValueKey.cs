@@ -1,13 +1,33 @@
-﻿
+
 namespace Mag.Shared.Constants
 {
+	// https://github.com/ACEmulator/ACE/blob/master/Source/ACE.Entity/Enum/Properties/PropertyInt64.cs
 	public enum QuadValueKey
 	{
-		TotalExperience = 0x01,
-		UnassignedExperience = 0x02,
-		ItemCurrentExperience = 0x04,
-		ItemLevelExperienceIncrement = 0x05,
-		LuminancePointsCurrent = 0x06,
-		LuminancePointsMaximum = 0x07,
+        Undef               = 0,
+        [SendOnLogin]
+        TotalExperience     = 1,
+        [SendOnLogin]
+        AvailableExperience = 2,
+        AugmentationCost    = 3,
+        ItemTotalXp         = 4,
+        ItemBaseXp          = 5,
+        [SendOnLogin]
+        AvailableLuminance  = 6,
+        [SendOnLogin]
+        MaximumLuminance    = 7,
+        InteractionReqs     = 8,
+
+
+		// ACE Specific
+        /* custom */
+        [ServerOnly]
+        AllegianceXPCached    = 9000,
+        [ServerOnly]
+        AllegianceXPGenerated = 9001,
+        [ServerOnly]
+        AllegianceXPReceived  = 9002,
+        [ServerOnly]
+        VerifyXp              = 9003
 	}
 }

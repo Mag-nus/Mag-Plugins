@@ -20,25 +20,25 @@ namespace Mag_LootParser.ItemGroups
 		{
 			base.ProcessItem(item);
 
-			if (!LimitStatsToOnlyItemsWithWorkmanship || item.LongValues.ContainsKey(IntValueKey.Workmanship))
+			if (!LimitStatsToOnlyItemsWithWorkmanship || item.LongValues.ContainsKey(IntValueKey.ItemWorkmanship))
 			{
-				if (item.LongValues.ContainsKey(IntValueKey.WieldReqType) && item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+				if (item.LongValues.ContainsKey(IntValueKey.WieldRequirements) && item.LongValues.ContainsKey(IntValueKey.WieldDifficulty))
 				{
-					var wieldReqValue = item.LongValues[IntValueKey.WieldReqValue];
+					var wieldDifficulty = item.LongValues[IntValueKey.WieldDifficulty];
 
-					if (item.LongValues[IntValueKey.WieldReqType] == (int)WieldRequirement.RawSkill)
+					if (item.LongValues[IntValueKey.WieldRequirements] == (int)WieldRequirement.RawSkill)
 					{
-						if (!HitsByRawSkillWieldReqValue.ContainsKey(wieldReqValue))
-							HitsByRawSkillWieldReqValue[wieldReqValue] = 1;
+						if (!HitsByRawSkillWieldReqValue.ContainsKey(wieldDifficulty))
+							HitsByRawSkillWieldReqValue[wieldDifficulty] = 1;
 						else
-							HitsByRawSkillWieldReqValue[wieldReqValue]++;
+							HitsByRawSkillWieldReqValue[wieldDifficulty]++;
 					}
-					else if (item.LongValues[IntValueKey.WieldReqType] == (int)WieldRequirement.Level)
+					else if (item.LongValues[IntValueKey.WieldRequirements] == (int)WieldRequirement.Level)
 					{
-						if (!HitsByLevelWieldReqValue.ContainsKey(wieldReqValue))
-							HitsByLevelWieldReqValue[wieldReqValue] = 1;
+						if (!HitsByLevelWieldReqValue.ContainsKey(wieldDifficulty))
+							HitsByLevelWieldReqValue[wieldDifficulty] = 1;
 						else
-							HitsByLevelWieldReqValue[wieldReqValue]++;
+							HitsByLevelWieldReqValue[wieldDifficulty]++;
 					}
 				}
 			}
@@ -55,7 +55,7 @@ namespace Mag_LootParser.ItemGroups
 
 			if (HitsByRawSkillWieldReqValue.Count > 0)
 			{
-				sb.AppendLine("Hits By WieldReqType: RawSkill, WeidlReqValue: ");
+				sb.AppendLine("Hits By WieldRequirements: RawSkill, WeidlReqValue: ");
 				var totalHitsByBuffLevels = HitsByRawSkillWieldReqValue.Values.Sum();
 				var sortedKeys = HitsByRawSkillWieldReqValue.Keys.ToList();
 				sortedKeys.Sort();
@@ -65,7 +65,7 @@ namespace Mag_LootParser.ItemGroups
 
 			if (HitsByLevelWieldReqValue.Count > 0)
 			{
-				sb.AppendLine("Hits By WieldReqType: Level, WeidlReqValue: ");
+				sb.AppendLine("Hits By WieldRequirements: Level, WeidlReqValue: ");
 				var totalHitsByBuffLevels = HitsByLevelWieldReqValue.Values.Sum();
 				var sortedKeys = HitsByLevelWieldReqValue.Keys.ToList();
 				sortedKeys.Sort();

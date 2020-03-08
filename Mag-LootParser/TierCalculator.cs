@@ -19,19 +19,19 @@ namespace Mag_LootParser
             // Reference: http://asheron.wikia.com/wiki/Loot
             foreach (var item in items)
             {
-                if ((item.LongValues.ContainsKey(IntValueKey.NumberTimesTinkered) && item.LongValues[IntValueKey.NumberTimesTinkered] > 0) || item.ActiveSpells.Count > 0)
+                if ((item.LongValues.ContainsKey(IntValueKey.NumTimesTinkered) && item.LongValues[IntValueKey.NumTimesTinkered] > 0) || item.ActiveSpells.Count > 0)
                     return -1;
 
                 // Exclude trophy items from tier calculation
-                if (!item.LongValues.ContainsKey(IntValueKey.Workmanship))
+                if (!item.LongValues.ContainsKey(IntValueKey.ItemWorkmanship))
                     goto bypassNonRandomLootGenItems;
 
 				// Melee
-				if (item.LongValues.ContainsKey(IntValueKey.WieldReqType) && item.LongValues[IntValueKey.WieldReqType] == (int)WieldRequirement.RawSkill &&
-					item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && (item.LongValues[IntValueKey.WieldReqAttribute] == (int)Skill.TwoHandedCombat || item.LongValues[IntValueKey.WieldReqAttribute] == (int)Skill.HeavyWeapons || item.LongValues[IntValueKey.WieldReqAttribute] == (int)Skill.LightWeapons || item.LongValues[IntValueKey.WieldReqAttribute] == (int)Skill.FinesseWeapons) &&
-                    item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+				if (item.LongValues.ContainsKey(IntValueKey.WieldRequirements) && item.LongValues[IntValueKey.WieldRequirements] == (int)WieldRequirement.RawSkill &&
+					item.LongValues.ContainsKey(IntValueKey.WieldSkillType) && (item.LongValues[IntValueKey.WieldSkillType] == (int)Skill.TwoHandedCombat || item.LongValues[IntValueKey.WieldSkillType] == (int)Skill.HeavyWeapons || item.LongValues[IntValueKey.WieldSkillType] == (int)Skill.LightWeapons || item.LongValues[IntValueKey.WieldSkillType] == (int)Skill.FinesseWeapons) &&
+                    item.LongValues.ContainsKey(IntValueKey.WieldDifficulty))
 				{
-					switch (item.LongValues[IntValueKey.WieldReqValue])
+					switch (item.LongValues[IntValueKey.WieldDifficulty])
                     {
                         case 250:
                             if (tier < 2) tier = 2;
@@ -57,11 +57,11 @@ namespace Mag_LootParser
                 }
 
                 // Missile
-                if (item.LongValues.ContainsKey(IntValueKey.WieldReqType) && item.LongValues[IntValueKey.WieldReqType] == (int)WieldRequirement.RawSkill &&
-					item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && item.LongValues[IntValueKey.WieldReqAttribute] == (int)Skill.MissileWeapons &&
-					item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+                if (item.LongValues.ContainsKey(IntValueKey.WieldRequirements) && item.LongValues[IntValueKey.WieldRequirements] == (int)WieldRequirement.RawSkill &&
+					item.LongValues.ContainsKey(IntValueKey.WieldSkillType) && item.LongValues[IntValueKey.WieldSkillType] == (int)Skill.MissileWeapons &&
+					item.LongValues.ContainsKey(IntValueKey.WieldDifficulty))
                 {
-					switch (item.LongValues[IntValueKey.WieldReqValue])
+					switch (item.LongValues[IntValueKey.WieldDifficulty])
                     {
                         case 250:
                             if (tier < 2) tier = 2;
@@ -87,11 +87,11 @@ namespace Mag_LootParser
                 }
 
 				// Magic
-				if (item.LongValues.ContainsKey(IntValueKey.WieldReqType) && item.LongValues[IntValueKey.WieldReqType] == (int)WieldRequirement.RawSkill &&
-					item.LongValues.ContainsKey(IntValueKey.WieldReqAttribute) && (item.LongValues[IntValueKey.WieldReqAttribute] == (int)Skill.WarMagic || item.LongValues[IntValueKey.WieldReqAttribute] == (int)Skill.VoidMagic) &&
-					item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+				if (item.LongValues.ContainsKey(IntValueKey.WieldRequirements) && item.LongValues[IntValueKey.WieldRequirements] == (int)WieldRequirement.RawSkill &&
+					item.LongValues.ContainsKey(IntValueKey.WieldSkillType) && (item.LongValues[IntValueKey.WieldSkillType] == (int)Skill.WarMagic || item.LongValues[IntValueKey.WieldSkillType] == (int)Skill.VoidMagic) &&
+					item.LongValues.ContainsKey(IntValueKey.WieldDifficulty))
                 {
-					switch (item.LongValues[IntValueKey.WieldReqValue])
+					switch (item.LongValues[IntValueKey.WieldDifficulty])
                     {
 						case 290:
 						case 310:
@@ -111,10 +111,10 @@ namespace Mag_LootParser
                 }
 
 				// Wield Level
-				if (item.LongValues.ContainsKey(IntValueKey.WieldReqType) && item.LongValues[IntValueKey.WieldReqType] == (int)WieldRequirement.Level &&
-				    item.LongValues.ContainsKey(IntValueKey.WieldReqValue))
+				if (item.LongValues.ContainsKey(IntValueKey.WieldRequirements) && item.LongValues[IntValueKey.WieldRequirements] == (int)WieldRequirement.Level &&
+				    item.LongValues.ContainsKey(IntValueKey.WieldDifficulty))
 				{
-					switch (item.LongValues[IntValueKey.WieldReqValue])
+					switch (item.LongValues[IntValueKey.WieldDifficulty])
 					{
 						case 150:
 							if (tier < 7) tier = 7;
@@ -125,24 +125,24 @@ namespace Mag_LootParser
 					}
 				}
 
-				if (item.LongValues.ContainsKey(IntValueKey.Workmanship))
+				if (item.LongValues.ContainsKey(IntValueKey.ItemWorkmanship))
                 {
-                    if (item.LongValues[IntValueKey.Workmanship] ==  1 && tier < 1) tier = 1;
-                    if (item.LongValues[IntValueKey.Workmanship] ==  2 && tier < 1) tier = 1;
-                    if (item.LongValues[IntValueKey.Workmanship] ==  3 && tier < 1) tier = 1;
-                    if (item.LongValues[IntValueKey.Workmanship] ==  4 && tier < 1) tier = 1;
-                    if (item.LongValues[IntValueKey.Workmanship] ==  5 && tier < 1) tier = 1;
-                    if (item.LongValues[IntValueKey.Workmanship] ==  6 && tier < 2) tier = 2;
-                    if (item.LongValues[IntValueKey.Workmanship] ==  7 && tier < 3) tier = 3;
-                    if (item.LongValues[IntValueKey.Workmanship] ==  8 && tier < 4) tier = 4;
-                    if (item.LongValues[IntValueKey.Workmanship] ==  9 && tier < 5) tier = 5;
-                    if (item.LongValues[IntValueKey.Workmanship] == 10 && tier < 6) tier = 6;
+                    if (item.LongValues[IntValueKey.ItemWorkmanship] ==  1 && tier < 1) tier = 1;
+                    if (item.LongValues[IntValueKey.ItemWorkmanship] ==  2 && tier < 1) tier = 1;
+                    if (item.LongValues[IntValueKey.ItemWorkmanship] ==  3 && tier < 1) tier = 1;
+                    if (item.LongValues[IntValueKey.ItemWorkmanship] ==  4 && tier < 1) tier = 1;
+                    if (item.LongValues[IntValueKey.ItemWorkmanship] ==  5 && tier < 1) tier = 1;
+                    if (item.LongValues[IntValueKey.ItemWorkmanship] ==  6 && tier < 2) tier = 2;
+                    if (item.LongValues[IntValueKey.ItemWorkmanship] ==  7 && tier < 3) tier = 3;
+                    if (item.LongValues[IntValueKey.ItemWorkmanship] ==  8 && tier < 4) tier = 4;
+                    if (item.LongValues[IntValueKey.ItemWorkmanship] ==  9 && tier < 5) tier = 5;
+                    if (item.LongValues[IntValueKey.ItemWorkmanship] == 10 && tier < 6) tier = 6;
                 }
 
                 bypassNonRandomLootGenItems:
 
                 // Gems in higher tiers can come with low spells, so we don't do spell checks on these objects
-                if (item.LongValues.ContainsKey(IntValueKey.Workmanship))
+                if (item.LongValues.ContainsKey(IntValueKey.ItemWorkmanship))
                 {
                     foreach (var spellId in item.Spells)
                     {
