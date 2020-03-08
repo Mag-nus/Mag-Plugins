@@ -617,29 +617,29 @@ namespace Mag.Shared.Constants
         InventoryOrder                          = 9015,
 
 		// Decal Specific
-        Type_Decal				                = 218103808,
-		Icon_Decal                              = 218103809,
-		Container_Decal                         = 218103810,
+		Type_Decal                              = 218103808, // WeeneClassId
+		Icon_Decal_DID                          = 218103809, // ICON_DID
+		Container_Decal_IID                     = 218103810, // CONTAINER_IID
 		Landblock_Decal                         = 218103811,
 		ItemSlots_Decal                         = 218103812,
 		PackSlots_Decal                         = 218103813,
 		StackCount_Decal                        = 218103814,
 		StackMax_Decal                          = 218103815,
-		AssociatedSpell_Decal                   = 218103816,
+		Spell_Decal_DID                         = 218103816, // SPELL_DID
 		SlotLegacy_Decal                        = 218103817,
-		Wielder_Decal                           = 218103818,
+		Wielder_Decal_IID                       = 218103818, // WIELDER_IID
 		WieldingSlot_Decal                      = 218103819,
-		Monarch_Decal                           = 218103820,
+		Monarch_Decal_IID                       = 218103820, // MONARCH_IID
 		Coverage_Decal                          = 218103821,
 		EquipableSlots_Decal                    = 218103822,
 		EquipType_Decal                         = 218103823,
 		IconOutline_Decal                       = 218103824,
 		MissileType_Decal                       = 218103825,
 		UsageMask_Decal                         = 218103826,
-		HouseOwner_Decal                        = 218103827,
+		HouseOwner_Decal_IID                    = 218103827, // HOUSE_OWNER_IID
 		HookMask_Decal                          = 218103828,
 		HookType_Decal                          = 218103829,
-		Model_Decal                             = 218103830,
+		Setup_Decal_DID                         = 218103830, // SETUP_DID
 		Flags_Decal                             = 218103831,
 		CreateFlags1_Decal                      = 218103832,
 		CreateFlags2_Decal                      = 218103833,
@@ -658,8 +658,38 @@ namespace Mag.Shared.Constants
 		Unknown8000000_Decal                    = 218103846,
 		PhysicsDataFlags_Decal                  = 218103847,
 		ActiveSpellCount_Decal                  = 218103848,
-		IconOverlay_Decal                       = 218103849,
-		IconUnderlay_Decal                      = 218103850,
+		IconOverlay_Decal_DID                   = 218103849, // ICON_OVERLAY_DID
+		IconUnderlay_Decal_DID                  = 218103850, // ICON_UNDERLAY_DID
 		Slot_Decal                              = 231735296,
+	}
+
+	public static class IntValueKeyTools
+	{
+		/// <summary>
+		/// If input is not a IID, 0 will be returned
+		/// </summary>
+		public static uint ConvertToIID(IntValueKey input)
+		{
+			if (input == IntValueKey.Container_Decal_IID)	return 2;  // CONTAINER_IID
+			if (input == IntValueKey.Wielder_Decal_IID)		return 3;  // WIELDER_IID	
+			if (input == IntValueKey.Monarch_Decal_IID)		return 26; // MONARCH_IID	
+			if (input == IntValueKey.HouseOwner_Decal_IID)	return 32; // HOUSE_OWNER_IID	
+
+			return 0;
+		}
+
+		/// <summary>
+		/// If input is not a DID, 0 will be returned
+		/// </summary>
+		public static uint ConvertToDID(IntValueKey input)
+		{
+			if (input == IntValueKey.Setup_Decal_DID)			return 1;  // SETUP_DID
+			if (input == IntValueKey.Icon_Decal_DID)			return 8;  // ICON_DID
+			if (input == IntValueKey.Spell_Decal_DID)			return 28; // SPELL_DID
+			if (input == IntValueKey.IconOverlay_Decal_DID)		return 50; // ICON_OVERLAY_DID
+			if (input == IntValueKey.IconUnderlay_Decal_DID)	return 52; // ICON_UNDERLAY_DID
+
+			return 0;
+		}
 	}
 }

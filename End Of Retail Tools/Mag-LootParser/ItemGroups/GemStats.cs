@@ -16,7 +16,7 @@ namespace Mag_LootParser.ItemGroups
             base.ProcessItem(item);
 
             var type = item.LongValues.FirstOrDefault(r => r.Key == Mag.Shared.Constants.IntValueKey.Type_Decal);
-            var iconOverlay = item.LongValues.FirstOrDefault(r => r.Key == Mag.Shared.Constants.IntValueKey.IconOverlay_Decal);
+            var iconOverlay = item.LongValues.FirstOrDefault(r => r.Key == Mag.Shared.Constants.IntValueKey.IconOverlay_Decal_DID);
 
             if (type.Value == 42635) // Blue
                 BlueAtheriaCountsByLevel[iconOverlay.Value - 27700 + 1]++;
