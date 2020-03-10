@@ -236,4 +236,31 @@ namespace Mag.Shared.Constants
 		Range_Decal                    = 167772173,
 		DamageBonus_Decal              = 167772174,
 	}
+
+	public static class DoubleValueKeyTools
+	{
+		/// <summary>
+		/// Converts a decal specific IntValueKey to the actual IntValueKey.
+		/// If this is not an IntValueKey, 0 will be returned.
+		/// </summary>
+		public static uint ConvertToDouble(DoubleValueKey input)
+		{
+			if (input == DoubleValueKey.SlashProt_Decal)		return (int)DoubleValueKey.ArmorModVsSlash;
+			if (input == DoubleValueKey.PierceProt_Decal)		return (int)DoubleValueKey.ArmorModVsPierce;
+			if (input == DoubleValueKey.BludgeonProt_Decal)		return (int)DoubleValueKey.ArmorModVsBludgeon;
+			if (input == DoubleValueKey.AcidProt_Decal)			return (int)DoubleValueKey.ArmorModVsAcid;
+			if (input == DoubleValueKey.LightningProt_Decal)	return (int)DoubleValueKey.ArmorModVsElectric;
+			if (input == DoubleValueKey.FireProt_Decal)			return (int)DoubleValueKey.ArmorModVsFire;
+			if (input == DoubleValueKey.ColdProt_Decal)			return (int)DoubleValueKey.ArmorModVsCold;
+
+			if (input == DoubleValueKey.ApproachDistance_Decal) return (int)DoubleValueKey.UseRadius;
+			if (input == DoubleValueKey.Scale_Decal)			return (int)DoubleValueKey.DefaultScale;
+			if (input == DoubleValueKey.Variance_Decal)			return (int)DoubleValueKey.DamageVariance;
+			if (input == DoubleValueKey.AttackBonus_Decal)		return (int)DoubleValueKey.WeaponOffense;;
+			if (input == DoubleValueKey.Range_Decal)			return (int)DoubleValueKey.MaximumVelocity;
+			if (input == DoubleValueKey.DamageBonus_Decal)		return (int)DoubleValueKey.DamageMod;
+
+			return 0;
+		}
+	}
 }

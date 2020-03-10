@@ -617,30 +617,30 @@ namespace Mag.Shared.Constants
         InventoryOrder                          = 9015,
 
 		// Decal Specific
-		Type_Decal                              = 218103808, // WeeneClassId
-		Icon_Decal_DID                          = 218103809, // ICON_DID
-		Container_Decal_IID                     = 218103810, // CONTAINER_IID
+		WeenieClassId_Decal                     = 218103808,
+		Icon_Decal_DID                          = 218103809,
+		Container_Decal_IID                     = 218103810,
 		Landblock_Decal                         = 218103811,
 		ItemSlots_Decal                         = 218103812,
 		PackSlots_Decal                         = 218103813,
 		StackCount_Decal                        = 218103814,
 		StackMax_Decal                          = 218103815,
-		Spell_Decal_DID                         = 218103816, // SPELL_DID
+		Spell_Decal_DID                         = 218103816,
 		SlotLegacy_Decal                        = 218103817,
-		Wielder_Decal_IID                       = 218103818, // WIELDER_IID
+		Wielder_Decal_IID                       = 218103818,
 		WieldingSlot_Decal                      = 218103819,
-		Monarch_Decal_IID                       = 218103820, // MONARCH_IID
+		Monarch_Decal_IID                       = 218103820,
 		Coverage_Decal                          = 218103821,
 		EquipableSlots_Decal                    = 218103822,
 		EquipType_Decal                         = 218103823,
 		IconOutline_Decal                       = 218103824,
 		MissileType_Decal                       = 218103825,
 		UsageMask_Decal                         = 218103826,
-		HouseOwner_Decal_IID                    = 218103827, // HOUSE_OWNER_IID
+		HouseOwner_Decal_IID                    = 218103827,
 		HookMask_Decal                          = 218103828,
 		HookType_Decal                          = 218103829,
-		Setup_Decal_DID                         = 218103830, // SETUP_DID
-		Flags_Decal                             = 218103831,
+		Setup_Decal_DID                         = 218103830,
+		ObjectDescriptionFlags_Decal            = 218103831,
 		CreateFlags1_Decal                      = 218103832,
 		CreateFlags2_Decal                      = 218103833,
 		Category_Decal                          = 218103834,
@@ -652,28 +652,55 @@ namespace Mag.Shared.Constants
 		EquipSkill_Decal                        = 218103840,
 		DamageType_Decal                        = 218103841,
 		MaxDamage_Decal                         = 218103842,
-		Unknown10_Decal                         = 218103843,
-		Unknown100000_Decal                     = 218103844,
+		Unknown10_Decal                         = 218103843, // CurrentWieldLocation?
+		Unknown100000_Decal                     = 218103844, // RadarBlipColor ???
 		Unknown800000_Decal                     = 218103845,
 		Unknown8000000_Decal                    = 218103846,
 		PhysicsDataFlags_Decal                  = 218103847,
 		ActiveSpellCount_Decal                  = 218103848,
-		IconOverlay_Decal_DID                   = 218103849, // ICON_OVERLAY_DID
-		IconUnderlay_Decal_DID                  = 218103850, // ICON_UNDERLAY_DID
+		IconOverlay_Decal_DID                   = 218103849,
+		IconUnderlay_Decal_DID                  = 218103850,
 		Slot_Decal                              = 231735296,
 	}
 
 	public static class IntValueKeyTools
 	{
 		/// <summary>
+		/// Converts a decal specific IntValueKey to the actual IntValueKey.
+		/// If this is not an IntValueKey, 0 will be returned.
+		/// </summary>
+		public static uint ConvertToInt(IntValueKey input)
+		{
+			if (input == IntValueKey.Category_Decal)		return (int)IntValueKey.ItemType;
+			if (input == IntValueKey.Coverage_Decal)		return (int)IntValueKey.ClothingPriority;
+			if (input == IntValueKey.ItemSlots_Decal)		return (int)IntValueKey.ItemsCapacity;
+			if (input == IntValueKey.PackSlots_Decal)		return (int)IntValueKey.ContainersCapacity;
+			if (input == IntValueKey.EquipableSlots_Decal)	return (int)IntValueKey.ValidLocations;
+			//if (input == IntValueKey.WieldingSlot_Decal)	return (int)IntValueKey.CurrentWieldedLocation;
+			if (input == IntValueKey.StackMax_Decal)		return (int)IntValueKey.MaxStackSize;
+			if (input == IntValueKey.StackCount_Decal)		return (int)IntValueKey.StackSize;
+			if (input == IntValueKey.IconOutline_Decal)		return (int)IntValueKey.UiEffects;
+			if (input == IntValueKey.MaxDamage_Decal)		return (int)IntValueKey.Damage;
+			if (input == IntValueKey.DamageType_Decal)		return (int)IntValueKey.DamageType;
+			if (input == IntValueKey.EquipSkill_Decal)		return (int)IntValueKey.WeaponSkill;
+			if (input == IntValueKey.WeapSpeed_Decal)		return (int)IntValueKey.WeaponTime;
+			if (input == IntValueKey.MissileType_Decal)		return (int)IntValueKey.AmmoType;
+			if (input == IntValueKey.EquipType_Decal)		return (int)IntValueKey.CombatUse;
+			if (input == IntValueKey.UsageMask_Decal)		return (int)IntValueKey.TargetType;
+			if (input == IntValueKey.HookMask_Decal)		return (int)IntValueKey.HookType;
+
+			return 0;
+		}
+
+		/// <summary>
 		/// If input is not a IID, 0 will be returned
 		/// </summary>
 		public static uint ConvertToIID(IntValueKey input)
 		{
 			if (input == IntValueKey.Container_Decal_IID)	return 2;  // CONTAINER_IID
-			if (input == IntValueKey.Wielder_Decal_IID)		return 3;  // WIELDER_IID	
-			if (input == IntValueKey.Monarch_Decal_IID)		return 26; // MONARCH_IID	
-			if (input == IntValueKey.HouseOwner_Decal_IID)	return 32; // HOUSE_OWNER_IID	
+			if (input == IntValueKey.Wielder_Decal_IID)		return 3;  // WIELDER_IID
+			if (input == IntValueKey.Monarch_Decal_IID)		return 26; // MONARCH_IID
+			if (input == IntValueKey.HouseOwner_Decal_IID)	return 32; // HOUSE_OWNER_IID
 
 			return 0;
 		}
