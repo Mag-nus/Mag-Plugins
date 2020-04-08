@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Mag.Shared.Constants
@@ -92,6 +92,13 @@ namespace Mag.Shared.Constants
 				}
 				else if (value == (CoverageFlags.Chest | CoverageFlags.Abdomen | CoverageFlags.UpperArms | CoverageFlags.LowerArms))
 					options.Add(CoverageFlags.Chest);
+				else if (value == (CoverageFlags.Abdomen | CoverageFlags.UpperLegs))
+				{
+					// This is a emu piece that follows the pre-2010 retail guidelines
+					// https://asheron.fandom.com/wiki/Announcements_-_2010/04_-_Shedding_Skin
+					// For now, we assume only abdomen reduction
+					options.Add(CoverageFlags.Abdomen);
+				}
 				else
 					throw new Exception("Unable to determine reduction paths for CoverageFlags of " + value);
 			}
