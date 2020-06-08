@@ -179,7 +179,7 @@ namespace MagTools
 			{
 				Current = this;
 
-				Debug.Init(PluginPersonalFolder.FullName + @"\Exceptions.txt", PluginName);
+				Debug.Init(PluginPersonalFolder.FullName + @"\Debug.txt", PluginPersonalFolder.FullName + @"\Exceptions.txt", PluginName);
 				Mag.Shared.Settings.SettingsFile.Init(PluginPersonalFolder.FullName + @"\" + PluginName + ".xml", PluginName);
 
 				CoreManager.Current.PluginInitComplete += new EventHandler<EventArgs>(Current_PluginInitComplete);

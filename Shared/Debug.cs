@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 
@@ -8,22 +8,49 @@ namespace Mag.Shared
 {
 	static class Debug
 	{
+		static string _debugLogPath;
 		static string _errorLogPath;
 
 		static string _pluginName;
 
-		public static void Init(string errorLogPath, string pluginName)
+		public static void Init(string debugLogPath, string errorLogPath, string pluginName)
 		{
+			_debugLogPath = debugLogPath;
 			_errorLogPath = errorLogPath;
 
 			_pluginName = pluginName;
 		}
 
 		/// <summary>
+		/// This will write to the debug.txt
+		/// </summary>
+		public static void LogDebug(string message)
+		{
+			try
+			{
+				if (String.IsNullOrEmpty(_debugLogPath))
+					return;
+
+				FileInfo fileInfo = new FileInfo(_debugLogPath);
+
+				// Limit the file to 1MB
+				bool append = !(fileInfo.Exists && fileInfo.Length > 1048576);
+
+				using (StreamWriter writer = new StreamWriter(fileInfo.FullName, append))
+				{
+					writer.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "," + message);
+					writer.Close();
+				}
+			}
+			catch
+			{
+				// Eat the exception, yumm.
+			}
+		}
+
+		/// <summary>
 		/// This will only write the exception to the errors.txt file if DebugEnabled is true.
 		/// </summary>
-		/// <param name="ex"></param>
-		/// <param name="note"></param>
 		public static void LogException(Exception ex, string note = null)
 		{
 			try
