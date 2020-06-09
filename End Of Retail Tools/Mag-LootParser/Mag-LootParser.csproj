@@ -101,6 +101,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="IdentResponse.cs" />
+    <Compile Include="ItemGroups\ClothingStats.cs" />
     <Compile Include="ItemGroups\GemStats.cs" />
     <Compile Include="ItemGroups\ItemGroupStats.cs" />
     <Compile Include="ItemGroups\MeleeWeaponStats.cs" />

@@ -32,10 +32,10 @@ namespace Mag_LootParser
             { ObjectClass.MissileWeapon, new MissileWeaponStats(true) },
             { ObjectClass.WandStaffOrb, new WandStaffOrbStats(true) },
 
-            { ObjectClass.Armor, new ItemGroupStats(true) },
-            { ObjectClass.Clothing, new ItemGroupStats(true) },
+            { ObjectClass.Armor, new WieldableStats(true) },
+            { ObjectClass.Clothing, new ClothingStats(true) },
 
-            { ObjectClass.Jewelry, new ItemGroupStats(true) },
+			{ ObjectClass.Jewelry, new WieldableStats(true) },
 
             { ObjectClass.Gem, new GemStats() },
 

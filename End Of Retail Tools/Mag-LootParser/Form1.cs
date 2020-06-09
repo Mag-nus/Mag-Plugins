@@ -70,6 +70,7 @@ namespace Mag_LootParser
         private int skippedLines;
         private int corruptLines;
 
+		private string workignOutputFolder = null;
         private CancellationTokenSource cts;
 
         private void cmdProcessAllFiles_Click(object sender, EventArgs e)
@@ -81,7 +82,12 @@ namespace Mag_LootParser
             cmdProcessAllFiles.Enabled = false;
             cmdStop.Enabled = true;
 
-            cts = new CancellationTokenSource();
+            workignOutputFolder = Path.Combine(txtOutputPath.Text, DateTime.Now.ToString("yyyy-MM-dd HH-mm"));
+
+            if (!Directory.Exists(workignOutputFolder))
+	            Directory.CreateDirectory(workignOutputFolder);
+
+			cts = new CancellationTokenSource();
 
             var startTime = DateTime.Now;
 
@@ -455,15 +461,15 @@ namespace Mag_LootParser
 
             // Output stats by tier
             foreach (var kvp in StatsCalculator.StatsByLootTier)
-                File.WriteAllText(Path.Combine(txtOutputPath.Text, "Tier " + kvp.Key + " (No Chests).txt"), kvp.Value.ToString());
+                File.WriteAllText(Path.Combine(workignOutputFolder, "Tier " + kvp.Key + " (No Chests).txt"), kvp.Value.ToString());
 
             // Output stats by container name
             foreach (var stats in StatsCalculator.StatsByContainerNameAndTier)
-                File.WriteAllText(Path.Combine(txtOutputPath.Text, "Container " + stats.ContainerName + $" (T{stats.Tier}).txt"), stats.ToString());
+                File.WriteAllText(Path.Combine(workignOutputFolder, "Container " + stats.ContainerName + $" (T{stats.Tier}).txt"), stats.ToString());
 
 
             // Audit all the containers for anomolies
-            File.Delete(Path.Combine(txtOutputPath.Text, "Tier Container Audit.txt"));
+            File.Delete(Path.Combine(workignOutputFolder, "Tier Container Audit.txt"));
             foreach (var stats in StatsCalculator.StatsByContainerNameAndTier)
             {
                 // Chests of the same name can contain multiple tiers
@@ -509,7 +515,7 @@ namespace Mag_LootParser
                 ContainerTierAuditWieldReqs(stats, 8, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 355, 375, 385 }); 
 
 				if (outputAuditLine)
-                    File.AppendAllText(Path.Combine(txtOutputPath.Text, "Tier Container Audit.txt"), Environment.NewLine);
+                    File.AppendAllText(Path.Combine(workignOutputFolder, "Tier Container Audit.txt"), Environment.NewLine);
             }
         }
 

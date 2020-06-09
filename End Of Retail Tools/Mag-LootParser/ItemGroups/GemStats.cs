@@ -7,23 +7,23 @@ namespace Mag_LootParser.ItemGroups
 {
     class GemStats : ItemGroupStats
     {
-        public readonly Dictionary<int, int> BlueAtheriaCountsByLevel   = new Dictionary<int, int> { { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 } };
-        public readonly Dictionary<int, int> YellowAtheriaCountsByLevel = new Dictionary<int, int> { { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 } };
-        public readonly Dictionary<int, int> RedAtheriaCountsByLevel    = new Dictionary<int, int> { { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 } };
+        public readonly Dictionary<int, int> BlueAetheriaCountsByLevel   = new Dictionary<int, int> { { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 } };
+        public readonly Dictionary<int, int> YellowAetheriaCountsByLevel = new Dictionary<int, int> { { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 } };
+        public readonly Dictionary<int, int> RedAetheriaCountsByLevel    = new Dictionary<int, int> { { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 } };
 
         public override void ProcessItem(IdentResponse item)
         {
             base.ProcessItem(item);
 
-            var type = item.LongValues.FirstOrDefault(r => r.Key == Mag.Shared.Constants.IntValueKey.Type_Decal);
+            var type = item.LongValues.FirstOrDefault(r => r.Key == Mag.Shared.Constants.IntValueKey.WeenieClassId_Decal);
             var iconOverlay = item.LongValues.FirstOrDefault(r => r.Key == Mag.Shared.Constants.IntValueKey.IconOverlay_Decal_DID);
 
             if (type.Value == 42635) // Blue
-                BlueAtheriaCountsByLevel[iconOverlay.Value - 27700 + 1]++;
+                BlueAetheriaCountsByLevel[iconOverlay.Value - 27700 + 1]++;
             else if (type.Value == 42637) // Yellow
-                YellowAtheriaCountsByLevel[iconOverlay.Value - 27700 + 1]++;
+                YellowAetheriaCountsByLevel[iconOverlay.Value - 27700 + 1]++;
             else if (type.Value == 42636) // Red
-                RedAtheriaCountsByLevel[iconOverlay.Value - 27700 + 1]++;
+                RedAetheriaCountsByLevel[iconOverlay.Value - 27700 + 1]++;
         }
 
 
@@ -35,9 +35,9 @@ namespace Mag_LootParser.ItemGroups
 
             sb.AppendLine();
 
-            sb.AppendLine($"Blue Aetheria Stats By Level: {BlueAtheriaCountsByLevel[1]} {BlueAtheriaCountsByLevel[2]} {BlueAtheriaCountsByLevel[3]} {BlueAtheriaCountsByLevel[4]} {BlueAtheriaCountsByLevel[5]}");
-            sb.AppendLine($"Yellow Aetheria Stats By Level: {YellowAtheriaCountsByLevel[1]} {YellowAtheriaCountsByLevel[2]} {YellowAtheriaCountsByLevel[3]} {YellowAtheriaCountsByLevel[4]} {YellowAtheriaCountsByLevel[5]}");
-            sb.AppendLine($"Red Aetheria Stats By Level: {RedAtheriaCountsByLevel[1]} {RedAtheriaCountsByLevel[2]} {RedAtheriaCountsByLevel[3]} {RedAtheriaCountsByLevel[4]} {RedAtheriaCountsByLevel[5]}");
+            sb.AppendLine($"Blue Aetheria Stats By Level: {BlueAetheriaCountsByLevel[1]} {BlueAetheriaCountsByLevel[2]} {BlueAetheriaCountsByLevel[3]} {BlueAetheriaCountsByLevel[4]} {BlueAetheriaCountsByLevel[5]}");
+            sb.AppendLine($"Yellow Aetheria Stats By Level: {YellowAetheriaCountsByLevel[1]} {YellowAetheriaCountsByLevel[2]} {YellowAetheriaCountsByLevel[3]} {YellowAetheriaCountsByLevel[4]} {YellowAetheriaCountsByLevel[5]}");
+            sb.AppendLine($"Red Aetheria Stats By Level: {RedAetheriaCountsByLevel[1]} {RedAetheriaCountsByLevel[2]} {RedAetheriaCountsByLevel[3]} {RedAetheriaCountsByLevel[4]} {RedAetheriaCountsByLevel[5]}");
 
             return sb.ToString();
         }
