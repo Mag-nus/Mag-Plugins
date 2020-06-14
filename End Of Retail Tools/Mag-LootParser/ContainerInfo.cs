@@ -45,6 +45,9 @@ namespace Mag_LootParser
 	        if (name.EndsWith("Vault")) return true;
 	        if (name.EndsWith("Reliquary")) return true;
 
+			// This is ACE specific
+			if (name.StartsWith("DID ")) return false;
+
 	        throw new Exception($"Unable to determine if container is chest: {name}");
 		}
     }

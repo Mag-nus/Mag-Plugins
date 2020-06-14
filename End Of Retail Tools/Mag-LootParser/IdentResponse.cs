@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Mag.Shared;
 using Mag.Shared.Constants;
 
@@ -197,5 +197,54 @@ namespace Mag_LootParser
                 }
             }
         }
-    }
+
+
+        public void ParseFromBiota(ACE.Entity.Models.Biota biota)
+        {
+	        Id = biota.Id;
+
+	        LongValues[IntValueKey.WeenieClassId_Decal] = (int)biota.WeenieClassId;
+
+	        ObjectClass = ObjectClassTools.FromWeenieType((ItemType)biota.PropertiesInt.FirstOrDefault(r => r.Key == ACE.Entity.Enum.Properties.PropertyInt.ItemType).Value, (WeenieType)biota.WeenieType);
+
+			if (biota.PropertiesBool != null)
+			{
+				foreach (var property in biota.PropertiesBool)
+					BoolValues[(int) property.Key] = property.Value;
+			}
+
+			if (biota.PropertiesFloat != null)
+			{
+				foreach (var property in biota.PropertiesFloat)
+					DoubleValues[(int) property.Key] = property.Value;
+			}
+
+			if (biota.PropertiesInt != null)
+			{
+				foreach (var property in biota.PropertiesInt)
+					LongValues[(IntValueKey) property.Key] = property.Value;
+			}
+
+			// Int64
+
+			// IID
+
+			// DID
+			var iconOverlay = biota.PropertiesDID.FirstOrDefault(r => r.Key == ACE.Entity.Enum.Properties.PropertyDataId.IconOverlay);
+			if (iconOverlay.Key != 0)
+				LongValues[IntValueKey.IconOverlay_Decal_DID] = (int)(iconOverlay.Value & 0xFFFF);
+
+			if (biota.PropertiesString != null)
+			{
+				foreach (var property in biota.PropertiesString)
+					StringValues[(StringValueKey) property.Key] = property.Value;
+			}
+
+			if (biota.PropertiesSpellBook != null)
+			{
+				foreach (var spell in biota.PropertiesSpellBook)
+					Spells.Add(spell.Key);
+			}
+        }
+	}
 }

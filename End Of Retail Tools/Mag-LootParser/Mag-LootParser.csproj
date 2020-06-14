@@ -8,9 +8,10 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Mag_LootParser</RootNamespace>
     <AssemblyName>Mag-LootParser</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -33,6 +34,12 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ACE.Entity">
+      <HintPath>..\..\lib\ACE\ACE.Entity.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -62,6 +69,9 @@
     <Compile Include="..\..\Shared\Constants\IntValueKey.cs">
       <Link>Shared\Constants\IntValueKey.cs</Link>
     </Compile>
+    <Compile Include="..\..\Shared\Constants\ItemType.cs">
+      <Link>Shared\Constants\ItemType.cs</Link>
+    </Compile>
     <Compile Include="..\..\Shared\Constants\MaterialType.cs">
       <Link>Shared\Constants\MaterialType.cs</Link>
     </Compile>
@@ -82,6 +92,9 @@
     </Compile>
     <Compile Include="..\..\Shared\Constants\StringValueKey.cs">
       <Link>Shared\Constants\StringValueKey.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Shared\Constants\WeenieType.cs">
+      <Link>Shared\Constants\WeenieType.cs</Link>
     </Compile>
     <Compile Include="..\..\Shared\Constants\WieldRequirement.cs">
       <Link>Shared\Constants\WieldRequirement.cs</Link>
@@ -130,10 +143,12 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="..\..\Shared\Spells\Spells.csv">
       <Link>Shared\Spells\Spells.csv</Link>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
