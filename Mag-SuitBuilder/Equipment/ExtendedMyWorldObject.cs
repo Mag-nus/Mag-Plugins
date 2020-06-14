@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -31,29 +31,29 @@ namespace Mag_SuitBuilder.Equipment
 		}
 
 		[XmlIgnore]
-		public EquippableSlotFlags EquippableSlots
+		public EquipMask EquippableSlots
 		{
 			get
 			{
-				return IntValues.ContainsKey(218103822) ? (EquippableSlotFlags)IntValues[218103822] : EquippableSlotFlags.None;
+				return IntValues.ContainsKey(218103822) ? (EquipMask)IntValues[218103822] : EquipMask.None;
 			}
 		}
 
 		[XmlIgnore]
-		public CoverageFlags Coverage
+		public CoverageMask Coverage
 		{
 			get
 			{
-				return IntValues.ContainsKey(218103821) ? (CoverageFlags)IntValues[218103821] : CoverageFlags.None;
+				return IntValues.ContainsKey(218103821) ? (CoverageMask)IntValues[218103821] : CoverageMask.None;
 			}
 		}
 
 		[XmlIgnore]
-		public EquippableSlotFlags EquippedSlot
+		public EquipMask EquippedSlot
 		{
 			get
 			{
-				return IntValues.ContainsKey(10) ? (EquippableSlotFlags)IntValues[10] : EquippableSlotFlags.None;
+				return IntValues.ContainsKey(10) ? (EquipMask)IntValues[10] : EquipMask.None;
 			}
 		}
 

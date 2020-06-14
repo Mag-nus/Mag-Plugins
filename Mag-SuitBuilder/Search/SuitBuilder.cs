@@ -1,4 +1,4 @@
-﻿
+
 using Mag.Shared.Constants;
 //using Mag.Shared.Spells;
 
@@ -15,7 +15,7 @@ namespace Mag_SuitBuilder.Search
 		private class PieceSlotCache
 		{
 			public LeanMyWorldObject Piece;
-			public EquippableSlotFlags Slot;
+			public EquipMask Slot;
 			//public int SpellCount; // Used for the old search compare method
 		}
 
@@ -23,7 +23,7 @@ namespace Mag_SuitBuilder.Search
 		readonly int[] spellBitmaps = new int[17];
 		int nextOpenCacheIndex;
 
-		EquippableSlotFlags occupiedSlots = EquippableSlotFlags.None;
+		EquipMask occupiedSlots = EquipMask.None;
 
 		//readonly Spell[] spells = new Spell[17 * 6]; // Used for the old search compare method
 		//int nextOpenSpellIndex;
@@ -34,7 +34,7 @@ namespace Mag_SuitBuilder.Search
 
 		public int TotalBodyArmorPieces { get; private set; }
 
-		public void Push(LeanMyWorldObject item, EquippableSlotFlags slot)
+		public void Push(LeanMyWorldObject item, EquipMask slot)
 		{
 			slotCache[nextOpenCacheIndex].Piece = item;
 			slotCache[nextOpenCacheIndex].Slot = slot;
@@ -83,7 +83,7 @@ namespace Mag_SuitBuilder.Search
 			nextOpenCacheIndex--;
 		}
 
-		public bool SlotIsOpen(EquippableSlotFlags slot)
+		public bool SlotIsOpen(EquipMask slot)
 		{
 			return ((occupiedSlots & slot) == 0);
 		}

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 using Mag.Shared.Constants;
 
@@ -11,7 +11,7 @@ namespace Mag_SuitBuilder.Search
 			return value.PutItemInBuckets(piece, piece.EquippableSlots);
 		}
 
-		public static bool PutItemInBuckets(this ICollection<Bucket> value, LeanMyWorldObject piece, EquippableSlotFlags slot)
+		public static bool PutItemInBuckets(this ICollection<Bucket> value, LeanMyWorldObject piece, EquipMask slot)
 		{
 			bool foundBucket = false;
 

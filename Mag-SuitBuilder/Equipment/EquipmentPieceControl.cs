@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -14,7 +14,7 @@ namespace Mag_SuitBuilder.Equipment
 			InitializeComponent();
 		}
 
-		public EquippableSlotFlags EquippableSlots { get; set; }
+		public EquipMask EquippableSlots { get; set; }
 		ExtendedMyWorldObject mwo;
 
 		public bool CanEquip(ExtendedMyWorldObject piece)

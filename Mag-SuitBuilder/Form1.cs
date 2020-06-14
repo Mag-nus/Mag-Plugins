@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
@@ -311,8 +311,8 @@ namespace Mag_SuitBuilder
 			// This just hides numeric fields that aren't supported, they return -1
 			if ((e.Value is int && (int)e.Value == -1) ||
 				(e.Value is double && Math.Abs((double)e.Value + 1) < Double.Epsilon) ||
-				(e.Value is EquippableSlotFlags && (EquippableSlotFlags)e.Value == EquippableSlotFlags.None) ||
-				(e.Value is CoverageFlags && (CoverageFlags)e.Value == CoverageFlags.None))
+				(e.Value is EquipMask && (EquipMask)e.Value == EquipMask.None) ||
+				(e.Value is CoverageMask && (CoverageMask)e.Value == CoverageMask.None))
 			{
 				e.PaintBackground(e.ClipBounds, true);
 				e.Handled = true;
@@ -489,9 +489,9 @@ namespace Mag_SuitBuilder
 				foreach (var item in searchItems)
 				{
 					// Don't add items that we don't care about
-					if (item.EquippableSlots == EquippableSlotFlags.None || item.EquippableSlots == EquippableSlotFlags.MeleeWeapon || item.EquippableSlots == EquippableSlotFlags.MissileWeapon || item.EquippableSlots == EquippableSlotFlags.TwoHandWeapon || item.EquippableSlots == EquippableSlotFlags.Wand || item.EquippableSlots == EquippableSlotFlags.MissileAmmo)
+					if (item.EquippableSlots == EquipMask.None || item.EquippableSlots == EquipMask.MeleeWeapon || item.EquippableSlots == EquipMask.MissileWeapon || item.EquippableSlots == EquipMask.TwoHanded || item.EquippableSlots == EquipMask.Held || item.EquippableSlots == EquipMask.MissileAmmo)
 						continue;
-					if (item.EquippableSlots == EquippableSlotFlags.Cloak || item.EquippableSlots == EquippableSlotFlags.BlueAetheria || item.EquippableSlots == EquippableSlotFlags.YellowAetheria || item.EquippableSlots == EquippableSlotFlags.RedAetheria)
+					if (item.EquippableSlots == EquipMask.Cloak || item.EquippableSlots == EquipMask.SigilOne || item.EquippableSlots == EquipMask.SigilTwo || item.EquippableSlots == EquipMask.SigilThree)
 						continue;
 
 					if (item.ExtendedMyWorldObject.Locked && item.EquippableSlots.GetTotalBitsSet() == slotCount)
@@ -502,20 +502,20 @@ namespace Mag_SuitBuilder
 							{
 								var reductionOptions = item.Coverage.ReductionOptions();
 
-								EquippableSlotFlags slotFlag = EquippableSlotFlags.None;
+								EquipMask slotFlag = EquipMask.None;
 
 								foreach (var option in reductionOptions)
 								{
-									if (option == CoverageFlags.Chest && baseSuit[EquippableSlotFlags.Chest] == null)			{ slotFlag = EquippableSlotFlags.Chest; break; }
-									if (option == CoverageFlags.UpperArms && baseSuit[EquippableSlotFlags.UpperArms] == null)	{ slotFlag = EquippableSlotFlags.UpperArms; break; }
-									if (option == CoverageFlags.LowerArms && baseSuit[EquippableSlotFlags.LowerArms] == null)	{ slotFlag = EquippableSlotFlags.LowerArms; break; }
-									if (option == CoverageFlags.Abdomen && baseSuit[EquippableSlotFlags.Abdomen] == null)		{ slotFlag = EquippableSlotFlags.Abdomen; break; }
-									if (option == CoverageFlags.UpperLegs && baseSuit[EquippableSlotFlags.UpperLegs] == null)	{ slotFlag = EquippableSlotFlags.UpperLegs; break; }
-									if (option == CoverageFlags.LowerLegs && baseSuit[EquippableSlotFlags.LowerLegs] == null)	{ slotFlag = EquippableSlotFlags.LowerLegs; break; }
-									if (option == CoverageFlags.Feet && baseSuit[EquippableSlotFlags.Feet] == null)				{ slotFlag = EquippableSlotFlags.Feet; break; }
+									if (option == CoverageMask.OuterwearChest && baseSuit[EquipMask.ChestArmor] == null)			{ slotFlag = EquipMask.ChestArmor; break; }
+									if (option == CoverageMask.OuterwearUpperArms && baseSuit[EquipMask.UpperArmArmor] == null)	{ slotFlag = EquipMask.UpperArmArmor; break; }
+									if (option == CoverageMask.OuterwearLowerArms && baseSuit[EquipMask.LowerArmArmor] == null)	{ slotFlag = EquipMask.LowerArmArmor; break; }
+									if (option == CoverageMask.OuterwearAbdomen && baseSuit[EquipMask.AbdomenArmor] == null)		{ slotFlag = EquipMask.AbdomenArmor; break; }
+									if (option == CoverageMask.OuterwearUpperLegs && baseSuit[EquipMask.UpperLegArmor] == null)	{ slotFlag = EquipMask.UpperLegArmor; break; }
+									if (option == CoverageMask.OuterwearLowerLegs && baseSuit[EquipMask.LowerLegArmor] == null)	{ slotFlag = EquipMask.LowerLegArmor; break; }
+									if (option == CoverageMask.Feet && baseSuit[EquipMask.FootWear] == null)				{ slotFlag = EquipMask.FootWear; break; }
 								}
 
-								if (slotFlag == EquippableSlotFlags.None)
+								if (slotFlag == EquipMask.None)
 									MessageBox.Show("Unable to reduce " + item + " into an open single slot." + Environment.NewLine + "Reduction coverage option not expected or not open.");
 								else
 									baseSuit.AddItem(slotFlag, item);
@@ -796,25 +796,25 @@ namespace Mag_SuitBuilder
 			if (node == null)
 				return;
 
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Head] == null ? null : node.Suit[EquippableSlotFlags.Head].ExtendedMyWorldObject, sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Chest] == null ? null : node.Suit[EquippableSlotFlags.Chest].ExtendedMyWorldObject, sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Abdomen] == null ? null : node.Suit[EquippableSlotFlags.Abdomen].ExtendedMyWorldObject, sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.UpperArms] == null ? null : node.Suit[EquippableSlotFlags.UpperArms].ExtendedMyWorldObject, sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LowerArms] == null ? null : node.Suit[EquippableSlotFlags.LowerArms].ExtendedMyWorldObject, sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Hands] == null ? null : node.Suit[EquippableSlotFlags.Hands].ExtendedMyWorldObject, sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.UpperLegs] == null ? null : node.Suit[EquippableSlotFlags.UpperLegs].ExtendedMyWorldObject, sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LowerLegs] == null ? null : node.Suit[EquippableSlotFlags.LowerLegs].ExtendedMyWorldObject, sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Feet] == null ? null : node.Suit[EquippableSlotFlags.Feet].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.HeadWear] == null ? null : node.Suit[EquipMask.HeadWear].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.ChestArmor] == null ? null : node.Suit[EquipMask.ChestArmor].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.AbdomenArmor] == null ? null : node.Suit[EquipMask.AbdomenArmor].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.UpperArmArmor] == null ? null : node.Suit[EquipMask.UpperArmArmor].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.LowerArmArmor] == null ? null : node.Suit[EquipMask.LowerArmArmor].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.HandWear] == null ? null : node.Suit[EquipMask.HandWear].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.UpperLegArmor] == null ? null : node.Suit[EquipMask.UpperLegArmor].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.LowerLegArmor] == null ? null : node.Suit[EquipMask.LowerLegArmor].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.FootWear] == null ? null : node.Suit[EquipMask.FootWear].ExtendedMyWorldObject, sb);
 			sb.AppendLine();
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.ShirtChest] == null ? null : node.Suit[EquippableSlotFlags.ShirtChest].ExtendedMyWorldObject, sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.PantsUpperLegs] == null ? null : node.Suit[EquippableSlotFlags.PantsUpperLegs].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.ChestWear] == null ? null : node.Suit[EquipMask.ChestWear].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.UpperLegWear] == null ? null : node.Suit[EquipMask.UpperLegWear].ExtendedMyWorldObject, sb);
 			sb.AppendLine();
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Necklace] == null ? null : node.Suit[EquippableSlotFlags.Necklace].ExtendedMyWorldObject, sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.Trinket] == null ? null : node.Suit[EquippableSlotFlags.Trinket].ExtendedMyWorldObject, sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LeftBracelet] == null ? null : node.Suit[EquippableSlotFlags.LeftBracelet].ExtendedMyWorldObject, sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.RightBracelet] == null ? null : node.Suit[EquippableSlotFlags.RightBracelet].ExtendedMyWorldObject, sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.LeftRing] == null ? null : node.Suit[EquippableSlotFlags.LeftRing].ExtendedMyWorldObject, sb);
-			AddEquipmentPieceToClipboard(node.Suit[EquippableSlotFlags.RightRing] == null ? null : node.Suit[EquippableSlotFlags.RightRing].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.NeckWear] == null ? null : node.Suit[EquipMask.NeckWear].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.TrinketOne] == null ? null : node.Suit[EquipMask.TrinketOne].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.WristWearLeft] == null ? null : node.Suit[EquipMask.WristWearLeft].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.WristWearRight] == null ? null : node.Suit[EquipMask.WristWearRight].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.FingerWearLeft] == null ? null : node.Suit[EquipMask.FingerWearLeft].ExtendedMyWorldObject, sb);
+			AddEquipmentPieceToClipboard(node.Suit[EquipMask.FingerWearRight] == null ? null : node.Suit[EquipMask.FingerWearRight].ExtendedMyWorldObject, sb);
 			sb.AppendLine();
 			sb.AppendLine("Total Effective Legendaries: ".PadRight(30) + node.Suit.TotalEffectiveLegendaries);
 			sb.AppendLine("Total Effective Epics: ".PadRight(30) + node.Suit.TotalEffectiveEpics);

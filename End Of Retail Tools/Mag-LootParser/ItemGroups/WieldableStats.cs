@@ -104,7 +104,7 @@ namespace Mag_LootParser.ItemGroups
 				var sortedKeys = HitsByValidLocations.Keys.ToList();
 				sortedKeys.Sort();
 				foreach (var key in sortedKeys)
-					sb.AppendLine(key.ToString().PadLeft(9) + " [" + HitsByValidLocations[key].ToString("N0").PadLeft(7) + " " + (HitsByValidLocations[key] / (float)totalHits * 100).ToString("N1").PadLeft(6) + "%]");
+					sb.AppendLine(key.ToString().PadLeft(9) + " [" + HitsByValidLocations[key].ToString("N0").PadLeft(7) + " " + (HitsByValidLocations[key] / (float)totalHits * 100).ToString("N1").PadLeft(6) + "%] " + (EquipMask)key);
 			}
 
 			if (HitsByEquipmentSet.Count > 0)
@@ -114,7 +114,13 @@ namespace Mag_LootParser.ItemGroups
 				var sortedKeys = HitsByEquipmentSet.Keys.ToList();
 				sortedKeys.Sort();
 				foreach (var key in sortedKeys)
-					sb.AppendLine(key.ToString().PadLeft(9) + " [" + HitsByEquipmentSet[key].ToString("N0").PadLeft(7) + " " + (HitsByEquipmentSet[key] / (float)totalHits * 100).ToString("N1").PadLeft(6) + "%]");
+				{
+					if (Dictionaries.AttributeSetInfo.ContainsKey(key))
+						sb.AppendLine(key.ToString().PadLeft(9) + " [" + HitsByEquipmentSet[key].ToString("N0").PadLeft(7) + " " + (HitsByEquipmentSet[key] / (float) totalHits * 100).ToString("N1").PadLeft(6) + "%] " + Dictionaries.AttributeSetInfo[key]);
+					else
+						sb.AppendLine(key.ToString().PadLeft(9) + " [" + HitsByEquipmentSet[key].ToString("N0").PadLeft(7) + " " + (HitsByEquipmentSet[key] / (float)totalHits * 100).ToString("N1").PadLeft(6) + "%]");
+				}
+
 				sb.AppendLine("Percent chance of any item having a set: " + ((totalHits / (float)Items.Count) * 100).ToString("N1") + "%");
 			}
 

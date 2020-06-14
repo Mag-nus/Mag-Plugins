@@ -110,10 +110,10 @@ namespace Mag_SuitBuilder.Equipment
 
 		public bool ItemPassesFilters(ExtendedMyWorldObject mwo)
 		{
-			if (checkRemoveEquipped.Checked && mwo.EquippedSlot != EquippableSlotFlags.None)
+			if (checkRemoveEquipped.Checked && mwo.EquippedSlot != EquipMask.None)
 				return false;
 
-			if (chkRemoveUnequipped.Checked && mwo.EquippedSlot == EquippableSlotFlags.None)
+			if (chkRemoveUnequipped.Checked && mwo.EquippedSlot == EquipMask.None)
 				return false;
 
 
@@ -147,10 +147,10 @@ namespace Mag_SuitBuilder.Equipment
 			{
 				if (!chkJewelry.Checked) return false;
 
-				if (!chkJewelryNecklace.Checked && mwo.EquippableSlots == EquippableSlotFlags.Necklace) return false;
-				if (!chkJewelryTrinket.Checked && mwo.EquippableSlots == EquippableSlotFlags.Trinket) return false;
-				if (!chkJewelryBracelet.Checked && mwo.EquippableSlots == (EquippableSlotFlags.LeftBracelet | EquippableSlotFlags.RightBracelet)) return false;
-				if (!chkJewelryRing.Checked && mwo.EquippableSlots == (EquippableSlotFlags.LeftRing | EquippableSlotFlags.RightRing)) return false;
+				if (!chkJewelryNecklace.Checked && mwo.EquippableSlots == EquipMask.NeckWear) return false;
+				if (!chkJewelryTrinket.Checked && mwo.EquippableSlots == EquipMask.TrinketOne) return false;
+				if (!chkJewelryBracelet.Checked && mwo.EquippableSlots == (EquipMask.WristWearLeft | EquipMask.WristWearRight)) return false;
+				if (!chkJewelryRing.Checked && mwo.EquippableSlots == (EquipMask.FingerWearLeft | EquipMask.FingerWearRight)) return false;
 			}
 			else if (mwo.ObjClass == ObjectClass.MeleeWeapon)
 			{

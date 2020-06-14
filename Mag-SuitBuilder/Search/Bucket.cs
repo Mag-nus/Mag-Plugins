@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 using Mag.Shared.Constants;
 
@@ -6,9 +6,9 @@ namespace Mag_SuitBuilder.Search
 {
 	class Bucket : List<LeanMyWorldObject>
 	{
-		public readonly EquippableSlotFlags Slot;
+		public readonly EquipMask Slot;
 
-		public Bucket(EquippableSlotFlags slot)
+		public Bucket(EquipMask slot)
 		{
 			Slot = slot;
 		}

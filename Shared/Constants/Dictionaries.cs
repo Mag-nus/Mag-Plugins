@@ -225,6 +225,19 @@ namespace Mag.Shared.Constants
 			{ 129, "Blackfire Shivering Clouded Spirit" },
 
 			{ 130, "Shimmering Shadows" },
+
+			{ 131, "Brown Society Locket" },
+			{ 132, "Yellow Society Locket" },
+			{ 133, "Red Society Band" },
+			{ 134, "Green Society Band" },
+			{ 135, "Purple Society Band" },
+			{ 136, "Blue Society Band" },
+
+			{ 137, "Gauntlet Garb" },
+
+			{ 138, "UNKNOWN_138" }, // Possibly Paragon Missile Weapons
+			{ 139, "UNKNOWN_139" }, // Possibly Paragon Casters
+			{ 140, "UNKNOWN_140" }, // Possibly Paragon Melee Weapons
 		};
 
 		/// <summary>

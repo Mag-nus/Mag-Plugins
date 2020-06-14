@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 using Mag.Shared.Constants;
 using Mag.Shared.Spells;
@@ -11,9 +11,9 @@ namespace Mag_SuitBuilder.Search
 	{
 		public readonly ExtendedMyWorldObject ExtendedMyWorldObject;
 
-		public readonly EquippableSlotFlags EquippableSlots;
+		public readonly EquipMask EquippableSlots;
 
-		public readonly CoverageFlags Coverage;
+		public readonly CoverageMask Coverage;
 
 		public readonly int ItemSetId;
 

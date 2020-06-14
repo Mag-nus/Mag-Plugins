@@ -37,16 +37,16 @@ namespace Mag_SuitBuilder.Search
 		{
 			List<Bucket> sorter = new List<Bucket>();
 
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Trinket))		sorter.Add(new Bucket(EquippableSlotFlags.Trinket));
+			if (SuitBuilder.SlotIsOpen(EquipMask.TrinketOne))		sorter.Add(new Bucket(EquipMask.TrinketOne));
 
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.ShirtChest))		sorter.Add(new Bucket(EquippableSlotFlags.ShirtChest));
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.PantsUpperLegs)) sorter.Add(new Bucket(EquippableSlotFlags.PantsUpperLegs));
+			if (SuitBuilder.SlotIsOpen(EquipMask.ChestWear))		sorter.Add(new Bucket(EquipMask.ChestWear));
+			if (SuitBuilder.SlotIsOpen(EquipMask.UpperLegWear)) sorter.Add(new Bucket(EquipMask.UpperLegWear));
 
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Necklace))		sorter.Add(new Bucket(EquippableSlotFlags.Necklace));
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.RightBracelet))	sorter.Add(new Bucket(EquippableSlotFlags.RightBracelet));
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.LeftBracelet))	sorter.Add(new Bucket(EquippableSlotFlags.LeftBracelet));
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.RightRing))		sorter.Add(new Bucket(EquippableSlotFlags.RightRing));
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.LeftRing))		sorter.Add(new Bucket(EquippableSlotFlags.LeftRing));
+			if (SuitBuilder.SlotIsOpen(EquipMask.NeckWear))		sorter.Add(new Bucket(EquipMask.NeckWear));
+			if (SuitBuilder.SlotIsOpen(EquipMask.WristWearRight))	sorter.Add(new Bucket(EquipMask.WristWearRight));
+			if (SuitBuilder.SlotIsOpen(EquipMask.WristWearLeft))	sorter.Add(new Bucket(EquipMask.WristWearLeft));
+			if (SuitBuilder.SlotIsOpen(EquipMask.FingerWearRight))		sorter.Add(new Bucket(EquipMask.FingerWearRight));
+			if (SuitBuilder.SlotIsOpen(EquipMask.FingerWearLeft))		sorter.Add(new Bucket(EquipMask.FingerWearLeft));
 
 			// Put all of our inventory into its appropriate bucket
 			foreach (var piece in Equipment)

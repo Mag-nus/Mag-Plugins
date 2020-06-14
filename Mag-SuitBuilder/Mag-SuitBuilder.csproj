@@ -51,8 +51,8 @@
     <Compile Include="..\Shared\Constants\BoolValueKey.cs">
       <Link>Shared\Constants\BoolValueKey.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Constants\CoverageFlags.cs">
-      <Link>Shared\Constants\CoverageFlags.cs</Link>
+    <Compile Include="..\Shared\Constants\CoverageMask.cs">
+      <Link>Shared\Constants\CoverageMask.cs</Link>
     </Compile>
     <Compile Include="..\Shared\Constants\Dictionaries.cs">
       <Link>Shared\Constants\Dictionaries.cs</Link>
@@ -63,8 +63,8 @@
     <Compile Include="..\Shared\Constants\EphemeralAttribute.cs">
       <Link>Shared\Constants\EphemeralAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Constants\EquippableSlotFlags.cs">
-      <Link>Shared\Constants\EquippableSlotFlags.cs</Link>
+    <Compile Include="..\Shared\Constants\EquipMask.cs">
+      <Link>Shared\Constants\EquipMask.cs</Link>
     </Compile>
     <Compile Include="..\Shared\Constants\IntValueKey.cs">
       <Link>Shared\Constants\IntValueKey.cs</Link>

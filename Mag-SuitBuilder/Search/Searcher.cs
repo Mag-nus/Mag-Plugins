@@ -54,20 +54,20 @@ namespace Mag_SuitBuilder.Search
 
 							foreach (var option in reductionOptions)
 							{
-								if (option == CoverageFlags.Chest && SuitBuilder.SlotIsOpen(EquippableSlotFlags.Chest)) goto end;
-								if (option == CoverageFlags.UpperArms && SuitBuilder.SlotIsOpen(EquippableSlotFlags.UpperArms)) goto end;
-								if (option == CoverageFlags.LowerArms && SuitBuilder.SlotIsOpen(EquippableSlotFlags.LowerArms)) goto end;
-								if (option == CoverageFlags.Abdomen && SuitBuilder.SlotIsOpen(EquippableSlotFlags.Abdomen)) goto end;
-								if (option == CoverageFlags.UpperLegs && SuitBuilder.SlotIsOpen(EquippableSlotFlags.UpperLegs)) goto end;
-								if (option == CoverageFlags.LowerLegs && SuitBuilder.SlotIsOpen(EquippableSlotFlags.LowerLegs)) goto end;
+								if (option == CoverageMask.OuterwearChest && SuitBuilder.SlotIsOpen(EquipMask.ChestArmor)) goto end;
+								if (option == CoverageMask.OuterwearUpperArms && SuitBuilder.SlotIsOpen(EquipMask.UpperArmArmor)) goto end;
+								if (option == CoverageMask.OuterwearLowerArms && SuitBuilder.SlotIsOpen(EquipMask.LowerArmArmor)) goto end;
+								if (option == CoverageMask.OuterwearAbdomen && SuitBuilder.SlotIsOpen(EquipMask.AbdomenArmor)) goto end;
+								if (option == CoverageMask.OuterwearUpperLegs && SuitBuilder.SlotIsOpen(EquipMask.UpperLegArmor)) goto end;
+								if (option == CoverageMask.OuterwearLowerLegs && SuitBuilder.SlotIsOpen(EquipMask.LowerLegArmor)) goto end;
 							}
 
 							Equipment.RemoveAt(i);
 						}
 						else
 						{
-							if ((Equipment[i].EquippableSlots.HasFlag(EquippableSlotFlags.LeftRing) || Equipment[i].EquippableSlots.HasFlag(EquippableSlotFlags.RightRing)) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.LeftRing) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.RightRing)) { Equipment.RemoveAt(i); goto end; }
-							if ((Equipment[i].EquippableSlots.HasFlag(EquippableSlotFlags.LeftBracelet) || Equipment[i].EquippableSlots.HasFlag(EquippableSlotFlags.RightBracelet)) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.LeftBracelet) && !SuitBuilder.SlotIsOpen(EquippableSlotFlags.RightBracelet)) { Equipment.RemoveAt(i); goto end; }
+							if ((Equipment[i].EquippableSlots.HasFlag(EquipMask.FingerWearLeft) || Equipment[i].EquippableSlots.HasFlag(EquipMask.FingerWearRight)) && !SuitBuilder.SlotIsOpen(EquipMask.FingerWearLeft) && !SuitBuilder.SlotIsOpen(EquipMask.FingerWearRight)) { Equipment.RemoveAt(i); goto end; }
+							if ((Equipment[i].EquippableSlots.HasFlag(EquipMask.WristWearLeft) || Equipment[i].EquippableSlots.HasFlag(EquipMask.WristWearRight)) && !SuitBuilder.SlotIsOpen(EquipMask.WristWearLeft) && !SuitBuilder.SlotIsOpen(EquipMask.WristWearRight)) { Equipment.RemoveAt(i); goto end; }
 						}
 					}
 				}

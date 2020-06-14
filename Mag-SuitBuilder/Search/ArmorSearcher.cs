@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -37,24 +37,24 @@ namespace Mag_SuitBuilder.Search
 			buckets = new List<Bucket>();
 
 			// All these slots can have armor
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Head))		buckets.Add(new Bucket(EquippableSlotFlags.Head));
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Hands))		buckets.Add(new Bucket(EquippableSlotFlags.Hands));
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Feet))		buckets.Add(new Bucket(EquippableSlotFlags.Feet));
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Chest))		buckets.Add(new Bucket(EquippableSlotFlags.Chest));
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.Abdomen))	buckets.Add(new Bucket(EquippableSlotFlags.Abdomen));
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.UpperArms))	buckets.Add(new Bucket(EquippableSlotFlags.UpperArms));
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.LowerArms))	buckets.Add(new Bucket(EquippableSlotFlags.LowerArms));
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.UpperLegs))	buckets.Add(new Bucket(EquippableSlotFlags.UpperLegs));
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.LowerLegs))	buckets.Add(new Bucket(EquippableSlotFlags.LowerLegs));
+			if (SuitBuilder.SlotIsOpen(EquipMask.HeadWear))			buckets.Add(new Bucket(EquipMask.HeadWear));
+			if (SuitBuilder.SlotIsOpen(EquipMask.HandWear))			buckets.Add(new Bucket(EquipMask.HandWear));
+			if (SuitBuilder.SlotIsOpen(EquipMask.FootWear))			buckets.Add(new Bucket(EquipMask.FootWear));
+			if (SuitBuilder.SlotIsOpen(EquipMask.ChestArmor))		buckets.Add(new Bucket(EquipMask.ChestArmor));
+			if (SuitBuilder.SlotIsOpen(EquipMask.AbdomenArmor))		buckets.Add(new Bucket(EquipMask.AbdomenArmor));
+			if (SuitBuilder.SlotIsOpen(EquipMask.UpperArmArmor))	buckets.Add(new Bucket(EquipMask.UpperArmArmor));
+			if (SuitBuilder.SlotIsOpen(EquipMask.LowerArmArmor))	buckets.Add(new Bucket(EquipMask.LowerArmArmor));
+			if (SuitBuilder.SlotIsOpen(EquipMask.UpperLegArmor))	buckets.Add(new Bucket(EquipMask.UpperLegArmor));
+			if (SuitBuilder.SlotIsOpen(EquipMask.LowerLegArmor))	buckets.Add(new Bucket(EquipMask.LowerLegArmor));
 
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.ShirtChest))		buckets.Add(new Bucket(EquippableSlotFlags.ShirtChest));
-			if (SuitBuilder.SlotIsOpen(EquippableSlotFlags.PantsUpperLegs)) buckets.Add(new Bucket(EquippableSlotFlags.PantsUpperLegs));
+			if (SuitBuilder.SlotIsOpen(EquipMask.ChestWear))		buckets.Add(new Bucket(EquipMask.ChestWear));
+			if (SuitBuilder.SlotIsOpen(EquipMask.UpperLegWear))		buckets.Add(new Bucket(EquipMask.UpperLegWear));
 		
 			// Put all of our inventory into its appropriate bucket
 			foreach (var piece in Equipment)
 			{
-				if (piece.EquippableSlots == (EquippableSlotFlags.PantsLowerLegs | EquippableSlotFlags.Feet)) // Some shoes cover both feet/lower legs but can only go in the feet slot
-					buckets.PutItemInBuckets(piece, EquippableSlotFlags.Feet);
+				if (piece.EquippableSlots == (EquipMask.LowerLegWear | EquipMask.FootWear)) // Some shoes cover both feet/lower legs but can only go in the feet slot
+					buckets.PutItemInBuckets(piece, EquipMask.FootWear);
 				else if (piece.EquippableSlots.IsBodyArmor() && piece.EquippableSlots.GetTotalBitsSet() != piece.Coverage.GetTotalBitsSet())
 					MessageBox.Show("Unable to add " + piece + " into an appropriate bucket. EquippableSlots != Coverage" + Environment.NewLine + "EquippableSlots: " + piece.EquippableSlots + Environment.NewLine + "Coverage: " + piece.Coverage);
 				else if (piece.EquippableSlots.IsBodyArmor() && piece.EquippableSlots.GetTotalBitsSet() > 1)
@@ -66,15 +66,15 @@ namespace Mag_SuitBuilder.Search
 						// Lets try to reduce this
 						foreach (var option in piece.Coverage.ReductionOptions())
 						{
-							if (option == CoverageFlags.Head)			buckets.PutItemInBuckets(piece, EquippableSlotFlags.Head);
-							else if (option == CoverageFlags.Chest)		buckets.PutItemInBuckets(piece, EquippableSlotFlags.Chest);
-							else if (option == CoverageFlags.UpperArms) buckets.PutItemInBuckets(piece, EquippableSlotFlags.UpperArms);
-							else if (option == CoverageFlags.LowerArms) buckets.PutItemInBuckets(piece, EquippableSlotFlags.LowerArms);
-							else if (option == CoverageFlags.Hands)		buckets.PutItemInBuckets(piece, EquippableSlotFlags.Hands);
-							else if (option == CoverageFlags.Abdomen)	buckets.PutItemInBuckets(piece, EquippableSlotFlags.Abdomen);
-							else if (option == CoverageFlags.UpperLegs) buckets.PutItemInBuckets(piece, EquippableSlotFlags.UpperLegs);
-							else if (option == CoverageFlags.LowerLegs) buckets.PutItemInBuckets(piece, EquippableSlotFlags.LowerLegs);
-							else if (option == CoverageFlags.Feet)		buckets.PutItemInBuckets(piece, EquippableSlotFlags.Feet);
+							if (option == CoverageMask.Head)					buckets.PutItemInBuckets(piece, EquipMask.HeadWear);
+							else if (option == CoverageMask.OuterwearChest)		buckets.PutItemInBuckets(piece, EquipMask.ChestArmor);
+							else if (option == CoverageMask.OuterwearUpperArms) buckets.PutItemInBuckets(piece, EquipMask.UpperArmArmor);
+							else if (option == CoverageMask.OuterwearLowerArms) buckets.PutItemInBuckets(piece, EquipMask.LowerArmArmor);
+							else if (option == CoverageMask.Hands)				buckets.PutItemInBuckets(piece, EquipMask.HandWear);
+							else if (option == CoverageMask.OuterwearAbdomen)	buckets.PutItemInBuckets(piece, EquipMask.AbdomenArmor);
+							else if (option == CoverageMask.OuterwearUpperLegs) buckets.PutItemInBuckets(piece, EquipMask.UpperLegArmor);
+							else if (option == CoverageMask.OuterwearLowerLegs) buckets.PutItemInBuckets(piece, EquipMask.LowerLegArmor);
+							else if (option == CoverageMask.Feet)				buckets.PutItemInBuckets(piece, EquipMask.FootWear);
 							else
 								MessageBox.Show("Unable to add " + piece + " into an appropriate bucket." + Environment.NewLine + "Reduction coverage option of " + option + " not expected.");
 						}

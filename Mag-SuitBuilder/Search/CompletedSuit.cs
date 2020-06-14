@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +18,9 @@ namespace Mag_SuitBuilder.Search
 	/// When enumerating, keep in mind that SlotFlags could have one or more slot bits set for any piece.
 	/// No pieces should have overlapping slots.
 	/// </summary>
-	class CompletedSuit : IEnumerable<KeyValuePair<EquippableSlotFlags, LeanMyWorldObject>>
+	class CompletedSuit : IEnumerable<KeyValuePair<EquipMask, LeanMyWorldObject>>
 	{
-		readonly Dictionary<EquippableSlotFlags, LeanMyWorldObject> items = new Dictionary<EquippableSlotFlags, LeanMyWorldObject>();
+		readonly Dictionary<EquipMask, LeanMyWorldObject> items = new Dictionary<EquipMask, LeanMyWorldObject>();
 
 		readonly HashSet<LeanMyWorldObject> piecesHashSet = new HashSet<LeanMyWorldObject>();
 
@@ -47,32 +47,32 @@ namespace Mag_SuitBuilder.Search
 		/// <exception cref="ArgumentException">Trying to add an item that covers a slot already filled.</exception>
 		public bool AddItem(LeanMyWorldObject item)
 		{
-			EquippableSlotFlags slotToAddTo = item.EquippableSlots;
+			EquipMask slotToAddTo = item.EquippableSlots;
 
-			if (item.EquippableSlots == (EquippableSlotFlags.Feet | EquippableSlotFlags.PantsLowerLegs)) // Some armor boots
-				slotToAddTo = EquippableSlotFlags.Feet;
-			else if (item.EquippableSlots == (EquippableSlotFlags.LeftBracelet | EquippableSlotFlags.RightBracelet))
+			if (item.EquippableSlots == (EquipMask.FootWear | EquipMask.LowerLegWear)) // Some armor boots
+				slotToAddTo = EquipMask.FootWear;
+			else if (item.EquippableSlots == (EquipMask.WristWearLeft | EquipMask.WristWearRight))
 			{
-				if (this[EquippableSlotFlags.LeftBracelet] == null)
-					slotToAddTo = EquippableSlotFlags.LeftBracelet;
-				else if (this[EquippableSlotFlags.RightBracelet] == null)
-					slotToAddTo = EquippableSlotFlags.RightBracelet;
+				if (this[EquipMask.WristWearLeft] == null)
+					slotToAddTo = EquipMask.WristWearLeft;
+				else if (this[EquipMask.WristWearRight] == null)
+					slotToAddTo = EquipMask.WristWearRight;
 				else
 					return false;
 			}
-			else if (item.EquippableSlots == (EquippableSlotFlags.LeftRing | EquippableSlotFlags.RightRing))
+			else if (item.EquippableSlots == (EquipMask.FingerWearLeft | EquipMask.FingerWearRight))
 			{
-				if (this[EquippableSlotFlags.LeftRing] == null)
-					slotToAddTo = EquippableSlotFlags.LeftRing;
-				else if (this[EquippableSlotFlags.RightRing] == null)
-					slotToAddTo = EquippableSlotFlags.RightRing;
+				if (this[EquipMask.FingerWearLeft] == null)
+					slotToAddTo = EquipMask.FingerWearLeft;
+				else if (this[EquipMask.FingerWearRight] == null)
+					slotToAddTo = EquipMask.FingerWearRight;
 				else
 					return false;
 			}
 			else if (item.EquippableSlots.IsShirt())
-				slotToAddTo = EquippableSlotFlags.ShirtChest;
+				slotToAddTo = EquipMask.ChestWear;
 			else if (item.EquippableSlots.IsPants())
-				slotToAddTo = EquippableSlotFlags.PantsUpperLegs;
+				slotToAddTo = EquipMask.UpperLegWear;
 
 			if (this[slotToAddTo] != null)
 				return false;
@@ -83,7 +83,7 @@ namespace Mag_SuitBuilder.Search
 		}
 
 		/// <exception cref="ArgumentException">Trying to add an item that covers a slot already filled.</exception>
-		public void AddItem(EquippableSlotFlags slots, LeanMyWorldObject item)
+		public void AddItem(EquipMask slots, LeanMyWorldObject item)
 		{
 			// Make sure we don't overlap a slot
 			foreach (var o in this)
@@ -133,11 +133,11 @@ namespace Mag_SuitBuilder.Search
 			}
 		}
 
-		public LeanMyWorldObject this[EquippableSlotFlags slot]
+		public LeanMyWorldObject this[EquipMask slot]
 		{
 			get
 			{
-				foreach (KeyValuePair<EquippableSlotFlags, LeanMyWorldObject> kvp in items)
+				foreach (KeyValuePair<EquipMask, LeanMyWorldObject> kvp in items)
 				{
 					if ((kvp.Key & slot) != 0)
 						return kvp.Value;
@@ -167,7 +167,7 @@ namespace Mag_SuitBuilder.Search
 			return piecesHashSet.IsSupersetOf(other.piecesHashSet);
 		}
 
-		public IEnumerator<KeyValuePair<EquippableSlotFlags, LeanMyWorldObject>> GetEnumerator()
+		public IEnumerator<KeyValuePair<EquipMask, LeanMyWorldObject>> GetEnumerator()
 		{
 			return items.GetEnumerator();
 		}

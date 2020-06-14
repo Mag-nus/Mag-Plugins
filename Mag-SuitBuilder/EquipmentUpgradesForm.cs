@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -46,8 +46,8 @@ namespace Mag_SuitBuilder
 			// This just hides numeric fields that aren't supported, they return -1
 			if ((e.Value is int && (int)e.Value == -1) ||
 				(e.Value is double && Math.Abs((double)e.Value + 1) < Double.Epsilon) ||
-				(e.Value is EquippableSlotFlags && (EquippableSlotFlags)e.Value == EquippableSlotFlags.None) ||
-				(e.Value is CoverageFlags && (CoverageFlags)e.Value == CoverageFlags.None))
+				(e.Value is EquipMask && (EquipMask)e.Value == EquipMask.None) ||
+				(e.Value is CoverageMask && (CoverageMask)e.Value == CoverageMask.None))
 			{
 				e.PaintBackground(e.ClipBounds, true);
 				e.Handled = true;
@@ -59,8 +59,8 @@ namespace Mag_SuitBuilder
 			// This just hides numeric fields that aren't supported, they return -1
 			if ((e.Value is int && (int)e.Value == -1) ||
 				(e.Value is double && Math.Abs((double)e.Value + 1) < Double.Epsilon) ||
-				(e.Value is EquippableSlotFlags && (EquippableSlotFlags)e.Value == EquippableSlotFlags.None) ||
-				(e.Value is CoverageFlags && (CoverageFlags)e.Value == CoverageFlags.None))
+				(e.Value is EquipMask && (EquipMask)e.Value == EquipMask.None) ||
+				(e.Value is CoverageMask && (CoverageMask)e.Value == CoverageMask.None))
 			{
 				e.PaintBackground(e.ClipBounds, true);
 				e.Handled = true;
