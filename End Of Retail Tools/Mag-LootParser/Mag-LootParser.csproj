@@ -77,6 +77,9 @@
     <Compile Include="..\..\Shared\Constants\Skill.cs">
       <Link>Shared\Constants\Skill.cs</Link>
     </Compile>
+    <Compile Include="..\..\Shared\Constants\SpellCategory.cs">
+      <Link>Shared\Constants\SpellCategory.cs</Link>
+    </Compile>
     <Compile Include="..\..\Shared\Constants\StringValueKey.cs">
       <Link>Shared\Constants\StringValueKey.cs</Link>
     </Compile>
