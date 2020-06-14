@@ -35,9 +35,23 @@ namespace Mag_LootParser.ItemGroups
 
             sb.AppendLine();
 
-            sb.AppendLine($"Blue Aetheria Stats By Level: {BlueAetheriaCountsByLevel[1]} {BlueAetheriaCountsByLevel[2]} {BlueAetheriaCountsByLevel[3]} {BlueAetheriaCountsByLevel[4]} {BlueAetheriaCountsByLevel[5]}");
-            sb.AppendLine($"Yellow Aetheria Stats By Level: {YellowAetheriaCountsByLevel[1]} {YellowAetheriaCountsByLevel[2]} {YellowAetheriaCountsByLevel[3]} {YellowAetheriaCountsByLevel[4]} {YellowAetheriaCountsByLevel[5]}");
-            sb.AppendLine($"Red Aetheria Stats By Level: {RedAetheriaCountsByLevel[1]} {RedAetheriaCountsByLevel[2]} {RedAetheriaCountsByLevel[3]} {RedAetheriaCountsByLevel[4]} {RedAetheriaCountsByLevel[5]}");
+            {
+	            var totalHits = BlueAetheriaCountsByLevel.Values.Sum();
+	            for (int i = 1; i <= 5; i++)
+					sb.AppendLine($"Blue   Aetheria Hits By Level {i} [" + BlueAetheriaCountsByLevel[i].ToString().PadRight(4) + " " + (BlueAetheriaCountsByLevel[i] / (float)totalHits * 100).ToString("N1").PadLeft(4) + " %]");
+			}
+
+            {
+	            var totalHits = YellowAetheriaCountsByLevel.Values.Sum();
+				for (int i = 1; i <= 5; i++)
+					sb.AppendLine($"Yellow Aetheria Hits By Level {i} [" + YellowAetheriaCountsByLevel[i].ToString().PadRight(4) + " " + (YellowAetheriaCountsByLevel[i] / (float)totalHits * 100).ToString("N1").PadLeft(4) + " %]");
+			}
+
+            {
+	            var totalHits = RedAetheriaCountsByLevel.Values.Sum();
+	            for (int i = 1; i <= 5; i++)
+		            sb.AppendLine($"Red    Aetheria Hits By Level {i} [" + RedAetheriaCountsByLevel[i].ToString().PadRight(4) + " " + (RedAetheriaCountsByLevel[i] / (float)totalHits * 100).ToString("N1").PadLeft(4) + " %]");
+			}
 
             return sb.ToString();
         }
