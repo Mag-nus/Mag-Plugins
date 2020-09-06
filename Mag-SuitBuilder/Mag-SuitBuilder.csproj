@@ -69,6 +69,9 @@
     <Compile Include="..\Shared\Constants\IntValueKey.cs">
       <Link>Shared\Constants\IntValueKey.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\Constants\ItemType.cs">
+      <Link>Shared\Constants\ItemType.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\Constants\SendOnLoginAttribute.cs">
       <Link>Shared\Constants\SendOnLoginAttribute.cs</Link>
     </Compile>
@@ -77,6 +80,9 @@
     </Compile>
     <Compile Include="..\Shared\Constants\StringValueKey.cs">
       <Link>Shared\Constants\StringValueKey.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Constants\WeenieType.cs">
+      <Link>Shared\Constants\WeenieType.cs</Link>
     </Compile>
     <Compile Include="..\Shared\ItemInfo.cs">
       <Link>Shared\ItemInfo.cs</Link>
