@@ -40,6 +40,8 @@ namespace Mag_LootParser
                             if (tier < 3) tier = 3;
                             break;
 						case 325:
+							if (tier < 4) tier = 4;
+							break;
 						case 350:
                             if (tier < 5) tier = 5;
                             break;
@@ -70,6 +72,8 @@ namespace Mag_LootParser
                             if (tier < 3) tier = 3;
                             break;
 						case 290:
+							if (tier < 4) tier = 4;
+							break;
 						case 315:
                             if (tier < 5) tier = 5;
                             break;
@@ -94,6 +98,8 @@ namespace Mag_LootParser
 					switch (item.LongValues[IntValueKey.WieldDifficulty])
                     {
 						case 290:
+							if (tier < 4) tier = 4;
+							break;
 						case 310:
                             if (tier < 5) tier = 5;
                             break;

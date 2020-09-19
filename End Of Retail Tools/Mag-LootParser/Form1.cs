@@ -543,7 +543,7 @@ namespace Mag_LootParser
                 ContainerTierAuditWieldReqs(stats, 1, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 0 });
 				ContainerTierAuditWieldReqs(stats, 2, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 0, 250 });
                 ContainerTierAuditWieldReqs(stats, 3, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 0, 250, 300 });
-                ContainerTierAuditWieldReqs(stats, 4, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 0, 250, 300 });
+                ContainerTierAuditWieldReqs(stats, 4, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 0, 250, 300, 325 });
                 ContainerTierAuditWieldReqs(stats, 5, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 300, 325, 350 });
                 ContainerTierAuditWieldReqs(stats, 6, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 350, 370, 400 });
                 ContainerTierAuditWieldReqs(stats, 7, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.TwoHandedCombat, (int)Skill.HeavyWeapons, (int)Skill.LightWeapons, (int)Skill.FinesseWeapons }, new HashSet<int> { 370, 400, 420 });
@@ -552,7 +552,7 @@ namespace Mag_LootParser
                 ContainerTierAuditWieldReqs(stats, 1, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 0 });
 				ContainerTierAuditWieldReqs(stats, 2, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 0, 250 });
                 ContainerTierAuditWieldReqs(stats, 3, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 0, 250, 270 });
-                ContainerTierAuditWieldReqs(stats, 4, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 250, 270 });
+                ContainerTierAuditWieldReqs(stats, 4, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 250, 270, 290 });
                 ContainerTierAuditWieldReqs(stats, 5, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 270, 290, 315 });
                 ContainerTierAuditWieldReqs(stats, 6, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 315, 335, 360 });
                 ContainerTierAuditWieldReqs(stats, 7, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.MissileWeapons }, new HashSet<int> { 335, 360, 375 });
@@ -561,7 +561,7 @@ namespace Mag_LootParser
                 ContainerTierAuditWieldReqs(stats, 1, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 0 });
                 ContainerTierAuditWieldReqs(stats, 2, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 0 });
                 ContainerTierAuditWieldReqs(stats, 3, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 0 });
-                ContainerTierAuditWieldReqs(stats, 4, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 0 });
+                ContainerTierAuditWieldReqs(stats, 4, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 0, 290 });
 				ContainerTierAuditWieldReqs(stats, 5, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 0, 290, 310 });
                 ContainerTierAuditWieldReqs(stats, 6, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 0, 290, 310, 330, 355 });
                 ContainerTierAuditWieldReqs(stats, 7, (int)WieldRequirement.RawSkill, new HashSet<int> { (int)Skill.WarMagic, (int)Skill.VoidMagic }, new HashSet<int> { 330, 355, 375 });
