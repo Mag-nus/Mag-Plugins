@@ -412,6 +412,12 @@ namespace Mag_LootParser
                 Interlocked.Increment(ref skippedLines);
                 return;
             }
+			// Corpse of Mahharu
+			if (identResponse.Id == 0xAAFFFDEB && identResponse.StringValues[StringValueKey.Name] == "War Axe")
+			{
+				Interlocked.Increment(ref skippedLines);
+				return;
+			}
 
             // Not sure why corpses are being detected as inside a container, probably a data bug
             if (identResponse.ObjectClass == Mag.Shared.ObjectClass.Corpse)

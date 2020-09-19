@@ -119,6 +119,12 @@
     <Compile Include="IdentResponse.cs" />
     <Compile Include="ItemGroups\ClothingStats.cs" />
     <Compile Include="ItemGroups\GemStats.cs" />
+    <Compile Include="ItemGroups\Helpers\CasterNames.cs" />
+    <Compile Include="ItemGroups\Helpers\FinesseWeaponNames.cs" />
+    <Compile Include="ItemGroups\Helpers\HeavyWeaponNames.cs" />
+    <Compile Include="ItemGroups\Helpers\LightWeaponNames.cs" />
+    <Compile Include="ItemGroups\Helpers\MissileNames.cs" />
+    <Compile Include="ItemGroups\Helpers\TwoHandedWeaponNames.cs" />
     <Compile Include="ItemGroups\ItemGroupStats.cs" />
     <Compile Include="ItemGroups\MeleeWeaponStats.cs" />
     <Compile Include="ItemGroups\MissileWeaponStats.cs" />
@@ -162,5 +168,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
