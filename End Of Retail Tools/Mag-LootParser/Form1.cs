@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
@@ -11,6 +12,7 @@ using System.Windows.Forms;
 using Mag.Shared.Constants;
 
 using Mag_LootParser.Properties;
+
 using Newtonsoft.Json;
 
 namespace Mag_LootParser
@@ -71,7 +73,6 @@ namespace Mag_LootParser
         private int skippedLines;
         private int corruptLines;
 
-		private string workignOutputFolder = null;
         private CancellationTokenSource cts;
 
         private void cmdProcessAllFiles_Click(object sender, EventArgs e)
@@ -82,11 +83,6 @@ namespace Mag_LootParser
             cmdBrowseForDifferentOutput.Enabled = false;
             cmdProcessAllFiles.Enabled = false;
             cmdStop.Enabled = true;
-
-            workignOutputFolder = Path.Combine(txtOutputPath.Text, DateTime.Now.ToString("yyyy-MM-dd HH-mm"));
-
-            if (!Directory.Exists(workignOutputFolder))
-	            Directory.CreateDirectory(workignOutputFolder);
 
 			cts = new CancellationTokenSource();
 
@@ -100,9 +96,9 @@ namespace Mag_LootParser
             // Clear our outputs
             dataGridView1.DataSource = null;
 
-            var files = Directory.GetFiles(txtSourcePath.Text, "*.csv", SearchOption.AllDirectories);
+            var files = Directory.GetFiles(txtSourcePath.Text, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".csv") || s.EndsWith(".json")).ToList();
 
-            totalLines = 0;
+			totalLines = 0;
             corruptLines = 0;
             corruptLines = 0;
 
@@ -122,7 +118,7 @@ namespace Mag_LootParser
 
                     var processed = Interlocked.Increment(ref filesProcessed);
 
-                    progressBar1.BeginInvoke((Action)(() => progressBar1.Value = (int)(((double)processed / files.Length) * 100)));
+                    progressBar1.BeginInvoke((Action)(() => progressBar1.Value = (int)(((double)processed / files.Count) * 100)));
                 });
 
                 BeginInvoke((Action)(() =>
@@ -162,6 +158,20 @@ namespace Mag_LootParser
 
         private void ProcessFile(string fileName, CancellationToken ct)
         {
+	        if (fileName.EndsWith(".json"))
+	        {
+		        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+				var fileText = File.ReadAllText(fileName);
+
+		        var containers = JsonConvert.DeserializeObject<List<ContainerInfo>>(fileText);
+
+		        lock (processLockObject)
+					containersLoot[fileNameWithoutExtension] = containers;
+
+		        return;
+	        }
+
+
             var fileLines = File.ReadAllLines(fileName);
 
             FileType fileType = FileType.Unknown;
@@ -321,7 +331,7 @@ namespace Mag_LootParser
 						string containerName = firstPartSplit[0];
 						uint containerID = uint.Parse(firstPartSplit[1]);
 
-						var biota = JsonConvert.DeserializeObject< ACE.Entity.Models.Biota>(secondPart);
+						var biota = JsonConvert.DeserializeObject<ACE.Entity.Models.Biota>(secondPart);
 
 	                    identResponse.ParseFromBiota(biota);
 
@@ -472,9 +482,32 @@ namespace Mag_LootParser
 		}
 
 		private void OnLoadFilesComplete()
-        {
-            // Calculate the stats
-            StatsCalculator.Calculate(containersLoot);
+		{
+			if (chkGeneratecontainersLootJson.Checked)
+			{
+				var workignOutputJsonFolder = Path.Combine(txtOutputPath.Text, DateTime.Now.ToString("yyyy-MM-dd HH-mm") + " containers json");
+
+				if (!Directory.Exists(workignOutputJsonFolder))
+					Directory.CreateDirectory(workignOutputJsonFolder);
+
+				foreach (var kvp in containersLoot)
+				{
+					var containersLootJson = JsonConvert.SerializeObject(kvp.Value);
+					File.WriteAllText(Path.Combine(workignOutputJsonFolder, $"{kvp.Key}.json"), containersLootJson);
+				}
+
+				return;
+			}
+
+
+			var workignOutputFolder = Path.Combine(txtOutputPath.Text, DateTime.Now.ToString("yyyy-MM-dd HH-mm"));
+
+			if (!Directory.Exists(workignOutputFolder))
+				Directory.CreateDirectory(workignOutputFolder);
+
+
+			// Calculate the stats
+			StatsCalculator.Calculate(containersLoot);
 
 
             // Populate the Containers tab
