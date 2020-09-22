@@ -374,8 +374,23 @@ namespace Mag_LootParser
                 containerName == "Corpse of Sholdslastridelc" ||
                 containerName == "Corpse of Thisistheendmyonlyfriendtheend" ||
 				containerName == "Corpse of Dieter the Black" ||
-                containerName == "Corpse of Twangs")
-            {
+                containerName == "Corpse of Twangs" ||
+                containerName == "Corpse of Big D Boy" ||
+	            containerName == "Corpse of Blood Quench" ||
+				containerName == "Corpse of Ripley of Frostfell" ||
+                containerName == "Corpse of Al Bow" ||
+                containerName == "Corpse of Ashly g" ||
+                containerName == "Corpse of Zojak Quazith" ||
+                containerName == "Corpse of Crimson Mage of Mt" ||
+                containerName == "Corpse of Mr Goodman's Goodies" ||
+                containerName == "Corpse of Mag-nus" ||
+                containerName == "Corpse of Dirty Mike" ||
+                containerName == "Corpse of Shootey McWarwand" ||
+                containerName == "Corpse of Sinner of Dt" ||
+                containerName == "Corpse of Rimok" ||
+                containerName == "Corpse of Ujiio")
+
+			{
                 Interlocked.Increment(ref skippedLines);
                 return;
             }
