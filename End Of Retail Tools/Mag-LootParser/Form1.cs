@@ -372,7 +372,9 @@ namespace Mag_LootParser
                 containerName == "Corpse of Blumenkind" ||
                 containerName == "Corpse of Cyberkiller" ||
                 containerName == "Corpse of Sholdslastridelc" ||
-                containerName == "Corpse of Thisistheendmyonlyfriendtheend")
+                containerName == "Corpse of Thisistheendmyonlyfriendtheend" ||
+				containerName == "Corpse of Dieter the Black" ||
+                containerName == "Corpse of Twangs")
             {
                 Interlocked.Increment(ref skippedLines);
                 return;
