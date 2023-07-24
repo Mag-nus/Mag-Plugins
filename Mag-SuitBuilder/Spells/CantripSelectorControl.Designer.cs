@@ -205,7 +205,7 @@
 			this.cmdLoadDefaults.Name = "cmdLoadDefaults";
 			this.cmdLoadDefaults.Size = new System.Drawing.Size(105, 23);
 			this.cmdLoadDefaults.TabIndex = 30;
-			this.cmdLoadDefaults.Text = "Load Defautls For:";
+			this.cmdLoadDefaults.Text = "Load Defaults For:";
 			this.cmdLoadDefaults.UseVisualStyleBackColor = true;
 			this.cmdLoadDefaults.Click += new System.EventHandler(this.cmdLoadDefaults_Click);
 			// 
