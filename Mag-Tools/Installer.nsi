@@ -1,6 +1,6 @@
 !define APPNAME "Mag-Tools"
 !define SOFTWARECOMPANY "Mag-nus"
-!define APPGUID "959d5ca6-0bd5-48a2-9ad2-f95f94dcdc3e"
+!define APPGUID "{959d5ca6-0bd5-48a2-9ad2-f95f94dcdc3e}"
 !define CLASSNAME "MagTools.PluginCore"
 !define ASSEMBLY "MagTools.dll"
 InstallDir "C:\Games\Decal Plugins\${APPNAME}"
