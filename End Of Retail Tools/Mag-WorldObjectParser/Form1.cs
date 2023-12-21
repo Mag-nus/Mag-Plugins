@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -404,22 +404,21 @@ namespace Mag_WorldObjectParser
 
 		        if (identResponse.ExtendIDAttributeInfo != null)
 		        {
-		            if (!identResponse.LongValues.ContainsKey(IntValueKey.Type)) // Type. Everything should have this
+		            if (!identResponse.LongValues.ContainsKey(IntValueKey.WeenieClassId_Decal)) // Type. Everything should have this
 		                return false;
 
-		            if (!identResponse.StringValues.ContainsKey((int) StringValueKey.Name)
-		            ) // Name. Everything should have this
+		            if (!identResponse.StringValues.ContainsKey((int) StringValueKey.Name)) // Name. Everything should have this
 		                return false;
 
 		            List<CreatureInfo> creatureInfos;
 
-		            if (!creatureAttributes.ContainsKey(identResponse.LongValues[IntValueKey.Type]))
+		            if (!creatureAttributes.ContainsKey(identResponse.LongValues[IntValueKey.WeenieClassId_Decal]))
 		            {
 		                creatureInfos = new List<CreatureInfo>();
-		                creatureAttributes[identResponse.LongValues[IntValueKey.Type]] = creatureInfos;
+		                creatureAttributes[identResponse.LongValues[IntValueKey.WeenieClassId_Decal]] = creatureInfos;
 		            }
 		            else
-		                creatureInfos = creatureAttributes[identResponse.LongValues[IntValueKey.Type]];
+		                creatureInfos = creatureAttributes[identResponse.LongValues[IntValueKey.WeenieClassId_Decal]];
 
 		            /*if (!creatureAttributes.ContainsKey(identResponse.StringValues[1]))
                     {
@@ -433,8 +432,8 @@ namespace Mag_WorldObjectParser
 
 		            creatureInfo.Name = identResponse.StringValues[1];
 
-		            if (identResponse.LongValues.ContainsKey(IntValueKey.CreatureLevel))
-		                creatureInfo.Level = identResponse.LongValues[IntValueKey.CreatureLevel];
+		            if (identResponse.LongValues.ContainsKey(IntValueKey.Level))
+		                creatureInfo.Level = identResponse.LongValues[IntValueKey.Level];
 
 		            creatureInfo.healthMax = identResponse.ExtendIDAttributeInfo.healthMax;
 		            creatureInfo.staminaMax = identResponse.ExtendIDAttributeInfo.staminaMax;
