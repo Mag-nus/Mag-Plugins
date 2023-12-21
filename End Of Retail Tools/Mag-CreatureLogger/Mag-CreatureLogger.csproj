@@ -37,7 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Decal.Adapter">
-      <HintPath>..\lib\Decal\2.9.7.5\Decal.Adapter.dll</HintPath>
+      <HintPath>..\..\lib\Decal\2.9.7.5\Decal.Adapter.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

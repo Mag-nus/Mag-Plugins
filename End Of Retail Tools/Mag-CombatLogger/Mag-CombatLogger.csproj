@@ -37,15 +37,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Decal.Adapter">
-      <HintPath>..\lib\Decal\2.9.7.5\Decal.Adapter.dll</HintPath>
+      <HintPath>..\..\lib\Decal\2.9.7.5\Decal.Adapter.dll</HintPath>
     </Reference>
     <Reference Include="Decal.FileService">
-      <HintPath>..\lib\Decal\2.9.7.5\Decal.FileService.dll</HintPath>
+      <HintPath>..\..\lib\Decal\2.9.7.5\Decal.FileService.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Shared\Util.cs">
+    <Compile Include="..\..\Shared\Util.cs">
       <Link>Shared\Util.cs</Link>
     </Compile>
     <Compile Include="Class1.cs" />

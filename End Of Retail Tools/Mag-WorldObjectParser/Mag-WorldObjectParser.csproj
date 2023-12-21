@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mag_WorldObjectParser</RootNamespace>
     <AssemblyName>Mag-WorldObjectParser</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <SccProjectName>SAK</SccProjectName>
@@ -47,31 +47,46 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Shared\Constants\BoolValueKey.cs">
+    <Compile Include="..\..\Shared\Constants\BoolValueKey.cs">
       <Link>Shared\Constants\BoolValueKey.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Constants\CoverageFlags.cs">
-      <Link>Shared\Constants\CoverageFlags.cs</Link>
+    <Compile Include="..\..\Shared\Constants\CoverageMask.cs">
+      <Link>Shared\Constants\CoverageMask.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Constants\Dictionaries.cs">
+    <Compile Include="..\..\Shared\Constants\Dictionaries.cs">
       <Link>Shared\Constants\Dictionaries.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Constants\DoubleValueKey.cs">
+    <Compile Include="..\..\Shared\Constants\DoubleValueKey.cs">
       <Link>Shared\Constants\DoubleValueKey.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Constants\EquippableSlotFlags.cs">
-      <Link>Shared\Constants\EquippableSlotFlags.cs</Link>
+    <Compile Include="..\..\Shared\Constants\EphemeralAttribute.cs">
+      <Link>Shared\Constants\EphemeralAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Constants\IntValueKey.cs">
+    <Compile Include="..\..\Shared\Constants\EquipMask.cs">
+      <Link>Shared\Constants\EquipMask.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Shared\Constants\IntValueKey.cs">
       <Link>Shared\Constants\IntValueKey.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Constants\QuadValueKey.cs">
+    <Compile Include="..\..\Shared\Constants\ItemType.cs">
+      <Link>Shared\Constants\ItemType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Shared\Constants\QuadValueKey.cs">
       <Link>Shared\Constants\QuadValueKey.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Constants\StringValueKey.cs">
+    <Compile Include="..\..\Shared\Constants\SendOnLoginAttribute.cs">
+      <Link>Shared\Constants\SendOnLoginAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Shared\Constants\ServerOnlyAttribute.cs">
+      <Link>Shared\Constants\ServerOnlyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Shared\Constants\StringValueKey.cs">
       <Link>Shared\Constants\StringValueKey.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\ObjectClass.cs">
+    <Compile Include="..\..\Shared\Constants\WeenieType.cs">
+      <Link>Shared\Constants\WeenieType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Shared\ObjectClass.cs">
       <Link>Shared\ObjectClass.cs</Link>
     </Compile>
     <Compile Include="CreatePacket.cs" />
