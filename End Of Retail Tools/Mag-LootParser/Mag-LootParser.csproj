@@ -127,6 +127,7 @@
     <Compile Include="ItemGroups\Helpers\TwoHandedWeaponNames.cs" />
     <Compile Include="ItemGroups\ItemGroupStats.cs" />
     <Compile Include="ItemGroups\MeleeWeaponStats.cs" />
+    <Compile Include="ItemGroups\MiscGroupStats.cs" />
     <Compile Include="ItemGroups\MissileWeaponStats.cs" />
     <Compile Include="ItemGroups\WandStaffOrbStats.cs" />
     <Compile Include="ItemGroups\WieldableStats.cs" />

@@ -61,7 +61,7 @@ namespace Mag_LootParser
 
             { ObjectClass.Bundle, new ItemGroupStats() },
 
-            { ObjectClass.Misc, new ItemGroupStats() },
+            { ObjectClass.Misc, new MiscGroupStats() },
 
             { ObjectClass.Unknown, new ItemGroupStats() },
         };
