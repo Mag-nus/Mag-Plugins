@@ -81,6 +81,8 @@ namespace Mag_SuitBuilder
 			this.coveragePiece10 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.coveragePiece9 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
 			this.timerCalculatorUpdator = new System.Windows.Forms.Timer(this.components);
+			this.tabPage2 = new System.Windows.Forms.TabPage();
+			this.cmdImportRetailInventoryLogs = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.tabPage3.SuspendLayout();
 			this.panel1.SuspendLayout();
@@ -88,12 +90,14 @@ namespace Mag_SuitBuilder
 			this.equipmentGridContextMenu.SuspendLayout();
 			this.CharactersTreeViewContextMenu.SuspendLayout();
 			this.tabPage1.SuspendLayout();
+			this.tabPage2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
 			// 
 			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Controls.Add(this.tabPage1);
+			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
@@ -164,12 +168,12 @@ namespace Mag_SuitBuilder
 			this.equipmentGridContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyItemsToClipboardToolStripMenuItem});
 			this.equipmentGridContextMenu.Name = "equipmentGridContextMenu";
-			this.equipmentGridContextMenu.Size = new System.Drawing.Size(207, 48);
+			this.equipmentGridContextMenu.Size = new System.Drawing.Size(205, 26);
 			// 
 			// copyItemsToClipboardToolStripMenuItem
 			// 
 			this.copyItemsToClipboardToolStripMenuItem.Name = "copyItemsToClipboardToolStripMenuItem";
-			this.copyItemsToClipboardToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+			this.copyItemsToClipboardToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
 			this.copyItemsToClipboardToolStripMenuItem.Text = "Copy Items To Clipboard";
 			this.copyItemsToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyItemsToClipboardToolStripMenuItem_Click);
 			// 
@@ -565,6 +569,27 @@ namespace Mag_SuitBuilder
 			this.timerCalculatorUpdator.Interval = 500;
 			this.timerCalculatorUpdator.Tick += new System.EventHandler(this.timerCalculatorUpdator_Tick);
 			// 
+			// tabPage2
+			// 
+			this.tabPage2.Controls.Add(this.cmdImportRetailInventoryLogs);
+			this.tabPage2.Location = new System.Drawing.Point(4, 22);
+			this.tabPage2.Name = "tabPage2";
+			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage2.Size = new System.Drawing.Size(1446, 749);
+			this.tabPage2.TabIndex = 3;
+			this.tabPage2.Text = "Retail Inventory Logs Biota Importer";
+			this.tabPage2.UseVisualStyleBackColor = true;
+			// 
+			// cmdImportRetailInventoryLogs
+			// 
+			this.cmdImportRetailInventoryLogs.Location = new System.Drawing.Point(8, 6);
+			this.cmdImportRetailInventoryLogs.Name = "cmdImportRetailInventoryLogs";
+			this.cmdImportRetailInventoryLogs.Size = new System.Drawing.Size(75, 23);
+			this.cmdImportRetailInventoryLogs.TabIndex = 0;
+			this.cmdImportRetailInventoryLogs.Text = "Do It";
+			this.cmdImportRetailInventoryLogs.UseVisualStyleBackColor = true;
+			this.cmdImportRetailInventoryLogs.Click += new System.EventHandler(this.cmdImportRetailInventoryLogs_Click);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -584,6 +609,7 @@ namespace Mag_SuitBuilder
 			this.CharactersTreeViewContextMenu.ResumeLayout(false);
 			this.tabPage1.ResumeLayout(false);
 			this.tabPage1.PerformLayout();
+			this.tabPage2.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -636,6 +662,8 @@ namespace Mag_SuitBuilder
 		private System.Windows.Forms.Label lblArmorSearchThreads;
 		private System.Windows.Forms.Label lblAccessorizerRunningThreads;
 		private System.Windows.Forms.Timer timerCalculatorUpdator;
+		private System.Windows.Forms.TabPage tabPage2;
+		private System.Windows.Forms.Button cmdImportRetailInventoryLogs;
 	}
 }
 

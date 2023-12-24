@@ -8,10 +8,14 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
+using ACE.Database.Models.Shard;
+
+using Mag_SuitBuilder.ACE_Helpers;
 using Mag_SuitBuilder.Equipment;
 using Mag_SuitBuilder.Properties;
 using Mag_SuitBuilder.Search;
@@ -880,6 +884,281 @@ namespace Mag_SuitBuilder
 		private void cmdCollapseAll_Click(object sender, EventArgs e)
 		{
 			treeView1.CollapseAll();
+		}
+
+		private void cmdImportRetailInventoryLogs_Click(object sender, EventArgs e)
+		{
+			this.Enabled = false;
+
+			var serializer = new XmlSerializer(typeof(List<ExtendedMyWorldObject>));
+			var biotaWriter = new ACE.Database.SQLFormatters.Shard.BiotaSQLWriter();
+
+			var sourcePath = @"C:\ACEmulator\Logs Unpacked";
+			var sourceFiles = Directory.GetFileSystemEntries(sourcePath, "*.Inventory.xml", SearchOption.AllDirectories);
+
+			var outputPath = @"C:\GitHub\Mag-nus\ACE-Shard-Retail";
+			var destinationPlayerBiotaFiles = Directory.GetFileSystemEntries(outputPath, @"5*.sql", SearchOption.AllDirectories);
+			// 0 indicates a character record that has no timestamp (did not originate from login event)
+			destinationPlayerBiotaFiles = destinationPlayerBiotaFiles.Where(r => r.Contains(@"\0\")).ToArray();
+
+			ConcurrentBag<string> noServers = new ConcurrentBag<string>();
+			ConcurrentBag<string> destsFound = new ConcurrentBag<string>();
+			ConcurrentBag<string> destsNotFound = new ConcurrentBag<string>();
+
+			Parallel.ForEach(sourceFiles, sourceFile =>
+			//foreach (var sourceFile in sourceFiles)
+			{
+				var fileDirectory = Path.GetDirectoryName(sourceFile);
+				var serverName = fileDirectory.Substring(fileDirectory.LastIndexOf(Path.DirectorySeparatorChar) + 1, fileDirectory.Length - fileDirectory.LastIndexOf(Path.DirectorySeparatorChar) - 1);
+
+				var fileName = Path.GetFileNameWithoutExtension(sourceFile);
+				var characterName = fileName.Substring(0, fileName.Length - 10);
+
+				if (serverName != "Darktide" &&
+					serverName != "Frostfell" &&
+					serverName != "Harvestgain" &&
+					serverName != "Leafcull" &&
+					serverName != "Morningthaw" &&
+					serverName != "Solclaim" &&
+					serverName != "Thistledown" &&
+					serverName != "Verdantine" &&
+					serverName != "WintersEbb" && serverName != "Wintersebb")
+					serverName = null;
+
+				if (serverName == null)
+				{
+					foreach (var destinationPlayerBiotaFile in destinationPlayerBiotaFiles)
+					{
+						if (destinationPlayerBiotaFile.ToLower().Contains(characterName.ToLower()))
+						{
+							serverName = destinationPlayerBiotaFile.Substring(outputPath.Length + 1, destinationPlayerBiotaFile.Length - outputPath.Length - 1);
+							serverName = serverName.Substring(0, serverName.IndexOf(Path.DirectorySeparatorChar));
+							break;
+						}
+					}
+
+					if (serverName == null)
+					{
+						noServers.Add(sourceFile);
+						return; // todo
+					}
+				}
+
+				// TODO after testing is done, enable it for all servers
+				//if (serverName != "Verdantine")
+				//	return;
+				//if (!characterName.StartsWith("Mag-"))
+				//	return;
+
+				// Before we process this file, let's see if we can find a destination character stub
+				var destinationRoot = Path.Combine(outputPath, serverName, characterName, "0"); // 0 indicates a character record that has no timestamp (did not originate from login event)
+
+				if (!Directory.Exists(destinationRoot))
+				{
+					destsNotFound.Add(sourceFile);
+					return; // todo
+				}
+
+				// Find the player biota file
+				var playerBiotaFileName = Directory.GetFiles(destinationRoot, "5*.sql", SearchOption.TopDirectoryOnly);
+
+				if (playerBiotaFileName.Length != 1)
+				{
+					destsNotFound.Add(sourceFile);
+					return; // todo
+				}
+
+				var playerBiotaFileNameOnly = Path.GetFileName(playerBiotaFileName[0]);
+				var playerBiotaGuid = uint.Parse(playerBiotaFileNameOnly.Substring(0, playerBiotaFileNameOnly.IndexOf(' ')), NumberStyles.HexNumber);
+
+				// Make sure we only have one file in the destination (the player biota file)
+				var filesInDestination = Directory.GetFileSystemEntries(destinationRoot);
+
+				if (filesInDestination.Length != 1)
+				{
+					return; // todo
+				}
+
+				destsFound.Add(sourceFile);
+
+				// This is pretty hacked. SuitBuildableMyWorldObject is a derived class of MyWorldObject. It extends properties for the binding list.
+				// Mag-Tools serializes MyWorldObjects.
+				// I don't know how to deserialize those objects out as SuitBuildableMyWorldObjects.
+				var fileContents = File.ReadAllText(sourceFile);
+				fileContents = fileContents.Replace("MyWorldObject", "ExtendedMyWorldObject");
+
+				try
+				{
+					List<ExtendedMyWorldObject> myWorldObjects;
+
+					using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContents)))
+					using (XmlReader reader = XmlReader.Create(stream))
+						myWorldObjects = (List<ExtendedMyWorldObject>)serializer.Deserialize(reader);
+
+					foreach (var mwo in myWorldObjects)
+					{
+						mwo.Owner = characterName;
+
+						var biota = new Biota();
+
+						biota.Id = (uint)mwo.Id;
+
+						// Copy over the properties into the biota
+						foreach (var kvp in mwo.BoolValues)
+						{
+							if (kvp.Key > ushort.MaxValue)
+								continue;
+
+							biota.BiotaPropertiesBool.Add(new BiotaPropertiesBool { Type = (ushort)kvp.Key, Value = kvp.Value });
+						}
+
+						foreach (var kvp in mwo.DoubleValues)
+						{
+							if (kvp.Key > ushort.MaxValue)
+							{
+								var proper = DoubleValueKeyTools.ConvertToDouble((DoubleValueKey)kvp.Key);
+								if (proper != 0)
+								{
+									biota.BiotaPropertiesFloat.Add(new BiotaPropertiesFloat { Type = (ushort)proper, Value = kvp.Value });
+									continue;
+								}
+
+								if (kvp.Key == (int)DoubleValueKey.SalvageWorkmanship_Decal) // todo
+									continue;
+								if (kvp.Key == (int)DoubleValueKey.Heading_Decal)
+									continue;
+
+								continue;
+							}
+
+							biota.BiotaPropertiesFloat.Add(new BiotaPropertiesFloat { Type = (ushort)kvp.Key, Value = kvp.Value });
+						}
+
+						foreach (var kvp in mwo.IntValues)
+						{
+							if (kvp.Key > ushort.MaxValue)
+							{
+								var proper = IntValueKeyTools.ConvertToInt((IntValueKey)kvp.Key);
+								if (proper != 0)
+								{
+									biota.BiotaPropertiesInt.Add(new BiotaPropertiesInt { Type = (ushort)proper, Value = kvp.Value });
+									continue;
+								}
+
+								var did = IntValueKeyTools.ConvertToDID((IntValueKey)kvp.Key);
+								if (did != 0)
+								{
+									biota.BiotaPropertiesDID.Add(new BiotaPropertiesDID { Type = (ushort)did, Value = (uint)kvp.Value });
+									continue;
+								}
+
+								var iid = IntValueKeyTools.ConvertToIID((IntValueKey)kvp.Key);
+								if (iid != 0)
+								{
+									biota.BiotaPropertiesIID.Add(new BiotaPropertiesIID { Type = (ushort)iid, Value = (uint)kvp.Value });
+									continue;
+								}
+
+								if (kvp.Key == (int) IntValueKey.WeenieClassId_Decal)
+								{
+									biota.WeenieClassId = (uint)kvp.Value;
+									continue;
+								}
+								if (kvp.Key == (int)IntValueKey.ObjectDescriptionFlags_Decal)
+								{
+									biota.SetProperty((ACE.Entity.Enum.Properties.PropertyDataId)8003, (uint)kvp.Value);
+									continue;
+								}
+								if (kvp.Key == (int)IntValueKey.Behavior_Decal)
+									continue;
+								if (kvp.Key == (int)IntValueKey.Unknown10_Decal)
+									continue;
+								if (kvp.Key == (int)IntValueKey.PhysicsDataFlags_Decal)
+									continue;
+								if (kvp.Key == (int)IntValueKey.CreateFlags1_Decal)
+									continue;
+								if (kvp.Key == (int)IntValueKey.CreateFlags2_Decal)
+									continue;
+								if (kvp.Key == (int)IntValueKey.SpellCount_Decal)
+									continue;
+								if (kvp.Key == (int)IntValueKey.ActiveSpellCount_Decal)
+									continue;
+								if (kvp.Key == (int)IntValueKey.Landblock_Decal)
+									continue;
+								if (kvp.Key == (int)IntValueKey.WieldingSlot_Decal) // what is this?
+									continue;
+
+								continue;
+							}
+
+							biota.BiotaPropertiesInt.Add(new BiotaPropertiesInt { Type = (ushort)kvp.Key, Value = kvp.Value });
+						}
+
+						foreach (var kvp in mwo.StringValues)
+						{
+							if (kvp.Key > ushort.MaxValue)
+							{
+								if (kvp.Key == (int) StringValueKey.SecondaryName_Decal)
+									continue;
+
+								continue;
+							}
+
+							biota.BiotaPropertiesString.Add(new BiotaPropertiesString { Type = (ushort)kvp.Key, Value = kvp.Value });
+						}
+
+
+						foreach (var spell in mwo.Spells)
+							biota.BiotaPropertiesSpellBook.Add(new BiotaPropertiesSpellBook { Spell = spell, Probability = 2.0f });
+
+						foreach (var spell in mwo.ActiveSpells)
+							biota.BiotaPropertiesEnchantmentRegistry.Add(new BiotaPropertiesEnchantmentRegistry { SpellId = spell });
+
+
+						// Fix wielded stuff
+						var wielderProp = biota.BiotaPropertiesIID.FirstOrDefault(r => r.Type == 3); // WIELDER_IID
+						var currentWieldedLocationProp = biota.BiotaPropertiesInt.FirstOrDefault(r => r.Type == (ushort)IntValueKey.CurrentWieldedLocation);
+
+						if (currentWieldedLocationProp != null)
+						{
+							if (currentWieldedLocationProp.Value != 0)
+							{
+								if (wielderProp == null)
+								{
+									wielderProp = new BiotaPropertiesIID { Type = 3 };
+									biota.BiotaPropertiesIID.Add(wielderProp);
+								}
+
+								wielderProp.Value = playerBiotaGuid;
+
+								var containerProp = biota.BiotaPropertiesIID.FirstOrDefault(r => r.Type == 2); // CONTAINER_IID
+
+								if (containerProp != null)
+									biota.BiotaPropertiesIID.Remove(containerProp);
+							}
+						}
+
+
+						// Write the output
+						var defaultFileName = biotaWriter.GetDefaultFileName(biota);
+
+						var biotaFileName = Path.Combine(destinationRoot, defaultFileName);
+
+						biota.WeenieType = (int)ACEBiotaCreator.DetermineWeenieType(biota);
+
+						ACEBiotaCreator.SetBiotaPopulatedCollections(biota);
+
+						using (StreamWriter outputFile = new StreamWriter(biotaFileName, false))
+							biotaWriter.CreateSQLINSERTStatement(biota, outputFile);
+					}
+				}
+				catch (Exception ex)
+				{
+					//MessageBox.Show("Error parsing file: " + sourceFile + Environment.NewLine + "Try deleting the characters Name.Inventory.xml file and relog him." + Environment.NewLine + Environment.NewLine + ex);
+				}
+			});
+
+			this.Enabled = true;
 		}
 	}
 }
