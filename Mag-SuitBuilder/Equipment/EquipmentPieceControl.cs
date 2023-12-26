@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
@@ -7,7 +8,7 @@ using Mag.Shared.Spells;
 
 namespace Mag_SuitBuilder.Equipment
 {
-	partial class EquipmentPieceControl : UserControl
+	public partial class EquipmentPieceControl : UserControl
 	{
 		public EquipmentPieceControl()
 		{
@@ -100,7 +101,7 @@ namespace Mag_SuitBuilder.Equipment
 			chkExclude.Checked = piece.Exclude;
 		}
 
-		private void chkLocked_CheckedChanged(object sender, System.EventArgs e)
+		private void chkLocked_CheckedChanged(object sender, EventArgs e)
 		{
 			if (mwo == null)
 				return;
@@ -113,7 +114,7 @@ namespace Mag_SuitBuilder.Equipment
 			}
 		}
 
-		private void chkExclude_CheckedChanged(object sender, System.EventArgs e)
+		private void chkExclude_CheckedChanged(object sender, EventArgs e)
 		{
 			if (mwo == null)
 				return;

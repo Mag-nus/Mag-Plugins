@@ -30,88 +30,86 @@
 		{
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-			this.currentEquipmentGrid = new System.Windows.Forms.DataGridView();
-			this.upgradeEquipmentGrid = new System.Windows.Forms.DataGridView();
-			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-			((System.ComponentModel.ISupportInitialize)(this.currentEquipmentGrid)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.upgradeEquipmentGrid)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-			this.splitContainer1.Panel1.SuspendLayout();
-			this.splitContainer1.Panel2.SuspendLayout();
-			this.splitContainer1.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// currentEquipmentGrid
-			// 
-			this.currentEquipmentGrid.AllowUserToAddRows = false;
-			this.currentEquipmentGrid.AllowUserToDeleteRows = false;
-			this.currentEquipmentGrid.AllowUserToOrderColumns = true;
-			this.currentEquipmentGrid.AllowUserToResizeRows = false;
-			dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(234)))));
-			this.currentEquipmentGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-			this.currentEquipmentGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.currentEquipmentGrid.Location = new System.Drawing.Point(0, 0);
-			this.currentEquipmentGrid.Name = "currentEquipmentGrid";
-			this.currentEquipmentGrid.Size = new System.Drawing.Size(889, 218);
-			this.currentEquipmentGrid.TabIndex = 29;
-			this.currentEquipmentGrid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.currentEquipmentGrid_CellPainting);
-			// 
-			// upgradeEquipmentGrid
-			// 
-			this.upgradeEquipmentGrid.AllowUserToAddRows = false;
-			this.upgradeEquipmentGrid.AllowUserToDeleteRows = false;
-			this.upgradeEquipmentGrid.AllowUserToOrderColumns = true;
-			this.upgradeEquipmentGrid.AllowUserToResizeRows = false;
-			dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(234)))));
-			this.upgradeEquipmentGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
-			this.upgradeEquipmentGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.upgradeEquipmentGrid.Location = new System.Drawing.Point(0, 0);
-			this.upgradeEquipmentGrid.Name = "upgradeEquipmentGrid";
-			this.upgradeEquipmentGrid.Size = new System.Drawing.Size(889, 264);
-			this.upgradeEquipmentGrid.TabIndex = 30;
-			this.upgradeEquipmentGrid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.upgradeEquipmentGrid_CellPainting);
+			splitContainer1 = new System.Windows.Forms.SplitContainer();
+			currentEquipmentGrid = new System.Windows.Forms.DataGridView();
+			upgradeEquipmentGrid = new System.Windows.Forms.DataGridView();
+			((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+			splitContainer1.Panel1.SuspendLayout();
+			splitContainer1.Panel2.SuspendLayout();
+			splitContainer1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)currentEquipmentGrid).BeginInit();
+			((System.ComponentModel.ISupportInitialize)upgradeEquipmentGrid).BeginInit();
+			SuspendLayout();
 			// 
 			// splitContainer1
 			// 
-			this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-			this.splitContainer1.Name = "splitContainer1";
-			this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+			splitContainer1.Location = new System.Drawing.Point(0, 0);
+			splitContainer1.Name = "splitContainer1";
+			splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
 			// 
 			// splitContainer1.Panel1
 			// 
-			this.splitContainer1.Panel1.Controls.Add(this.currentEquipmentGrid);
+			splitContainer1.Panel1.Controls.Add(currentEquipmentGrid);
 			// 
 			// splitContainer1.Panel2
 			// 
-			this.splitContainer1.Panel2.Controls.Add(this.upgradeEquipmentGrid);
-			this.splitContainer1.Size = new System.Drawing.Size(889, 487);
-			this.splitContainer1.SplitterDistance = 218;
-			this.splitContainer1.SplitterWidth = 5;
-			this.splitContainer1.TabIndex = 31;
+			splitContainer1.Panel2.Controls.Add(upgradeEquipmentGrid);
+			splitContainer1.Size = new System.Drawing.Size(889, 487);
+			splitContainer1.SplitterDistance = 218;
+			splitContainer1.TabIndex = 0;
+			// 
+			// currentEquipmentGrid
+			// 
+			currentEquipmentGrid.AllowUserToAddRows = false;
+			currentEquipmentGrid.AllowUserToDeleteRows = false;
+			currentEquipmentGrid.AllowUserToResizeRows = false;
+			dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(234, 234, 234);
+			currentEquipmentGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			currentEquipmentGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			currentEquipmentGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+			currentEquipmentGrid.Location = new System.Drawing.Point(0, 0);
+			currentEquipmentGrid.Name = "currentEquipmentGrid";
+			currentEquipmentGrid.Size = new System.Drawing.Size(889, 218);
+			currentEquipmentGrid.TabIndex = 0;
+			currentEquipmentGrid.CellPainting += currentEquipmentGrid_CellPainting;
+			// 
+			// upgradeEquipmentGrid
+			// 
+			upgradeEquipmentGrid.AllowUserToAddRows = false;
+			upgradeEquipmentGrid.AllowUserToDeleteRows = false;
+			upgradeEquipmentGrid.AllowUserToResizeRows = false;
+			dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(234, 234, 234);
+			upgradeEquipmentGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
+			upgradeEquipmentGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			upgradeEquipmentGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+			upgradeEquipmentGrid.Location = new System.Drawing.Point(0, 0);
+			upgradeEquipmentGrid.Name = "upgradeEquipmentGrid";
+			upgradeEquipmentGrid.Size = new System.Drawing.Size(889, 265);
+			upgradeEquipmentGrid.TabIndex = 0;
+			upgradeEquipmentGrid.CellPainting += upgradeEquipmentGrid_CellPainting;
 			// 
 			// EquipmentUpgradesForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(889, 487);
-			this.Controls.Add(this.splitContainer1);
-			this.Name = "EquipmentUpgradesForm";
-			this.Text = "Equipment Upgrades Form";
-			((System.ComponentModel.ISupportInitialize)(this.currentEquipmentGrid)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.upgradeEquipmentGrid)).EndInit();
-			this.splitContainer1.Panel1.ResumeLayout(false);
-			this.splitContainer1.Panel2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-			this.splitContainer1.ResumeLayout(false);
-			this.ResumeLayout(false);
-
+			AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+			AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			ClientSize = new System.Drawing.Size(889, 487);
+			Controls.Add(splitContainer1);
+			Name = "EquipmentUpgradesForm";
+			Text = "Equipment Upgrades Form";
+			splitContainer1.Panel1.ResumeLayout(false);
+			splitContainer1.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+			splitContainer1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)currentEquipmentGrid).EndInit();
+			((System.ComponentModel.ISupportInitialize)upgradeEquipmentGrid).EndInit();
+			ResumeLayout(false);
 		}
 
 		#endregion
 
+		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.DataGridView currentEquipmentGrid;
 		private System.Windows.Forms.DataGridView upgradeEquipmentGrid;
-		private System.Windows.Forms.SplitContainer splitContainer1;
 	}
 }

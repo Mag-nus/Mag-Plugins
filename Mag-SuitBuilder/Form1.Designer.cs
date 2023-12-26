@@ -1,19 +1,14 @@
-using Mag_SuitBuilder.Equipment;
-using Mag_SuitBuilder.Spells;
-
-using Mag.Shared.Constants;
-
 namespace Mag_SuitBuilder
 {
 	partial class Form1
 	{
 		/// <summary>
-		/// Required designer variable.
+		///  Required designer variable.
 		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 
 		/// <summary>
-		/// Clean up any resources being used.
+		///  Clean up any resources being used.
 		/// </summary>
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
@@ -28,614 +23,604 @@ namespace Mag_SuitBuilder
 		#region Windows Form Designer generated code
 
 		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
+		///  Required method for Designer support - do not modify
+		///  the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
+			components = new System.ComponentModel.Container();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-			this.tabControl1 = new System.Windows.Forms.TabControl();
-			this.tabPage3 = new System.Windows.Forms.TabPage();
-			this.cmdResizeColumns = new System.Windows.Forms.Button();
-			this.panel1 = new System.Windows.Forms.Panel();
-			this.equipmentGrid = new System.Windows.Forms.DataGridView();
-			this.equipmentGridContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.copyItemsToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.filtersControl1 = new Mag_SuitBuilder.Equipment.FiltersControl();
-			this.CharactersTreeView = new System.Windows.Forms.TreeView();
-			this.CharactersTreeViewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.ShowEquipmentUpgradesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.chkFilters = new System.Windows.Forms.CheckBox();
-			this.chkTree = new System.Windows.Forms.CheckBox();
-			this.txtInventoryRootPath = new System.Windows.Forms.TextBox();
-			this.btnHelp = new System.Windows.Forms.Button();
-			this.btnLoadFromDB = new System.Windows.Forms.Button();
-			this.tabPage1 = new System.Windows.Forms.TabPage();
-			this.lblAccessorizerRunningThreads = new System.Windows.Forms.Label();
-			this.lblAccessorizerQueuedThreads = new System.Windows.Forms.Label();
-			this.lblArmorSearchThreads = new System.Windows.Forms.Label();
-			this.cmdCopyToClipboard = new System.Windows.Forms.Button();
-			this.cmdCollapseAll = new System.Windows.Forms.Button();
-			this.cmdExpandAll = new System.Windows.Forms.Button();
-			this.treeView1 = new System.Windows.Forms.TreeView();
-			this.progressBar1 = new System.Windows.Forms.ProgressBar();
-			this.btnStopCalculating = new System.Windows.Forms.Button();
-			this.btnCalculatePossibilities = new System.Windows.Forms.Button();
-			this.cntrlSuitCantrips = new Mag_SuitBuilder.Spells.CantripSelectorControl();
-			this.coveragePiece1 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece16 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece2 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece17 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece3 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece14 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece4 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece15 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece5 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece13 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece6 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece12 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece7 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece11 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece8 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece10 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.coveragePiece9 = new Mag_SuitBuilder.Equipment.EquipmentPieceControl();
-			this.timerCalculatorUpdator = new System.Windows.Forms.Timer(this.components);
-			this.tabControl1.SuspendLayout();
-			this.tabPage3.SuspendLayout();
-			this.panel1.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.equipmentGrid)).BeginInit();
-			this.equipmentGridContextMenu.SuspendLayout();
-			this.CharactersTreeViewContextMenu.SuspendLayout();
-			this.tabPage1.SuspendLayout();
-			this.SuspendLayout();
+			tabControl1 = new System.Windows.Forms.TabControl();
+			tabPage1 = new System.Windows.Forms.TabPage();
+			panel1 = new System.Windows.Forms.Panel();
+			equipmentGrid = new System.Windows.Forms.DataGridView();
+			equipmentGridContextMenu = new System.Windows.Forms.ContextMenuStrip(components);
+			copyItemsToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			filtersControl1 = new Equipment.FiltersControl();
+			CharactersTreeView = new System.Windows.Forms.TreeView();
+			CharactersTreeViewContextMenu = new System.Windows.Forms.ContextMenuStrip(components);
+			showEquipmentUpgradesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			cmdResizeColumns = new System.Windows.Forms.Button();
+			btnHelp = new System.Windows.Forms.Button();
+			txtInventoryRootPath = new System.Windows.Forms.TextBox();
+			btnLoadFromDB = new System.Windows.Forms.Button();
+			chkFilters = new System.Windows.Forms.CheckBox();
+			chkTree = new System.Windows.Forms.CheckBox();
+			tabPage2 = new System.Windows.Forms.TabPage();
+			treeView1 = new System.Windows.Forms.TreeView();
+			lblAccessorizerRunningThreads = new System.Windows.Forms.Label();
+			lblAccessorizerQueuedThreads = new System.Windows.Forms.Label();
+			lblArmorSearchThreads = new System.Windows.Forms.Label();
+			progressBar1 = new System.Windows.Forms.ProgressBar();
+			cmdCollapseAll = new System.Windows.Forms.Button();
+			cmdExpandAll = new System.Windows.Forms.Button();
+			cmdCopyToClipboard = new System.Windows.Forms.Button();
+			btnStopCalculating = new System.Windows.Forms.Button();
+			btnCalculatePossibilities = new System.Windows.Forms.Button();
+			cntrlSuitCantrips = new Spells.CantripSelectorControl();
+			equipmentPieceControl17 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl16 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl15 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl14 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl13 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl12 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl11 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl10 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl9 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl8 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl7 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl6 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl5 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl4 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl3 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl2 = new Equipment.EquipmentPieceControl();
+			equipmentPieceControl1 = new Equipment.EquipmentPieceControl();
+			timerCalculatorUpdator = new System.Windows.Forms.Timer(components);
+			tabControl1.SuspendLayout();
+			tabPage1.SuspendLayout();
+			panel1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)equipmentGrid).BeginInit();
+			equipmentGridContextMenu.SuspendLayout();
+			CharactersTreeViewContextMenu.SuspendLayout();
+			tabPage2.SuspendLayout();
+			SuspendLayout();
 			// 
 			// tabControl1
 			// 
-			this.tabControl1.Controls.Add(this.tabPage3);
-			this.tabControl1.Controls.Add(this.tabPage1);
-			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tabControl1.Location = new System.Drawing.Point(0, 0);
-			this.tabControl1.Name = "tabControl1";
-			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(1454, 775);
-			this.tabControl1.TabIndex = 17;
-			// 
-			// tabPage3
-			// 
-			this.tabPage3.Controls.Add(this.cmdResizeColumns);
-			this.tabPage3.Controls.Add(this.panel1);
-			this.tabPage3.Controls.Add(this.chkFilters);
-			this.tabPage3.Controls.Add(this.chkTree);
-			this.tabPage3.Controls.Add(this.txtInventoryRootPath);
-			this.tabPage3.Controls.Add(this.btnHelp);
-			this.tabPage3.Controls.Add(this.btnLoadFromDB);
-			this.tabPage3.Location = new System.Drawing.Point(4, 22);
-			this.tabPage3.Name = "tabPage3";
-			this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage3.Size = new System.Drawing.Size(1446, 749);
-			this.tabPage3.TabIndex = 2;
-			this.tabPage3.Text = "Step 1. Add Inventory";
-			this.tabPage3.UseVisualStyleBackColor = true;
-			// 
-			// cmdResizeColumns
-			// 
-			this.cmdResizeColumns.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.cmdResizeColumns.Location = new System.Drawing.Point(1260, 6);
-			this.cmdResizeColumns.Name = "cmdResizeColumns";
-			this.cmdResizeColumns.Size = new System.Drawing.Size(97, 23);
-			this.cmdResizeColumns.TabIndex = 38;
-			this.cmdResizeColumns.Text = "Resize Columns";
-			this.cmdResizeColumns.UseVisualStyleBackColor = true;
-			this.cmdResizeColumns.Click += new System.EventHandler(this.cmdResizeColumns_Click);
-			// 
-			// panel1
-			// 
-			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panel1.Controls.Add(this.equipmentGrid);
-			this.panel1.Controls.Add(this.filtersControl1);
-			this.panel1.Controls.Add(this.CharactersTreeView);
-			this.panel1.Location = new System.Drawing.Point(1, 32);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(1442, 715);
-			this.panel1.TabIndex = 37;
-			// 
-			// equipmentGrid
-			// 
-			this.equipmentGrid.AllowUserToAddRows = false;
-			this.equipmentGrid.AllowUserToDeleteRows = false;
-			this.equipmentGrid.AllowUserToOrderColumns = true;
-			this.equipmentGrid.AllowUserToResizeRows = false;
-			dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(234)))));
-			this.equipmentGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-			this.equipmentGrid.ContextMenuStrip = this.equipmentGridContextMenu;
-			this.equipmentGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.equipmentGrid.Location = new System.Drawing.Point(736, 0);
-			this.equipmentGrid.Name = "equipmentGrid";
-			this.equipmentGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.equipmentGrid.Size = new System.Drawing.Size(706, 715);
-			this.equipmentGrid.TabIndex = 28;
-			this.equipmentGrid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.equipmentGrid_CellPainting);
-			// 
-			// equipmentGridContextMenu
-			// 
-			this.equipmentGridContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyItemsToClipboardToolStripMenuItem});
-			this.equipmentGridContextMenu.Name = "equipmentGridContextMenu";
-			this.equipmentGridContextMenu.Size = new System.Drawing.Size(207, 48);
-			// 
-			// copyItemsToClipboardToolStripMenuItem
-			// 
-			this.copyItemsToClipboardToolStripMenuItem.Name = "copyItemsToClipboardToolStripMenuItem";
-			this.copyItemsToClipboardToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-			this.copyItemsToClipboardToolStripMenuItem.Text = "Copy Items To Clipboard";
-			this.copyItemsToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyItemsToClipboardToolStripMenuItem_Click);
-			// 
-			// filtersControl1
-			// 
-			this.filtersControl1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.filtersControl1.Dock = System.Windows.Forms.DockStyle.Left;
-			this.filtersControl1.Location = new System.Drawing.Point(206, 0);
-			this.filtersControl1.Name = "filtersControl1";
-			this.filtersControl1.Size = new System.Drawing.Size(530, 715);
-			this.filtersControl1.TabIndex = 0;
-			// 
-			// CharactersTreeView
-			// 
-			this.CharactersTreeView.CheckBoxes = true;
-			this.CharactersTreeView.ContextMenuStrip = this.CharactersTreeViewContextMenu;
-			this.CharactersTreeView.Dock = System.Windows.Forms.DockStyle.Left;
-			this.CharactersTreeView.Location = new System.Drawing.Point(0, 0);
-			this.CharactersTreeView.Name = "CharactersTreeView";
-			this.CharactersTreeView.Size = new System.Drawing.Size(206, 715);
-			this.CharactersTreeView.TabIndex = 33;
-			this.CharactersTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.inventoryTreeView_AfterCheck);
-			// 
-			// CharactersTreeViewContextMenu
-			// 
-			this.CharactersTreeViewContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ShowEquipmentUpgradesMenuItem});
-			this.CharactersTreeViewContextMenu.Name = "ShowEquipmentUpgradesMenuItem";
-			this.CharactersTreeViewContextMenu.Size = new System.Drawing.Size(218, 26);
-			this.CharactersTreeViewContextMenu.Text = "Show Equipment Upgrades";
-			this.CharactersTreeViewContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.CharactersTreeViewContextMenu_Opening);
-			// 
-			// ShowEquipmentUpgradesMenuItem
-			// 
-			this.ShowEquipmentUpgradesMenuItem.Name = "ShowEquipmentUpgradesMenuItem";
-			this.ShowEquipmentUpgradesMenuItem.Size = new System.Drawing.Size(217, 22);
-			this.ShowEquipmentUpgradesMenuItem.Text = "Show Equipment Upgrades";
-			this.ShowEquipmentUpgradesMenuItem.Click += new System.EventHandler(this.ShowEquipmentUpgradesMenuItem_Click);
-			// 
-			// chkFilters
-			// 
-			this.chkFilters.AutoSize = true;
-			this.chkFilters.Checked = true;
-			this.chkFilters.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkFilters.Location = new System.Drawing.Point(62, 9);
-			this.chkFilters.Name = "chkFilters";
-			this.chkFilters.Size = new System.Drawing.Size(53, 17);
-			this.chkFilters.TabIndex = 35;
-			this.chkFilters.Text = "Filters";
-			this.chkFilters.UseVisualStyleBackColor = true;
-			this.chkFilters.CheckedChanged += new System.EventHandler(this.chkTree_CheckedChanged);
-			// 
-			// chkTree
-			// 
-			this.chkTree.AutoSize = true;
-			this.chkTree.Checked = true;
-			this.chkTree.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.chkTree.Location = new System.Drawing.Point(8, 9);
-			this.chkTree.Name = "chkTree";
-			this.chkTree.Size = new System.Drawing.Size(48, 17);
-			this.chkTree.TabIndex = 18;
-			this.chkTree.Text = "Tree";
-			this.chkTree.UseVisualStyleBackColor = true;
-			this.chkTree.CheckedChanged += new System.EventHandler(this.chkTree_CheckedChanged);
-			// 
-			// txtInventoryRootPath
-			// 
-			this.txtInventoryRootPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.txtInventoryRootPath.Location = new System.Drawing.Point(227, 9);
-			this.txtInventoryRootPath.Name = "txtInventoryRootPath";
-			this.txtInventoryRootPath.Size = new System.Drawing.Size(1027, 20);
-			this.txtInventoryRootPath.TabIndex = 34;
-			// 
-			// btnHelp
-			// 
-			this.btnHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnHelp.Location = new System.Drawing.Point(1363, 6);
-			this.btnHelp.Name = "btnHelp";
-			this.btnHelp.Size = new System.Drawing.Size(75, 23);
-			this.btnHelp.TabIndex = 32;
-			this.btnHelp.Text = "Help";
-			this.btnHelp.UseVisualStyleBackColor = true;
-			this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
-			// 
-			// btnLoadFromDB
-			// 
-			this.btnLoadFromDB.Location = new System.Drawing.Point(121, 6);
-			this.btnLoadFromDB.Name = "btnLoadFromDB";
-			this.btnLoadFromDB.Size = new System.Drawing.Size(100, 23);
-			this.btnLoadFromDB.TabIndex = 29;
-			this.btnLoadFromDB.Text = "Reload Inventory";
-			this.btnLoadFromDB.UseVisualStyleBackColor = true;
-			this.btnLoadFromDB.Click += new System.EventHandler(this.btnLoadFromDB_Click);
+			tabControl1.Controls.Add(tabPage1);
+			tabControl1.Controls.Add(tabPage2);
+			tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+			tabControl1.Location = new System.Drawing.Point(0, 0);
+			tabControl1.Name = "tabControl1";
+			tabControl1.SelectedIndex = 0;
+			tabControl1.Size = new System.Drawing.Size(1454, 841);
+			tabControl1.TabIndex = 0;
 			// 
 			// tabPage1
 			// 
-			this.tabPage1.Controls.Add(this.lblAccessorizerRunningThreads);
-			this.tabPage1.Controls.Add(this.lblAccessorizerQueuedThreads);
-			this.tabPage1.Controls.Add(this.lblArmorSearchThreads);
-			this.tabPage1.Controls.Add(this.cmdCopyToClipboard);
-			this.tabPage1.Controls.Add(this.cmdCollapseAll);
-			this.tabPage1.Controls.Add(this.cmdExpandAll);
-			this.tabPage1.Controls.Add(this.treeView1);
-			this.tabPage1.Controls.Add(this.progressBar1);
-			this.tabPage1.Controls.Add(this.btnStopCalculating);
-			this.tabPage1.Controls.Add(this.btnCalculatePossibilities);
-			this.tabPage1.Controls.Add(this.cntrlSuitCantrips);
-			this.tabPage1.Controls.Add(this.coveragePiece1);
-			this.tabPage1.Controls.Add(this.coveragePiece16);
-			this.tabPage1.Controls.Add(this.coveragePiece2);
-			this.tabPage1.Controls.Add(this.coveragePiece17);
-			this.tabPage1.Controls.Add(this.coveragePiece3);
-			this.tabPage1.Controls.Add(this.coveragePiece14);
-			this.tabPage1.Controls.Add(this.coveragePiece4);
-			this.tabPage1.Controls.Add(this.coveragePiece15);
-			this.tabPage1.Controls.Add(this.coveragePiece5);
-			this.tabPage1.Controls.Add(this.coveragePiece13);
-			this.tabPage1.Controls.Add(this.coveragePiece6);
-			this.tabPage1.Controls.Add(this.coveragePiece12);
-			this.tabPage1.Controls.Add(this.coveragePiece7);
-			this.tabPage1.Controls.Add(this.coveragePiece11);
-			this.tabPage1.Controls.Add(this.coveragePiece8);
-			this.tabPage1.Controls.Add(this.coveragePiece10);
-			this.tabPage1.Controls.Add(this.coveragePiece9);
-			this.tabPage1.Location = new System.Drawing.Point(4, 22);
-			this.tabPage1.Name = "tabPage1";
-			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(1446, 749);
-			this.tabPage1.TabIndex = 0;
-			this.tabPage1.Text = "Step 2. Generate Suits";
-			this.tabPage1.UseVisualStyleBackColor = true;
+			tabPage1.Controls.Add(panel1);
+			tabPage1.Controls.Add(cmdResizeColumns);
+			tabPage1.Controls.Add(btnHelp);
+			tabPage1.Controls.Add(txtInventoryRootPath);
+			tabPage1.Controls.Add(btnLoadFromDB);
+			tabPage1.Controls.Add(chkFilters);
+			tabPage1.Controls.Add(chkTree);
+			tabPage1.Location = new System.Drawing.Point(4, 24);
+			tabPage1.Name = "tabPage1";
+			tabPage1.Padding = new System.Windows.Forms.Padding(3);
+			tabPage1.Size = new System.Drawing.Size(1446, 813);
+			tabPage1.TabIndex = 0;
+			tabPage1.Text = "Step 1. Add Inventory";
+			tabPage1.UseVisualStyleBackColor = true;
 			// 
-			// lblAccessorizerRunningThreads
+			// panel1
 			// 
-			this.lblAccessorizerRunningThreads.AutoSize = true;
-			this.lblAccessorizerRunningThreads.Location = new System.Drawing.Point(772, 78);
-			this.lblAccessorizerRunningThreads.Name = "lblAccessorizerRunningThreads";
-			this.lblAccessorizerRunningThreads.Size = new System.Drawing.Size(155, 13);
-			this.lblAccessorizerRunningThreads.TabIndex = 41;
-			this.lblAccessorizerRunningThreads.Text = "Accessorizer Running Threads:";
+			panel1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+			panel1.Controls.Add(equipmentGrid);
+			panel1.Controls.Add(filtersControl1);
+			panel1.Controls.Add(CharactersTreeView);
+			panel1.Location = new System.Drawing.Point(0, 35);
+			panel1.Name = "panel1";
+			panel1.Size = new System.Drawing.Size(1446, 778);
+			panel1.TabIndex = 6;
 			// 
-			// lblAccessorizerQueuedThreads
+			// equipmentGrid
 			// 
-			this.lblAccessorizerQueuedThreads.AutoSize = true;
-			this.lblAccessorizerQueuedThreads.Location = new System.Drawing.Point(772, 56);
-			this.lblAccessorizerQueuedThreads.Name = "lblAccessorizerQueuedThreads";
-			this.lblAccessorizerQueuedThreads.Size = new System.Drawing.Size(153, 13);
-			this.lblAccessorizerQueuedThreads.TabIndex = 40;
-			this.lblAccessorizerQueuedThreads.Text = "Accessorizer Queued Threads:";
+			equipmentGrid.AllowUserToAddRows = false;
+			equipmentGrid.AllowUserToDeleteRows = false;
+			equipmentGrid.AllowUserToOrderColumns = true;
+			equipmentGrid.AllowUserToResizeRows = false;
+			dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(234, 234, 234);
+			equipmentGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+			equipmentGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			equipmentGrid.ContextMenuStrip = equipmentGridContextMenu;
+			equipmentGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+			equipmentGrid.Location = new System.Drawing.Point(795, 0);
+			equipmentGrid.Name = "equipmentGrid";
+			equipmentGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+			equipmentGrid.Size = new System.Drawing.Size(651, 778);
+			equipmentGrid.TabIndex = 2;
+			equipmentGrid.CellPainting += equipmentGrid_CellPainting;
 			// 
-			// lblArmorSearchThreads
+			// equipmentGridContextMenu
 			// 
-			this.lblArmorSearchThreads.AutoSize = true;
-			this.lblArmorSearchThreads.Location = new System.Drawing.Point(772, 34);
-			this.lblArmorSearchThreads.Name = "lblArmorSearchThreads";
-			this.lblArmorSearchThreads.Size = new System.Drawing.Size(116, 13);
-			this.lblArmorSearchThreads.TabIndex = 39;
-			this.lblArmorSearchThreads.Text = "Armor Search Threads:";
+			equipmentGridContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { copyItemsToClipboardToolStripMenuItem });
+			equipmentGridContextMenu.Name = "equipmentGridContextMenu";
+			equipmentGridContextMenu.Size = new System.Drawing.Size(205, 26);
 			// 
-			// cmdCopyToClipboard
+			// copyItemsToClipboardToolStripMenuItem
 			// 
-			this.cmdCopyToClipboard.Location = new System.Drawing.Point(485, 257);
-			this.cmdCopyToClipboard.Name = "cmdCopyToClipboard";
-			this.cmdCopyToClipboard.Size = new System.Drawing.Size(139, 23);
-			this.cmdCopyToClipboard.TabIndex = 38;
-			this.cmdCopyToClipboard.Text = "Copy to Clipboard";
-			this.cmdCopyToClipboard.UseVisualStyleBackColor = true;
-			this.cmdCopyToClipboard.Click += new System.EventHandler(this.cmdCopyToClipboard_Click);
+			copyItemsToClipboardToolStripMenuItem.Name = "copyItemsToClipboardToolStripMenuItem";
+			copyItemsToClipboardToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
+			copyItemsToClipboardToolStripMenuItem.Text = "Copy Items To Clipboard";
+			copyItemsToClipboardToolStripMenuItem.Click += copyItemsToClipboardToolStripMenuItem_Click;
 			// 
-			// cmdCollapseAll
+			// filtersControl1
 			// 
-			this.cmdCollapseAll.Location = new System.Drawing.Point(881, 189);
-			this.cmdCollapseAll.Name = "cmdCollapseAll";
-			this.cmdCollapseAll.Size = new System.Drawing.Size(75, 23);
-			this.cmdCollapseAll.TabIndex = 37;
-			this.cmdCollapseAll.Text = "Collapse All";
-			this.cmdCollapseAll.UseVisualStyleBackColor = true;
-			this.cmdCollapseAll.Click += new System.EventHandler(this.cmdCollapseAll_Click);
+			filtersControl1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			filtersControl1.Dock = System.Windows.Forms.DockStyle.Left;
+			filtersControl1.Location = new System.Drawing.Point(206, 0);
+			filtersControl1.Name = "filtersControl1";
+			filtersControl1.Size = new System.Drawing.Size(589, 778);
+			filtersControl1.TabIndex = 1;
 			// 
-			// cmdExpandAll
+			// CharactersTreeView
 			// 
-			this.cmdExpandAll.Location = new System.Drawing.Point(881, 160);
-			this.cmdExpandAll.Name = "cmdExpandAll";
-			this.cmdExpandAll.Size = new System.Drawing.Size(75, 23);
-			this.cmdExpandAll.TabIndex = 36;
-			this.cmdExpandAll.Text = "Expand All";
-			this.cmdExpandAll.UseVisualStyleBackColor = true;
-			this.cmdExpandAll.Click += new System.EventHandler(this.cmdExpandAll_Click);
+			CharactersTreeView.CheckBoxes = true;
+			CharactersTreeView.ContextMenuStrip = CharactersTreeViewContextMenu;
+			CharactersTreeView.Dock = System.Windows.Forms.DockStyle.Left;
+			CharactersTreeView.Location = new System.Drawing.Point(0, 0);
+			CharactersTreeView.Name = "CharactersTreeView";
+			CharactersTreeView.Size = new System.Drawing.Size(206, 778);
+			CharactersTreeView.TabIndex = 0;
+			CharactersTreeView.AfterCheck += CharactersTreeView_AfterCheck;
+			// 
+			// CharactersTreeViewContextMenu
+			// 
+			CharactersTreeViewContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { showEquipmentUpgradesToolStripMenuItem });
+			CharactersTreeViewContextMenu.Name = "CharactersTreeViewContextMenu";
+			CharactersTreeViewContextMenu.Size = new System.Drawing.Size(218, 26);
+			CharactersTreeViewContextMenu.Opening += CharactersTreeViewContextMenu_Opening;
+			// 
+			// showEquipmentUpgradesToolStripMenuItem
+			// 
+			showEquipmentUpgradesToolStripMenuItem.Name = "showEquipmentUpgradesToolStripMenuItem";
+			showEquipmentUpgradesToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+			showEquipmentUpgradesToolStripMenuItem.Text = "Show Equipment Upgrades";
+			showEquipmentUpgradesToolStripMenuItem.Click += showEquipmentUpgradesToolStripMenuItem_Click;
+			// 
+			// cmdResizeColumns
+			// 
+			cmdResizeColumns.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+			cmdResizeColumns.Location = new System.Drawing.Point(1246, 6);
+			cmdResizeColumns.Name = "cmdResizeColumns";
+			cmdResizeColumns.Size = new System.Drawing.Size(113, 23);
+			cmdResizeColumns.TabIndex = 5;
+			cmdResizeColumns.Text = "Resize Columns";
+			cmdResizeColumns.UseVisualStyleBackColor = true;
+			cmdResizeColumns.Click += cmdResizeColumns_Click;
+			// 
+			// btnHelp
+			// 
+			btnHelp.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+			btnHelp.Location = new System.Drawing.Point(1365, 6);
+			btnHelp.Name = "btnHelp";
+			btnHelp.Size = new System.Drawing.Size(75, 23);
+			btnHelp.TabIndex = 4;
+			btnHelp.Text = "Help";
+			btnHelp.UseVisualStyleBackColor = true;
+			btnHelp.Click += btnHelp_Click;
+			// 
+			// txtInventoryRootPath
+			// 
+			txtInventoryRootPath.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+			txtInventoryRootPath.Location = new System.Drawing.Point(261, 6);
+			txtInventoryRootPath.Name = "txtInventoryRootPath";
+			txtInventoryRootPath.Size = new System.Drawing.Size(979, 23);
+			txtInventoryRootPath.TabIndex = 3;
+			// 
+			// btnLoadFromDB
+			// 
+			btnLoadFromDB.Location = new System.Drawing.Point(131, 7);
+			btnLoadFromDB.Name = "btnLoadFromDB";
+			btnLoadFromDB.Size = new System.Drawing.Size(124, 23);
+			btnLoadFromDB.TabIndex = 2;
+			btnLoadFromDB.Text = "Reload Inventory";
+			btnLoadFromDB.UseVisualStyleBackColor = true;
+			btnLoadFromDB.Click += btnLoadFromDB_Click;
+			// 
+			// chkFilters
+			// 
+			chkFilters.AutoSize = true;
+			chkFilters.Checked = true;
+			chkFilters.CheckState = System.Windows.Forms.CheckState.Checked;
+			chkFilters.Location = new System.Drawing.Point(61, 10);
+			chkFilters.Name = "chkFilters";
+			chkFilters.Size = new System.Drawing.Size(57, 19);
+			chkFilters.TabIndex = 1;
+			chkFilters.Text = "Filters";
+			chkFilters.UseVisualStyleBackColor = true;
+			chkFilters.CheckedChanged += chkTree_CheckedChanged;
+			// 
+			// chkTree
+			// 
+			chkTree.AutoSize = true;
+			chkTree.Checked = true;
+			chkTree.CheckState = System.Windows.Forms.CheckState.Checked;
+			chkTree.Location = new System.Drawing.Point(8, 9);
+			chkTree.Name = "chkTree";
+			chkTree.Size = new System.Drawing.Size(47, 19);
+			chkTree.TabIndex = 0;
+			chkTree.Text = "Tree";
+			chkTree.UseVisualStyleBackColor = true;
+			chkTree.CheckedChanged += chkTree_CheckedChanged;
+			// 
+			// tabPage2
+			// 
+			tabPage2.Controls.Add(treeView1);
+			tabPage2.Controls.Add(lblAccessorizerRunningThreads);
+			tabPage2.Controls.Add(lblAccessorizerQueuedThreads);
+			tabPage2.Controls.Add(lblArmorSearchThreads);
+			tabPage2.Controls.Add(progressBar1);
+			tabPage2.Controls.Add(cmdCollapseAll);
+			tabPage2.Controls.Add(cmdExpandAll);
+			tabPage2.Controls.Add(cmdCopyToClipboard);
+			tabPage2.Controls.Add(btnStopCalculating);
+			tabPage2.Controls.Add(btnCalculatePossibilities);
+			tabPage2.Controls.Add(cntrlSuitCantrips);
+			tabPage2.Controls.Add(equipmentPieceControl17);
+			tabPage2.Controls.Add(equipmentPieceControl16);
+			tabPage2.Controls.Add(equipmentPieceControl15);
+			tabPage2.Controls.Add(equipmentPieceControl14);
+			tabPage2.Controls.Add(equipmentPieceControl13);
+			tabPage2.Controls.Add(equipmentPieceControl12);
+			tabPage2.Controls.Add(equipmentPieceControl11);
+			tabPage2.Controls.Add(equipmentPieceControl10);
+			tabPage2.Controls.Add(equipmentPieceControl9);
+			tabPage2.Controls.Add(equipmentPieceControl8);
+			tabPage2.Controls.Add(equipmentPieceControl7);
+			tabPage2.Controls.Add(equipmentPieceControl6);
+			tabPage2.Controls.Add(equipmentPieceControl5);
+			tabPage2.Controls.Add(equipmentPieceControl4);
+			tabPage2.Controls.Add(equipmentPieceControl3);
+			tabPage2.Controls.Add(equipmentPieceControl2);
+			tabPage2.Controls.Add(equipmentPieceControl1);
+			tabPage2.Location = new System.Drawing.Point(4, 24);
+			tabPage2.Name = "tabPage2";
+			tabPage2.Padding = new System.Windows.Forms.Padding(3);
+			tabPage2.Size = new System.Drawing.Size(1446, 813);
+			tabPage2.TabIndex = 1;
+			tabPage2.Text = "Step 2. Generate Suits";
+			tabPage2.UseVisualStyleBackColor = true;
 			// 
 			// treeView1
 			// 
-			this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.treeView1.Location = new System.Drawing.Point(962, 8);
-			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(476, 735);
-			this.treeView1.TabIndex = 35;
-			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+			treeView1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+			treeView1.Location = new System.Drawing.Point(948, 6);
+			treeView1.Name = "treeView1";
+			treeView1.Size = new System.Drawing.Size(492, 801);
+			treeView1.TabIndex = 27;
+			treeView1.AfterSelect += treeView1_AfterSelect;
+			// 
+			// lblAccessorizerRunningThreads
+			// 
+			lblAccessorizerRunningThreads.AutoSize = true;
+			lblAccessorizerRunningThreads.Location = new System.Drawing.Point(732, 103);
+			lblAccessorizerRunningThreads.Name = "lblAccessorizerRunningThreads";
+			lblAccessorizerRunningThreads.Size = new System.Drawing.Size(167, 15);
+			lblAccessorizerRunningThreads.TabIndex = 26;
+			lblAccessorizerRunningThreads.Text = "Accessorizer Running Threads:";
+			// 
+			// lblAccessorizerQueuedThreads
+			// 
+			lblAccessorizerQueuedThreads.AutoSize = true;
+			lblAccessorizerQueuedThreads.Location = new System.Drawing.Point(732, 79);
+			lblAccessorizerQueuedThreads.Name = "lblAccessorizerQueuedThreads";
+			lblAccessorizerQueuedThreads.Size = new System.Drawing.Size(164, 15);
+			lblAccessorizerQueuedThreads.TabIndex = 25;
+			lblAccessorizerQueuedThreads.Text = "Accessorizer Queued Threads:";
+			// 
+			// lblArmorSearchThreads
+			// 
+			lblArmorSearchThreads.AutoSize = true;
+			lblArmorSearchThreads.Location = new System.Drawing.Point(732, 55);
+			lblArmorSearchThreads.Name = "lblArmorSearchThreads";
+			lblArmorSearchThreads.Size = new System.Drawing.Size(126, 15);
+			lblArmorSearchThreads.TabIndex = 24;
+			lblArmorSearchThreads.Text = "Armor Search Threads:";
 			// 
 			// progressBar1
 			// 
-			this.progressBar1.Location = new System.Drawing.Point(775, 8);
-			this.progressBar1.Name = "progressBar1";
-			this.progressBar1.Size = new System.Drawing.Size(181, 23);
-			this.progressBar1.TabIndex = 34;
+			progressBar1.Location = new System.Drawing.Point(732, 15);
+			progressBar1.Name = "progressBar1";
+			progressBar1.Size = new System.Drawing.Size(210, 23);
+			progressBar1.TabIndex = 23;
+			// 
+			// cmdCollapseAll
+			// 
+			cmdCollapseAll.Location = new System.Drawing.Point(854, 211);
+			cmdCollapseAll.Name = "cmdCollapseAll";
+			cmdCollapseAll.Size = new System.Drawing.Size(79, 23);
+			cmdCollapseAll.TabIndex = 22;
+			cmdCollapseAll.Text = "Collapse All";
+			cmdCollapseAll.UseVisualStyleBackColor = true;
+			cmdCollapseAll.Click += cmdCollapseAll_Click;
+			// 
+			// cmdExpandAll
+			// 
+			cmdExpandAll.Location = new System.Drawing.Point(854, 182);
+			cmdExpandAll.Name = "cmdExpandAll";
+			cmdExpandAll.Size = new System.Drawing.Size(79, 23);
+			cmdExpandAll.TabIndex = 21;
+			cmdExpandAll.Text = "Expand All";
+			cmdExpandAll.UseVisualStyleBackColor = true;
+			cmdExpandAll.Click += cmdExpandAll_Click;
+			// 
+			// cmdCopyToClipboard
+			// 
+			cmdCopyToClipboard.Location = new System.Drawing.Point(486, 248);
+			cmdCopyToClipboard.Name = "cmdCopyToClipboard";
+			cmdCopyToClipboard.Size = new System.Drawing.Size(114, 23);
+			cmdCopyToClipboard.TabIndex = 20;
+			cmdCopyToClipboard.Text = "Copy to Clipboard";
+			cmdCopyToClipboard.UseVisualStyleBackColor = true;
+			cmdCopyToClipboard.Click += cmdCopyToClipboard_Click;
 			// 
 			// btnStopCalculating
 			// 
-			this.btnStopCalculating.Enabled = false;
-			this.btnStopCalculating.Location = new System.Drawing.Point(630, 8);
-			this.btnStopCalculating.Name = "btnStopCalculating";
-			this.btnStopCalculating.Size = new System.Drawing.Size(139, 23);
-			this.btnStopCalculating.TabIndex = 22;
-			this.btnStopCalculating.Text = "Stop Calculating";
-			this.btnStopCalculating.UseVisualStyleBackColor = true;
-			this.btnStopCalculating.Click += new System.EventHandler(this.btnStopCalculating_Click);
+			btnStopCalculating.Enabled = false;
+			btnStopCalculating.Location = new System.Drawing.Point(622, 15);
+			btnStopCalculating.Name = "btnStopCalculating";
+			btnStopCalculating.Size = new System.Drawing.Size(104, 23);
+			btnStopCalculating.TabIndex = 19;
+			btnStopCalculating.Text = "Stop Calculating";
+			btnStopCalculating.UseVisualStyleBackColor = true;
+			btnStopCalculating.Click += btnStopCalculating_Click;
 			// 
 			// btnCalculatePossibilities
 			// 
-			this.btnCalculatePossibilities.Location = new System.Drawing.Point(485, 8);
-			this.btnCalculatePossibilities.Name = "btnCalculatePossibilities";
-			this.btnCalculatePossibilities.Size = new System.Drawing.Size(139, 23);
-			this.btnCalculatePossibilities.TabIndex = 18;
-			this.btnCalculatePossibilities.Text = "Calculate Possibilities";
-			this.btnCalculatePossibilities.UseVisualStyleBackColor = true;
-			this.btnCalculatePossibilities.Click += new System.EventHandler(this.btnCalculatePossibilities_Click);
+			btnCalculatePossibilities.Location = new System.Drawing.Point(486, 15);
+			btnCalculatePossibilities.Name = "btnCalculatePossibilities";
+			btnCalculatePossibilities.Size = new System.Drawing.Size(130, 23);
+			btnCalculatePossibilities.TabIndex = 18;
+			btnCalculatePossibilities.Text = "Calculate Possibilities";
+			btnCalculatePossibilities.UseVisualStyleBackColor = true;
+			btnCalculatePossibilities.Click += btnCalculatePossibilities_Click;
 			// 
 			// cntrlSuitCantrips
 			// 
-			this.cntrlSuitCantrips.Enabled = false;
-			this.cntrlSuitCantrips.Location = new System.Drawing.Point(8, 564);
-			this.cntrlSuitCantrips.Name = "cntrlSuitCantrips";
-			this.cntrlSuitCantrips.Size = new System.Drawing.Size(528, 181);
-			this.cntrlSuitCantrips.TabIndex = 33;
+			cntrlSuitCantrips.Enabled = false;
+			cntrlSuitCantrips.Location = new System.Drawing.Point(6, 610);
+			cntrlSuitCantrips.Name = "cntrlSuitCantrips";
+			cntrlSuitCantrips.Size = new System.Drawing.Size(585, 197);
+			cntrlSuitCantrips.TabIndex = 17;
 			// 
-			// coveragePiece1
+			// equipmentPieceControl17
 			// 
-			this.coveragePiece1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece1.EquippableSlots = Mag.Shared.Constants.EquipMask.NeckWear;
-			this.coveragePiece1.Location = new System.Drawing.Point(8, 8);
-			this.coveragePiece1.Name = "coveragePiece1";
-			this.coveragePiece1.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece1.TabIndex = 0;
+			equipmentPieceControl17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl17.EquippableSlots = Mag.Shared.Constants.EquipMask.FootWear;
+			equipmentPieceControl17.Location = new System.Drawing.Point(597, 610);
+			equipmentPieceControl17.Name = "equipmentPieceControl17";
+			equipmentPieceControl17.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl17.TabIndex = 16;
 			// 
-			// coveragePiece16
+			// equipmentPieceControl16
 			// 
-			this.coveragePiece16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece16.EquippableSlots = Mag.Shared.Constants.EquipMask.UpperLegWear;
-			this.coveragePiece16.Location = new System.Drawing.Point(803, 425);
-			this.coveragePiece16.Name = "coveragePiece16";
-			this.coveragePiece16.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece16.TabIndex = 16;
+			equipmentPieceControl16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl16.EquippableSlots = Mag.Shared.Constants.EquipMask.UpperLegWear;
+			equipmentPieceControl16.Location = new System.Drawing.Point(791, 459);
+			equipmentPieceControl16.Name = "equipmentPieceControl16";
+			equipmentPieceControl16.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl16.TabIndex = 15;
 			// 
-			// coveragePiece2
+			// equipmentPieceControl15
 			// 
-			this.coveragePiece2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece2.EquippableSlots = Mag.Shared.Constants.EquipMask.TrinketOne;
-			this.coveragePiece2.Location = new System.Drawing.Point(8, 147);
-			this.coveragePiece2.Name = "coveragePiece2";
-			this.coveragePiece2.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece2.TabIndex = 1;
+			equipmentPieceControl15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl15.EquippableSlots = Mag.Shared.Constants.EquipMask.FingerWearRight;
+			equipmentPieceControl15.Location = new System.Drawing.Point(634, 459);
+			equipmentPieceControl15.Name = "equipmentPieceControl15";
+			equipmentPieceControl15.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl15.TabIndex = 14;
 			// 
-			// coveragePiece17
+			// equipmentPieceControl14
 			// 
-			this.coveragePiece17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece17.EquippableSlots = Mag.Shared.Constants.EquipMask.ChestWear;
-			this.coveragePiece17.Location = new System.Drawing.Point(803, 286);
-			this.coveragePiece17.Name = "coveragePiece17";
-			this.coveragePiece17.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece17.TabIndex = 15;
+			equipmentPieceControl14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl14.EquippableSlots = Mag.Shared.Constants.EquipMask.LowerLegArmor;
+			equipmentPieceControl14.Location = new System.Drawing.Point(477, 459);
+			equipmentPieceControl14.Name = "equipmentPieceControl14";
+			equipmentPieceControl14.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl14.TabIndex = 13;
 			// 
-			// coveragePiece3
+			// equipmentPieceControl13
 			// 
-			this.coveragePiece3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece3.EquippableSlots = Mag.Shared.Constants.EquipMask.WristWearLeft;
-			this.coveragePiece3.Location = new System.Drawing.Point(8, 286);
-			this.coveragePiece3.Name = "coveragePiece3";
-			this.coveragePiece3.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece3.TabIndex = 2;
+			equipmentPieceControl13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl13.EquippableSlots = Mag.Shared.Constants.EquipMask.ChestWear;
+			equipmentPieceControl13.Location = new System.Drawing.Point(791, 308);
+			equipmentPieceControl13.Name = "equipmentPieceControl13";
+			equipmentPieceControl13.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl13.TabIndex = 12;
 			// 
-			// coveragePiece14
+			// equipmentPieceControl12
 			// 
-			this.coveragePiece14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece14.EquippableSlots = Mag.Shared.Constants.EquipMask.FingerWearRight;
-			this.coveragePiece14.Location = new System.Drawing.Point(644, 425);
-			this.coveragePiece14.Name = "coveragePiece14";
-			this.coveragePiece14.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece14.TabIndex = 14;
+			equipmentPieceControl12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl12.EquippableSlots = Mag.Shared.Constants.EquipMask.WristWearRight;
+			equipmentPieceControl12.Location = new System.Drawing.Point(634, 308);
+			equipmentPieceControl12.Name = "equipmentPieceControl12";
+			equipmentPieceControl12.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl12.TabIndex = 11;
 			// 
-			// coveragePiece4
+			// equipmentPieceControl11
 			// 
-			this.coveragePiece4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece4.EquippableSlots = Mag.Shared.Constants.EquipMask.FingerWearLeft;
-			this.coveragePiece4.Location = new System.Drawing.Point(8, 425);
-			this.coveragePiece4.Name = "coveragePiece4";
-			this.coveragePiece4.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece4.TabIndex = 3;
+			equipmentPieceControl11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl11.EquippableSlots = Mag.Shared.Constants.EquipMask.UpperLegArmor;
+			equipmentPieceControl11.Location = new System.Drawing.Point(477, 308);
+			equipmentPieceControl11.Name = "equipmentPieceControl11";
+			equipmentPieceControl11.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl11.TabIndex = 10;
 			// 
-			// coveragePiece15
+			// equipmentPieceControl10
 			// 
-			this.coveragePiece15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece15.EquippableSlots = Mag.Shared.Constants.EquipMask.WristWearRight;
-			this.coveragePiece15.Location = new System.Drawing.Point(644, 286);
-			this.coveragePiece15.Name = "coveragePiece15";
-			this.coveragePiece15.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece15.TabIndex = 13;
+			equipmentPieceControl10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl10.EquippableSlots = Mag.Shared.Constants.EquipMask.HeadWear;
+			equipmentPieceControl10.Location = new System.Drawing.Point(320, 6);
+			equipmentPieceControl10.Name = "equipmentPieceControl10";
+			equipmentPieceControl10.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl10.TabIndex = 9;
 			// 
-			// coveragePiece5
+			// equipmentPieceControl9
 			// 
-			this.coveragePiece5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece5.EquippableSlots = Mag.Shared.Constants.EquipMask.UpperArmArmor;
-			this.coveragePiece5.Location = new System.Drawing.Point(167, 147);
-			this.coveragePiece5.Name = "coveragePiece5";
-			this.coveragePiece5.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece5.TabIndex = 4;
+			equipmentPieceControl9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl9.EquippableSlots = Mag.Shared.Constants.EquipMask.AbdomenArmor;
+			equipmentPieceControl9.Location = new System.Drawing.Point(320, 308);
+			equipmentPieceControl9.Name = "equipmentPieceControl9";
+			equipmentPieceControl9.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl9.TabIndex = 8;
 			// 
-			// coveragePiece13
+			// equipmentPieceControl8
 			// 
-			this.coveragePiece13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece13.EquippableSlots = Mag.Shared.Constants.EquipMask.FootWear;
-			this.coveragePiece13.Location = new System.Drawing.Point(542, 564);
-			this.coveragePiece13.Name = "coveragePiece13";
-			this.coveragePiece13.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece13.TabIndex = 12;
+			equipmentPieceControl8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl8.EquippableSlots = Mag.Shared.Constants.EquipMask.ChestArmor;
+			equipmentPieceControl8.Location = new System.Drawing.Point(320, 157);
+			equipmentPieceControl8.Name = "equipmentPieceControl8";
+			equipmentPieceControl8.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl8.TabIndex = 7;
 			// 
-			// coveragePiece6
+			// equipmentPieceControl7
 			// 
-			this.coveragePiece6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece6.EquippableSlots = Mag.Shared.Constants.EquipMask.ChestArmor;
-			this.coveragePiece6.Location = new System.Drawing.Point(326, 147);
-			this.coveragePiece6.Name = "coveragePiece6";
-			this.coveragePiece6.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece6.TabIndex = 5;
+			equipmentPieceControl7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl7.EquippableSlots = Mag.Shared.Constants.EquipMask.HandWear;
+			equipmentPieceControl7.Location = new System.Drawing.Point(163, 459);
+			equipmentPieceControl7.Name = "equipmentPieceControl7";
+			equipmentPieceControl7.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl7.TabIndex = 6;
 			// 
-			// coveragePiece12
+			// equipmentPieceControl6
 			// 
-			this.coveragePiece12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece12.EquippableSlots = Mag.Shared.Constants.EquipMask.LowerLegArmor;
-			this.coveragePiece12.Location = new System.Drawing.Point(485, 425);
-			this.coveragePiece12.Name = "coveragePiece12";
-			this.coveragePiece12.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece12.TabIndex = 11;
+			equipmentPieceControl6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl6.EquippableSlots = Mag.Shared.Constants.EquipMask.LowerArmArmor;
+			equipmentPieceControl6.Location = new System.Drawing.Point(163, 308);
+			equipmentPieceControl6.Name = "equipmentPieceControl6";
+			equipmentPieceControl6.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl6.TabIndex = 5;
 			// 
-			// coveragePiece7
+			// equipmentPieceControl5
 			// 
-			this.coveragePiece7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece7.EquippableSlots = Mag.Shared.Constants.EquipMask.HeadWear;
-			this.coveragePiece7.Location = new System.Drawing.Point(326, 8);
-			this.coveragePiece7.Name = "coveragePiece7";
-			this.coveragePiece7.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece7.TabIndex = 6;
+			equipmentPieceControl5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl5.EquippableSlots = Mag.Shared.Constants.EquipMask.UpperArmArmor;
+			equipmentPieceControl5.Location = new System.Drawing.Point(163, 157);
+			equipmentPieceControl5.Name = "equipmentPieceControl5";
+			equipmentPieceControl5.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl5.TabIndex = 4;
 			// 
-			// coveragePiece11
+			// equipmentPieceControl4
 			// 
-			this.coveragePiece11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece11.EquippableSlots = Mag.Shared.Constants.EquipMask.HandWear;
-			this.coveragePiece11.Location = new System.Drawing.Point(167, 425);
-			this.coveragePiece11.Name = "coveragePiece11";
-			this.coveragePiece11.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece11.TabIndex = 10;
+			equipmentPieceControl4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl4.EquippableSlots = Mag.Shared.Constants.EquipMask.FingerWearLeft;
+			equipmentPieceControl4.Location = new System.Drawing.Point(6, 459);
+			equipmentPieceControl4.Name = "equipmentPieceControl4";
+			equipmentPieceControl4.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl4.TabIndex = 3;
 			// 
-			// coveragePiece8
+			// equipmentPieceControl3
 			// 
-			this.coveragePiece8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece8.EquippableSlots = Mag.Shared.Constants.EquipMask.LowerArmArmor;
-			this.coveragePiece8.Location = new System.Drawing.Point(167, 286);
-			this.coveragePiece8.Name = "coveragePiece8";
-			this.coveragePiece8.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece8.TabIndex = 7;
+			equipmentPieceControl3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl3.EquippableSlots = Mag.Shared.Constants.EquipMask.WristWearLeft;
+			equipmentPieceControl3.Location = new System.Drawing.Point(6, 308);
+			equipmentPieceControl3.Name = "equipmentPieceControl3";
+			equipmentPieceControl3.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl3.TabIndex = 2;
 			// 
-			// coveragePiece10
+			// equipmentPieceControl2
 			// 
-			this.coveragePiece10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece10.EquippableSlots = Mag.Shared.Constants.EquipMask.UpperLegArmor;
-			this.coveragePiece10.Location = new System.Drawing.Point(485, 286);
-			this.coveragePiece10.Name = "coveragePiece10";
-			this.coveragePiece10.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece10.TabIndex = 9;
+			equipmentPieceControl2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl2.EquippableSlots = Mag.Shared.Constants.EquipMask.TrinketOne;
+			equipmentPieceControl2.Location = new System.Drawing.Point(6, 157);
+			equipmentPieceControl2.Name = "equipmentPieceControl2";
+			equipmentPieceControl2.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl2.TabIndex = 1;
 			// 
-			// coveragePiece9
+			// equipmentPieceControl1
 			// 
-			this.coveragePiece9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.coveragePiece9.EquippableSlots = Mag.Shared.Constants.EquipMask.AbdomenArmor;
-			this.coveragePiece9.Location = new System.Drawing.Point(326, 286);
-			this.coveragePiece9.Name = "coveragePiece9";
-			this.coveragePiece9.Size = new System.Drawing.Size(153, 133);
-			this.coveragePiece9.TabIndex = 8;
+			equipmentPieceControl1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			equipmentPieceControl1.EquippableSlots = Mag.Shared.Constants.EquipMask.NeckWear;
+			equipmentPieceControl1.Location = new System.Drawing.Point(6, 6);
+			equipmentPieceControl1.Name = "equipmentPieceControl1";
+			equipmentPieceControl1.Size = new System.Drawing.Size(151, 145);
+			equipmentPieceControl1.TabIndex = 0;
 			// 
 			// timerCalculatorUpdator
 			// 
-			this.timerCalculatorUpdator.Interval = 500;
-			this.timerCalculatorUpdator.Tick += new System.EventHandler(this.timerCalculatorUpdator_Tick);
+			timerCalculatorUpdator.Interval = 500;
+			timerCalculatorUpdator.Tick += timerCalculatorUpdator_Tick;
 			// 
 			// Form1
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1454, 775);
-			this.Controls.Add(this.tabControl1);
-			this.DoubleBuffered = true;
-			this.MinimumSize = new System.Drawing.Size(1100, 779);
-			this.Name = "Form1";
-			this.Text = "Mag-Suit Builder";
-			this.tabControl1.ResumeLayout(false);
-			this.tabPage3.ResumeLayout(false);
-			this.tabPage3.PerformLayout();
-			this.panel1.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.equipmentGrid)).EndInit();
-			this.equipmentGridContextMenu.ResumeLayout(false);
-			this.CharactersTreeViewContextMenu.ResumeLayout(false);
-			this.tabPage1.ResumeLayout(false);
-			this.tabPage1.PerformLayout();
-			this.ResumeLayout(false);
-
+			AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+			AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			ClientSize = new System.Drawing.Size(1454, 841);
+			Controls.Add(tabControl1);
+			MinimumSize = new System.Drawing.Size(1200, 880);
+			Name = "Form1";
+			Text = "Mag-Suit Builder";
+			tabControl1.ResumeLayout(false);
+			tabPage1.ResumeLayout(false);
+			tabPage1.PerformLayout();
+			panel1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)equipmentGrid).EndInit();
+			equipmentGridContextMenu.ResumeLayout(false);
+			CharactersTreeViewContextMenu.ResumeLayout(false);
+			tabPage2.ResumeLayout(false);
+			tabPage2.PerformLayout();
+			ResumeLayout(false);
 		}
 
 		#endregion
 
-		private EquipmentPieceControl coveragePiece1;
-		private EquipmentPieceControl coveragePiece2;
-		private EquipmentPieceControl coveragePiece3;
-		private EquipmentPieceControl coveragePiece4;
-		private EquipmentPieceControl coveragePiece5;
-		private EquipmentPieceControl coveragePiece6;
-		private EquipmentPieceControl coveragePiece7;
-		private EquipmentPieceControl coveragePiece8;
-		private EquipmentPieceControl coveragePiece9;
-		private EquipmentPieceControl coveragePiece10;
-		private EquipmentPieceControl coveragePiece11;
-		private EquipmentPieceControl coveragePiece12;
-		private EquipmentPieceControl coveragePiece13;
-		private EquipmentPieceControl coveragePiece14;
-		private EquipmentPieceControl coveragePiece15;
-		private EquipmentPieceControl coveragePiece16;
-		private EquipmentPieceControl coveragePiece17;
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
-		private System.Windows.Forms.Button btnCalculatePossibilities;
-		private System.Windows.Forms.TabPage tabPage3;
+		private System.Windows.Forms.TabPage tabPage2;
+		private System.Windows.Forms.Panel panel1;
+		private Equipment.FiltersControl filtersControl1;
 		private System.Windows.Forms.DataGridView equipmentGrid;
-		private System.Windows.Forms.Button btnLoadFromDB;
-		private System.Windows.Forms.Button btnStopCalculating;
-		private System.Windows.Forms.Button btnHelp;
-		private CantripSelectorControl cntrlSuitCantrips;
-		private System.Windows.Forms.ProgressBar progressBar1;
-		private System.Windows.Forms.TreeView treeView1;
-		private System.Windows.Forms.Button cmdCollapseAll;
-		private System.Windows.Forms.Button cmdExpandAll;
 		private System.Windows.Forms.TreeView CharactersTreeView;
+		private System.Windows.Forms.Button cmdResizeColumns;
+		private System.Windows.Forms.Button btnHelp;
 		private System.Windows.Forms.TextBox txtInventoryRootPath;
+		private System.Windows.Forms.Button btnLoadFromDB;
 		private System.Windows.Forms.CheckBox chkFilters;
 		private System.Windows.Forms.CheckBox chkTree;
-		private System.Windows.Forms.Panel panel1;
-		private FiltersControl filtersControl1;
-		private System.Windows.Forms.Button cmdResizeColumns;
-		private System.Windows.Forms.ContextMenuStrip CharactersTreeViewContextMenu;
-		private System.Windows.Forms.ToolStripMenuItem ShowEquipmentUpgradesMenuItem;
-		private System.Windows.Forms.ContextMenuStrip equipmentGridContextMenu;
-		private System.Windows.Forms.ToolStripMenuItem copyItemsToClipboardToolStripMenuItem;
-		private System.Windows.Forms.Button cmdCopyToClipboard;
+		private Spells.CantripSelectorControl cntrlSuitCantrips;
+		private Equipment.EquipmentPieceControl equipmentPieceControl17;
+		private Equipment.EquipmentPieceControl equipmentPieceControl16;
+		private Equipment.EquipmentPieceControl equipmentPieceControl15;
+		private Equipment.EquipmentPieceControl equipmentPieceControl14;
+		private Equipment.EquipmentPieceControl equipmentPieceControl13;
+		private Equipment.EquipmentPieceControl equipmentPieceControl12;
+		private Equipment.EquipmentPieceControl equipmentPieceControl11;
+		private Equipment.EquipmentPieceControl equipmentPieceControl10;
+		private Equipment.EquipmentPieceControl equipmentPieceControl9;
+		private Equipment.EquipmentPieceControl equipmentPieceControl8;
+		private Equipment.EquipmentPieceControl equipmentPieceControl7;
+		private Equipment.EquipmentPieceControl equipmentPieceControl6;
+		private Equipment.EquipmentPieceControl equipmentPieceControl5;
+		private Equipment.EquipmentPieceControl equipmentPieceControl4;
+		private Equipment.EquipmentPieceControl equipmentPieceControl3;
+		private Equipment.EquipmentPieceControl equipmentPieceControl2;
+		private Equipment.EquipmentPieceControl equipmentPieceControl1;
+		private System.Windows.Forms.TreeView treeView1;
+		private System.Windows.Forms.Label lblAccessorizerRunningThreads;
 		private System.Windows.Forms.Label lblAccessorizerQueuedThreads;
 		private System.Windows.Forms.Label lblArmorSearchThreads;
-		private System.Windows.Forms.Label lblAccessorizerRunningThreads;
+		private System.Windows.Forms.ProgressBar progressBar1;
+		private System.Windows.Forms.Button cmdCollapseAll;
+		private System.Windows.Forms.Button cmdExpandAll;
+		private System.Windows.Forms.Button cmdCopyToClipboard;
+		private System.Windows.Forms.Button btnStopCalculating;
+		private System.Windows.Forms.Button btnCalculatePossibilities;
+		private System.Windows.Forms.ContextMenuStrip equipmentGridContextMenu;
+		private System.Windows.Forms.ContextMenuStrip CharactersTreeViewContextMenu;
 		private System.Windows.Forms.Timer timerCalculatorUpdator;
+		private System.Windows.Forms.ToolStripMenuItem showEquipmentUpgradesToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem copyItemsToClipboardToolStripMenuItem;
 	}
 }
-

@@ -213,7 +213,7 @@ namespace Mag_SuitBuilder
 		}
 
 		int count;
-		private void inventoryTreeView_AfterCheck(object sender, TreeViewEventArgs e)
+		private void CharactersTreeView_AfterCheck(object sender, TreeViewEventArgs e)
 		{
 			count++;
 
@@ -323,10 +323,10 @@ namespace Mag_SuitBuilder
 		{
 			bool characterSelected = CharactersTreeView.SelectedNode != null && CharactersTreeView.SelectedNode.Level >= 1;
 
-			ShowEquipmentUpgradesMenuItem.Enabled = characterSelected;
+			showEquipmentUpgradesToolStripMenuItem.Enabled = characterSelected;
 		}
 
-		private void ShowEquipmentUpgradesMenuItem_Click(object sender, EventArgs e)
+		private void showEquipmentUpgradesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (CharactersTreeView.SelectedNode == null)
 				return;
@@ -759,7 +759,7 @@ namespace Mag_SuitBuilder
 			if (suit == null)
 				return;
 
-			foreach (Control cntrl in tabPage1.Controls)
+			foreach (Control cntrl in tabPage2.Controls)
 			{
 				if (cntrl is EquipmentPieceControl)
 				{

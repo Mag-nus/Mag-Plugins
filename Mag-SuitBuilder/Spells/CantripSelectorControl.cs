@@ -1,4 +1,5 @@
-﻿using System.Collections;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -89,12 +90,21 @@ namespace Mag_SuitBuilder.Spells
 						for (int i = 1 ; i < cellSpells.Length ; i++)
 						{
 							if (!cellSpells[0].IsOfSameFamilyAndGroup(cellSpells[i]))
-								throw new System.Exception("Spell group mismatch detected for cell: " + cell.Value + " " + cellSpells[0] + " - " + cellSpells[i]);
+								throw new Exception("Spell group mismatch detected for cell: " + cell.Value + " " + cellSpells[0] + " - " + cellSpells[i]);
 						}
 					}
 				}
 			}
 			*/
+		}
+
+		protected override void OnLoad(EventArgs e)
+		{
+			base.OnLoad(e);
+
+			cmdLoadDefaults.Visible = Enabled;
+			defaultsComboBox.Visible = Enabled;
+			cmdClear.Visible = Enabled;
 		}
 
 		readonly Collection<Spell> items = new Collection<Spell>();
@@ -392,12 +402,12 @@ namespace Mag_SuitBuilder.Spells
 			Add(spells[index]);
 		}
 
-		private void cmdLoadDefaults_Click(object sender, System.EventArgs e)
+		private void cmdLoadDefaults_Click(object sender, EventArgs e)
 		{
 			LoadDefaults(defaultsComboBox.Text);
 		}
 
-		private void cmdClear_Click(object sender, System.EventArgs e)
+		private void cmdClear_Click(object sender, EventArgs e)
 		{
 			Clear();
 		}
