@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 using Mag.Shared;
 using Mag.Shared.Constants;
@@ -29,38 +30,48 @@ namespace Mag_LootParser
         public Dictionary<int, int> Resources = new Dictionary<int, int>();
 
 
-        public void ParseFromDictionary(Dictionary<string, object> result)
+        public void ParseFromDictionary(IDictionary<string, object?> result)
         {
             foreach (var kvp in result)
             {
                 switch (kvp.Key)
                 {
                     case "Id":
-                        Id = (uint)int.Parse((string)kvp.Value);
+						Id = (uint)int.Parse(kvp.Value.ToString(), System.Globalization.NumberStyles.AllowLeadingSign);
                         break;
 
                     case "ObjectClass":
-                        ObjectClass = (ObjectClass)Enum.Parse(typeof(ObjectClass), (string)kvp.Value);
+                        ObjectClass = (ObjectClass)Enum.Parse(typeof(ObjectClass), kvp.Value.ToString());
                         break;
 
                     case "BoolValues":
                         {
-                            var values = (Dictionary<string, object>)kvp.Value;
+							var valueAsString = kvp.Value.ToString();
 
-                            foreach (var kvp2 in values)
+							if (valueAsString == "{}")
+									continue;
+
+							var values = JsonSerializer.Deserialize<Dictionary<string, string>>(valueAsString);
+
+							foreach (var kvp2 in values)
                             {
                                 var key = int.Parse(kvp2.Key);
                                 var value = bool.Parse(kvp2.Value.ToString());
 
                                 BoolValues[key] = value;
                             }
-
-                            break;
                         }
 
-                    case "DoubleValues":
+						break;
+
+					case "DoubleValues":
                         {
-                            var values = (Dictionary<string, object>)kvp.Value;
+							var valueAsString = kvp.Value.ToString();
+
+							if (valueAsString == "{}")
+								continue;
+
+							var values = JsonSerializer.Deserialize<Dictionary<string, string>>(valueAsString);
 
                             foreach (var kvp2 in values)
                             {
@@ -69,131 +80,159 @@ namespace Mag_LootParser
 
                                 DoubleValues[key] = value;
                             }
-
-                            break;
                         }
 
-                    case "LongValues":
-                        {
-                            var values = (Dictionary<string, object>)kvp.Value;
+						break;
 
-                            foreach (var kvp2 in values)
+					case "LongValues":
+                        {
+							var valueAsString = kvp.Value.ToString();
+
+							if (valueAsString == "{}")
+								continue;
+
+							var values = JsonSerializer.Deserialize<Dictionary<string, string>>(valueAsString);
+
+							foreach (var kvp2 in values)
                             {
                                 var key = (IntValueKey)int.Parse(kvp2.Key);
                                 var value = int.Parse(kvp2.Value.ToString());
 
                                 LongValues[key] = value;
                             }
-
-                            break;
                         }
 
-                    case "StringValues":
-                        {
-                            var values = (Dictionary<string, object>)kvp.Value;
+						break;
 
-                            foreach (var kvp2 in values)
+					case "StringValues":
+                        {
+							var valueAsString = kvp.Value.ToString();
+
+							if (valueAsString == "{}")
+								continue;
+
+							var values = JsonSerializer.Deserialize<Dictionary<string, string>>(valueAsString);
+
+							foreach (var kvp2 in values)
                             {
                                 var key = (StringValueKey)int.Parse(kvp2.Key);
 
                                 StringValues[key] = kvp2.Value.ToString();
                             }
-
-                            break;
                         }
 
-                    case "ActiveSpells":
-                        if (!string.IsNullOrEmpty((string)kvp.Value))
-                        {
-                            var spellsSplit = ((string)kvp.Value).Split(',');
+						break;
 
-                            foreach (var spell in spellsSplit)
-                                ActiveSpells.Add(int.Parse(spell));
-                        }
+					case "ActiveSpells":
+						{
+							var valueAsString = kvp.Value.ToString();
+
+							if (!string.IsNullOrEmpty(valueAsString))
+							{
+								var spellsSplit = valueAsString.Split(',');
+
+								foreach (var spell in spellsSplit)
+									ActiveSpells.Add(int.Parse(spell));
+							}
+						}
 
                         break;
 
                     case "Spells":
-                        if (!string.IsNullOrEmpty((string)kvp.Value))
-                        {
-                            var spellsSplit = ((string)kvp.Value).Split(',');
+						{
+							var valueAsString = kvp.Value.ToString();
 
-                            foreach (var spell in spellsSplit)
-                                Spells.Add(int.Parse(spell));
-                        }
+							if (!string.IsNullOrEmpty(valueAsString))
+							{
+								var spellsSplit = valueAsString.Split(',');
 
-                        break;
+								foreach (var spell in spellsSplit)
+									Spells.Add(int.Parse(spell));
+							}
+						}
 
-                    case "Attributes":
+						break;
+
+					case "Attributes":
                         {
                             ExtendIDAttributeInfo = new ExtendIDAttributeInfo();
 
-                            var values = (Dictionary<string, object>)kvp.Value;
+							var valueAsString = kvp.Value.ToString();
+
+							if (valueAsString == "{}")
+								continue;
+
+							var values = JsonSerializer.Deserialize<Dictionary<string, string>>(valueAsString);
 
                             foreach (var kvp2 in values)
                             {
                                 switch (kvp2.Key)
                                 {
                                     case "healthMax":
-                                        ExtendIDAttributeInfo.healthMax = uint.Parse((string)kvp2.Value);
+                                        ExtendIDAttributeInfo.healthMax = uint.Parse(kvp2.Value);
                                         break;
 
                                     case "manaMax":
-                                        ExtendIDAttributeInfo.manaMax = uint.Parse((string)kvp2.Value);
+                                        ExtendIDAttributeInfo.manaMax = uint.Parse(kvp2.Value);
                                         break;
 
                                     case "staminaMax":
-                                        ExtendIDAttributeInfo.staminaMax = uint.Parse((string)kvp2.Value);
+                                        ExtendIDAttributeInfo.staminaMax = uint.Parse(kvp2.Value);
                                         break;
 
                                     case "strength":
-                                        ExtendIDAttributeInfo.strength = uint.Parse((string)kvp2.Value);
+                                        ExtendIDAttributeInfo.strength = uint.Parse(kvp2.Value);
                                         break;
 
                                     case "endurance":
-                                        ExtendIDAttributeInfo.endurance = uint.Parse((string)kvp2.Value);
+                                        ExtendIDAttributeInfo.endurance = uint.Parse(kvp2.Value);
                                         break;
 
                                     case "quickness":
-                                        ExtendIDAttributeInfo.quickness = uint.Parse((string)kvp2.Value);
+                                        ExtendIDAttributeInfo.quickness = uint.Parse(kvp2.Value);
                                         break;
 
                                     case "coordination":
-                                        ExtendIDAttributeInfo.coordination = uint.Parse((string)kvp2.Value);
+                                        ExtendIDAttributeInfo.coordination = uint.Parse(kvp2.Value);
                                         break;
 
                                     case "focus":
-                                        ExtendIDAttributeInfo.focus = uint.Parse((string)kvp2.Value);
+                                        ExtendIDAttributeInfo.focus = uint.Parse(kvp2.Value);
                                         break;
 
                                     case "self":
-                                        ExtendIDAttributeInfo.self = uint.Parse((string)kvp2.Value);
+                                        ExtendIDAttributeInfo.self = uint.Parse(kvp2.Value);
                                         break;
 
                                     default:
                                         throw new NotImplementedException();
                                 }
                             }
+						}
 
-                            break;
-                        }
+						break;
 
-                    case "Resources":
+					case "Resources":
                         {
-                            var values = (Dictionary<string, object>)kvp.Value;
+							var valueAsString = kvp.Value.ToString();
 
-                            foreach (var kvp2 in values)
+							if (valueAsString == "{}")
+								continue;
+
+							var values = JsonSerializer.Deserialize<Dictionary<string, string>>(valueAsString);
+
+							foreach (var kvp2 in values)
                             {
                                 var key = int.Parse(kvp2.Key);
                                 var value = int.Parse(kvp2.Value.ToString());
 
                                 Resources[key] = value;
                             }
-
-                            break;
                         }
 
-                    default:
+						break;
+
+					default:
                         throw new NotImplementedException();
                 }
             }
