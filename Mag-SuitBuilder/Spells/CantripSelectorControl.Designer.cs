@@ -28,8 +28,7 @@ namespace Mag_SuitBuilder.Spells
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-			cmdLoadDefaults = new System.Windows.Forms.Button();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			defaultsComboBox = new System.Windows.Forms.ComboBox();
 			cmdClear = new System.Windows.Forms.Button();
 			dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -44,28 +43,20 @@ namespace Mag_SuitBuilder.Spells
 			lblMinor = new System.Windows.Forms.Label();
 			lblMajor = new System.Windows.Forms.Label();
 			lblEpic = new System.Windows.Forms.Label();
+			lblLoadDefaults = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
 			SuspendLayout();
-			// 
-			// cmdLoadDefaults
-			// 
-			cmdLoadDefaults.Location = new System.Drawing.Point(3, 3);
-			cmdLoadDefaults.Name = "cmdLoadDefaults";
-			cmdLoadDefaults.Size = new System.Drawing.Size(112, 23);
-			cmdLoadDefaults.TabIndex = 0;
-			cmdLoadDefaults.Text = "Load Defaults For:";
-			cmdLoadDefaults.UseVisualStyleBackColor = true;
-			cmdLoadDefaults.Click += cmdLoadDefaults_Click;
 			// 
 			// defaultsComboBox
 			// 
 			defaultsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			defaultsComboBox.FormattingEnabled = true;
-			defaultsComboBox.Items.AddRange(new object[] { "Finesse", "Generic", "Heavy", "Light", "Missile", "Tinker", "Two Hand", "Void", "War" });
-			defaultsComboBox.Location = new System.Drawing.Point(121, 3);
+			defaultsComboBox.Items.AddRange(new object[] { "", "Finesse", "Generic", "Heavy", "Light", "Missile", "Tinker", "Two Hand", "Void", "War" });
+			defaultsComboBox.Location = new System.Drawing.Point(91, 3);
 			defaultsComboBox.Name = "defaultsComboBox";
 			defaultsComboBox.Size = new System.Drawing.Size(154, 23);
 			defaultsComboBox.TabIndex = 1;
+			defaultsComboBox.SelectedIndexChanged += defaultsComboBox_SelectedIndexChanged;
 			// 
 			// cmdClear
 			// 
@@ -87,14 +78,14 @@ namespace Mag_SuitBuilder.Spells
 			dataGridView1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
 			dataGridView1.ColumnHeadersVisible = false;
 			dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Column1, Column2, Column3, Column4, Column5, Column6, Column7 });
-			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-			dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F);
-			dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-			dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Window;
-			dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-			dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-			dataGridView1.DefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+			dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F);
+			dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+			dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Window;
+			dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+			dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+			dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
 			dataGridView1.Location = new System.Drawing.Point(0, 33);
 			dataGridView1.Margin = new System.Windows.Forms.Padding(0);
 			dataGridView1.MultiSelect = false;
@@ -209,10 +200,20 @@ namespace Mag_SuitBuilder.Spells
 			lblEpic.TabIndex = 7;
 			lblEpic.Text = "-- Epic --";
 			// 
+			// lblLoadDefaults
+			// 
+			lblLoadDefaults.AutoSize = true;
+			lblLoadDefaults.Location = new System.Drawing.Point(3, 7);
+			lblLoadDefaults.Name = "lblLoadDefaults";
+			lblLoadDefaults.Size = new System.Drawing.Size(82, 15);
+			lblLoadDefaults.TabIndex = 8;
+			lblLoadDefaults.Text = "Load Defaults:";
+			// 
 			// CantripSelectorControl
 			// 
 			AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			Controls.Add(lblLoadDefaults);
 			Controls.Add(lblEpic);
 			Controls.Add(lblMajor);
 			Controls.Add(lblMinor);
@@ -220,7 +221,6 @@ namespace Mag_SuitBuilder.Spells
 			Controls.Add(dataGridView1);
 			Controls.Add(cmdClear);
 			Controls.Add(defaultsComboBox);
-			Controls.Add(cmdLoadDefaults);
 			Name = "CantripSelectorControl";
 			Size = new System.Drawing.Size(585, 197);
 			((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
@@ -229,8 +229,6 @@ namespace Mag_SuitBuilder.Spells
 		}
 
 		#endregion
-
-		private System.Windows.Forms.Button cmdLoadDefaults;
 		private System.Windows.Forms.ComboBox defaultsComboBox;
 		private System.Windows.Forms.Button cmdClear;
 		private System.Windows.Forms.DataGridView dataGridView1;
@@ -245,5 +243,6 @@ namespace Mag_SuitBuilder.Spells
 		private System.Windows.Forms.Label lblMinor;
 		private System.Windows.Forms.Label lblMajor;
 		private System.Windows.Forms.Label lblEpic;
+		private System.Windows.Forms.Label lblLoadDefaults;
 	}
 }

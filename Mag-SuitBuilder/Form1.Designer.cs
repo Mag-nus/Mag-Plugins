@@ -93,7 +93,7 @@ namespace Mag_SuitBuilder
 			tabControl1.Location = new System.Drawing.Point(0, 0);
 			tabControl1.Name = "tabControl1";
 			tabControl1.SelectedIndex = 0;
-			tabControl1.Size = new System.Drawing.Size(1454, 841);
+			tabControl1.Size = new System.Drawing.Size(1429, 841);
 			tabControl1.TabIndex = 0;
 			// 
 			// tabPage1
@@ -108,7 +108,7 @@ namespace Mag_SuitBuilder
 			tabPage1.Location = new System.Drawing.Point(4, 24);
 			tabPage1.Name = "tabPage1";
 			tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			tabPage1.Size = new System.Drawing.Size(1446, 813);
+			tabPage1.Size = new System.Drawing.Size(1421, 813);
 			tabPage1.TabIndex = 0;
 			tabPage1.Text = "Step 1. Add Inventory";
 			tabPage1.UseVisualStyleBackColor = true;
@@ -121,7 +121,7 @@ namespace Mag_SuitBuilder
 			panel1.Controls.Add(CharactersTreeView);
 			panel1.Location = new System.Drawing.Point(0, 35);
 			panel1.Name = "panel1";
-			panel1.Size = new System.Drawing.Size(1446, 778);
+			panel1.Size = new System.Drawing.Size(1421, 778);
 			panel1.TabIndex = 6;
 			// 
 			// equipmentGrid
@@ -138,7 +138,7 @@ namespace Mag_SuitBuilder
 			equipmentGrid.Location = new System.Drawing.Point(795, 0);
 			equipmentGrid.Name = "equipmentGrid";
 			equipmentGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			equipmentGrid.Size = new System.Drawing.Size(651, 778);
+			equipmentGrid.Size = new System.Drawing.Size(626, 778);
 			equipmentGrid.TabIndex = 2;
 			equipmentGrid.CellPainting += equipmentGrid_CellPainting;
 			// 
@@ -192,7 +192,7 @@ namespace Mag_SuitBuilder
 			// cmdResizeColumns
 			// 
 			cmdResizeColumns.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-			cmdResizeColumns.Location = new System.Drawing.Point(1246, 6);
+			cmdResizeColumns.Location = new System.Drawing.Point(1838, 6);
 			cmdResizeColumns.Name = "cmdResizeColumns";
 			cmdResizeColumns.Size = new System.Drawing.Size(113, 23);
 			cmdResizeColumns.TabIndex = 5;
@@ -203,7 +203,7 @@ namespace Mag_SuitBuilder
 			// btnHelp
 			// 
 			btnHelp.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-			btnHelp.Location = new System.Drawing.Point(1365, 6);
+			btnHelp.Location = new System.Drawing.Point(1957, 6);
 			btnHelp.Name = "btnHelp";
 			btnHelp.Size = new System.Drawing.Size(75, 23);
 			btnHelp.TabIndex = 4;
@@ -216,7 +216,7 @@ namespace Mag_SuitBuilder
 			txtInventoryRootPath.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
 			txtInventoryRootPath.Location = new System.Drawing.Point(261, 6);
 			txtInventoryRootPath.Name = "txtInventoryRootPath";
-			txtInventoryRootPath.Size = new System.Drawing.Size(979, 23);
+			txtInventoryRootPath.Size = new System.Drawing.Size(1571, 23);
 			txtInventoryRootPath.TabIndex = 3;
 			// 
 			// btnLoadFromDB
@@ -288,7 +288,7 @@ namespace Mag_SuitBuilder
 			tabPage2.Location = new System.Drawing.Point(4, 24);
 			tabPage2.Name = "tabPage2";
 			tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			tabPage2.Size = new System.Drawing.Size(1446, 813);
+			tabPage2.Size = new System.Drawing.Size(1421, 813);
 			tabPage2.TabIndex = 1;
 			tabPage2.Text = "Step 2. Generate Suits";
 			tabPage2.UseVisualStyleBackColor = true;
@@ -296,16 +296,16 @@ namespace Mag_SuitBuilder
 			// treeView1
 			// 
 			treeView1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-			treeView1.Location = new System.Drawing.Point(948, 6);
+			treeView1.Location = new System.Drawing.Point(6, 123);
 			treeView1.Name = "treeView1";
-			treeView1.Size = new System.Drawing.Size(492, 801);
+			treeView1.Size = new System.Drawing.Size(467, 684);
 			treeView1.TabIndex = 27;
 			treeView1.AfterSelect += treeView1_AfterSelect;
 			// 
 			// lblAccessorizerRunningThreads
 			// 
 			lblAccessorizerRunningThreads.AutoSize = true;
-			lblAccessorizerRunningThreads.Location = new System.Drawing.Point(732, 103);
+			lblAccessorizerRunningThreads.Location = new System.Drawing.Point(17, 98);
 			lblAccessorizerRunningThreads.Name = "lblAccessorizerRunningThreads";
 			lblAccessorizerRunningThreads.Size = new System.Drawing.Size(167, 15);
 			lblAccessorizerRunningThreads.TabIndex = 26;
@@ -314,7 +314,7 @@ namespace Mag_SuitBuilder
 			// lblAccessorizerQueuedThreads
 			// 
 			lblAccessorizerQueuedThreads.AutoSize = true;
-			lblAccessorizerQueuedThreads.Location = new System.Drawing.Point(732, 79);
+			lblAccessorizerQueuedThreads.Location = new System.Drawing.Point(17, 74);
 			lblAccessorizerQueuedThreads.Name = "lblAccessorizerQueuedThreads";
 			lblAccessorizerQueuedThreads.Size = new System.Drawing.Size(164, 15);
 			lblAccessorizerQueuedThreads.TabIndex = 25;
@@ -323,7 +323,7 @@ namespace Mag_SuitBuilder
 			// lblArmorSearchThreads
 			// 
 			lblArmorSearchThreads.AutoSize = true;
-			lblArmorSearchThreads.Location = new System.Drawing.Point(732, 55);
+			lblArmorSearchThreads.Location = new System.Drawing.Point(17, 50);
 			lblArmorSearchThreads.Name = "lblArmorSearchThreads";
 			lblArmorSearchThreads.Size = new System.Drawing.Size(126, 15);
 			lblArmorSearchThreads.TabIndex = 24;
@@ -331,14 +331,14 @@ namespace Mag_SuitBuilder
 			// 
 			// progressBar1
 			// 
-			progressBar1.Location = new System.Drawing.Point(732, 15);
+			progressBar1.Location = new System.Drawing.Point(263, 15);
 			progressBar1.Name = "progressBar1";
 			progressBar1.Size = new System.Drawing.Size(210, 23);
 			progressBar1.TabIndex = 23;
 			// 
 			// cmdCollapseAll
 			// 
-			cmdCollapseAll.Location = new System.Drawing.Point(854, 211);
+			cmdCollapseAll.Location = new System.Drawing.Point(348, 94);
 			cmdCollapseAll.Name = "cmdCollapseAll";
 			cmdCollapseAll.Size = new System.Drawing.Size(79, 23);
 			cmdCollapseAll.TabIndex = 22;
@@ -348,7 +348,7 @@ namespace Mag_SuitBuilder
 			// 
 			// cmdExpandAll
 			// 
-			cmdExpandAll.Location = new System.Drawing.Point(854, 182);
+			cmdExpandAll.Location = new System.Drawing.Point(263, 94);
 			cmdExpandAll.Name = "cmdExpandAll";
 			cmdExpandAll.Size = new System.Drawing.Size(79, 23);
 			cmdExpandAll.TabIndex = 21;
@@ -358,18 +358,19 @@ namespace Mag_SuitBuilder
 			// 
 			// cmdCopyToClipboard
 			// 
-			cmdCopyToClipboard.Location = new System.Drawing.Point(486, 248);
+			cmdCopyToClipboard.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+			cmdCopyToClipboard.Location = new System.Drawing.Point(992, 15);
 			cmdCopyToClipboard.Name = "cmdCopyToClipboard";
-			cmdCopyToClipboard.Size = new System.Drawing.Size(114, 23);
+			cmdCopyToClipboard.Size = new System.Drawing.Size(137, 23);
 			cmdCopyToClipboard.TabIndex = 20;
-			cmdCopyToClipboard.Text = "Copy to Clipboard";
+			cmdCopyToClipboard.Text = "Copy Suit to Clipboard";
 			cmdCopyToClipboard.UseVisualStyleBackColor = true;
 			cmdCopyToClipboard.Click += cmdCopyToClipboard_Click;
 			// 
 			// btnStopCalculating
 			// 
 			btnStopCalculating.Enabled = false;
-			btnStopCalculating.Location = new System.Drawing.Point(622, 15);
+			btnStopCalculating.Location = new System.Drawing.Point(153, 15);
 			btnStopCalculating.Name = "btnStopCalculating";
 			btnStopCalculating.Size = new System.Drawing.Size(104, 23);
 			btnStopCalculating.TabIndex = 19;
@@ -379,7 +380,7 @@ namespace Mag_SuitBuilder
 			// 
 			// btnCalculatePossibilities
 			// 
-			btnCalculatePossibilities.Location = new System.Drawing.Point(486, 15);
+			btnCalculatePossibilities.Location = new System.Drawing.Point(17, 15);
 			btnCalculatePossibilities.Name = "btnCalculatePossibilities";
 			btnCalculatePossibilities.Size = new System.Drawing.Size(130, 23);
 			btnCalculatePossibilities.TabIndex = 18;
@@ -389,161 +390,179 @@ namespace Mag_SuitBuilder
 			// 
 			// cntrlSuitCantrips
 			// 
+			cntrlSuitCantrips.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			cntrlSuitCantrips.Enabled = false;
-			cntrlSuitCantrips.Location = new System.Drawing.Point(6, 610);
+			cntrlSuitCantrips.Location = new System.Drawing.Point(479, 610);
 			cntrlSuitCantrips.Name = "cntrlSuitCantrips";
 			cntrlSuitCantrips.Size = new System.Drawing.Size(585, 197);
 			cntrlSuitCantrips.TabIndex = 17;
 			// 
 			// equipmentPieceControl17
 			// 
+			equipmentPieceControl17.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl17.EquippableSlots = Mag.Shared.Constants.EquipMask.FootWear;
-			equipmentPieceControl17.Location = new System.Drawing.Point(597, 610);
+			equipmentPieceControl17.Location = new System.Drawing.Point(1070, 610);
 			equipmentPieceControl17.Name = "equipmentPieceControl17";
 			equipmentPieceControl17.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl17.TabIndex = 16;
 			// 
 			// equipmentPieceControl16
 			// 
+			equipmentPieceControl16.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl16.EquippableSlots = Mag.Shared.Constants.EquipMask.UpperLegWear;
-			equipmentPieceControl16.Location = new System.Drawing.Point(791, 459);
+			equipmentPieceControl16.Location = new System.Drawing.Point(1264, 459);
 			equipmentPieceControl16.Name = "equipmentPieceControl16";
 			equipmentPieceControl16.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl16.TabIndex = 15;
 			// 
 			// equipmentPieceControl15
 			// 
+			equipmentPieceControl15.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl15.EquippableSlots = Mag.Shared.Constants.EquipMask.FingerWearRight;
-			equipmentPieceControl15.Location = new System.Drawing.Point(634, 459);
+			equipmentPieceControl15.Location = new System.Drawing.Point(1107, 459);
 			equipmentPieceControl15.Name = "equipmentPieceControl15";
 			equipmentPieceControl15.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl15.TabIndex = 14;
 			// 
 			// equipmentPieceControl14
 			// 
+			equipmentPieceControl14.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl14.EquippableSlots = Mag.Shared.Constants.EquipMask.LowerLegArmor;
-			equipmentPieceControl14.Location = new System.Drawing.Point(477, 459);
+			equipmentPieceControl14.Location = new System.Drawing.Point(950, 459);
 			equipmentPieceControl14.Name = "equipmentPieceControl14";
 			equipmentPieceControl14.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl14.TabIndex = 13;
 			// 
 			// equipmentPieceControl13
 			// 
+			equipmentPieceControl13.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl13.EquippableSlots = Mag.Shared.Constants.EquipMask.ChestWear;
-			equipmentPieceControl13.Location = new System.Drawing.Point(791, 308);
+			equipmentPieceControl13.Location = new System.Drawing.Point(1264, 308);
 			equipmentPieceControl13.Name = "equipmentPieceControl13";
 			equipmentPieceControl13.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl13.TabIndex = 12;
 			// 
 			// equipmentPieceControl12
 			// 
+			equipmentPieceControl12.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl12.EquippableSlots = Mag.Shared.Constants.EquipMask.WristWearRight;
-			equipmentPieceControl12.Location = new System.Drawing.Point(634, 308);
+			equipmentPieceControl12.Location = new System.Drawing.Point(1107, 308);
 			equipmentPieceControl12.Name = "equipmentPieceControl12";
 			equipmentPieceControl12.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl12.TabIndex = 11;
 			// 
 			// equipmentPieceControl11
 			// 
+			equipmentPieceControl11.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl11.EquippableSlots = Mag.Shared.Constants.EquipMask.UpperLegArmor;
-			equipmentPieceControl11.Location = new System.Drawing.Point(477, 308);
+			equipmentPieceControl11.Location = new System.Drawing.Point(950, 308);
 			equipmentPieceControl11.Name = "equipmentPieceControl11";
 			equipmentPieceControl11.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl11.TabIndex = 10;
 			// 
 			// equipmentPieceControl10
 			// 
+			equipmentPieceControl10.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl10.EquippableSlots = Mag.Shared.Constants.EquipMask.HeadWear;
-			equipmentPieceControl10.Location = new System.Drawing.Point(320, 6);
+			equipmentPieceControl10.Location = new System.Drawing.Point(793, 6);
 			equipmentPieceControl10.Name = "equipmentPieceControl10";
 			equipmentPieceControl10.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl10.TabIndex = 9;
 			// 
 			// equipmentPieceControl9
 			// 
+			equipmentPieceControl9.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl9.EquippableSlots = Mag.Shared.Constants.EquipMask.AbdomenArmor;
-			equipmentPieceControl9.Location = new System.Drawing.Point(320, 308);
+			equipmentPieceControl9.Location = new System.Drawing.Point(793, 308);
 			equipmentPieceControl9.Name = "equipmentPieceControl9";
 			equipmentPieceControl9.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl9.TabIndex = 8;
 			// 
 			// equipmentPieceControl8
 			// 
+			equipmentPieceControl8.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl8.EquippableSlots = Mag.Shared.Constants.EquipMask.ChestArmor;
-			equipmentPieceControl8.Location = new System.Drawing.Point(320, 157);
+			equipmentPieceControl8.Location = new System.Drawing.Point(793, 157);
 			equipmentPieceControl8.Name = "equipmentPieceControl8";
 			equipmentPieceControl8.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl8.TabIndex = 7;
 			// 
 			// equipmentPieceControl7
 			// 
+			equipmentPieceControl7.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl7.EquippableSlots = Mag.Shared.Constants.EquipMask.HandWear;
-			equipmentPieceControl7.Location = new System.Drawing.Point(163, 459);
+			equipmentPieceControl7.Location = new System.Drawing.Point(636, 459);
 			equipmentPieceControl7.Name = "equipmentPieceControl7";
 			equipmentPieceControl7.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl7.TabIndex = 6;
 			// 
 			// equipmentPieceControl6
 			// 
+			equipmentPieceControl6.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl6.EquippableSlots = Mag.Shared.Constants.EquipMask.LowerArmArmor;
-			equipmentPieceControl6.Location = new System.Drawing.Point(163, 308);
+			equipmentPieceControl6.Location = new System.Drawing.Point(636, 308);
 			equipmentPieceControl6.Name = "equipmentPieceControl6";
 			equipmentPieceControl6.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl6.TabIndex = 5;
 			// 
 			// equipmentPieceControl5
 			// 
+			equipmentPieceControl5.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl5.EquippableSlots = Mag.Shared.Constants.EquipMask.UpperArmArmor;
-			equipmentPieceControl5.Location = new System.Drawing.Point(163, 157);
+			equipmentPieceControl5.Location = new System.Drawing.Point(636, 157);
 			equipmentPieceControl5.Name = "equipmentPieceControl5";
 			equipmentPieceControl5.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl5.TabIndex = 4;
 			// 
 			// equipmentPieceControl4
 			// 
+			equipmentPieceControl4.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl4.EquippableSlots = Mag.Shared.Constants.EquipMask.FingerWearLeft;
-			equipmentPieceControl4.Location = new System.Drawing.Point(6, 459);
+			equipmentPieceControl4.Location = new System.Drawing.Point(479, 459);
 			equipmentPieceControl4.Name = "equipmentPieceControl4";
 			equipmentPieceControl4.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl4.TabIndex = 3;
 			// 
 			// equipmentPieceControl3
 			// 
+			equipmentPieceControl3.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl3.EquippableSlots = Mag.Shared.Constants.EquipMask.WristWearLeft;
-			equipmentPieceControl3.Location = new System.Drawing.Point(6, 308);
+			equipmentPieceControl3.Location = new System.Drawing.Point(479, 308);
 			equipmentPieceControl3.Name = "equipmentPieceControl3";
 			equipmentPieceControl3.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl3.TabIndex = 2;
 			// 
 			// equipmentPieceControl2
 			// 
+			equipmentPieceControl2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl2.EquippableSlots = Mag.Shared.Constants.EquipMask.TrinketOne;
-			equipmentPieceControl2.Location = new System.Drawing.Point(6, 157);
+			equipmentPieceControl2.Location = new System.Drawing.Point(479, 157);
 			equipmentPieceControl2.Name = "equipmentPieceControl2";
 			equipmentPieceControl2.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl2.TabIndex = 1;
 			// 
 			// equipmentPieceControl1
 			// 
+			equipmentPieceControl1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
 			equipmentPieceControl1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			equipmentPieceControl1.EquippableSlots = Mag.Shared.Constants.EquipMask.NeckWear;
-			equipmentPieceControl1.Location = new System.Drawing.Point(6, 6);
+			equipmentPieceControl1.Location = new System.Drawing.Point(479, 6);
 			equipmentPieceControl1.Name = "equipmentPieceControl1";
 			equipmentPieceControl1.Size = new System.Drawing.Size(151, 145);
 			equipmentPieceControl1.TabIndex = 0;
@@ -557,9 +576,9 @@ namespace Mag_SuitBuilder
 			// 
 			AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			ClientSize = new System.Drawing.Size(1454, 841);
+			ClientSize = new System.Drawing.Size(1429, 841);
 			Controls.Add(tabControl1);
-			MinimumSize = new System.Drawing.Size(1200, 880);
+			MinimumSize = new System.Drawing.Size(1445, 880);
 			Name = "Form1";
 			Text = "Mag-Suit Builder";
 			tabControl1.ResumeLayout(false);
