@@ -576,7 +576,7 @@ namespace Mag_SuitBuilder
 
 		void armorSearcher_SuitCreated(CompletedSuit obj)
 		{
-			BeginInvoke((MethodInvoker)(() => AddCompletedSuitToTreeView(obj)));
+			BeginInvoke((System.Windows.Forms.MethodInvoker)(() => AddCompletedSuitToTreeView(obj)));
 
 			lock (lockObject)
 			{
@@ -631,7 +631,7 @@ namespace Mag_SuitBuilder
 		void accSearcher_SuitCreated(CompletedSuit obj)
 		{
 			if (!IsDisposed)
-				BeginInvoke((MethodInvoker)(() => AddCompletedSuitToTreeView(obj)));
+				BeginInvoke((System.Windows.Forms.MethodInvoker)(() => AddCompletedSuitToTreeView(obj)));
 		}
 
 		void AddCompletedSuitToTreeView(CompletedSuit suit)
@@ -700,7 +700,7 @@ namespace Mag_SuitBuilder
 		{
 			if (Interlocked.Read(ref armorThreadCounter) == 0 && Interlocked.Read(ref accessoryThreadQueueCounter) == 0)
 			{
-				BeginInvoke((MethodInvoker)(() =>
+				BeginInvoke((System.Windows.Forms.MethodInvoker)(() =>
 				{
 					progressBar1.Style = ProgressBarStyle.Blocks;
 					btnStopCalculating.Enabled = false;
