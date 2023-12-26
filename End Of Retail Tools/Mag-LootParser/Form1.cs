@@ -1,19 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
 using Mag.Shared.Constants;
 
 using Mag_LootParser.Properties;
-
-using Newtonsoft.Json;
 
 namespace Mag_LootParser
 {
@@ -23,7 +22,7 @@ namespace Mag_LootParser
         {
             InitializeComponent();
 
-            this.Text += " " + Application.ProductVersion;
+			this.Text += " " + Application.ProductVersion;
 
             txtSourcePath.Text = (string)Settings.Default["SourceFolder"];
             txtOutputPath.Text = (string)Settings.Default["OutputFolder"];
@@ -147,8 +146,6 @@ namespace Mag_LootParser
             cts.Cancel();
         }
 
-        readonly JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
-
         private enum FileType
         {
 			Unknown,
@@ -163,7 +160,7 @@ namespace Mag_LootParser
 		        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
 				var fileText = File.ReadAllText(fileName);
 
-		        var containers = JsonConvert.DeserializeObject<List<ContainerInfo>>(fileText);
+		        var containers = JsonSerializer.Deserialize<List<ContainerInfo>>(fileText);
 
 		        lock (processLockObject)
 					containersLoot[fileNameWithoutExtension] = containers;
@@ -281,35 +278,39 @@ namespace Mag_LootParser
 
 	                    jsonPart = jsonPart.Substring(1, jsonPart.Length - 2); // Trim the quotes... why did I add them.. :(
 
-	                    if (jsonPart.StartsWith("{\"Id"))
-	                    {
-		                    // Fix json errors
-		                    jsonPart = jsonPart.Replace("\"Enchanted\"", "\\\"Enchanted\\\"");
-		                    jsonPart = jsonPart.Replace("\"Bunny Master\"", "\\\"Bunny Master\\\"");
-		                    jsonPart = jsonPart.Replace("\"Samuel\"", "\\\"Samuel\\\"");
+						if (jsonPart.StartsWith("{\"Id"))
+						{
+							var identResponse = new IdentResponse();
 
-		                    jsonPart = jsonPart.Replace("\"Is that what I think it is?\"", "\\\"Is that what I think it is?\\\"");
+							identResponse.Timestamp = timestamp;
+							identResponse.Landcell = landcell;
+							//identResponse.RawCoordinates = rawCoordinates;
 
-		                    jsonPart = jsonPart.Replace("\"Procedures By", "\\\"Procedures By");
-		                    jsonPart = jsonPart.Replace("The Creeping Blight.\"", "The Creeping Blight.\\\"");
+							// This is because I forgot to encode strings...
+							jsonPart = jsonPart.Replace("\r\n", "\\r\\n");
 
-		                    var identResponse = new IdentResponse();
+							jsonPart = jsonPart.Replace("\n", "\\n");
 
-		                    identResponse.Timestamp = timestamp;
-		                    identResponse.Landcell = landcell;
-		                    //identResponse.RawCoordinates = rawCoordinates;
+							jsonPart = jsonPart.Replace("\"Enchanted\"", "\\\"Enchanted\\\"");
+							jsonPart = jsonPart.Replace("\"Bunny Master\"", "\\\"Bunny Master\\\"");
+							jsonPart = jsonPart.Replace("\"Samuel\"", "\\\"Samuel\\\"");
 
-		                    Dictionary<string, object> result = (Dictionary<string, object>) jsonSerializer.DeserializeObject(jsonPart);
+							jsonPart = jsonPart.Replace("\"Is that what I think it is?\"", "\\\"Is that what I think it is?\\\"");
 
-		                    identResponse.ParseFromDictionary(result);
+							jsonPart = jsonPart.Replace("\"Procedures By", "\\\"Procedures By");
+							jsonPart = jsonPart.Replace("The Creeping Blight.\"", "The Creeping Blight.\\\"");
 
-		                    if (ct.IsCancellationRequested)
-			                    return;
+							var result = JsonSerializer.Deserialize<ExpandoObject>(jsonPart);
 
-		                    ProcessLootItemWithChecks(containerID, containerName, landcell, location, identResponse);
-	                    }
-	                    else
-	                    {
+							identResponse.ParseFromDictionary(result);
+
+							if (ct.IsCancellationRequested)
+								return;
+
+							ProcessLootItemWithChecks(containerID, containerName, landcell, location, identResponse);
+						}
+						else
+						{
 		                    Interlocked.Increment(ref corruptLines);
 		                    continue;
 	                    }
@@ -331,7 +332,7 @@ namespace Mag_LootParser
 						string containerName = firstPartSplit[0];
 						uint containerID = uint.Parse(firstPartSplit[1]);
 
-						var biota = JsonConvert.DeserializeObject<ACE.Entity.Models.Biota>(secondPart);
+						var biota = JsonSerializer.Deserialize<ACE.Entity.Models.Biota>(secondPart);
 
 	                    identResponse.ParseFromBiota(biota);
 
@@ -509,7 +510,7 @@ namespace Mag_LootParser
 
 				foreach (var kvp in containersLoot)
 				{
-					var containersLootJson = JsonConvert.SerializeObject(kvp.Value);
+					var containersLootJson = JsonSerializer.Serialize(kvp.Value);
 					File.WriteAllText(Path.Combine(workignOutputJsonFolder, $"{kvp.Key}.json"), containersLootJson);
 				}
 

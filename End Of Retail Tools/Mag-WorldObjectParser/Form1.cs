@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
-using Mag.Shared;
 using Mag.Shared.Constants;
 
 using Mag_WorldObjectParser.Properties;
@@ -138,8 +138,6 @@ namespace Mag_WorldObjectParser
 	        cts.Cancel();
         }
 
-        readonly JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
-
 		private void ProcessFile(string fileName, CancellationToken ct)
 		{
 			var fileLines = File.ReadAllLines(fileName);
@@ -151,15 +149,34 @@ namespace Mag_WorldObjectParser
             lock (totalLinesLockObject)
 			    totalLines += fileLines.Length;
 
-			foreach (var line in fileLines)
+			for (int i = 0; i < fileLines.Length; i++)
 			{
 			    if (ct.IsCancellationRequested)
 			        return;
 
-                // "2017-01-23 15:25:42Z,"00000000",49.0488996505737 -29.9918003082275 -7.45058059692383E-09","{"RawData":"45F70000334020771100000003980100180001000C00000000003D00020000000C00000000000000B40104724BC8704135EFEFC1000000B2F70435BF0000000000000000F70435BF86000009220000202B000034DA0500020100020000000000000002000000000090010000300000000400446F6F720000A131171380000000141000002000000000000040"}"
-                // "2017-01-23 15:25:42Z,"00000000",49.0488996505737 -29.9918003082275 -7.45058059692383E-09","{"Id":"1998602291","ObjectClass":"Door","BoolValues":{},"DoubleValues":{"167772167":"269.999963323784","167772168":"2"},"LongValues":{"19":" - 1","218103811":"1912865204","218103831":"2","218103835":"4116","218103843":"32","218103847":"104451","218103808":"12705","218103830":"33555930","218103832":"48","218103834":"128","218103809":"4887"},"StringValues":{"1":"Door"},"ActiveSpells":"","Spells":""}"
+				// "2017-01-23 15:25:42Z,"00000000",49.0488996505737 -29.9918003082275 -7.45058059692383E-09","{"RawData":"45F70000334020771100000003980100180001000C00000000003D00020000000C00000000000000B40104724BC8704135EFEFC1000000B2F70435BF0000000000000000F70435BF86000009220000202B000034DA0500020100020000000000000002000000000090010000300000000400446F6F720000A131171380000000141000002000000000000040"}"
+				// "2017-01-23 15:25:42Z,"00000000",49.0488996505737 -29.9918003082275 -7.45058059692383E-09","{"Id":"1998602291","ObjectClass":"Door","BoolValues":{},"DoubleValues":{"167772167":"269.999963323784","167772168":"2"},"LongValues":{"19":" - 1","218103811":"1912865204","218103831":"2","218103835":"4116","218103843":"32","218103847":"104451","218103808":"12705","218103830":"33555930","218103832":"48","218103834":"128","218103809":"4887"},"StringValues":{"1":"Door"},"ActiveSpells":"","Spells":""}"
 
-                try
+				var line = fileLines[i];
+
+				// If this line starts with a quote but does not end with one, and the next line does not start with a quote but ends with one, they are probably the same entry that was broken up with a \r\n
+				if (i < fileLines.Length - 1 &&
+					fileLines[i].Length != 0 && fileLines[i][0] == '"' && fileLines[i][fileLines[i].Length - 1] != '"' &&
+					fileLines[i + 1].Length != 0 && fileLines[i + 1][0] != '"' && fileLines[i + 1][fileLines[i + 1].Length - 1] == '"')
+				{
+					line = fileLines[i] + "\\r\\n" + fileLines[i + 1];
+					i++;
+				}
+				else if (i < fileLines.Length - 2 &&
+					fileLines[i].Length != 0 && fileLines[i][0] == '"' && fileLines[i][fileLines[i].Length - 1] != '"' &&
+					fileLines[i + 1].Length == 0 &&
+					fileLines[i + 2].Length != 0 && fileLines[i + 2][0] != '"' && fileLines[i + 2][fileLines[i + 2].Length - 1] == '"')
+				{
+					line = fileLines[i] + "\\r\\n" + fileLines[i + 1] + "\\r\\n" + fileLines[i + 2];
+					i += 2;
+				}
+
+				try
 				{
 					var thirdComma = Util.IndexOfNth(line, ',', 3);
 
@@ -218,7 +235,7 @@ namespace Mag_WorldObjectParser
 					var jsonPart = line.Substring(thirdComma + 1, line.Length - (thirdComma + 1));
 					if (jsonPart[0] != '"' || jsonPart[jsonPart.Length - 1] != '"') // Corrupt line
 					{
-					    Interlocked.Increment(ref corruptLines);
+						Interlocked.Increment(ref corruptLines);
                         continue;
 					}
 
@@ -232,23 +249,23 @@ namespace Mag_WorldObjectParser
 						createPacket.Landcell = landcell;
 						createPacket.RawCoordinates = rawCoordinates;
 
-						Dictionary<string, object> result = (Dictionary<string, object>) jsonSerializer.DeserializeObject(jsonPart);
+						var result = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonPart);
 
 						if (result.Count != 1)
 						{
-						    Interlocked.Increment(ref corruptLines);
+							Interlocked.Increment(ref corruptLines);
                             continue;
 						}
 
 						foreach (var kvp in result)
-							createPacket.RawData = Util.HexStringToByteArray((string) kvp.Value);
+							createPacket.RawData = Util.HexStringToByteArray(kvp.Value);
 
-					    if (ct.IsCancellationRequested)
+						if (ct.IsCancellationRequested)
 					        return;
 
                         if (!ProcessCreatePacket(createPacket))
 						{
-						    Interlocked.Increment(ref corruptLines);
+							Interlocked.Increment(ref corruptLines);
                             continue;
 						}
 					}
@@ -265,16 +282,16 @@ namespace Mag_WorldObjectParser
 							identResponse.Landcell = landcell;
 							identResponse.RawCoordinates = rawCoordinates;
 
-							Dictionary<string, object> result = (Dictionary<string, object>) jsonSerializer.DeserializeObject(jsonPart);
+							var result = JsonSerializer.Deserialize<ExpandoObject>(jsonPart);
 
-						    identResponse.ParseFromDictionary(result);
+							identResponse.ParseFromDictionary(result);
 
 						    if (ct.IsCancellationRequested)
 						        return;
 
                             if (!ProcessIdentResponse(identResponse))
 							{
-							    Interlocked.Increment(ref corruptLines);
+								Interlocked.Increment(ref corruptLines);
                                 continue;
 							}
 						}
@@ -285,7 +302,7 @@ namespace Mag_WorldObjectParser
 							{
 								retried = true;
 
-								// This is because I forgot to encode strings... 
+								// This is because I forgot to encode strings...
 								jsonPart = jsonPart.Replace(" \"Ruschk\" ", " \\\"Ruschk\\\" ");
 								jsonPart = jsonPart.Replace(" \"giants\" ", " \\\"giants\\\" ");
 								jsonPart = jsonPart.Replace(" \"guard dogs.\"", " \\\"guard dogs.\\\"");
@@ -315,22 +332,37 @@ namespace Mag_WorldObjectParser
 								jsonPart = jsonPart.Replace("\"Winds From Darkness\"", "\\\"Winds From Darkness\\\"");
 								jsonPart = jsonPart.Replace(" \"Property of Celcynd\" ", " \\\"Property of Celcynd\\\" ");
 
+								jsonPart = jsonPart.Replace("\"\"Mag-Ma!\"\"", "\"\\\"Mag-Ma!\\\"\"");
+								jsonPart = jsonPart.Replace("\"\"Mini Mag-Ma!\"\"", "\"\\\"Mini Mag-Ma!\\\"\"");
+
+								jsonPart = jsonPart.Replace("\"Long live the Stag of Bellenesse!\"", "\\\"Long live the Stag of Bellenesse!\\\"");
+								jsonPart = jsonPart.Replace("\"borrowed\"", "\\\"borrowed\\\"");
+								jsonPart = jsonPart.Replace("\"From northland to madness; from madness to grace; from grace to our verdurous home.\"", "\\\"From northland to madness; from madness to grace; from grace to our verdurous home.\\\"");
+								jsonPart = jsonPart.Replace("\"Empty.\"", "\\\"Empty.\\\"");
+								jsonPart = jsonPart.Replace("\"And now, in the end...seek the end to her story, and the beginning to the story of humanity upon Dereth.\"", "\\\"And now, in the end...seek the end to her story, and the beginning to the story of humanity upon Dereth.\\\"");
+								jsonPart = jsonPart.Replace("\"Seek resolve in the place where the words of the past were found.\"", "\\\"Seek resolve in the place where the words of the past were found.\\\"");
+								jsonPart = jsonPart.Replace("\"Seek courage in the home of light.\"", "\\\"Seek courage in the home of light.\\\"");
+								jsonPart = jsonPart.Replace("\"Seek determination in the tomb of past warriors.\"", "\\\"Seek determination in the tomb of past warriors.\\\"");
+								jsonPart = jsonPart.Replace("\"Auberean\"", "\\\"Auberean\\\"");
+								jsonPart = jsonPart.Replace("\"Enchanted\" ", "\\\"Enchanted\\\" ");
+								jsonPart = jsonPart.Replace("\"Last of the high desert's mighty, fallen at last. Honor is yours on this world chieftain. Serve the gods with distinction in the next.\"", "\\\"Last of the high desert's mighty, fallen at last. Honor is yours on this world chieftain. Serve the gods with distinction in the next.\\\"");
+
 								goto retry;
 							}
 
-						    Interlocked.Increment(ref corruptLines);
+							Interlocked.Increment(ref corruptLines);
                             continue;
 						}
 					}
 					else
 					{
-					    Interlocked.Increment(ref corruptLines);
+						Interlocked.Increment(ref corruptLines);
                         continue;
 					}
 				}
 				catch
 				{
-				    Interlocked.Increment(ref corruptLines);
+					Interlocked.Increment(ref corruptLines);
                     continue;
 				}
 			}
