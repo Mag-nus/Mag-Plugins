@@ -83,4 +83,13 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="ACE.Database">
+      <HintPath>..\lib\ACE\ACE.Database.dll</HintPath>
+    </Reference>
+    <Reference Include="ACE.Entity">
+      <HintPath>..\lib\ACE\ACE.Entity.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

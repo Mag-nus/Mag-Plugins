@@ -1146,7 +1146,7 @@ namespace Mag_SuitBuilder
 
 						biota.WeenieType = (int)ACEBiotaCreator.DetermineWeenieType(biota);
 
-						ACEBiotaCreator.SetBiotaPopulatedCollections(biota);
+						ACE.Database.ShardDatabase.SetBiotaPopulatedCollections(biota);
 
 						using (StreamWriter outputFile = new StreamWriter(biotaFileName, false))
 							biotaWriter.CreateSQLINSERTStatement(biota, outputFile);
