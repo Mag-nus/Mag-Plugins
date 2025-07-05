@@ -706,6 +706,7 @@ namespace MagTools
 			{
 				if (lower.StartsWith("/mt send enter")) PostMessageTools.SendEnter();
 				else if (lower.StartsWith("/mt send pause")) PostMessageTools.SendPause();
+				else if (lower.StartsWith("/mt send del")) PostMessageTools.SendDel();
 				else if (lower.StartsWith("/mt send space")) PostMessageTools.SendSpace();
 				else if (lower.StartsWith("/mt send cntrl+") && lower.Length >= 16) PostMessageTools.SendCntrl(mtCommand[15]);
 				else if (lower.StartsWith("/mt send f4")) PostMessageTools.SendF4();

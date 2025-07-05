@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 
 using Decal.Adapter;
@@ -14,6 +14,7 @@ namespace Mag.Shared
 		private const byte VK_CONTROL		= 0x11;
 		private const byte VK_PAUSE		= 0x13;
 		private const byte VK_SPACE		= 0x20;
+		private const byte VK_DELETE	= 0x2E;
 
 		private static byte ScanCode(char Char)
 		{
@@ -97,6 +98,12 @@ namespace Mag.Shared
 		{
 			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)VK_PAUSE, (UIntPtr)0x00450001);
 			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)VK_PAUSE, (UIntPtr)0xC0450001);
+		}
+
+		public static void SendDel()
+		{
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYDOWN,	(IntPtr)VK_DELETE, (UIntPtr)0x01530001);
+			User32.PostMessage(CoreManager.Current.Decal.Hwnd, User32.WM_KEYUP,		(IntPtr)VK_DELETE, (UIntPtr)0x01530001);
 		}
 
 		static Timer _spaceReleaseTimer;
