@@ -253,6 +253,8 @@ namespace Mag.Shared
 			if (mwo.Values(IntValueKey.WieldDifficulty) > 0)
 			{
 				// I don't quite understand this.
+				// WieldRequirements==7 means SkillType doesn't represent skill names, instead SkillType==1 means Level (instead of Axe)
+				// Cloaks for example have Player Level wield requirement
 				if (mwo.Values(IntValueKey.WieldRequirements) == 7 && mwo.Values(IntValueKey.WieldSkillType) == 1)
 					sb.Append(", Wield Lvl " + mwo.Values(IntValueKey.WieldDifficulty));
 				else
