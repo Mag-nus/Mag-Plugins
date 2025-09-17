@@ -119,27 +119,21 @@ namespace Mag_SuitBuilder.Equipment
 			txtWieldRequirementLevelMax = new System.Windows.Forms.TextBox();
 			label27 = new System.Windows.Forms.Label();
 			label28 = new System.Windows.Forms.Label();
-			txtMissileDefActMin = new System.Windows.Forms.TextBox();
 			label29 = new System.Windows.Forms.Label();
 			txtMissileDefActMax = new System.Windows.Forms.TextBox();
 			label30 = new System.Windows.Forms.Label();
-			txtArcaneLoreActMin = new System.Windows.Forms.TextBox();
 			label31 = new System.Windows.Forms.Label();
 			txtArcaneLoreActMax = new System.Windows.Forms.TextBox();
 			label32 = new System.Windows.Forms.Label();
-			txtMeleeDefActMin = new System.Windows.Forms.TextBox();
 			label33 = new System.Windows.Forms.Label();
 			txtMeleeDefActMax = new System.Windows.Forms.TextBox();
 			label34 = new System.Windows.Forms.Label();
-			txtMissileDefWldMin = new System.Windows.Forms.TextBox();
 			label35 = new System.Windows.Forms.Label();
 			txtMissileDefWldMax = new System.Windows.Forms.TextBox();
 			label36 = new System.Windows.Forms.Label();
-			txtMeleeDefWldMin = new System.Windows.Forms.TextBox();
 			label37 = new System.Windows.Forms.Label();
 			txtMeleeDefWldMax = new System.Windows.Forms.TextBox();
 			label38 = new System.Windows.Forms.Label();
-			txtMagicDefWldMin = new System.Windows.Forms.TextBox();
 			label39 = new System.Windows.Forms.Label();
 			txtMagicDefWldMax = new System.Windows.Forms.TextBox();
 			label40 = new System.Windows.Forms.Label();
@@ -1101,45 +1095,34 @@ namespace Mag_SuitBuilder.Equipment
 			// 
 			label27.AutoSize = true;
 			label27.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, 0);
-			label27.Location = new System.Drawing.Point(271, 256);
+			label27.Location = new System.Drawing.Point(266, 256);
 			label27.Name = "label27";
 			label27.Size = new System.Drawing.Size(137, 15);
 			label27.TabIndex = 87;
 			label27.Text = "Activation Requirements";
-			toolTip1.SetToolTip(label27, resources.GetString("label27.ToolTip"));
+			toolTip1.SetToolTip(label27, "Optionally restrict items by their Activation Requirement.  Typically setting the max value to your buffed skill value.");
 			// 
 			// label28
 			// 
 			label28.AutoSize = true;
-			label28.Location = new System.Drawing.Point(188, 339);
+			label28.Location = new System.Drawing.Point(240, 339);
 			label28.Name = "label28";
 			label28.Size = new System.Drawing.Size(91, 15);
 			label28.TabIndex = 91;
 			label28.Text = "Missile Defense:";
 			// 
-			// txtMissileDefActMin
-			// 
-			txtMissileDefActMin.Location = new System.Drawing.Point(283, 336);
-			txtMissileDefActMin.MaxLength = 3;
-			txtMissileDefActMin.Name = "txtMissileDefActMin";
-			txtMissileDefActMin.Size = new System.Drawing.Size(36, 23);
-			txtMissileDefActMin.TabIndex = 90;
-			txtMissileDefActMin.Text = "0";
-			txtMissileDefActMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-			txtMissileDefActMin.TextChanged += txtFilter_TextChanged;
-			// 
 			// label29
 			// 
 			label29.AutoSize = true;
-			label29.Location = new System.Drawing.Point(322, 339);
+			label29.Location = new System.Drawing.Point(336, 339);
 			label29.Name = "label29";
-			label29.Size = new System.Drawing.Size(42, 15);
+			label29.Size = new System.Drawing.Size(23, 15);
 			label29.TabIndex = 89;
-			label29.Text = ">= =<";
+			label29.Text = "=<";
 			// 
 			// txtMissileDefActMax
 			// 
-			txtMissileDefActMax.Location = new System.Drawing.Point(367, 336);
+			txtMissileDefActMax.Location = new System.Drawing.Point(362, 336);
 			txtMissileDefActMax.MaxLength = 3;
 			txtMissileDefActMax.Name = "txtMissileDefActMax";
 			txtMissileDefActMax.Size = new System.Drawing.Size(36, 23);
@@ -1151,35 +1134,24 @@ namespace Mag_SuitBuilder.Equipment
 			// label30
 			// 
 			label30.AutoSize = true;
-			label30.Location = new System.Drawing.Point(206, 281);
+			label30.Location = new System.Drawing.Point(258, 281);
 			label30.Name = "label30";
 			label30.Size = new System.Drawing.Size(73, 15);
 			label30.TabIndex = 95;
 			label30.Text = "Arcane Lore:";
 			// 
-			// txtArcaneLoreActMin
-			// 
-			txtArcaneLoreActMin.Location = new System.Drawing.Point(283, 278);
-			txtArcaneLoreActMin.MaxLength = 3;
-			txtArcaneLoreActMin.Name = "txtArcaneLoreActMin";
-			txtArcaneLoreActMin.Size = new System.Drawing.Size(36, 23);
-			txtArcaneLoreActMin.TabIndex = 94;
-			txtArcaneLoreActMin.Text = "0";
-			txtArcaneLoreActMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-			txtArcaneLoreActMin.TextChanged += txtFilter_TextChanged;
-			// 
 			// label31
 			// 
 			label31.AutoSize = true;
-			label31.Location = new System.Drawing.Point(322, 281);
+			label31.Location = new System.Drawing.Point(334, 281);
 			label31.Name = "label31";
-			label31.Size = new System.Drawing.Size(42, 15);
+			label31.Size = new System.Drawing.Size(23, 15);
 			label31.TabIndex = 93;
-			label31.Text = ">= =<";
+			label31.Text = "=<";
 			// 
 			// txtArcaneLoreActMax
 			// 
-			txtArcaneLoreActMax.Location = new System.Drawing.Point(367, 278);
+			txtArcaneLoreActMax.Location = new System.Drawing.Point(362, 278);
 			txtArcaneLoreActMax.MaxLength = 3;
 			txtArcaneLoreActMax.Name = "txtArcaneLoreActMax";
 			txtArcaneLoreActMax.Size = new System.Drawing.Size(36, 23);
@@ -1191,35 +1163,24 @@ namespace Mag_SuitBuilder.Equipment
 			// label32
 			// 
 			label32.AutoSize = true;
-			label32.Location = new System.Drawing.Point(192, 310);
+			label32.Location = new System.Drawing.Point(244, 310);
 			label32.Name = "label32";
 			label32.Size = new System.Drawing.Size(87, 15);
 			label32.TabIndex = 99;
 			label32.Text = "Melee Defense:";
 			// 
-			// txtMeleeDefActMin
-			// 
-			txtMeleeDefActMin.Location = new System.Drawing.Point(283, 307);
-			txtMeleeDefActMin.MaxLength = 3;
-			txtMeleeDefActMin.Name = "txtMeleeDefActMin";
-			txtMeleeDefActMin.Size = new System.Drawing.Size(36, 23);
-			txtMeleeDefActMin.TabIndex = 98;
-			txtMeleeDefActMin.Text = "0";
-			txtMeleeDefActMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-			txtMeleeDefActMin.TextChanged += txtFilter_TextChanged;
-			// 
 			// label33
 			// 
 			label33.AutoSize = true;
-			label33.Location = new System.Drawing.Point(322, 310);
+			label33.Location = new System.Drawing.Point(335, 310);
 			label33.Name = "label33";
-			label33.Size = new System.Drawing.Size(42, 15);
+			label33.Size = new System.Drawing.Size(23, 15);
 			label33.TabIndex = 97;
-			label33.Text = ">= =<";
+			label33.Text = "=<";
 			// 
 			// txtMeleeDefActMax
 			// 
-			txtMeleeDefActMax.Location = new System.Drawing.Point(367, 307);
+			txtMeleeDefActMax.Location = new System.Drawing.Point(362, 307);
 			txtMeleeDefActMax.MaxLength = 3;
 			txtMeleeDefActMax.Name = "txtMeleeDefActMax";
 			txtMeleeDefActMax.Size = new System.Drawing.Size(36, 23);
@@ -1231,35 +1192,24 @@ namespace Mag_SuitBuilder.Equipment
 			// label34
 			// 
 			label34.AutoSize = true;
-			label34.Location = new System.Drawing.Point(187, 447);
+			label34.Location = new System.Drawing.Point(240, 447);
 			label34.Name = "label34";
 			label34.Size = new System.Drawing.Size(91, 15);
 			label34.TabIndex = 112;
 			label34.Text = "Missile Defense:";
 			// 
-			// txtMissileDefWldMin
-			// 
-			txtMissileDefWldMin.Location = new System.Drawing.Point(282, 444);
-			txtMissileDefWldMin.MaxLength = 3;
-			txtMissileDefWldMin.Name = "txtMissileDefWldMin";
-			txtMissileDefWldMin.Size = new System.Drawing.Size(36, 23);
-			txtMissileDefWldMin.TabIndex = 111;
-			txtMissileDefWldMin.Text = "0";
-			txtMissileDefWldMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-			txtMissileDefWldMin.TextChanged += txtFilter_TextChanged;
-			// 
 			// label35
 			// 
 			label35.AutoSize = true;
-			label35.Location = new System.Drawing.Point(322, 447);
+			label35.Location = new System.Drawing.Point(336, 447);
 			label35.Name = "label35";
-			label35.Size = new System.Drawing.Size(42, 15);
+			label35.Size = new System.Drawing.Size(23, 15);
 			label35.TabIndex = 110;
-			label35.Text = ">= =<";
+			label35.Text = "=<";
 			// 
 			// txtMissileDefWldMax
 			// 
-			txtMissileDefWldMax.Location = new System.Drawing.Point(367, 444);
+			txtMissileDefWldMax.Location = new System.Drawing.Point(362, 444);
 			txtMissileDefWldMax.MaxLength = 3;
 			txtMissileDefWldMax.Name = "txtMissileDefWldMax";
 			txtMissileDefWldMax.Size = new System.Drawing.Size(36, 23);
@@ -1271,35 +1221,24 @@ namespace Mag_SuitBuilder.Equipment
 			// label36
 			// 
 			label36.AutoSize = true;
-			label36.Location = new System.Drawing.Point(192, 418);
+			label36.Location = new System.Drawing.Point(245, 418);
 			label36.Name = "label36";
 			label36.Size = new System.Drawing.Size(87, 15);
 			label36.TabIndex = 108;
 			label36.Text = "Melee Defense:";
 			// 
-			// txtMeleeDefWldMin
-			// 
-			txtMeleeDefWldMin.Location = new System.Drawing.Point(282, 415);
-			txtMeleeDefWldMin.MaxLength = 3;
-			txtMeleeDefWldMin.Name = "txtMeleeDefWldMin";
-			txtMeleeDefWldMin.Size = new System.Drawing.Size(36, 23);
-			txtMeleeDefWldMin.TabIndex = 107;
-			txtMeleeDefWldMin.Text = "0";
-			txtMeleeDefWldMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-			txtMeleeDefWldMin.TextChanged += txtFilter_TextChanged;
-			// 
 			// label37
 			// 
 			label37.AutoSize = true;
-			label37.Location = new System.Drawing.Point(322, 418);
+			label37.Location = new System.Drawing.Point(336, 418);
 			label37.Name = "label37";
-			label37.Size = new System.Drawing.Size(42, 15);
+			label37.Size = new System.Drawing.Size(23, 15);
 			label37.TabIndex = 106;
-			label37.Text = ">= =<";
+			label37.Text = "=<";
 			// 
 			// txtMeleeDefWldMax
 			// 
-			txtMeleeDefWldMax.Location = new System.Drawing.Point(367, 415);
+			txtMeleeDefWldMax.Location = new System.Drawing.Point(362, 415);
 			txtMeleeDefWldMax.MaxLength = 3;
 			txtMeleeDefWldMax.Name = "txtMeleeDefWldMax";
 			txtMeleeDefWldMax.Size = new System.Drawing.Size(36, 23);
@@ -1311,35 +1250,24 @@ namespace Mag_SuitBuilder.Equipment
 			// label38
 			// 
 			label38.AutoSize = true;
-			label38.Location = new System.Drawing.Point(190, 476);
+			label38.Location = new System.Drawing.Point(243, 476);
 			label38.Name = "label38";
 			label38.Size = new System.Drawing.Size(88, 15);
 			label38.TabIndex = 104;
 			label38.Text = "Magic Defense:";
 			// 
-			// txtMagicDefWldMin
-			// 
-			txtMagicDefWldMin.Location = new System.Drawing.Point(282, 473);
-			txtMagicDefWldMin.MaxLength = 3;
-			txtMagicDefWldMin.Name = "txtMagicDefWldMin";
-			txtMagicDefWldMin.Size = new System.Drawing.Size(36, 23);
-			txtMagicDefWldMin.TabIndex = 103;
-			txtMagicDefWldMin.Text = "0";
-			txtMagicDefWldMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-			txtMagicDefWldMin.TextChanged += txtFilter_TextChanged;
-			// 
 			// label39
 			// 
 			label39.AutoSize = true;
-			label39.Location = new System.Drawing.Point(322, 476);
+			label39.Location = new System.Drawing.Point(336, 476);
 			label39.Name = "label39";
-			label39.Size = new System.Drawing.Size(42, 15);
+			label39.Size = new System.Drawing.Size(23, 15);
 			label39.TabIndex = 102;
-			label39.Text = ">= =<";
+			label39.Text = "=<";
 			// 
 			// txtMagicDefWldMax
 			// 
-			txtMagicDefWldMax.Location = new System.Drawing.Point(367, 473);
+			txtMagicDefWldMax.Location = new System.Drawing.Point(362, 473);
 			txtMagicDefWldMax.MaxLength = 3;
 			txtMagicDefWldMax.Name = "txtMagicDefWldMax";
 			txtMagicDefWldMax.Size = new System.Drawing.Size(36, 23);
@@ -1352,7 +1280,7 @@ namespace Mag_SuitBuilder.Equipment
 			// 
 			label40.AutoSize = true;
 			label40.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, 0);
-			label40.Location = new System.Drawing.Point(212, 393);
+			label40.Location = new System.Drawing.Point(207, 393);
 			label40.Name = "label40";
 			label40.Size = new System.Drawing.Size(195, 15);
 			label40.TabIndex = 100;
@@ -1372,28 +1300,22 @@ namespace Mag_SuitBuilder.Equipment
 			AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			Controls.Add(label34);
-			Controls.Add(txtMissileDefWldMin);
 			Controls.Add(label35);
 			Controls.Add(txtMissileDefWldMax);
 			Controls.Add(label36);
-			Controls.Add(txtMeleeDefWldMin);
 			Controls.Add(label37);
 			Controls.Add(txtMeleeDefWldMax);
 			Controls.Add(label38);
-			Controls.Add(txtMagicDefWldMin);
 			Controls.Add(label39);
 			Controls.Add(txtMagicDefWldMax);
 			Controls.Add(label40);
 			Controls.Add(label32);
-			Controls.Add(txtMeleeDefActMin);
 			Controls.Add(label33);
 			Controls.Add(txtMeleeDefActMax);
 			Controls.Add(label30);
-			Controls.Add(txtArcaneLoreActMin);
 			Controls.Add(label31);
 			Controls.Add(txtArcaneLoreActMax);
 			Controls.Add(label28);
-			Controls.Add(txtMissileDefActMin);
 			Controls.Add(label29);
 			Controls.Add(txtMissileDefActMax);
 			Controls.Add(label27);
@@ -1581,27 +1503,21 @@ namespace Mag_SuitBuilder.Equipment
 		private System.Windows.Forms.TextBox txtWieldRequirementLevelMax;
 		private System.Windows.Forms.Label label27;
 		private System.Windows.Forms.Label label28;
-		private System.Windows.Forms.TextBox txtMissileDefActMin;
 		private System.Windows.Forms.Label label29;
 		private System.Windows.Forms.TextBox txtMissileDefActMax;
 		private System.Windows.Forms.Label label30;
-		private System.Windows.Forms.TextBox txtArcaneLoreActMin;
 		private System.Windows.Forms.Label label31;
 		private System.Windows.Forms.TextBox txtArcaneLoreActMax;
 		private System.Windows.Forms.Label label32;
-		private System.Windows.Forms.TextBox txtMeleeDefActMin;
 		private System.Windows.Forms.Label label33;
 		private System.Windows.Forms.TextBox txtMeleeDefActMax;
 		private System.Windows.Forms.Label label34;
-		private System.Windows.Forms.TextBox txtMissileDefWldMin;
 		private System.Windows.Forms.Label label35;
 		private System.Windows.Forms.TextBox txtMissileDefWldMax;
 		private System.Windows.Forms.Label label36;
-		private System.Windows.Forms.TextBox txtMeleeDefWldMin;
 		private System.Windows.Forms.Label label37;
 		private System.Windows.Forms.TextBox txtMeleeDefWldMax;
 		private System.Windows.Forms.Label label38;
-		private System.Windows.Forms.TextBox txtMagicDefWldMin;
 		private System.Windows.Forms.Label label39;
 		private System.Windows.Forms.TextBox txtMagicDefWldMax;
 		private System.Windows.Forms.Label label40;

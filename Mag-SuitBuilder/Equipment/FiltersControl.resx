@@ -120,17 +120,12 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="label27.ToolTip" xml:space="preserve">
-    <value>Optionally restrict items by their Activation Requirement.  Typically setting the max value to your buffed skill value.
-Setting a non-zero Min value excludes any items without that skill requirement.  Multiple min values from different skills will require an item to have requirements from ALL of those skills.</value>
-  </data>
   <metadata name="toolTip2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>115, 17</value>
   </metadata>
   <data name="label40.ToolTip" xml:space="preserve">
-    <value>Typically set the max field to the character's corresponding base skill value.  These filters provide granular resictions for each skill.
+    <value>Typically set the max filter to the character's corresponding base skill value.  These filters provide granular resictions for each skill.
 Note: Wield Requirements "Skill" field covers wield requirements for these defensive skills as well as weapon skills,
-and can be used to apply generic restriction for all wield requirement skills.  Most restrictive filter will exclude items from results.
-Setting a non-zero Min value excludes any items without that skill requirement.  Multiple min values from different skills will require an item to have requirements from ALL of those skills.</value>
+and can be used to apply generic restriction for all wield requirement skills.  Most restrictive filter will exclude items from results.</value>
   </data>
 </root>
