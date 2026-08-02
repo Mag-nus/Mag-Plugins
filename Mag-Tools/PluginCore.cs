@@ -446,6 +446,12 @@ namespace MagTools
 		{
 			try
 			{
+				if (VirindiHotkeySystem.VHotkeySystem.InstanceReal == null)
+				{
+					startupErrors.Add("Hotkeys failed to bind: Is Virindi Hotkey System running?");
+					return;
+				}
+
 				// Wire up Inventory Packer Hotkey
 				if (InventoryPacker != null)
 				{
