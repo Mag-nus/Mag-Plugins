@@ -1,0 +1,11 @@
+<Solution>
+  <Project Path="Mag-LootLogger.csproj" />
+  <Properties Name="TeamFoundationVersionControl">
+    <Property Name="SccEnterpriseProvider" Value="{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}" />
+    <Property Name="SccLocalPath0" Value="." />
+    <Property Name="SccLocalPath1" Value="." />
+    <Property Name="SccNumberOfProjects" Value="2" />
+    <Property Name="SccProjectUniqueName1" Value="Mag-LootLogger.csproj" />
+    <Property Name="SccTeamFoundationServer" Value="https://tfs.codeplex.com/tfs/tfs29" />
+  </Properties>
+</Solution>
