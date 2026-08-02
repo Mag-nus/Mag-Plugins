@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -48,7 +48,11 @@ namespace MagFilter
 
 		protected override void Startup()
 		{
-			Debug.Init(PluginPersonalFolder.FullName + @"\Exceptions.txt", PluginName);
+			#if DEBUG
+			Debug.Init(PluginPersonalFolder.FullName + @"\Debug.txt", PluginPersonalFolder.FullName + @"\Exceptions.txt", PluginName);
+			#else
+			Debug.Init(null, PluginPersonalFolder.FullName + @"\Exceptions.txt", PluginName);
+			#endif
 			SettingsFile.Init(PluginPersonalFolder.FullName + @"\" + PluginName + ".xml", PluginName);
 
 			frameRateLimiter.Startup();

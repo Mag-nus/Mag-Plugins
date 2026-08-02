@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 
 using MagFilter.Settings;
@@ -10,8 +10,6 @@ namespace MagFilter
 {
 	class FrameRateLimiter
 	{
-		readonly System.Diagnostics.Stopwatch stopWatch = System.Diagnostics.Stopwatch.StartNew();
-
 		public void Startup()
 		{
 			CoreManager.Current.RenderFrame += Current_RenderFrame;

@@ -2,8 +2,6 @@ using System;
 using System.Globalization;
 using System.IO;
 
-using Decal.Adapter;
-
 namespace Mag.Shared
 {
 	static class Debug

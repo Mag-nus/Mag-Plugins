@@ -1,4 +1,5 @@
-﻿
+using System;
+
 namespace MagFilter
 {
 	internal struct DefaultFirstCharacter
