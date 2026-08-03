@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -99,6 +99,14 @@ namespace MagTools.Loggers.Chat
 
 			if (fileInfo.Directory != null && !fileInfo.Directory.Exists)
 				fileInfo.Directory.Create();
+
+			// If our file exceeds 100 MB, split it up
+			if (fileInfo.Exists && fileInfo.Length >= 100000000)
+			{
+				var newFileName = Path.Combine(fileInfo.DirectoryName, Path.GetFileNameWithoutExtension(FileName) + " " + DateTime.Now.ToString("yy-MM-dd") + Path.GetExtension(FileName));
+
+				File.Move(FileName, newFileName);
+			}
 
 			using (StreamWriter sw = File.AppendText(FileName))
 			{
