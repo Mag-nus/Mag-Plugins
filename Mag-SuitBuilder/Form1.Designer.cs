@@ -76,6 +76,7 @@ namespace Mag_SuitBuilder
 			equipmentPieceControl2 = new Equipment.EquipmentPieceControl();
 			equipmentPieceControl1 = new Equipment.EquipmentPieceControl();
 			timerCalculatorUpdator = new System.Windows.Forms.Timer(components);
+			lblElapsed = new System.Windows.Forms.Label();
 			tabControl1.SuspendLayout();
 			tabPage1.SuspendLayout();
 			panel1.SuspendLayout();
@@ -192,7 +193,7 @@ namespace Mag_SuitBuilder
 			// cmdResizeColumns
 			// 
 			cmdResizeColumns.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-			cmdResizeColumns.Location = new System.Drawing.Point(1838, 6);
+			cmdResizeColumns.Location = new System.Drawing.Point(1221, 6);
 			cmdResizeColumns.Name = "cmdResizeColumns";
 			cmdResizeColumns.Size = new System.Drawing.Size(113, 23);
 			cmdResizeColumns.TabIndex = 5;
@@ -203,7 +204,7 @@ namespace Mag_SuitBuilder
 			// btnHelp
 			// 
 			btnHelp.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-			btnHelp.Location = new System.Drawing.Point(1957, 6);
+			btnHelp.Location = new System.Drawing.Point(1340, 6);
 			btnHelp.Name = "btnHelp";
 			btnHelp.Size = new System.Drawing.Size(75, 23);
 			btnHelp.TabIndex = 4;
@@ -216,7 +217,7 @@ namespace Mag_SuitBuilder
 			txtInventoryRootPath.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
 			txtInventoryRootPath.Location = new System.Drawing.Point(261, 6);
 			txtInventoryRootPath.Name = "txtInventoryRootPath";
-			txtInventoryRootPath.Size = new System.Drawing.Size(1571, 23);
+			txtInventoryRootPath.Size = new System.Drawing.Size(954, 23);
 			txtInventoryRootPath.TabIndex = 3;
 			// 
 			// btnLoadFromDB
@@ -257,6 +258,7 @@ namespace Mag_SuitBuilder
 			// 
 			// tabPage2
 			// 
+			tabPage2.Controls.Add(lblElapsed);
 			tabPage2.Controls.Add(treeView1);
 			tabPage2.Controls.Add(lblAccessorizerRunningThreads);
 			tabPage2.Controls.Add(lblAccessorizerQueuedThreads);
@@ -572,6 +574,15 @@ namespace Mag_SuitBuilder
 			timerCalculatorUpdator.Interval = 500;
 			timerCalculatorUpdator.Tick += timerCalculatorUpdator_Tick;
 			// 
+			// lblElapsed
+			// 
+			lblElapsed.AutoSize = true;
+			lblElapsed.Location = new System.Drawing.Point(263, 50);
+			lblElapsed.Name = "lblElapsed";
+			lblElapsed.Size = new System.Drawing.Size(50, 15);
+			lblElapsed.TabIndex = 29;
+			lblElapsed.Text = "Elapsed:";
+			// 
 			// Form1
 			// 
 			AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -641,5 +652,6 @@ namespace Mag_SuitBuilder
 		private System.Windows.Forms.Timer timerCalculatorUpdator;
 		private System.Windows.Forms.ToolStripMenuItem showEquipmentUpgradesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem copyItemsToClipboardToolStripMenuItem;
+		private System.Windows.Forms.Label lblElapsed;
 	}
 }

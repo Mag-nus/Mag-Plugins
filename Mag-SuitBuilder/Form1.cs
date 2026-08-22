@@ -384,6 +384,9 @@ namespace Mag_SuitBuilder
 					return;
 			}
 
+			startTime = DateTime.UtcNow;
+			lblElapsed.Text = "Elapsed: ";
+
 			btnCalculatePossibilities.Enabled = false;
 
 			treeView1.Nodes.Clear();
@@ -539,8 +542,6 @@ namespace Mag_SuitBuilder
 
 			armorSearcher.SuitCreated += new Action<CompletedSuit>(armorSearcher_SuitCreated);
 			armorSearcher.SearchCompleted += new Action(ThreadFinished);
-
-			startTime = DateTime.Now;
 
 			armorThreadCounter = 1;
 			accessoryThreadQueueCounter = 0;
@@ -707,9 +708,7 @@ namespace Mag_SuitBuilder
 					btnCalculatePossibilities.Enabled = true;
 					FlashWindow(this.Handle, true);
 
-					#if DEBUG
-					//MessageBox.Show("Search finished in: " + (DateTime.Now - startTime).TotalSeconds + " seconds.");
-					#endif
+					lblElapsed.Text = "Elapsed: " + (DateTime.UtcNow - startTime).TotalSeconds.ToString("N0") + " s";
 				}));
 			}
 		}
@@ -744,6 +743,9 @@ namespace Mag_SuitBuilder
 			lblArmorSearchThreads.Text = "Armor Search Threads: " + Interlocked.Read(ref armorThreadCounter);
 			lblAccessorizerQueuedThreads.Text = "Accessorizer Queued Threads: " + (Interlocked.Read(ref accessoryThreadQueueCounter) - Interlocked.Read(ref accessoryThreadRunningCounter));
 			lblAccessorizerRunningThreads.Text = "Accessorizer Running Threads: " + Interlocked.Read(ref accessoryThreadRunningCounter);
+
+			if (btnStopCalculating.Enabled)
+				lblElapsed.Text = "Elapsed: " + (DateTime.UtcNow - startTime).TotalSeconds.ToString("N0") + " s";
 		}
 
 		private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
