@@ -110,7 +110,7 @@ namespace Mag.Shared
 				if (obj.ObjectClass != ObjectClass.Monster)
 					continue;
 
-				if (!String.IsNullOrWhiteSpace(objectName))
+				if (!String.IsNullOrEmpty(objectName))
 				{
 					if (!partialMatch && String.Compare(obj.Name, objectName, StringComparison.OrdinalIgnoreCase) != 0)
 						continue;
