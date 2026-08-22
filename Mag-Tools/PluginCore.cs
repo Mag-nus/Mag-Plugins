@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
-using System.Collections.ObjectModel;
 using System.Reflection;
 
 using MagTools.Client;
@@ -1076,6 +1076,26 @@ namespace MagTools
 				else if (state == "missile") CoreManager.Current.Actions.SetCombatMode(CombatState.Missile);
 				else if (state == "peace") CoreManager.Current.Actions.SetCombatMode(CombatState.Peace);
 				else return false;
+				return true;
+			}
+
+			if (lower.StartsWith("/mt attack_melee"))
+			{
+				if (CoreManager.Current.Actions.CombatMode != CombatState.Melee)
+					CoreManager.Current.Actions.SetCombatMode(CombatState.Melee);
+				else
+				{
+					// If we have no target we need to select one
+					WorldObject wo = CoreManager.Current.WorldFilter[CoreManager.Current.Actions.CurrentSelection];
+					if (wo == null || wo.ObjectClass != ObjectClass.Monster || lower.StartsWith("/mt attack_melee closest"))
+					{
+						WorldObject closestObject = Util.GetClosestMonster(null, false);
+						if (closestObject == null)
+							return false;
+						CoreManager.Current.Actions.SelectItem(closestObject.Id);
+					}
+					PostMessageTools.SendDel();
+				}
 				return true;
 			}
 

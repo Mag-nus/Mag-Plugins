@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -93,6 +93,30 @@ namespace Mag.Shared
 					continue;
 				 if (partialMatch && !obj.Name.ToLower().Contains(objectName.ToLower()))
 					continue;
+
+				if (closest == null || GetDistanceFromPlayer(obj) < GetDistanceFromPlayer(closest))
+					closest = obj;
+			}
+
+			return closest;
+		}
+
+		public static WorldObject GetClosestMonster(string objectName, bool partialMatch = false)
+		{
+			WorldObject closest = null;
+
+			foreach (WorldObject obj in CoreManager.Current.WorldFilter.GetLandscape())
+			{
+				if (obj.ObjectClass != ObjectClass.Monster)
+					continue;
+
+				if (!String.IsNullOrWhiteSpace(objectName))
+				{
+					if (!partialMatch && String.Compare(obj.Name, objectName, StringComparison.OrdinalIgnoreCase) != 0)
+						continue;
+					if (partialMatch && !obj.Name.ToLower().Contains(objectName.ToLower()))
+						continue;
+				}
 
 				if (closest == null || GetDistanceFromPlayer(obj) < GetDistanceFromPlayer(closest))
 					closest = obj;
