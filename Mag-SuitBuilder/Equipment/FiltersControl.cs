@@ -338,7 +338,7 @@ namespace Mag_SuitBuilder.Equipment
 				}
 			}
 
-
+			
 			// Wield Requirements
 			if (int.TryParse(txtWieldRequirementLevelMin.Text, out value))
 			{
@@ -364,6 +364,58 @@ namespace Mag_SuitBuilder.Equipment
 					return false;
 			}
 
+			// Defense Skill Wield Requirement filters - These overlap with more generic filters above.
+			// Most restrictive wins, allowing users to optionally supply more granualy filters
+			int wieldSkill = mwo.Values(IntValueKey.WieldSkillType, 0); // Dictionaries.SkillInfo[wieldSkill]
+			int wieldSkillLevelRequ = mwo.Values(IntValueKey.WieldDifficulty, 0);
+			if (mwo.Values(IntValueKey.WieldRequirements, 0) != 7) // Check that WieldSkillType can be interpretted as a skill, is NOT a Level requ.
+			{
+				// Melee Defense Wield Requirement filter
+				if (wieldSkill == (int)6 && int.TryParse(txtMeleeDefWldMax.Text, out int melDMax)
+					&& wieldSkillLevelRequ > melDMax)
+				{
+					return false;
+				}
+
+				// Missile Defense Wield Requirement filter
+				if (wieldSkill == (int)7 && int.TryParse(txtMissileDefWldMax.Text, out int mslDMax)
+					&& wieldSkillLevelRequ > mslDMax)
+				{
+					return false;
+				}
+
+				// Magic Defense Wield Requirement filter
+				if (wieldSkill == (int)15 && int.TryParse(txtMagicDefWldMax.Text, out int magDMax)
+					&& wieldSkillLevelRequ > magDMax)
+				{
+					return false;
+				}				
+			}
+						
+			int loreRequirement = mwo.Values(IntValueKey.ItemDifficulty, 0);// Item's Arcane Lore Activation Requirement		
+			// Arcane Lore activation filter
+			if( int.TryParse(txtArcaneLoreActMax.Text, out int alMax) && loreRequirement > alMax)
+			{
+				return false;
+			}
+
+			// Skill based Activation Requirements for spells (MissileDef, MeleeDef etc.) These are NOT Wield requirements
+			int activationSkill = mwo.Values(IntValueKey.AppraisalItemSkill, 0);
+			int activationSkillLevelRequirement = mwo.Values(IntValueKey.ItemSkillLevelLimit, 0);
+
+			// Melee Defense activation filter, Skill type 6 == Melee Defense
+			if (activationSkill == (int)6 && int.TryParse(txtMeleeDefActMax.Text, out int meleeDActMax)
+				&& activationSkillLevelRequirement > meleeDActMax)
+			{
+				return false;
+			}
+
+			// Missile Defense activation filter, Skill type 7 == Missile Defense
+			if (activationSkill == (int)7 && int.TryParse(txtMissileDefActMax.Text, out int mslDActMax)
+				&& activationSkillLevelRequirement > mslDActMax)
+			{
+				return false;
+			}
 
 			// Spell Selector
 			if (cantripSelectorControl1.Count > 0)
