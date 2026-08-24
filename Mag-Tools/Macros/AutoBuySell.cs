@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.ObjectModel;
 
@@ -139,6 +139,15 @@ namespace MagTools.Macros
 				WorldObject buyItem = GetBuyItem(((VTClassic.LootCore)lootProfile), openVendor, out buyAmount);
 				WorldObject sellItem = GetSellItem(((VTClassic.LootCore)lootProfile));
 
+				// Give the user some feedback regarding operation.  
+				// It's better to know that there is nothing to sell or buy than for nothing to happen.
+				if (buyItem == null)
+					Debug.WriteToChat("AutoBuySell: Nothing to Buy");
+				if (sellItem == null)
+					Debug.WriteToChat("AutoBuySell: Nothing to Sell");
+				if (buyItem.ObjectClass != ObjectClass.TradeNote && sellItem.ObjectClass != ObjectClass.TradeNote)
+					Debug.WriteToChat("AutoBuySell: No TradeNotes to buy or sell. Check Loot Profile");
+
 				if (buyItem != null && sellItem != null && (buyItem.ObjectClass != ObjectClass.TradeNote || sellItem.ObjectClass != ObjectClass.TradeNote))
 				{
 					VirindiItemTool.PluginCore.ActivityStateChanged += new VirindiItemTool.PluginCore.delActivityStateChanged(PluginCore_ActivityStateChanged);
@@ -266,7 +275,7 @@ namespace MagTools.Macros
 			foreach (WorldObject playerObj in CoreManager.Current.WorldFilter.GetInventory())
 			{
 				// Safety check to prevent equipped items from being sold.
-				if (playerObj.Values(LongValueKey.EquipableSlots, 0) > 0)
+				if (playerObj.Values(LongValueKey.EquippedSlots, 0) > 0)
 					continue;
 
 				// Convert the vendor item into a VT GameItemInfo object
@@ -352,7 +361,7 @@ namespace MagTools.Macros
 			foreach (WorldObject playerObj in CoreManager.Current.WorldFilter.GetInventory())
 			{
 				// Safety check to prevent equipped items from being sold.
-				if (playerObj.Values(LongValueKey.EquipableSlots, 0) > 0)
+				if (playerObj.Values(LongValueKey.EquippedSlots, 0) > 0)
 					continue;
 
 				// Convert the vendor item into a VT GameItemInfo object
