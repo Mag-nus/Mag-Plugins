@@ -1130,7 +1130,7 @@ namespace MagTools
 					else
 						count = 1;
 
-					int objectId = FindIdForName(itemName, true, false, false, partialMatch);
+					int objectId = FindIdForName(itemName, false, true, false, partialMatch);
 
 					if (objectId == -1) return false;
 					CoreManager.Current.Actions.VendorAddBuyList(objectId, count);
